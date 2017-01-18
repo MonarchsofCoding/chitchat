@@ -1,0 +1,27 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // compile "joda-time:joda-time:2.2"
+    testCompile "junit:junit:4.12"
+}
+
+mainClassName = 'com.moc.chitchat.Main'
+
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.test.java.srcDirs = ['test']
+
+jar {
+    manifest {
+        attributes(
+            'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+            'Main-Class': 'com.moc.chitchat.Main'
+        )
+    }
+}
+
