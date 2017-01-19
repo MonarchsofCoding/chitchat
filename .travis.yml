@@ -10,8 +10,8 @@ addons:
       - python3-pip
 
 before_install:
-  - sudo pip install --upgrade pip
-  - sudo pip install --upgrade invoke-tools
+  - sudo pip3 install --upgrade pip
+  - sudo pip3 install --upgrade invoke-tools
 
 script:
   - cd java_client && invoke test
