@@ -1,5 +1,7 @@
 package com.moc.chitchat;
 
+import com.moc.chitchat.splash.SplashWindow;
+
 /**
  *
  */
@@ -10,6 +12,6 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println("HELLO");
+        SplashWindow splashWindow = new SplashWindow();
     }
 }
