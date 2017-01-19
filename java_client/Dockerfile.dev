@@ -1,0 +1,11 @@
+FROM frekele/gradle:3.3-jdk8
+
+RUN mkdir /app
+
+VOLUME /app
+
+WORKDIR /app
+
+RUN apt-get update -y
+RUN apt-get install -y vnc4server
+RUN echo "docker\ndocker\n|n" | vncpasswd
