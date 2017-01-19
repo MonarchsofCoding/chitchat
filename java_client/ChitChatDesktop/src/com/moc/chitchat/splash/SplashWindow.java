@@ -1,7 +1,9 @@
 package com.moc.chitchat.splash;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import javax.swing.JWindow;
 
 /**
  * SplashWindow provides a loading window to display to the User while the application loads.
@@ -9,7 +11,7 @@ import java.awt.*;
 public class SplashWindow extends JWindow {
 
     /**
-     *
+     * Constructor for the SplashWindow.
      */
     public SplashWindow() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

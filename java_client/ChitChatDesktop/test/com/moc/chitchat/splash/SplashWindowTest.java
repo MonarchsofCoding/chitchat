@@ -17,11 +17,7 @@ public class SplashWindowTest {
 
         SplashWindow splashWindow = new SplashWindow();
 
-        assertEquals(
-            resX/3,
-            splashWindow.getSize().getWidth(),
-            0
-        );
+        assertEquals(resX/3, splashWindow.getSize().getWidth(), 0);
     }
 
     @Test
@@ -31,11 +27,7 @@ public class SplashWindowTest {
 
         SplashWindow splashWindow = new SplashWindow();
 
-        assertEquals(
-            resY/3,
-            splashWindow.getSize().getHeight(),
-            0
-        );
+        assertEquals(resY/3, splashWindow.getSize().getHeight(), 0);
     }
 
     @Test
@@ -50,11 +42,7 @@ public class SplashWindowTest {
         double expectedX = width/2 - (splashWindowSize.getWidth()/2);
         double expectedY = height/2 - (splashWindowSize.getHeight()/2);
 
-        assertEquals(
-            expectedX,
-            splashWindow.getLocation().getX(),
-            2
-        );
+        assertEquals(expectedX, splashWindow.getLocation().getX(), 2        );
 
         assertEquals(
             expectedY,
