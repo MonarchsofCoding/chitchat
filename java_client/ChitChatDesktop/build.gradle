@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
 apply plugin: "jacoco" // Jacoco Code Coverage
+apply plugin: 'checkstyle'
 
 repositories {
     mavenCentral()
@@ -35,4 +36,9 @@ test {
 jacoco {
     toolVersion = "0.7.8"
     reportsDir = file("$buildDir/JacocoCoverageReport")
+}
+
+checkstyle {
+    toolVersion = "7.4"
+    sourceSets = [project.sourceSets.main]
 }

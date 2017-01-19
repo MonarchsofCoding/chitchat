@@ -10,6 +10,6 @@ public class MainTest {
 
     @Test
     public void sample() {
-        assertEquals( 64, 8*8);
+        assertEquals(64, 8*8);
     }
 }

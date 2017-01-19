@@ -63,3 +63,13 @@ def test(ctx):
         working_dir="/app",
         environment={}
     )
+
+    lxc.Docker.run(cli,
+        tag="{0}-dev".format("chitchat-javaclient"),
+        command='gradle check',
+        volumes=[
+            "{0}/ChitChatDesktop:/app".format(os.getcwd())
+        ],
+        working_dir="/app",
+        environment={}
+    )
