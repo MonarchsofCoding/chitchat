@@ -1,0 +1,28 @@
+# All JAR files
+*.jar
+
+# generated build folders
+build
+/gen
+
+# Java class files
+*.class
+
+# Project module file
+*.iml
+*.ipr
+*.iws
+
+# Gradle build related folders and files
+/build
+.gradle
+
+# Local properties and settings, and IDEA project files
+/local.properties
+.idea
+
+# OSX Files
+.DS_Store
+/captures
+.externalNativeBuild
+.editorconfig
