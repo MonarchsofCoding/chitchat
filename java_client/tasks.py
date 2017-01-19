@@ -6,10 +6,10 @@ from invoke_tools import lxc, system, vcs
 
 cli = Client(base_url='unix://var/run/docker.sock', timeout=600)
 
-system.Info.print_all()
+# system.Info.print_all()
 
 repo = vcs.Git()
-repo.print_all()
+# repo.print_all()
 
 
 @task
