@@ -1,0 +1,5 @@
+FROM elixir:slim
+
+RUN mkdir /app
+
+VOLUME /app
