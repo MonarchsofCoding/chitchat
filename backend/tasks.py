@@ -17,6 +17,8 @@ def test(ctx):
         tag="{0}-dev".format("chitchat-backend")
     )
 
+    cli.pull("postgres", "latest")
+
     postgres_container = lxc.Docker.run(
       cli,
       'postgres',
