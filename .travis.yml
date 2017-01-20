@@ -13,8 +13,12 @@ before_install:
   - sudo pip3 install --upgrade pip
   - sudo pip3 install --upgrade invoke-tools
 
+env:
+  - SERVICE=backend
+  - SERVICE=java_client
+
 script:
-  - cd java_client && invoke test
+  - cd $SERVICE && invoke test
 
 notifications:
   slack:
