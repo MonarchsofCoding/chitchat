@@ -35,6 +35,21 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String passRegXPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*+!=])" +
+                    "(?=\\S+$).{8,}$";
+                if(usernameInput.getText().toString().equals("")) {
+                    System.out.println("ERROR: the username cannot be empty.");
+                }
+                else if(passwordInput.getText().toString().equals("")){
+                    System.out.println("ERROR: the password cannot be empty.");
+                }
+                else if (!passwordInput.getText().toString().matches(passRegXPattern)) {
+                    System.out.println("ERROR: the password does not match with the desired password" +
+                        " pattern.");
+                }
+                else {
+                    System.out.println("OK.");
+                }
                 //TODO Aydin: HTTPS-JSON AsyncTask execute.
             }
         });

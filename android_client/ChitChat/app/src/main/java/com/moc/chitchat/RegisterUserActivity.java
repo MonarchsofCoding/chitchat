@@ -45,18 +45,35 @@ public class RegisterUserActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String passRegXPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*+!=])" +
                     "(?=\\S+$).{8,}$";
-                if(passwordInput.getText().equals(passwordReInput.getText().toString())) {
-                    Toast.makeText(registerContext, "The two password inputs do not match! ",
+                if(usernameInput.getText().toString().equals("")) {
+                    System.out.println("ERROR: the username cannot be empty.");
+                    Toast.makeText(registerContext, "The username cannot be empty.",
+                        Toast.LENGTH_LONG).show();
+                }
+                else if(passwordInput.getText().toString().equals("") ||
+                    passwordReInput.getText().toString().equals("")) {
+                    System.out.println("ERROR: the password cannot be empty.");
+                    Toast.makeText(registerContext, "The password cannot be empty.",
                         Toast.LENGTH_LONG).show();
                 }
                 else if (!passwordInput.getText().toString().matches(passRegXPattern)) {
+                    System.out.println("ERROR: the password does not match with the desired " +
+                        "password pattern.");
                     Toast.makeText(registerContext, "The password must have at least one " +
                         "digit, at least one lowercase, at least one upper case, at least one " +
                         "special character, no whitespaces, and must be at least 8 characters " +
                         "long.", Toast.LENGTH_LONG).show();
                 }
+
+                else if(!passwordInput.getText().toString().equals(passwordReInput.getText().toString())) {
+                    System.out.println("ERROR: The two password inputs do not match!");
+                    Toast.makeText(registerContext, "The two password inputs do not match!",
+                        Toast.LENGTH_LONG).show();
+                }
                 else {
+                    System.out.println("OK.");
                     //TODO Aydin: HTTPS-JSON AsyncTask execute.
+
                 }
             }
         });
