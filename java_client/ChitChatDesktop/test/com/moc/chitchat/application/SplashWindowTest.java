@@ -1,9 +1,10 @@
-package com.moc.chitchat.splash;
+package com.moc.chitchat.application;
 
-import static org.junit.Assert.*;
-import org.junit.*;
+import org.junit.Test;
 
 import java.awt.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * SplashWindowTest provides tests for SplashWindow
@@ -66,7 +67,7 @@ public class SplashWindowTest {
     public void testSplashWindowVisible() {
         SplashWindow splashWindow = new SplashWindow();
 
-        assertEquals(true, splashWindow.isVisible());
+        assertEquals(false, splashWindow.isVisible());
     }
 
 }
