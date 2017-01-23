@@ -6,10 +6,11 @@ import org.junit.*;
 /**
  *
  */
-public class MainTest {
+public class ApplicationTest {
 
     @Test
     public void sample() {
-        assertEquals( 64, 8*8);
+        assertEquals(64, 8*8);
     }
+
 }
