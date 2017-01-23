@@ -69,11 +69,20 @@ public class RegistrationView extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         switch (actionEvent.getActionCommand()) {
             case "register":
-                this.registrationController.registerUser(
-                    this.usernameField.getText(),
-                    String.valueOf(this.passwordField.getPassword()),
-                    String.valueOf(this.passwordCheckField.getPassword())
-                );
+                this.registerAction();
+        }
+    }
+
+    private void registerAction() {
+        try {
+            this.registrationController.registerUser(
+                this.usernameField.getText(),
+                String.valueOf(this.passwordField.getPassword()),
+                String.valueOf(this.passwordCheckField.getPassword())
+            );
+        } catch (Exception e) {
+            // Do validation or error handling. TODO: throw and catch more descriptive exceptions.
+            System.out.println("Exception caught!");
         }
     }
 }
