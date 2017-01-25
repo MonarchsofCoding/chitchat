@@ -2,15 +2,19 @@ defmodule ChitChat.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :chit_chat,
-     version: "0.0.1",
-     elixir: "~> 1.2",
-     elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     aliases: aliases(),
-     deps: deps()]
+    [
+    app: :chit_chat,
+    version: "0.0.1",
+    elixir: "~> 1.2",
+    elixirc_paths: elixirc_paths(Mix.env),
+    compilers: [:phoenix, :gettext] ++ Mix.compilers,
+    build_embedded: Mix.env == :prod,
+    start_permanent: Mix.env == :prod,
+    aliases: aliases(),
+    deps: deps(),
+    test_coverage: [tool: ExCoveralls],
+    preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+    ]
   end
 
   # Configuration for the OTP application.
@@ -19,7 +23,7 @@ defmodule ChitChat.Mixfile do
   def application do
     [mod: {ChitChat, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :comeonin]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,7 +41,11 @@ defmodule ChitChat.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:comeonin, "~> 3.0"},
+     {:excoveralls, "~> 0.5", only: :test},
+     {:distillery, "~> 1.0"},
+     {:credo, "~> 0.5", only: [:dev, :test]}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
