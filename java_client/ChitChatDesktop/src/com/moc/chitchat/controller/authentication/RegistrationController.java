@@ -40,20 +40,24 @@ public class RegistrationController {
 
         // Create the User object from parameters.
         UserModel user = this.userResolver.createUser(username, password, passwordCheck);
-
+        //System.out.println("kodas2222");
         // Validate the User object. Throw exception if invalid.
         this.userValidator.validate(user);
 
-        // Register the User object on the backend via a HTTP request.
-        HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/users", user);
+       // Register the User object on the backend via a HTTP request.
+        System.out.println("here");
 
+
+        HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/users", user);
         // Process HTTP response. Throw Exception if User invalid. Return void/true if Successful.
         if (response.getStatus() == 201) {
-            // Success, return True?
-        } else if (response.getStatus() == 400) {
-            // Validation failed or username taken.
+
+        } else if (response.getStatus() == 422) {
+
         } else {
+
             throw new Exception(String.format("HTTP/Server error %s", response.getStatus()));
         }
+
     }
 }
