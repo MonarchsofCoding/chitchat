@@ -54,11 +54,8 @@ public class UserValidator implements Validator {
         MapBindingResult errors = new MapBindingResult(new HashMap<String,String>(), UserModel.class.getName());
 
         this.validate(user, errors);
-
+        System.out.println("leleme   "+errors.hasFieldErrors("username"));
         if (errors.hasErrors()) {
-
-
-
 
             if(errors.hasFieldErrors("username"))JOptionPane.showMessageDialog(null,"The field of username is empty");
             else if(errors.hasFieldErrors("password"))JOptionPane.showMessageDialog(null,"Password is empty");
