@@ -1,4 +1,8 @@
 defmodule ChitChat.User do
+  @moduledoc """
+  provides user entity.
+  """
+
   use ChitChat.Web, :model
 
   schema "users" do
@@ -13,6 +17,7 @@ defmodule ChitChat.User do
   @doc """
   Builds a changeset based on the struct and params.
   """
+  @spec changeset(struct, {}) :: struct
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:username, :password])

@@ -7,7 +7,7 @@ defmodule ChitChat.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  test "lists all entries on index", %{conn: conn} do
+  test "lists all entries on index" do
 
     users = [
       User.changeset(%User{}, %{username: "alice", password: "password1234"}),
@@ -17,7 +17,7 @@ defmodule ChitChat.UserControllerTest do
     Enum.each(users, &Repo.insert!(&1))
 
     response = build_conn()
-    |> get(user_path(build_conn, :index))
+    |> get(user_path(build_conn(), :index))
     |> json_response(200)
 
     expected = %{
@@ -29,9 +29,6 @@ defmodule ChitChat.UserControllerTest do
 
     assert response == expected
 
-#    conn = get conn, user_path(conn, :index)
-
-#    assert json_response(conn, 200)["data"] == []
   end
 
   test "creates and renders User resource when data is valid", %{conn: conn} do

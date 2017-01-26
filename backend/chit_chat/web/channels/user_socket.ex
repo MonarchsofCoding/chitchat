@@ -19,6 +19,7 @@ defmodule ChitChat.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
+  @spec connect({}, Socket) :: Socket
   def connect(_params, socket) do
     {:ok, socket}
   end
@@ -33,5 +34,6 @@ defmodule ChitChat.UserSocket do
   #     ChitChat.Endpoint.broadcast("users_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
+  @spec id(Socket) :: nil
   def id(_socket), do: nil
 end
