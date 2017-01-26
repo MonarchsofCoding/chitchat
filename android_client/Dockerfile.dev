@@ -1,0 +1,11 @@
+FROM frekele/gradle:3.3-jdk8
+
+RUN mkdir /app
+
+VOLUME /app
+
+WORKDIR /app
+
+RUN echo "deb http://http.us.debian.org/debian/ testing non-free contrib main" >> /etc/apt/sources.list
+RUN apt-get update -y
+RUN apt-get install -y android-sdk
