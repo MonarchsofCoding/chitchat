@@ -37,7 +37,7 @@ def test(ctx):
     try:
       lxc.Docker.run(cli,
           tag="{0}-dev".format("chitchat-backend"),
-          command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix test"',
+          command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix test --color"',
           volumes=[
               "{0}/chit_chat:/app".format(os.getcwd())
           ],
@@ -47,6 +47,32 @@ def test(ctx):
             postgres_container.get('Id'): "postgres"
           }
       )
+
+      lxc.Docker.run(cli,
+         tag="{0}-dev".format("chitchat-backend"),
+         command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix coveralls.html"',
+         volumes=[
+           "{0}/chit_chat:/app".format(os.getcwd())
+         ],
+         working_dir="/app",
+         environment={},
+         links={
+           postgres_container.get('Id'): "postgres"
+         }
+       )
+
+      lxc.Docker.run(cli,
+         tag="{0}-dev".format("chitchat-backend"),
+         command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix credo"',
+         volumes=[
+           "{0}/chit_chat:/app".format(os.getcwd())
+         ],
+         working_dir="/app",
+         environment={},
+         links={
+           postgres_container.get('Id'): "postgres"
+         }
+       )
     finally:
       cli.stop(postgres_container.get('Id'))
       cli.remove_container(postgres_container.get('Id'))
