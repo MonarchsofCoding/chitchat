@@ -16,6 +16,7 @@ before_install:
 env:
   - SERVICE=backend
   - SERVICE=java_client
+  - SERVICE=android_client
 
 script:
   - cd $SERVICE && invoke test
