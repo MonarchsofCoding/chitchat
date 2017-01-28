@@ -43,7 +43,7 @@ def test(ctx):
           ],
           working_dir="/app",
           environment={
-            "MIX_ENV": "TEST"
+            "MIX_ENV": "test"
           },
           links={
             postgres_container.get('Id'): "postgres"
@@ -58,7 +58,7 @@ def test(ctx):
          ],
          working_dir="/app",
          environment={
-          "MIX_ENV": "TEST"
+          "MIX_ENV": "test"
          },
          links={
            postgres_container.get('Id'): "postgres"
@@ -73,7 +73,7 @@ def test(ctx):
          ],
          working_dir="/app",
          environment={
-          "MIX_ENV": "TEST"
+          "MIX_ENV": "test"
          },
          links={
            postgres_container.get('Id'): "postgres"
