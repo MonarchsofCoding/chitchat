@@ -31,3 +31,8 @@ def test(ctx):
         working_dir="/app",
         environment={}
     )
+
+@task
+def publish_test_artifacts(ctx):
+    # TODO
+    pass
