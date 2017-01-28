@@ -44,29 +44,11 @@ def test(ctx):
         tag="{0}-dev".format("chitchat-javaclient")
     )
 
-    lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-javaclient"),
-        command='/bin/bash -c "vnc4server -geometry 1920x1080 && export DISPLAY=:1 && gradle test"',
-        volumes=[
-            "{0}/ChitChatDesktop:/app".format(os.getcwd())
-        ],
-        working_dir="/app",
-        environment={}
-    )
+    vnc = "vnc4server -geometry 1920x1080 && export DISPLAY=:1"
 
     lxc.Docker.run(cli,
         tag="{0}-dev".format("chitchat-javaclient"),
-        command='gradle jacocoTestReport',
-        volumes=[
-            "{0}/ChitChatDesktop:/app".format(os.getcwd())
-        ],
-        working_dir="/app",
-        environment={}
-    )
-
-    lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-javaclient"),
-        command='gradle check',
+        command='/bin/bash -c "{0} && gradle test && gradle jacocoTestReport && gradle check"'.format(vnc),
         volumes=[
             "{0}/ChitChatDesktop:/app".format(os.getcwd())
         ],
