@@ -21,3 +21,4 @@ chit_chat/config/prod.secret.exs
 
 terraform/*.json
 terraform/**/*.tfstate
+terraform/**/*.tfstate.backup
