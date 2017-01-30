@@ -5,23 +5,25 @@ services:
   database:
     image: postgres:latest
     environment:
-      POSTGRES_USER: a
-      POSTGRES_PASSWORD: a
-      POSTGRES_DB: a
+      POSTGRES_USER: chit_chat_dev
+      POSTGRES_PASSWORD: chit_chat_dev
+      POSTGRES_DB: chit_chat_dev
 
   chitchat_backend:
     build:
       context: ./
       dockerfile: Dockerfile.app
     environment:
-      DB_HOST: postgres
-      DB_USER: a
-      DB_PASSWORD: a
-      DB_NAME: a
+      SECRET_KEY_BASE: G9XBaZMFhtWDxAaowHCBrrDVq8xVB3sfro8xiGnFXfidldnvf
+      DATABSE_HOSTNAME: postgres
+      DATABASE_USERNAME: chit_chat_dev
+      DATABASE_PASSWORD: chit_chat_dev
+      DATABASE_NAME: chit_chat_dev
+      DATABASE_PORT: 5432
     ports:
       - 80:80
       - 443:443
     links:
       - database:postgres
     depends_on:
-      - postgres
+      - database

@@ -29,6 +29,12 @@ def build(ctx):
       }
   )
 
+  # lxc.Docker.build(cli,
+  #     dockerfile='Dockerfile.app',
+  #     tag="chitchat-backend"
+  # )
+
+
 
 
 @task

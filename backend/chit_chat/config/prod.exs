@@ -13,8 +13,8 @@ use Mix.Config
 # which you typically run after static files are built.
 config :chit_chat, ChitChat.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json"
+  url: [host: "example.com", port: 80]
+  # cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -56,6 +56,15 @@ config :logger, level: :info
 #     config :chit_chat, ChitChat.Endpoint, server: true
 #
 
-# Finally import the config/prod.secret.exs
-# which should be versioned separately.
-import_config "prod.secret.exs"
+config :chit_chat, ChitChat.Endpoint,
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
+
+# Configure your database
+config :chit_chat, ChitChat.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("DATABASE_USERNAME"),
+  password: System.get_env("DATABASE_PASSWORD"),
+  database: System.get_env("DATABASE_NAME"),
+  hostname: System.get_env("DATABASE_HOSTNAME"),
+  port: System.get_env("DATABASE_PORT"),
+  size: 20 # The amount of database connections in the pool
