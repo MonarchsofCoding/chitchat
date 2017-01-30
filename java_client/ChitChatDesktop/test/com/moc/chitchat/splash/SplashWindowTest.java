@@ -30,27 +30,6 @@ public class SplashWindowTest {
         assertEquals(resY/3, splashWindow.getSize().getHeight(), 0);
     }
 
-    @Test
-    public void testSplashWindowLocationCenter() {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
-
-        SplashWindow splashWindow = new SplashWindow();
-        Dimension splashWindowSize = splashWindow.getSize();
-
-        double expectedX = width/2 - (splashWindowSize.getWidth()/2);
-        double expectedY = height/2 - (splashWindowSize.getHeight()/2);
-
-        assertEquals(expectedX, splashWindow.getLocation().getX(), 2        );
-
-        assertEquals(
-            expectedY,
-            splashWindow.getLocation().getY(),
-            2
-        );
-    }
-
     @Test()
     public void testSplashWindowBackground() {
         SplashWindow splashWindow = new SplashWindow();
