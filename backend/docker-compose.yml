@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: a
+      POSTGRES_PASSWORD: a
+      POSTGRES_DB: a
+
+  chitchat_backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.app
+    environment:
+      DB_HOST: postgres
+      DB_USER: a
+      DB_PASSWORD: a
+      DB_NAME: a
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - database:postgres
+    depends_on:
+      - postgres
