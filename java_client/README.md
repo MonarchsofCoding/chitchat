@@ -45,3 +45,25 @@ java -jar build/libs/ChitChatDesktop.jar
 ```
 invoke build
 ```
+
+### Running the built JAR
+
+#### In development mode
+
+```
+java -jar build/libs/ChitChatDesktop.jar dev
+```
+
+
+#### In testing mode
+
+```
+java -jar build/libs/ChitChatDesktop.jar test
+```
+
+
+#### In production mode (default)
+
+```
+java -jar build/libs/ChitChatDesktop.jar
+```

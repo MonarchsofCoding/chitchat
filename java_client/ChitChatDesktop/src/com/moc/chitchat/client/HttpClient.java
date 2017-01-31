@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.Configuration;
 import org.json.JSONString;
 import org.springframework.stereotype.Component;
 
@@ -13,15 +14,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class HttpClient {
 
-    private String baseApiAddress;
+    private Configuration configuration;
 
-    HttpClient() {
-        this.baseApiAddress = "http://localhost"; // TODO: Set up global configuration
+
+    HttpClient(Configuration configuration) {
+        this.configuration = configuration;
     }
 
     public HttpResponse<JsonNode> post(String uri, JSONString object) throws UnirestException {
         return Unirest
-            .post(baseApiAddress + uri)
+            .post(configuration.getBackendAddress() + uri)
             .header("accept", "application/json")
             .body(object.toJSONString().getBytes())
             .asJson()
