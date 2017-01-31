@@ -13,29 +13,9 @@ def build(ctx):
   Builds a Docker container for the Backend
   """
   lxc.Docker.build(cli,
-      dockerfile='Dockerfile.dev',
-      tag="{0}-dev".format("chitchat-backend")
+      dockerfile='Dockerfile.app',
+      tag="chitchat-backend"
   )
-
-  lxc.Docker.run(cli,
-      tag="{0}-dev".format("chitchat-backend"),
-      command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix release.init && mix release"',
-      volumes=[
-          "{0}/chit_chat:/app".format(os.getcwd())
-      ],
-      working_dir="/app",
-      environment={
-        "MIX_ENV": "prod"
-      }
-  )
-
-  # lxc.Docker.build(cli,
-  #     dockerfile='Dockerfile.app',
-  #     tag="chitchat-backend"
-  # )
-
-
-
 
 @task
 def test(ctx):

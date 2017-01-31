@@ -2,4 +2,6 @@ FROM elixir:latest
 
 RUN mkdir /app
 
+WORKDIR /app
+
 VOLUME /app

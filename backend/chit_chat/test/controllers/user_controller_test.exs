@@ -32,26 +32,26 @@ defmodule ChitChat.UserControllerTest do
   end
 
   test "creates and renders User resource when data is valid", %{conn: conn} do
-    conn = post conn, user_path(conn, :create), user: %{username: "bob", password: "password123"}
+    conn = post conn, user_path(conn, :create), %{username: "bob", password: "password123"}
 
     assert json_response(conn, 201)["data"]["username"]
     assert Repo.get_by(User, %{username: "bob"})
   end
 
   test "does not create User resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, user_path(conn, :create), user: %{}
+    conn = post conn, user_path(conn, :create), %{}
 
     assert json_response(conn, 422)["errors"] != %{}
   end
 
   test "does not create duplicate User resource and renders errors when username is already taken", %{conn: conn} do
 
-    conn = post conn, user_path(conn, :create), user: %{
+    conn = post conn, user_path(conn, :create), %{
       username: "bob",
       password: "password123"
     }
 
-    conn = post conn, user_path(conn, :create), user: %{
+    conn = post conn, user_path(conn, :create), %{
       username: "bob",
       password: "password1234"
     }
