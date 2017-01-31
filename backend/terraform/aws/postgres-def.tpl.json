@@ -1,0 +1,14 @@
+[
+  {
+    "name": "postgres-db",
+    "image": "postgres:latest",
+    "cpu": 10,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 5432
+      }
+    ]
+  }
+]
