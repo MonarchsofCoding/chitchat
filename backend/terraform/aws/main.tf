@@ -2,9 +2,13 @@ provider "aws" {
     region = "eu-west-1"
 }
 
+## AWS ECS - Elastic Container Service
+
 resource "aws_ecs_cluster" "chit_chat" {
   name = "chit-chat"
 }
+
+### ECS ChitChat App containers
 
 data "template_file" "ecs_chit-chat_def" {
   template = "${file("chit-chat-def.tpl.json")}"
@@ -13,6 +17,37 @@ data "template_file" "ecs_chit-chat_def" {
     world = "moon"
   }
 }
+
+resource "aws_ecs_task_definition" "chit_chat" {
+  family = "chit-chat"
+  container_definitions = "${data.template_file.ecs_chit-chat_def.rendered}"
+}
+
+resource "aws_ecs_service" "chat_chat" {
+  name = "chit-chat"
+  cluster = "${aws_ecs_cluster.chit_chat.id}"
+  task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
+  desired_count = 3
+  iam_role = "${aws_iam_role.ecs_service.arn}"
+
+  placement_strategy {
+    type = "binpack"
+    field = "cpu"
+  }
+
+  load_balancer {
+    target_group_arn = "${aws_alb_target_group.chit_chat.id}"
+    container_name   = "chit-chat"
+    container_port   = "80"
+  }
+
+  depends_on = [
+    "aws_iam_role_policy.ecs_service",
+    "aws_alb_listener.front_end",
+  ]
+}
+
+### ECS Postgres containers
 
 data "template_file" "ecs_postgres_def" {
   template = "${file("postgres-def.tpl.json")}"
@@ -47,35 +82,7 @@ resource "aws_ecs_service" "postgres" {
   }*/
 }
 
-resource "aws_ecs_task_definition" "chit_chat" {
-  family = "chit-chat"
-  container_definitions = "${data.template_file.ecs_chit-chat_def.rendered}"
-}
-
-resource "aws_ecs_service" "chat_chat" {
-  name = "chit-chat"
-  cluster = "${aws_ecs_cluster.chit_chat.id}"
-  task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
-  desired_count = 3
-  iam_role = "${aws_iam_role.ecs_service.arn}"
-  depends_on = ["aws_iam_role_policy.ecs_service"]
-
-  placement_strategy {
-    type = "binpack"
-    field = "cpu"
-  }
-
-  load_balancer {
-    target_group_arn = "${aws_alb_target_group.chit_chat.id}"
-    container_name   = "chit-chat"
-    container_port   = "80"
-  }
-
-  depends_on = [
-    "aws_iam_role_policy.ecs_service",
-    "aws_alb_listener.front_end",
-  ]
-}
+### ECS IAM Roles
 
 resource "aws_iam_role" "ecs_service" {
   name = "tf_example_ecs_role"
@@ -167,6 +174,21 @@ resource "aws_autoscaling_group" "chit_chat" {
   launch_configuration = "${aws_launch_configuration.app.name}"
 }
 
+data "template_file" "user_data" {
+  template = "${file("user-data.sh")}"
+
+  vars {
+    aws_region         = "eu-west-1"
+    ecs_cluster_name   = "chit-chat"
+    ecs_log_level      = "info"
+    ecs_agent_version  = "latest"
+  }
+}
+
+output "user_data" {
+  value = "${data.template_file.user_data.rendered}"
+}
+
 resource "aws_launch_configuration" "app" {
   security_groups = [
     "${aws_security_group.instance_sg.id}",
@@ -175,10 +197,69 @@ resource "aws_launch_configuration" "app" {
   image_id                    = "ami-48f9a52e"
   instance_type               = "t2.small"
   associate_public_ip_address = true
+  iam_instance_profile        = "${aws_iam_instance_profile.app.name}"
+  user_data = "${data.template_file.user_data.rendered}"
 
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_iam_instance_profile" "app" {
+  name  = "tf-ecs-instprofile"
+  roles = ["${aws_iam_role.app_instance.name}"]
+}
+
+resource "aws_iam_role_policy" "app_instance" {
+  name = "tf_app_policy"
+  role = "${aws_iam_role.app_instance.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecs:CreateCluster",
+        "ecs:DeregisterContainerInstance",
+        "ecs:DiscoverPollEndpoint",
+        "ecs:Poll",
+        "ecs:RegisterContainerInstance",
+        "ecs:StartTelemetrySession",
+        "ecs:Submit*",
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "app_instance" {
+  name = "tf-ecs-example-instance-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
 }
 
 ## Security Groups
@@ -242,6 +323,10 @@ resource "aws_alb" "chit_chat" {
   name            = "tf-chit-chat-alb-ecs"
   subnets         = ["${aws_subnet.chit_chat.*.id}"]
   security_groups = ["${aws_security_group.alb_sg.id}"]
+
+  provisioner "local-exec" {
+    command = "sleep 10"
+  }
 }
 
 resource "aws_alb_listener" "front_end" {
