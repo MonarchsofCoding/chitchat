@@ -1,7 +1,10 @@
 package com.moc.chitchat;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import javax.inject.Singleton;
 import javax.net.ssl.HttpsURLConnection;
@@ -40,9 +43,19 @@ public class RegisterController {
             throw new MessageException("ERROR: The two password inputs do not match!\n");
         }
         else {
-            System.out.print("OK.\n");
-            //TODO Aydin: Create JSON object and call the function
-            //TODO Aydin: IF the registration is successful, store the user somehow
+            System.out.print("Input Check for Registration: OK.\n");
+
+            JSONObject registerObject = new JSONObject();
+            JSONObject returnObject = new JSONObject();
+            registerObject.put("username",usernameInput);
+            registerObject.put("password",passwordInput);
+            ServerComms comms = new ServerComms(Resources.getSystem().getString(R.string.server_url));
+            if (comms.setRequestType("POST")) {
+                returnObject = comms.requestWithJSON(registerObject);
+                //TODO Aydin: Handle the response code and the message somehow (maybe a JSONObject and String tuple)
+                //TODO Everybody else: Below code is a debug print code. Just to see what is the returning JSON
+                System.out.println(returnObject);
+            }
         }
     }
 }

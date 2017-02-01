@@ -1,19 +1,4 @@
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
-  }
-}
-
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco-android'
-apply plugin: 'checkstyle'
-
-checkstyle {
-    toolVersion = "7.4"
-}
 
 android {
     compileSdkVersion 25
@@ -32,6 +17,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        development {
+            resValue "string", "server_url", "http://localhost"
+        }
+        beta {
+            resValue "string", "server_url", "https://beta.chitchat.moc.com"
+        }
+        production {
+            resValue "string", "server_url", "https://chitchat.moc.com"
+        }
+    }
 }
 
 dependencies {
@@ -45,35 +41,3 @@ dependencies {
     testCompile "org.mockito:mockito-core:2.+"
 }
 
-tasks.withType(Test) {
-    testLogging {
-        // set options for log level LIFECYCLE
-        events "passed", "skipped", "failed", "standardOut"
-        showExceptions true
-        exceptionFormat "full"
-        showCauses true
-        showStackTraces true
-
-        // set options for log level DEBUG and INFO
-        debug {
-            events "started", "passed", "skipped", "failed", "standardOut", "standardError"
-            exceptionFormat "full"
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
-    }
-}
-
-jacoco {
-    toolVersion = "0.7.8"
-    reportsDir = file("$buildDir/JacocoCoverageReport")
-}

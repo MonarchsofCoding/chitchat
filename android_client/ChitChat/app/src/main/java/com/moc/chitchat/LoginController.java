@@ -11,13 +11,11 @@ import dagger.Provides;
  */
 
 @Module
+@Singleton
 public class LoginController {
 
-    @Provides
-    @Singleton
-    public LoginController LoginController() {
-        return new LoginController();
-    }
+    public LoginController() {}
+
     public void loginUser(String username, String password) {
         String passRegXPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*+!=])" +
             "(?=\\S+$).{8,}$";
@@ -32,8 +30,18 @@ public class LoginController {
                 " pattern.\n");
         }
         else {
-            System.out.print("OK.\n");
+            System.out.print("Input Check for Login: OK.\n");
         }
-        //TODO Aydin: HTTPS-JSON AsyncTask execute.
+        /* TODO Aydin: Lift off the comment when the server is ready, and be sure of the JSONObject structure
+        JSONObject registerObject = new JSONObject();
+        JSONObject returnObject = new JSONObject();
+        registerObject.put("username",usernameInput);
+        registerObject.put("password",passwordInput);
+        ServerComms comms = new ServerComms();
+        if (comms.setRequestType("POST")) {
+            returnObject = comms.requestWithJSON(registerObject);
+            //TODO Aydin: Handle the response code and the message somehow (maybe a JSONObject and String tuple)
+        }
+        */
     }
 }
