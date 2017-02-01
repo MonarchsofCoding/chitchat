@@ -9,6 +9,24 @@
       {
         "containerPort": 5432
       }
+    ],
+    "environment": [
+      {
+        "Name": "SERVICE_5432_NAME",
+        "Value": "postgres"
+      },
+      {
+        "Name" : "POSTGRES_USER",
+        "Value": "${db_username}"
+      },
+      {
+        "Name" : "POSTGRES_PASSWORD",
+        "Value": "${db_password}"
+      },
+      {
+        "Name" : "POSTGRES_DB",
+        "Value": "${db_name}"
+      }
     ]
   }
 ]

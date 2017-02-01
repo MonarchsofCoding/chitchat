@@ -1,7 +1,7 @@
 [
   {
     "name": "chit-chat",
-    "image": "dockercloud/hello-world:latest",
+    "image": "vjftw/chitchat-backend-test",
     "cpu": 50,
     "memory": 512,
     "essential": true,
@@ -16,6 +16,38 @@
       }
     ],
     "environment": [
+      {
+        "Name": "SECRET_KEY_BASE",
+        "Value": "${secret_key_base}"
+      },
+      {
+        "Name": "DATABASE_HOSTNAME",
+        "Value": "postgres.servicediscovery.internal"
+      },
+      {
+        "Name": "DATABASE_USERNAME",
+        "Value": "${database_username}"
+      },
+      {
+        "Name": "DATABASE_PASSWORD",
+        "Value": "${database_password}"
+      },
+      {
+        "Name": "DATABASE_NAME",
+        "Value": "${database_name}"
+      },
+      {
+        "Name": "DATABASE_PORT",
+        "Value": "5432"
+      },
+      {
+        "Name": "PORT",
+        "Value": "80"
+      },
+      {
+        "Name": "MIX_ENV",
+        "Value": "prod"
+      }
     ]
   }
 ]

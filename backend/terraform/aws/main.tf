@@ -1,11 +1,11 @@
 provider "aws" {
-    region = "eu-west-1"
+    region = "${var.aws_region}"
 }
 
 ## AWS ECS - Elastic Container Service
 
-resource "aws_ecs_cluster" "chit_chat" {
-  name = "chit-chat"
+resource "aws_ecs_cluster" "app" {
+  name = "${var.cluster_name}"
 }
 
 ### ECS ChitChat App containers
@@ -13,8 +13,10 @@ resource "aws_ecs_cluster" "chit_chat" {
 data "template_file" "ecs_chit-chat_def" {
   template = "${file("chit-chat-def.tpl.json")}"
   vars {
-    hello = "goodnight"
-    world = "moon"
+    secret_key_base = "${var.backend_secret_key_base}"
+    database_username = "${var.backend_database_username}"
+    database_password = "${var.backend_database_password}"
+    database_name = "${var.backend_database_name}"
   }
 }
 
@@ -25,7 +27,7 @@ resource "aws_ecs_task_definition" "chit_chat" {
 
 resource "aws_ecs_service" "chat_chat" {
   name = "chit-chat"
-  cluster = "${aws_ecs_cluster.chit_chat.id}"
+  cluster = "${aws_ecs_cluster.app.id}"
   task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
   desired_count = 3
   iam_role = "${aws_iam_role.ecs_service.arn}"
@@ -36,7 +38,7 @@ resource "aws_ecs_service" "chat_chat" {
   }
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.chit_chat.id}"
+    target_group_arn = "${aws_alb_target_group.app.id}"
     container_name   = "chit-chat"
     container_port   = "80"
   }
@@ -52,8 +54,9 @@ resource "aws_ecs_service" "chat_chat" {
 data "template_file" "ecs_postgres_def" {
   template = "${file("postgres-def.tpl.json")}"
   vars {
-    hello = "goodnight"
-    world = "moon"
+    db_username = "${var.backend_database_username}"
+    db_password = "${var.backend_database_password}"
+    db_name = "${var.backend_database_name}"
   }
 }
 
@@ -64,7 +67,7 @@ resource "aws_ecs_task_definition" "postgres" {
 
 resource "aws_ecs_service" "postgres" {
   name = "postgres"
-  cluster = "${aws_ecs_cluster.chit_chat.id}"
+  cluster = "${aws_ecs_cluster.app.id}"
   task_definition = "${aws_ecs_task_definition.postgres.arn}"
   desired_count = 1
   /*iam_role = "${aws_iam_role.ecs_service.arn}"*/
@@ -133,41 +136,48 @@ EOF
 
 data "aws_availability_zones" "available" {}
 
-resource "aws_vpc" "chit_chat" {
+resource "aws_vpc" "app" {
   cidr_block = "10.0.0.0/16"
 }
 
-resource "aws_subnet" "chit_chat" {
+resource "aws_subnet" "app" {
   count             = "3"
-  cidr_block        = "${cidrsubnet(aws_vpc.chit_chat.cidr_block, 8, count.index)}"
+  cidr_block        = "${cidrsubnet(aws_vpc.app.cidr_block, 8, count.index)}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
-  vpc_id            = "${aws_vpc.chit_chat.id}"
+  vpc_id            = "${aws_vpc.app.id}"
 }
 
-resource "aws_internet_gateway" "chit_chat_gateway" {
-  vpc_id = "${aws_vpc.chit_chat.id}"
+resource "aws_internet_gateway" "app" {
+  vpc_id = "${aws_vpc.app.id}"
 }
 
-resource "aws_route_table" "chit_chat_route_table" {
-  vpc_id = "${aws_vpc.chit_chat.id}"
+resource "aws_route_table" "app" {
+  vpc_id = "${aws_vpc.app.id}"
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.chit_chat_gateway.id}"
+    gateway_id = "${aws_internet_gateway.app.id}"
   }
 }
 
 resource "aws_route_table_association" "a" {
   count          = "3"
-  subnet_id      = "${element(aws_subnet.chit_chat.*.id, count.index)}"
-  route_table_id = "${aws_route_table.chit_chat_route_table.id}"
+  subnet_id      = "${element(aws_subnet.app.*.id, count.index)}"
+  route_table_id = "${aws_route_table.app.id}"
+}
+
+## Route53
+resource "aws_route53_zone" "service_discovery" {
+  name = "servicediscovery.internal"
+  vpc_id = "${aws_vpc.app.id}"
+  force_destroy = true
 }
 
 ## Compute
 
 resource "aws_autoscaling_group" "chit_chat" {
   name                 = "tf-chit-chat-asg"
-  vpc_zone_identifier  = ["${aws_subnet.chit_chat.*.id}"]
+  vpc_zone_identifier  = ["${aws_subnet.app.*.id}"]
   min_size             = "1"
   max_size             = "3"
   desired_capacity     = "2"
@@ -178,8 +188,8 @@ data "template_file" "user_data" {
   template = "${file("user-data.sh")}"
 
   vars {
-    aws_region         = "eu-west-1"
-    ecs_cluster_name   = "chit-chat"
+    aws_region         = "${var.aws_region}"
+    ecs_cluster_name   = "${aws_ecs_cluster.app.name}"
     ecs_log_level      = "info"
     ecs_agent_version  = "latest"
   }
@@ -203,6 +213,10 @@ resource "aws_launch_configuration" "app" {
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [
+    "aws_ecs_cluster.app"
+  ]
 }
 
 resource "aws_iam_instance_profile" "app" {
@@ -233,7 +247,9 @@ resource "aws_iam_role_policy" "app_instance" {
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "route53:*",
+        "route53domains:*"
       ],
       "Resource": "*"
     }
@@ -267,7 +283,7 @@ EOF
 resource "aws_security_group" "alb_sg" {
   description = "Controls access to and from the ALB"
 
-  vpc_id = "${aws_vpc.chit_chat.id}"
+  vpc_id = "${aws_vpc.app.id}"
   name   = "tf-chit-chat-alb-sg"
 
   ingress {
@@ -290,7 +306,7 @@ resource "aws_security_group" "alb_sg" {
 
 resource "aws_security_group" "instance_sg" {
   description = "Controls access to nodes in ECS cluster"
-  vpc_id      = "${aws_vpc.chit_chat.id}"
+  vpc_id      = "${aws_vpc.app.id}"
   name        = "tf-chit-chat-ecs-sg"
 
   ingress {
@@ -312,16 +328,16 @@ resource "aws_security_group" "instance_sg" {
 }
 
 ## Application Load Balancer
-resource "aws_alb_target_group" "chit_chat" {
+resource "aws_alb_target_group" "app" {
   name     = "tf-chit-chat-alb-tg"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = "${aws_vpc.chit_chat.id}"
+  vpc_id   = "${aws_vpc.app.id}"
 }
 
-resource "aws_alb" "chit_chat" {
+resource "aws_alb" "app" {
   name            = "tf-chit-chat-alb-ecs"
-  subnets         = ["${aws_subnet.chit_chat.*.id}"]
+  subnets         = ["${aws_subnet.app.*.id}"]
   security_groups = ["${aws_security_group.alb_sg.id}"]
 
   provisioner "local-exec" {
@@ -330,12 +346,12 @@ resource "aws_alb" "chit_chat" {
 }
 
 resource "aws_alb_listener" "front_end" {
-  load_balancer_arn = "${aws_alb.chit_chat.id}"
+  load_balancer_arn = "${aws_alb.app.id}"
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.chit_chat.id}"
+    target_group_arn = "${aws_alb_target_group.app.id}"
     type             = "forward"
   }
 }
