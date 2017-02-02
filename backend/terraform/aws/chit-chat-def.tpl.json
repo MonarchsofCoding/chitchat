@@ -17,12 +17,12 @@
     ],
     "environment": [
       {
-        "Name": "SECRET_KEY_BASE",
-        "Value": "${secret_key_base}"
+        "Name": "ECS_DNS_POSTGRES",
+        "Value": "${ecs_postgres_name}"
       },
       {
-        "Name": "DATABASE_HOSTNAME",
-        "Value": "postgres.servicediscovery.internal"
+        "Name": "SECRET_KEY_BASE",
+        "Value": "${secret_key_base}"
       },
       {
         "Name": "DATABASE_USERNAME",
@@ -35,10 +35,6 @@
       {
         "Name": "DATABASE_NAME",
         "Value": "${database_name}"
-      },
-      {
-        "Name": "DATABASE_PORT",
-        "Value": "5432"
       },
       {
         "Name": "PORT",

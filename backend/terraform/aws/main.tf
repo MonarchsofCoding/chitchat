@@ -17,6 +17,7 @@ data "template_file" "ecs_chit-chat_def" {
     database_username = "${var.backend_database_username}"
     database_password = "${var.backend_database_password}"
     database_name = "${var.backend_database_name}"
+    ecs_postgres_name = "${var.backend_database_ecs_name}"
   }
 }
 
