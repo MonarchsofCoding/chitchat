@@ -1,11 +1,10 @@
 package com.moc.chitchat.model;
 
-import org.json.JSONObject;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by Ozhan on 01/02/2017.
+ *  UserModelTest provides tests for the UserModel
  */
 public class UserModelTest {
 
