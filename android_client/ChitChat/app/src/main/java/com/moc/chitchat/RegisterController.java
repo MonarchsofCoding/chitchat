@@ -56,6 +56,7 @@ public class RegisterController {
                     System.out.println(e.getStackTrace());
                 }
             }
+
         }
         return toReturn;
     }

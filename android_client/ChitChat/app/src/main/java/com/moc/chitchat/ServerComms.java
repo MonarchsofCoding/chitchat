@@ -97,5 +97,26 @@ public class ServerComms {
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
     }
+
+    /*TODO Aydin: after presentation swap AsyncTask with this
+    String url = "http://10.0.2.2:4000/api/v1/users";
+    JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, registerObject, new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject response) {
+            System.out.println(response.toString());
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.printStackTrace();
+        }
+    });
+    Volley.newRequestQueue(registerContext).add(jsonRequest);
+    */
 }

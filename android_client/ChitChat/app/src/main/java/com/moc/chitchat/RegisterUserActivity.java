@@ -81,8 +81,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                     System.out.println("GUI Input Check for Registration Request: OK.");
                     try {
                         JSONObject registerObject = new JSONObject();
-                        registerObject.put("username",usernameInput);
-                        registerObject.put("password",passwordInput);
+                        registerObject.put("username",usernameInput.getText().toString());
+                        registerObject.put("password",passwordInput.getText().toString());
                         if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString(),registerObject)) {
                             Toast.makeText(registerContext, "The registration process is successfull.", Toast.LENGTH_LONG).show();
                             thisActivity.finish();
@@ -92,11 +92,9 @@ public class RegisterUserActivity extends AppCompatActivity {
                         System.out.println(e.toString());
                         Toast.makeText(registerContext, "Something went wrong on our side. Try again.", Toast.LENGTH_LONG).show();
                     }
-
                 }
             }
         });
-
     }
 
     @Override
