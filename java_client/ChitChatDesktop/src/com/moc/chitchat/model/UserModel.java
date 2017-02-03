@@ -42,17 +42,6 @@ public class UserModel implements JSONString {
     }
 
     /**
-     * setUsername sets the username of the User.
-     * @param username String the new username.
-     * @return UserModel the User that was mutated.
-     */
-    public UserModel setUsername(String username) {
-        this.username = username;
-
-        return this;
-    }
-
-    /**
      * getPassword returns the password of the User.
      * @return String the password.
      */
