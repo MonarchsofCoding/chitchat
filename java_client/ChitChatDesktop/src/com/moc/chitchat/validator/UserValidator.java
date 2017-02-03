@@ -26,11 +26,11 @@ public class UserValidator implements Validator {
             errors.rejectValue("username", "field.required");
         }
 
-        if (user.getPassword().isEmpty()) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
             errors.rejectValue("password", "field.required");
         }
 
-        if (user.getPasswordCheck().equals(user.getPassword())) {
+        if (user.getPasswordCheck() == null || user.getPasswordCheck().equals(user.getPassword())) {
             errors.rejectValue("passwordCheck", "password.mismatch");
         }
     }
