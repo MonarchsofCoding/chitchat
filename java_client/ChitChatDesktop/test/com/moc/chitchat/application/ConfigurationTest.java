@@ -22,7 +22,7 @@ public class ConfigurationTest {
 
         configuration.setDevelopmentMode();
 
-        assertEquals(configuration.getBackendAddress(), "http://localhost");
+        assertEquals(configuration.getBackendAddress(), "http://localhost:4000");
     }
 
     @Test

@@ -10,7 +10,7 @@ public class Configuration {
 
     private static final String PROD_BACKEND_ADDRESS = "https://chitchat.moc.com";
     private static final String TEST_BACKEND_ADDRESS = "https://beta.chitchat.moc.com";
-    private static final String DEV_BACKEND_ADDRESS = "http://localhost";
+    private static final String DEV_BACKEND_ADDRESS = "http://localhost:4000";
 
     private String backendAddress;
 

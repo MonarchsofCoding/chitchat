@@ -25,7 +25,7 @@ public class HttpClient {
         return Unirest
             .post(configuration.getBackendAddress() + uri)
             .header("accept", "application/json")
-            .body(object.toJSONString().getBytes())
+            .body(object.toJSONString())
             .asJson()
         ;
     }

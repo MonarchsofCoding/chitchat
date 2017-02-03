@@ -1,8 +1,12 @@
 package com.moc.chitchat.validator;
 
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.MapBindingResult;
@@ -30,7 +34,7 @@ public class UserValidator implements Validator {
             errors.rejectValue("password", "field.required");
         }
 
-        if (user.getPasswordCheck() == null || user.getPasswordCheck().equals(user.getPassword())) {
+        if (user.getPasswordCheck() == null || !user.getPasswordCheck().equals(user.getPassword())) {
             errors.rejectValue("passwordCheck", "password.mismatch");
         }
     }
@@ -42,5 +46,33 @@ public class UserValidator implements Validator {
         if (errors.hasErrors()) {
             throw new ValidationException(errors);
         }
+
+    }
+
+    public void throwErrorsFromResponse(HttpResponse<JsonNode> response) throws ValidationException
+    {
+        JSONObject serverErrors = response.getBody().getObject().getJSONObject("errors");
+
+        MapBindingResult validationErrors = new MapBindingResult(new HashMap<String,String>(), UserModel.class.getName());
+
+
+        if (!serverErrors.isNull("username")) {
+            JSONArray usernameErrors = serverErrors.getJSONArray("username");
+
+            for (Object errorString:usernameErrors) {
+                validationErrors.rejectValue("username", errorString.toString());
+            }
+        }
+
+        if (!serverErrors.isNull("password")){
+            JSONArray passwordErrors = serverErrors.getJSONArray("password");
+
+            for (Object errorString:passwordErrors){
+                validationErrors.rejectValue("password", errorString.toString());
+            }
+        }
+        throw new ValidationException(validationErrors);
+
+
     }
 }
