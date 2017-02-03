@@ -34,7 +34,7 @@ public class LoginTest {
         passwordTyped = "Abc123!?";
         lController.loginUser(usernameTyped,passwordTyped);
 
-        String expectedOutput  = "OK.\n";
+        String expectedOutput  = "Input Check for Login: OK.\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 

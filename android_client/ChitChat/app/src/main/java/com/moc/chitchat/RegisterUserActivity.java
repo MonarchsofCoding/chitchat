@@ -26,11 +26,14 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     final Context registerContext = this;
     final Activity thisActivity = this;
+    RegisterController rController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        rController = new RegisterController(getResources().getString(R.string.server_url).toString());
 
         Window registerWindow = getWindow();
         registerWindow.setTitle("Register");
@@ -71,8 +74,17 @@ public class RegisterUserActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
                 }
                 else {
-                    System.out.println("OK.");
-                    //TODO Aydin: HTTPS-JSON AsyncTask execute.
+                    System.out.println("GUI Input Check for Registration Request: OK.");
+                    try {
+                        if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString())) {
+                            Toast.makeText(registerContext, "The registration process is successfull.", Toast.LENGTH_LONG).show();
+                            thisActivity.finish();
+                            overridePendingTransition(R.transition.anim_exit1,R.transition.anim_exit2);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
+                        Toast.makeText(registerContext, "Something went wrong on our side. Try again.", Toast.LENGTH_LONG).show();
+                    }
 
                 }
             }

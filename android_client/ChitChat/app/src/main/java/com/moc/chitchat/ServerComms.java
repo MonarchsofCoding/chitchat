@@ -8,8 +8,13 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.concurrent.Semaphore;
+
+import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 
 import javax.inject.Singleton;
@@ -18,66 +23,60 @@ import dagger.Module;
 /**
  * Created by aakyo on 26/01/2017.
  *
- * Alpha Server Communication class. Nothing is set stone.
- * TODO Aydin: need to return the response code
- * TODO Aydin: need to test with an example
+ * Alpha Server Communication class.
+ * All output is served with console output
  */
 
-@Module
-@Singleton
 public class ServerComms {
 
     private URL serverURL;
-    private HttpsURLConnection serverConn;
+    private HttpURLConnection serverConn;
 
     private JSONObject currentJSON;
-    private String resultString;
 
+    private Semaphore taskLock = new Semaphore(0);
+
+    @Inject
     public ServerComms(String URL) throws Exception {
-        serverURL = new URL(URL); //TODO Aydin: change when VJ runs the server.
-        serverConn = (HttpsURLConnection) serverURL.openConnection();
+        serverURL = new URL(URL);
+        serverConn = (HttpURLConnection) serverURL.openConnection();
+        serverConn.setDoOutput(true);
         serverConn.setConnectTimeout(10000);
         serverConn.setReadTimeout(10000);
+        serverConn.setRequestProperty("Content-Type", "application/json");
     }
 
     public boolean setRequestType(String reqType) throws ProtocolException {
-        if (reqType == "GET" || reqType == "POST") {
+        if (reqType.equals("GET") || reqType.equals("POST")) {
             serverConn.setRequestMethod(reqType);
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    public JSONObject requestWithJSON(JSONObject toSend) throws Exception {
-        resultString = "";
+    public void requestWithJSON(JSONObject toSend) throws Exception {
         currentJSON = toSend;
-        ServerWorker postWorker = new ServerWorker();
+        System.out.println("Executing HTTP Worker.");
+        HTTPWorker postWorker = new HTTPWorker();
         postWorker.execute();
-        currentJSON = null;
-        if (resultString != "") {
-            return new JSONObject(resultString);
-        }
-        else {
-            return null;
-        }
+        taskLock.acquire();
+        System.out.println("Request with a JSON object processed.");
     }
 
-    private class ServerWorker extends AsyncTask<String,String,String> {
+
+    private class HTTPWorker extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected String doInBackground(String... strings) {
-            serverConn.setRequestProperty("Content-Type", "application/json");
+        protected Void doInBackground(Void... voids) {
             try {
                 serverConn.connect();
-
-                OutputStream requestStream = new BufferedOutputStream(serverConn.getOutputStream());
-                requestStream.write(currentJSON.toString().getBytes());
-                requestStream.flush();
+                OutputStreamWriter requestStream = new OutputStreamWriter(serverConn.getOutputStream());
+                requestStream.write(currentJSON.toString());
                 requestStream.close();
 
-                BufferedReader responseStream = new BufferedReader(new InputStreamReader(serverConn.getInputStream()));
+                System.out.println("Server response: " + serverConn.getResponseCode());
+                BufferedReader responseStream = new BufferedReader(new InputStreamReader(serverConn.getInputStream(), "utf-8"));
                 StringBuilder responseBuilder = new StringBuilder();
                 String line;
                 while ((line = responseStream.readLine()) != null) {
@@ -85,25 +84,18 @@ public class ServerComms {
                 }
                 requestStream.close();
                 serverConn.disconnect();
-                return responseBuilder.toString();
+                System.out.println("Server response: " + responseBuilder.toString());
+            } catch (Exception e) {
+                System.out.println(e.getStackTrace());
             }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-                return "EXCEPTION";
-            }
+            currentJSON = null;
+            taskLock.release();
+            return null;
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (result != "EXCEPTION") {
-                resultString = result;
-            }
-            else {
-                resultString = "";
-            }
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
         }
-
     }
 }
-

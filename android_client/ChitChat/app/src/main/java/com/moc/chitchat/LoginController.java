@@ -1,6 +1,8 @@
 package com.moc.chitchat;
 
 
+import org.json.JSONObject;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -14,7 +16,11 @@ import dagger.Provides;
 @Singleton
 public class LoginController {
 
-    public LoginController() {}
+    private String URLtoPass;
+
+    public LoginController(String URL) {
+        URLtoPass = URL;
+    }
 
     public void loginUser(String username, String password) {
         String passRegXPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*+!=])" +
@@ -32,15 +38,18 @@ public class LoginController {
         else {
             System.out.print("Input Check for Login: OK.\n");
         }
-        /* TODO Aydin: Lift off the comment when the server is ready, and be sure of the JSONObject structure
-        JSONObject registerObject = new JSONObject();
-        JSONObject returnObject = new JSONObject();
-        registerObject.put("username",usernameInput);
-        registerObject.put("password",passwordInput);
-        ServerComms comms = new ServerComms();
-        if (comms.setRequestType("POST")) {
-            returnObject = comms.requestWithJSON(registerObject);
-            //TODO Aydin: Handle the response code and the message somehow (maybe a JSONObject and String tuple)
+        /*
+        try {
+            JSONObject registerObject = new JSONObject();
+            registerObject.put("username", username);
+            registerObject.put("password", password);
+            ServerComms comms = new ServerComms(URLtoPass);
+            if (comms.setRequestType("POST")) {
+                comms.requestWithJSON(registerObject);
+            }
+        }
+        catch (Exception e) {
+            System.out.println(e.getStackTrace());
         }
         */
     }

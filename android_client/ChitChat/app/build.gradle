@@ -19,13 +19,13 @@ android {
     }
     productFlavors {
         development {
-            resValue "string", "server_url", "http://localhost"
+            resValue "string", "server_url", "http://10.0.2.2:4000/api/v1/users"
         }
         beta {
-            resValue "string", "server_url", "https://beta.chitchat.moc.com"
+            resValue "string", "server_url", "https://beta.chitchat.moc.com/api/v1/users"
         }
         production {
-            resValue "string", "server_url", "https://chitchat.moc.com"
+            resValue "string", "server_url", "https://chitchat.moc.com/api/v1/users"
         }
     }
 }
