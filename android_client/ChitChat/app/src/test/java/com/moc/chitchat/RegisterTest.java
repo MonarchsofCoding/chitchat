@@ -3,6 +3,7 @@ package com.moc.chitchat;
 import android.content.Context;
 import android.test.mock.MockContext;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,14 +27,16 @@ public class RegisterTest {
     private String usernameTyped;
     private String passwordTyped;
     private String passwordReTyped;
-    String exceptionMessage = "";
-    @Inject RegisterController rController;
-    @Mock Context mockedRegisterContext;
+    private String exceptionMessage = "";
+    private ServerComms mockServerComms;
+    private RegisterController mockRegisterController;
+    private JSONObject mockJSON;
     
     @Before
     public void prep_controller() {
-        rController = Mockito.mock(RegisterController.class, Mockito.CALLS_REAL_METHODS);
-        mockedRegisterContext = new MockContext();
+        mockServerComms = Mockito.mock(ServerComms.class);
+        mockRegisterController = new RegisterController(mockServerComms);
+        mockJSON = Mockito.mock(JSONObject.class);
     }
 
     @Test
@@ -43,7 +46,7 @@ public class RegisterTest {
         passwordReTyped = "Abc123!?";
 
         try {
-            rController.registerUser(usernameTyped, passwordTyped, passwordReTyped);
+            mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
         }
         catch (Exception e) {
             exceptionMessage = e.getMessage();
@@ -57,7 +60,7 @@ public class RegisterTest {
         passwordTyped = "Abc123!?";
         passwordReTyped = "Abc123!?";
         try {
-            rController.registerUser(usernameTyped, passwordTyped, passwordReTyped);
+            mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
         }
         catch (Exception e) {
             exceptionMessage = e.getMessage();
@@ -72,7 +75,7 @@ public class RegisterTest {
         passwordTyped = "Abc123!?";
         passwordReTyped = "";
         try {
-            rController.registerUser(usernameTyped, passwordTyped, passwordReTyped);
+            mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
         }
         catch (Exception e) {
             exceptionMessage = e.getMessage();
@@ -86,7 +89,7 @@ public class RegisterTest {
         passwordTyped = "Abc123!?";
         passwordReTyped = "Def123!?";
         try {
-            rController.registerUser(usernameTyped, passwordTyped, passwordReTyped);
+            mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
         }
         catch (Exception e) {
             exceptionMessage = e.getMessage();
@@ -101,7 +104,7 @@ public class RegisterTest {
         passwordTyped = "Abc123";
         passwordReTyped = "Abc123";
         try {
-            rController.registerUser(usernameTyped, passwordTyped, passwordReTyped);
+            mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
         }
         catch (Exception e) {
             exceptionMessage = e.getMessage();

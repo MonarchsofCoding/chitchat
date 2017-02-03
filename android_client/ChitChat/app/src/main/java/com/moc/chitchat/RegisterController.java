@@ -21,14 +21,13 @@ import dagger.Provides;
 @Module
 public class RegisterController {
 
-    private String URLtoPass;
-    ServerComms comms;
+    private ServerComms comms;
 
-    public RegisterController(String URL) {
-        URLtoPass = URL;
+    public RegisterController(ServerComms newComm) {
+        comms = newComm;
     }
 
-    public Boolean registerUser(String usernameInput, String passwordInput, String passwordReInput) throws Exception{
+    public Boolean registerUser(String usernameInput, String passwordInput, String passwordReInput, JSONObject registerObject) throws Exception{
         Boolean toReturn = false;
         String passRegXPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*+!=])" +
             "(?=\\S+$).{8,}$";
@@ -46,10 +45,7 @@ public class RegisterController {
             throw new MessageException("ERROR: The two password inputs do not match!\n");
         }
         else {
-            System.out.print("Input Check for Registration: OK.\n");/*
-            JSONObject registerObject = new JSONObject();
-            registerObject.put("username",usernameInput);
-            registerObject.put("password",passwordInput);
+            System.out.print("Input Check for Registration: OK.\n");
             if (comms.setRequestType("POST")) {
                 try {
                     System.out.println("Sending JSON request to Servr Communication controller.");
@@ -59,7 +55,7 @@ public class RegisterController {
                 catch (Exception e) {
                     System.out.println(e.getStackTrace());
                 }
-            }*/
+            }
         }
         return toReturn;
     }

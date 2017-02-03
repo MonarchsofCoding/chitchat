@@ -18,11 +18,14 @@ public class LoginTest {
 
     private String usernameTyped;
     private String passwordTyped;
-    private LoginController lController;
+    private ServerComms mockServerComms;
+    private LoginController mockLoginController;
+    //private JSONObject mockJSON;
 
     @Before
     public void prep_controller() {
-        lController = Mockito.mock(LoginController.class, Mockito.CALLS_REAL_METHODS);
+        mockServerComms = Mockito.mock(ServerComms.class);
+        mockLoginController = new LoginController(mockServerComms);
     }
 
     @Test
@@ -32,7 +35,7 @@ public class LoginTest {
 
         usernameTyped = "aydinakyol";
         passwordTyped = "Abc123!?";
-        lController.loginUser(usernameTyped,passwordTyped);
+        mockLoginController.loginUser(usernameTyped,passwordTyped);
 
         String expectedOutput  = "Input Check for Login: OK.\n";
         assertEquals(expectedOutput, outContent.toString());
@@ -45,7 +48,7 @@ public class LoginTest {
 
         usernameTyped = "";
         passwordTyped = "Abc123!?";
-        lController.loginUser(usernameTyped,passwordTyped);
+        mockLoginController.loginUser(usernameTyped,passwordTyped);
 
         String expectedOutput  = "ERROR: the username cannot be empty.\n";
         assertEquals(outContent.toString(), expectedOutput);
@@ -59,7 +62,7 @@ public class LoginTest {
 
         usernameTyped = "aydinakyol";
         passwordTyped = "";
-        lController.loginUser(usernameTyped,passwordTyped);
+        mockLoginController.loginUser(usernameTyped,passwordTyped);
 
         String expectedOutput  = "ERROR: the password cannot be empty.\n";
         assertEquals(outContent.toString(), expectedOutput);
@@ -73,7 +76,7 @@ public class LoginTest {
 
         usernameTyped = "aydinakyol";
         passwordTyped = "Abc123";
-        lController.loginUser(usernameTyped,passwordTyped);
+        mockLoginController.loginUser(usernameTyped,passwordTyped);
 
         String expectedOutput  = "ERROR: the password does not match with the desired password" +
             " pattern.\n";

@@ -19,6 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
     final Context loginContext = this;
     final Activity thisActivity = this;
+    private LoginController lController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,12 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText usernameInput = (EditText) findViewById(R.id.username_input);
         final EditText passwordInput = (EditText) findViewById(R.id.password_input);
+
+        try {
+            lController = new LoginController(new ServerComms(getResources().getString(R.string.server_url).toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Button loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {

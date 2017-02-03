@@ -3,6 +3,8 @@ package com.moc.chitchat;
 
 import org.json.JSONObject;
 
+import java.util.ServiceConfigurationError;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -16,10 +18,10 @@ import dagger.Provides;
 @Singleton
 public class LoginController {
 
-    private String URLtoPass;
+    private ServerComms comms;
 
-    public LoginController(String URL) {
-        URLtoPass = URL;
+    public LoginController(ServerComms newComm) {
+        comms = newComm;
     }
 
     public void loginUser(String username, String password) {
@@ -38,7 +40,7 @@ public class LoginController {
         else {
             System.out.print("Input Check for Login: OK.\n");
         }
-        /*
+        /* TODO Aydin: Lift off and check JSON format when the server is ready.
         try {
             JSONObject registerObject = new JSONObject();
             registerObject.put("username", username);

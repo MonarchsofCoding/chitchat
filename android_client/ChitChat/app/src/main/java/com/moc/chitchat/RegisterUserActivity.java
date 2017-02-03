@@ -26,14 +26,18 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     final Context registerContext = this;
     final Activity thisActivity = this;
-    RegisterController rController;
+    private RegisterController rController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        rController = new RegisterController(getResources().getString(R.string.server_url).toString());
+        try {
+            rController = new RegisterController(new ServerComms(getResources().getString(R.string.server_url).toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Window registerWindow = getWindow();
         registerWindow.setTitle("Register");
@@ -76,7 +80,10 @@ public class RegisterUserActivity extends AppCompatActivity {
                 else {
                     System.out.println("GUI Input Check for Registration Request: OK.");
                     try {
-                        if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString())) {
+                        JSONObject registerObject = new JSONObject();
+                        registerObject.put("username",usernameInput);
+                        registerObject.put("password",passwordInput);
+                        if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString(),registerObject)) {
                             Toast.makeText(registerContext, "The registration process is successfull.", Toast.LENGTH_LONG).show();
                             thisActivity.finish();
                             overridePendingTransition(R.transition.anim_exit1,R.transition.anim_exit2);
