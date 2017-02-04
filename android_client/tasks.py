@@ -41,7 +41,7 @@ def publish_test_artifacts(ctx):
   acl = "gsutil -m acl ch -Ru AllUsers:R gs://kcl-chit-chat-artifacts"
 
   local_coverage = "app/build/JacocoCoverageReport/jacocoTestProductionReleaseUnitTestReport/html/*"
-  local_tests = "app/build/reports/tests/testReleaseUnitTest/release/*"
+  local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/productionRelease/*"
   local_lint = "app/build/outputs/lint-results-debug.html"
 
   lxc.Docker.run(cli,
