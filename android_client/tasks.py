@@ -42,7 +42,7 @@ def publish_test_artifacts(ctx):
 
   local_coverage = "app/build/JacocoCoverageReport/jacocoTestProductionReleaseUnitTestReport/html/*"
   local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/productionRelease/*"
-  local_lint = "app/build/outputs/lint-results-debug.html"
+  local_lint = "app/build/outputs/lint-results-betaDebug.html"
 
   lxc.Docker.run(cli,
      tag="google/cloud-sdk",
