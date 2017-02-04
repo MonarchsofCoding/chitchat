@@ -40,7 +40,7 @@ def publish_test_artifacts(ctx):
   gs_artifacts = "gs://kcl-chit-chat-artifacts/builds/{0}/android_client".format(os.getenv("TRAVIS_BUILD_NUMBER"))
   acl = "gsutil -m acl ch -Ru AllUsers:R gs://kcl-chit-chat-artifacts"
 
-  local_coverage = "app/build/JacocoCoverageReport/jacocoTestReleaseUnitTestReport/html/*"
+  local_coverage = "app/build/JacocoCoverageReport/jacocoTestProductionReleaseUnitTestReport/html/*"
   local_tests = "app/build/reports/tests/testReleaseUnitTest/release/*"
   local_lint = "app/build/outputs/lint-results-debug.html"
 
