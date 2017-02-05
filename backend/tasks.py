@@ -105,10 +105,15 @@ def publish_test_artifacts(ctx):
   local_coverage_html = "cover/excoveralls.html"
 
   lxc.Docker.run(cli,
-     tag="garland/aws-cli-docker:latest",
-     command='aws s3 cp {0} {1}/coverage/index.html'.format(local_coverage_html, s3_artifacts),
-     volumes=[
-       "{0}/chit_chat:/app".format(os.getcwd()),
-     ],
-     working_dir="/app"
-   )
+    tag="garland/aws-cli-docker:latest",
+    command='aws s3 cp {0} {1}/coverage/index.html'.format(local_coverage_html, s3_artifacts),
+    volumes=[
+      "{0}/chit_chat:/app".format(os.getcwd()),
+    ],
+    working_dir="/app",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "AWS_DEFAULT_REGION": "eu-west-1"
+    }
+  )
