@@ -7,6 +7,7 @@ defmodule Mix.Tasks.Aws.EcsDns do
     This is where we would put any long form documentation or doctests.
   """
 
+  @spec run(any) :: nil
   def run(_args) do
     Mix.shell.info "Checking for services on AWS ECS using DNS service discovery..."
       if System.get_env("ECS_DNS_POSTGRES") do
