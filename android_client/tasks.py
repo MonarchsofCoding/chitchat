@@ -38,8 +38,8 @@ def publish_test_artifacts(ctx):
 
   s3_artifacts = "s3://kcl-chit-chat-artifacts/builds/{0}/android_client".format(os.getenv("TRAVIS_BUILD_NUMBER"))
 
-  local_coverage = "app/build/JacocoCoverageReport/jacocoTestReleaseUnitTestReport/html/*"
-  local_tests = "app/build/reports/tests/testReleaseUnitTest/release/*"
+  local_coverage = "app/build/JacocoCoverageReport/jacocoTestReleaseUnitTestReport/html/"
+  local_tests = "app/build/reports/tests/testReleaseUnitTest/release/"
   local_lint = "app/build/outputs/lint-results-debug.html"
 
   lxc.Docker.run(cli,
