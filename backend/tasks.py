@@ -98,25 +98,17 @@ def test(ctx):
 
 @task
 def publish_test_artifacts(ctx):
-  cli.pull("google/cloud-sdk", "latest")
+  cli.pull("garland/aws-cli-docker", "latest")
 
-  auth = "gcloud auth activate-service-account --key-file /terraform/travis-gcp-credentials.json"
-  gs_artifacts = "gs://kcl-chit-chat-artifacts/builds/{0}/backend".format(os.getenv("TRAVIS_BUILD_NUMBER"))
-  acl = "gsutil -m acl ch -Ru AllUsers:R gs://kcl-chit-chat-artifacts"
+  s3_artifacts = "s3://kcl-chit-chat-artifacts/builds/{0}/backend".format(os.getenv("TRAVIS_BUILD_NUMBER"))
 
   local_coverage_html = "cover/excoveralls.html"
 
   lxc.Docker.run(cli,
-     tag="google/cloud-sdk",
-     command='/bin/sh -c "{0} && gsutil cp {1} {2}/coverage/index.html && {3}"'.format(
-      auth,
-      local_coverage_html,
-      gs_artifacts,
-      acl
-     ),
+     tag="garland/aws-cli-docker:latest",
+     command='aws s3 cp {0} {1}/coverage/index.html'.format(local_coverage_html, s3_artifacts),
      volumes=[
        "{0}/chit_chat:/app".format(os.getcwd()),
-       "{0}/terraform/:/terraform".format(os.getcwd())
      ],
      working_dir="/app"
    )
