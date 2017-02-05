@@ -8,4 +8,4 @@
 
 ## Test Artifacts (Coverage, Linting, etc.)
 
-https://storage.googleapis.com/kcl-chit-chat-artifacts/index.html
+https://s3-eu-west-1.amazonaws.com/kcl-chit-chat-artifacts/index.html
