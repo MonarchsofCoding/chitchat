@@ -60,28 +60,11 @@ config :chit_chat, ChitChat.Endpoint,
   secret_key_base: System.get_env("SECRET_KEY_BASE")
 
 # Configure your database
-# :inet_res.lookup('postgres.servicediscovery.internal', :any, :srv)
-# [{1, 1, 32768, 'ip-10-0-0-154.eu-west-1.compute.internal'}]
-
-def get_db_host_and_port() {
-  if System.get_env("ECS_DNS_POSTGRES") do
-    postgres_dns_address = System.get_env("ECS_DNS_POSTGRES")
-
-    res = :inet_res.lookup(postgres_dns_address, :in, :srv)
-
-    if length(res) > 0 do
-      dns_data = List.first(res)
-      db_port = elem(dns_data, 2)
-      db_hostname = elem(dns_data, 3)
-    end
-  end
-}
-
 config :chit_chat, ChitChat.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: System.get_env("DATABASE_USERNAME"),
   password: System.get_env("DATABASE_PASSWORD"),
-  hostname: System.get_env("DATABASE_HOSTNAME") || db_hostname,
+  hostname: System.get_env("DATABASE_HOSTNAME"),
   database: System.get_env("DATABASE_NAME"),
-  port: System.get_env("DATABASE_PORT") || db_port,
+  port: System.get_env("DATABASE_PORT"),
   size: 20 # The amount of database connections in the pool

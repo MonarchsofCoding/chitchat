@@ -27,3 +27,8 @@ variable "backend_database_name" {
   type = "string"
   description = "The name of the database to be created and used by the backend."
 }
+
+variable "backend_database_ecs_name" {
+  type = "string"
+  description = "The hostname to resolve when using AWS ECS DNS service discovery"
+}

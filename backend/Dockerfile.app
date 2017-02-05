@@ -34,4 +34,4 @@ RUN mix compile
 RUN apk del build-base
 RUN rm -rf /var/cache/apk/*
 
-CMD trap exit TERM; mix ecto.create && mix ecto.migrate && mix phoenix.server
+CMD /bin/sh -c "mix aws.ecs_dns && source config/env && mix ecto.create && mix ecto.migrate && mix phoenix.server"

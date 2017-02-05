@@ -18,6 +18,9 @@ data "template_file" "ecs_chit-chat_def" {
     database_password = "${var.backend_database_password}"
     database_name = "${var.backend_database_name}"
     ecs_postgres_name = "${var.backend_database_ecs_name}"
+
+    cloudwatch_log_group = "${aws_cloudwatch_log_group.chit_chat.arn}"
+    cloudwatch_region = "${var.aws_region}"
   }
 }
 
@@ -48,6 +51,18 @@ resource "aws_ecs_service" "chat_chat" {
     "aws_iam_role_policy.ecs_service",
     "aws_alb_listener.front_end",
   ]
+}
+
+#### Log Group for ChitChat App
+resource "aws_cloudwatch_log_group" "chit_chat" {
+  name = "chit-chat-container-logs"
+
+  retention_in_days = 7
+
+  tags {
+    Environment = "production"
+    Application = "serviceA"
+  }
 }
 
 ### ECS Postgres containers
@@ -315,8 +330,8 @@ resource "aws_security_group" "instance_sg" {
 
   ingress {
     protocol  = "tcp"
-    from_port = 80
-    to_port   = 80
+    from_port = 0
+    to_port   = 65535
 
     security_groups = [
       "${aws_security_group.alb_sg.id}",
