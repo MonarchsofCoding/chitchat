@@ -46,7 +46,7 @@ def publish_test_artifacts(ctx):
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/coverage/ --recursive'.format(local_coverage, s3_artifacts),
       volumes=[
-          "{0}/ChitChatDesktop:/app".format(os.getcwd())
+          "{0}/ChitChat:/app".format(os.getcwd())
       ],
       working_dir="/app",
       environment={
@@ -60,7 +60,7 @@ def publish_test_artifacts(ctx):
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/tests/ --recursive'.format(local_tests, s3_artifacts),
       volumes=[
-          "{0}/ChitChatDesktop:/app".format(os.getcwd())
+          "{0}/ChitChat:/app".format(os.getcwd())
       ],
       working_dir="/app",
       environment={
@@ -74,7 +74,7 @@ def publish_test_artifacts(ctx):
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/lint/index.html'.format(local_lint, s3_artifacts),
       volumes=[
-          "{0}/ChitChatDesktop:/app".format(os.getcwd())
+          "{0}/ChitChat:/app".format(os.getcwd())
       ],
       working_dir="/app",
       environment={
