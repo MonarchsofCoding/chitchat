@@ -63,6 +63,14 @@ jacoco {
     reportsDir = file("$buildDir/JacocoCoverageReport")
 }
 
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: 'com/moc/chitchat/view**')
+        })
+    }
+}
+
 checkstyle {
     toolVersion = "7.4"
     sourceSets = [project.sourceSets.main]
