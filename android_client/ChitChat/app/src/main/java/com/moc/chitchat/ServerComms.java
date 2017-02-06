@@ -1,6 +1,11 @@
 package com.moc.chitchat;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.json.JSONObject;
 
@@ -34,48 +39,50 @@ public class ServerComms {
 
     private JSONObject currentJSON;
 
+    private int returnCode;
+
     private Semaphore taskLock = new Semaphore(0);
 
     @Inject
     public ServerComms(String URL) throws Exception {
         serverURL = new URL(URL);
+    }
+
+    public int requestWithJSON(JSONObject toSend, String reqType) throws Exception {
+        returnCode = 0;
+        currentJSON = toSend;
+
+        System.out.println("Executing HTTP Worker.");
+
         serverConn = (HttpURLConnection) serverURL.openConnection();
         serverConn.setDoOutput(true);
+        serverConn.setRequestMethod(reqType);
         serverConn.setConnectTimeout(10000);
         serverConn.setReadTimeout(10000);
         serverConn.setRequestProperty("Content-Type", "application/json");
-    }
 
-    public boolean setRequestType(String reqType) throws ProtocolException {
-        if (reqType.equals("GET") || reqType.equals("POST")) {
-            serverConn.setRequestMethod(reqType);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void requestWithJSON(JSONObject toSend) throws Exception {
-        currentJSON = toSend;
-        System.out.println("Executing HTTP Worker.");
         HTTPWorker postWorker = new HTTPWorker();
         postWorker.execute();
+
         taskLock.acquire();
-        System.out.println("Request with a JSON object processed.");
+
+        System.out.println("Request with a JSON object processed. Response code: " + returnCode);
+        return returnCode;
     }
 
-
-    private class HTTPWorker extends AsyncTask<Void, Void, Void> {
+    private class HTTPWorker extends AsyncTask<Void,Void,Void> {
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(Void... params) {
+            int serverResponseCode = 0;
             try {
                 serverConn.connect();
                 OutputStreamWriter requestStream = new OutputStreamWriter(serverConn.getOutputStream());
                 requestStream.write(currentJSON.toString());
                 requestStream.close();
 
-                System.out.println("Server response: " + serverConn.getResponseCode());
+                returnCode = serverConn.getResponseCode();
+                System.out.println("Server response: " + returnCode);
                 BufferedReader responseStream = new BufferedReader(new InputStreamReader(serverConn.getInputStream(), "utf-8"));
                 StringBuilder responseBuilder = new StringBuilder();
                 String line;
@@ -83,40 +90,16 @@ public class ServerComms {
                     responseBuilder.append(line + "\n");
                 }
                 requestStream.close();
-                serverConn.disconnect();
                 System.out.println("Server response: " + responseBuilder.toString());
             } catch (Exception e) {
                 System.out.println(e.getStackTrace());
             }
-            currentJSON = null;
+            finally {
+                serverConn.disconnect();
+                currentJSON = null;
+            }
             taskLock.release();
             return null;
         }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
     }
-
-    /*TODO Aydin: after presentation swap AsyncTask with this
-    String url = "http://10.0.2.2:4000/api/v1/users";
-    JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url, registerObject, new Response.Listener<JSONObject>() {
-        @Override
-        public void onResponse(JSONObject response) {
-            System.out.println(response.toString());
-        }
-    }, new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            error.printStackTrace();
-        }
-    });
-    Volley.newRequestQueue(registerContext).add(jsonRequest);
-    */
 }

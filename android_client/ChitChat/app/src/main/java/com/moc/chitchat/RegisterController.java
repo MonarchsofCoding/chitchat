@@ -1,24 +1,13 @@
 package com.moc.chitchat;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.text.Editable;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import org.json.JSONObject;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-import javax.net.ssl.HttpsURLConnection;
-
-import dagger.Module;
-import dagger.Provides;
-
 /**
  * Created by aakyo on 23/01/2017.
  */
 
-@Module
 public class RegisterController {
 
     private ServerComms comms;
@@ -46,17 +35,16 @@ public class RegisterController {
         }
         else {
             System.out.print("Input Check for Registration: OK.\n");
-            if (comms.setRequestType("POST")) {
-                try {
-                    System.out.println("Sending JSON request to Servr Communication controller.");
-                    comms.requestWithJSON(registerObject);
+            try {
+                System.out.println("Sending JSON request to Servr Communication controller.");
+                int returnCode = comms.requestWithJSON(registerObject,"POST");
+                if (returnCode == 201) {
                     toReturn = true;
                 }
-                catch (Exception e) {
-                    System.out.println(e.getStackTrace());
-                }
             }
-
+            catch (Exception e) {
+                System.out.println(e.getStackTrace());
+            }
         }
         return toReturn;
     }

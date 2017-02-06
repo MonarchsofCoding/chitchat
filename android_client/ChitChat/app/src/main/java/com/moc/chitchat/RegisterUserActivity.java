@@ -2,21 +2,16 @@ package com.moc.chitchat;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
-import android.webkit.HttpAuthHandler;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by aakyo on 19/01/2017.
@@ -83,10 +78,16 @@ public class RegisterUserActivity extends AppCompatActivity {
                         JSONObject registerObject = new JSONObject();
                         registerObject.put("username",usernameInput.getText().toString());
                         registerObject.put("password",passwordInput.getText().toString());
+
+
+
                         if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString(),registerObject)) {
                             Toast.makeText(registerContext, "The registration process is successfull.", Toast.LENGTH_LONG).show();
                             thisActivity.finish();
                             overridePendingTransition(R.transition.anim_exit1,R.transition.anim_exit2);
+                        }
+                        else {
+                            Toast.makeText(registerContext, "The registration process is unsuccessfull.", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e) {
                         System.out.println(e.toString());
@@ -106,4 +107,6 @@ public class RegisterUserActivity extends AppCompatActivity {
         thisActivity.finish();
         overridePendingTransition(R.transition.anim_exit1,R.transition.anim_exit2);
     }
+
+
 }

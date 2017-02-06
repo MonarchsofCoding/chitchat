@@ -1,21 +1,9 @@
 package com.moc.chitchat;
 
-
-import org.json.JSONObject;
-
-import java.util.ServiceConfigurationError;
-
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-
 /**
  * Created by aakyo on 23/01/2017.
  */
 
-@Module
-@Singleton
 public class LoginController {
 
     private ServerComms comms;
