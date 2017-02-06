@@ -13,7 +13,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.dev
-    command: /bin/sh -c "ls -l && mix local.hex --force && mix local.rebar --force && mix deps.get && mix ecto.create && mix ecto.migrate && mix phoenix.server"
+    command: /bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix ecto.create && mix ecto.migrate && mix phoenix.server"
     environment:
       SECRET_KEY_BASE: G9XBaZMFhtWDxAaowHCBrrDVq8xVB3sfro8xiGnFXfidldnvf
       DATABASE_HOSTNAME: postgres
