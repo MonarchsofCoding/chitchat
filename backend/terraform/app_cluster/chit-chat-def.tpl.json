@@ -1,0 +1,55 @@
+[
+  {
+    "name": "chit-chat",
+    "image": "vjftw/chitchat-backend-test:abcde",
+    "cpu": 50,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80
+      },
+      {
+        "containerPort": 443
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "chit-chat-container-logs",
+        "awslogs-region": "${cloudwatch_region}",
+        "awslogs-stream-prefix": "chit-chat"
+      }
+    },
+    "environment": [
+      {
+        "Name": "ECS_DNS_POSTGRES",
+        "Value": "${ecs_postgres_name}"
+      },
+      {
+        "Name": "SECRET_KEY_BASE",
+        "Value": "${secret_key_base}"
+      },
+      {
+        "Name": "DATABASE_USERNAME",
+        "Value": "${database_username}"
+      },
+      {
+        "Name": "DATABASE_PASSWORD",
+        "Value": "${database_password}"
+      },
+      {
+        "Name": "DATABASE_NAME",
+        "Value": "${database_name}"
+      },
+      {
+        "Name": "PORT",
+        "Value": "80"
+      },
+      {
+        "Name": "MIX_ENV",
+        "Value": "prod"
+      }
+    ]
+  }
+]

@@ -64,7 +64,7 @@ config :chit_chat, ChitChat.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: System.get_env("DATABASE_USERNAME"),
   password: System.get_env("DATABASE_PASSWORD"),
-  database: System.get_env("DATABASE_NAME"),
   hostname: System.get_env("DATABASE_HOSTNAME"),
+  database: System.get_env("DATABASE_NAME"),
   port: System.get_env("DATABASE_PORT"),
   size: 20 # The amount of database connections in the pool

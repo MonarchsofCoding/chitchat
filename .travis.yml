@@ -7,15 +7,16 @@ addons:
     - python3
     - python3-pip
 before_install:
-- openssl aes-256-cbc -K $encrypted_12c8071d2874_key -iv $encrypted_12c8071d2874_iv
-  -in travis-gcp-credentials.json.enc -out backend/terraform/travis-gcp-credentials.json
-  -d
 - sudo pip3 install --upgrade pip
 - sudo pip3 install --upgrade invoke-tools
 env:
-- SERVICE=backend
-- SERVICE=java_client
-- SERVICE=android_client
+  global:
+    - secure: Ngt973I4brOFkWhQ9w3PfSEQ2I3RUy2wBDpp5qyDcYLDC7CDfOq/nebgXNvFL7/I+rtGJYxXMLj+ZVPHC270PxpPhGzeYMq2fJ6MHG+BA4kHqyWJ4EhIOKPO6weWP7IJ6Qb+z1UdgnBdMWVNyB47tmcBfVQ1gmBK/5J7Ryn6JgY1FYdIvXeV5kWndDQCuC1dguUfdBDaCC7w1KjfCTYGIFRx6I4zDPSBcClTzmT60+ip2U3i7KIqGIG9JEC8GKWiuD25vysY8Ezh28NIlTo34Fkm70l9Ii63BPkbJG7TI4yFomaVOaSwGWMsWNaPj+Q+XFfEYCNc28IJnhBAfV68sN6xdW9wCZEShfGPvzvW5qiI7uo+xVWaB5a5Q2xhGWM1XV0TEoVcpLwnxzJz++8HtrXw/IClQ/C9JxSOjIGU6hW3aDs8jR2vQymTlekCw5ZyzJofumI9HERTERTEj94vokZK7RNRan0qbUkptcE0mraTXJ7xZ1LbemrWBHGxSzUpLUUU/uNRMFm9b3FqfKfiw3Ib1bxTb6LiTp0nPhsgWoAQQGDfvk1hMyEMkdfT+M/w3iBQtH18rtrIjbRXiH2GerEFkdMpMHIqalGOgIHpwi/k9IDX2FrxTf8Vmy5Y4iMLqn5k6+TztJXLKtGiC7rqO4aPuE6K/XGNCPJP1pnNqa8=
+    - secure: puVpzLttujyTDXArl8wiqqW9PLJlFMVB14LmL0k33Tr4CNOCU86LSax445DB+VFiiIy7vmA4MHCdqG94JOVQ73vjdALPWzD/1i04vavYFRDXEd1KyV9bmzKALT70LPlwBbnFCUdsPdPdBbhZKOuKLouuqgYpoSrPyqCfUin/GA5z+bxOY5cm1bxSHMEY9JKUguvJwhCHPYH8Zl+aEM/L8eHWKEFU79/7lw9DJ1dTgvuRkMVNan+q27yjHZyZAgCkbfu4ZavG2DkeY7V6tMRqvWvB9GclX7OD7MmveOaSd5odYkRiBHQDBVxuZeXuOTufd3tGWnyl3sA1kLgC8TBtubyYOowqjVPCWyL2Bj8wSHLUWo1aaqZ9ssO72HNXidq/clL3MoOnI+Jjw19rDZslEqZEIcLMkTfM4SLt0Mp/iz//V1Q8D4TMKhTd6uhmjGQX4kHQvX9n6Pac7rP4nacAoX9UdcBBz+j6zx2VM7rKYbqdSJyMwYe2oqSrJzdeots63EAY1O+HweMjoI4kn7wApXOyZYxWYgLJHcv/gL/JevHCtyxlv9fwPinp6O04ehEsVBV3qwOPSJukDckdla1jnaKjegZykoCIyaGasI43L9p1uwAGZk1SAO7aPM7Em6LFM90EdN8MrN/vd31tJZszQfv65AFNbC16taYDj/pCeXs=
+  matrix:
+    - SERVICE=backend
+    - SERVICE=java_client
+    - SERVICE=android_client
 script:
 - cd $SERVICE && invoke test && invoke publish_test_artifacts
 notifications:
