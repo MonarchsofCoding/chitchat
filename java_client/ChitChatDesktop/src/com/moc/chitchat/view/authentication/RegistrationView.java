@@ -2,10 +2,12 @@ package com.moc.chitchat.view.authentication;
 
 
 import com.moc.chitchat.controller.authentication.RegistrationController;
+import com.moc.chitchat.exception.ValidationException;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -80,9 +82,18 @@ public class RegistrationView extends JFrame implements ActionListener {
                 String.valueOf(this.passwordField.getPassword()),
                 String.valueOf(this.passwordCheckField.getPassword())
             );
-        } catch (Exception e) {
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "Success! You have now registered!");
+        } catch (ValidationException e) {
             // Do validation or error handling. TODO: throw and catch more descriptive exceptions.
             System.out.println("Exception caught!");
+            Errors errors = e.getErrors();
+
+            System.out.println(errors.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 }

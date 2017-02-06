@@ -1,5 +1,7 @@
-FROM elixir:slim
+FROM elixir:latest
 
 RUN mkdir /app
+
+WORKDIR /app
 
 VOLUME /app

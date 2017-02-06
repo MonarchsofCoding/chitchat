@@ -1,0 +1,38 @@
+FROM ubuntu:16.04
+
+
+
+RUN apt-get update -y
+RUN apt-get install -y software-properties-common python-software-properties
+
+RUN add-apt-repository -y ppa:cwchien/gradle
+RUN apt-get update -y
+
+RUN apt-get install -y gradle openjdk-8-jdk wget expect
+
+ENV ANDROID_HOME /opt/android-sdk-linux
+
+RUN cd /opt && wget -q https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz -O android-sdk.tgz
+RUN cd /opt && tar -xvzf android-sdk.tgz
+RUN cd /opt && rm -f android-sdk.tgz
+
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+
+RUN echo y | android update sdk --no-ui --all --filter platform-tools | grep 'package installed'
+RUN echo y | android update sdk --no-ui --all --filter android-25 | grep 'package installed'
+RUN echo y | android update sdk --no-ui --all --filter build-tools-25.0.2 | grep 'package installed'
+RUN echo y | android update sdk --no-ui --all --filter extra-android-m2repository | grep 'package installed'
+RUN pwd && ls -lh && ls -lh /opt
+
+RUN mkdir "$ANDROID_HOME/licenses"
+RUN echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+
+RUN apt-get clean
+
+VOLUME ["/opt/android-sdk-linux"]
+
+RUN mkdir /app
+
+VOLUME /app
+
+WORKDIR /app

@@ -17,3 +17,8 @@ erl_crash.dump
 # secrets file as long as you replace its contents by environment
 # variables.
 chit_chat/config/prod.secret.exs
+
+
+terraform/*.json
+terraform/**/*.tfstate
+terraform/**/*.tfstate.backup

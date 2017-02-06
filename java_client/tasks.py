@@ -44,9 +44,11 @@ def test(ctx):
         tag="{0}-dev".format("chitchat-javaclient")
     )
 
+    vnc = "vnc4server -geometry 1920x1080 && export DISPLAY=:1"
+
     lxc.Docker.run(cli,
         tag="{0}-dev".format("chitchat-javaclient"),
-        command='/bin/bash -c "vnc4server -geometry 1920x1080 && export DISPLAY=:1 && gradle test"',
+        command='/bin/bash -c "{0} && gradle test && gradle jacocoTestReport && gradle check"'.format(vnc),
         volumes=[
             "{0}/ChitChatDesktop:/app".format(os.getcwd())
         ],
@@ -54,22 +56,54 @@ def test(ctx):
         environment={}
     )
 
+@task
+def publish_test_artifacts(ctx):
+    cli.pull("garland/aws-cli-docker", "latest")
+
+    s3_artifacts = "s3://kcl-chit-chat-artifacts/builds/{0}/java_client".format(os.getenv("TRAVIS_BUILD_NUMBER"))
+
+    local_coverage = "build/JacocoCoverageReport/test/html/"
+    local_tests = "build/reports/tests/test/"
+    local_checkstyle = "build/reports/checkstyle/"
+
     lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-javaclient"),
-        command='gradle jacocoTestReport',
+        tag="garland/aws-cli-docker:latest",
+        command='aws s3 cp {0} {1}/coverage/ --recursive'.format(local_coverage, s3_artifacts),
         volumes=[
             "{0}/ChitChatDesktop:/app".format(os.getcwd())
         ],
         working_dir="/app",
-        environment={}
+        environment={
+            "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+            "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+            "AWS_DEFAULT_REGION": "eu-west-1"
+        }
     )
 
     lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-javaclient"),
-        command='gradle check',
+        tag="garland/aws-cli-docker:latest",
+        command='aws s3 cp {0} {1}/tests/ --recursive'.format(local_tests, s3_artifacts),
         volumes=[
             "{0}/ChitChatDesktop:/app".format(os.getcwd())
         ],
         working_dir="/app",
-        environment={}
+        environment={
+            "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+            "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+            "AWS_DEFAULT_REGION": "eu-west-1"
+        }
+    )
+
+    lxc.Docker.run(cli,
+        tag="garland/aws-cli-docker:latest",
+        command='aws s3 cp {0} {1}/checkstyle/ --recursive'.format(local_checkstyle, s3_artifacts),
+        volumes=[
+            "{0}/ChitChatDesktop:/app".format(os.getcwd())
+        ],
+        working_dir="/app",
+        environment={
+            "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+            "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+            "AWS_DEFAULT_REGION": "eu-west-1"
+        }
     )

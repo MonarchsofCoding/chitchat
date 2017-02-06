@@ -16,13 +16,13 @@ public class Application {
 
     /**
      * main provides the entry point for this application.
-     * @param args There are no arguments for this application.
+     * @param args The environment to run. e.g. `java -jar app.jar dev`. Defaults to `prod`. Modes: `dev`, `test`, `prod`.
      */
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
         System.out.println(context.getApplicationName());
 
         ApplicationLoader applicationLoader = context.getBean(ApplicationLoader.class);
-        applicationLoader.load();
+        applicationLoader.load(args);
     }
 }

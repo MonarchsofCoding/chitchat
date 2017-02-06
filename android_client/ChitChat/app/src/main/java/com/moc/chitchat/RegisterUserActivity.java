@@ -26,11 +26,18 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     final Context registerContext = this;
     final Activity thisActivity = this;
+    private RegisterController rController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        try {
+            rController = new RegisterController(new ServerComms(getResources().getString(R.string.server_url).toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Window registerWindow = getWindow();
         registerWindow.setTitle("Register");
@@ -71,13 +78,23 @@ public class RegisterUserActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
                 }
                 else {
-                    System.out.println("OK.");
-                    //TODO Aydin: HTTPS-JSON AsyncTask execute.
-
+                    System.out.println("GUI Input Check for Registration Request: OK.");
+                    try {
+                        JSONObject registerObject = new JSONObject();
+                        registerObject.put("username",usernameInput.getText().toString());
+                        registerObject.put("password",passwordInput.getText().toString());
+                        if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString(),registerObject)) {
+                            Toast.makeText(registerContext, "The registration process is successfull.", Toast.LENGTH_LONG).show();
+                            thisActivity.finish();
+                            overridePendingTransition(R.transition.anim_exit1,R.transition.anim_exit2);
+                        }
+                    } catch (Exception e) {
+                        System.out.println(e.toString());
+                        Toast.makeText(registerContext, "Something went wrong on our side. Try again.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
-
     }
 
     @Override

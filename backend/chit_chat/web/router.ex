@@ -19,8 +19,10 @@ defmodule ChitChat.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ChitChat do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", ChitChat do
+    pipe_through :api # Use the API stack
+
+    resources "/users", UserController, except: [:new, :edit]
+  end
+
 end
