@@ -18,17 +18,11 @@ public class RegisterController {
 
     public Boolean registerUser(String usernameInput, String passwordInput, String passwordReInput, JSONObject registerObject) throws Exception{
         Boolean toReturn = false;
-        String passRegXPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*+!=])" +
-            "(?=\\S+$).{8,}$";
         if(usernameInput.equals("")) {
             throw new MessageException("ERROR: the username cannot be empty.\n");
         }
         else if(passwordInput.equals("") || passwordReInput.equals("")) {
             throw new MessageException("ERROR: the password cannot be empty.\n");
-        }
-        else if (!passwordInput.matches(passRegXPattern)) {
-            throw new MessageException("ERROR: the password does not match with the desired " +
-                "password pattern.\n");
         }
         else if(!passwordInput.equals(passwordReInput)) {
             throw new MessageException("ERROR: The two password inputs do not match!\n");
