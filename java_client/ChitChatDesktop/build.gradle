@@ -35,7 +35,7 @@ dependencies {
     compile 'com.mashape.unirest:unirest-java:1.4.9'
 
     testCompile "junit:junit:4.12"
-    testCompile 'org.mockito:mockito-core:2.6.5'
+    testCompile 'org.mockito:mockito-core:2.+'
 }
 
 mainClassName = 'com.moc.chitchat.Application'
