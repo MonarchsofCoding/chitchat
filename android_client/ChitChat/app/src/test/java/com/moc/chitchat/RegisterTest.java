@@ -31,7 +31,7 @@ public class RegisterTest {
     private ServerComms mockServerComms;
     private RegisterController mockRegisterController;
     private JSONObject mockJSON;
-    
+
     @Before
     public void prep_controller() {
         mockServerComms = Mockito.mock(ServerComms.class);
@@ -98,18 +98,18 @@ public class RegisterTest {
     }
 
 
-    @Test
-    public void false_PassInput() {
-        usernameTyped = "aydinakyol";
-        passwordTyped = "Abc123";
-        passwordReTyped = "Abc123";
-        try {
-            mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
-        }
-        catch (Exception e) {
-            exceptionMessage = e.getMessage();
-        }
-        assertEquals(exceptionMessage, "ERROR: the password does not match with the desired " +
-            "password pattern.\n");
-    }
+    // @Test
+    // public void false_PassInput() {
+    //     usernameTyped = "aydinakyol";
+    //     passwordTyped = "Abc123";
+    //     passwordReTyped = "Abc123";
+    //     try {
+    //         mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
+    //     }
+    //     catch (Exception e) {
+    //         exceptionMessage = e.getMessage();
+    //     }
+    //     assertEquals(exceptionMessage, "ERROR: the password does not match with the desired " +
+    //         "password pattern.\n");
+    // }
 }
