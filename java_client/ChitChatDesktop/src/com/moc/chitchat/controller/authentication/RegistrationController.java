@@ -2,19 +2,15 @@ package com.moc.chitchat.controller.authentication;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.MapBindingResult;
-import org.springframework.validation.Validator;
-
-import java.util.HashMap;
 
 /**
  * RegistrationController provides the actions involved with registering a User.
@@ -39,8 +35,8 @@ public class RegistrationController {
         this.httpClient = httpClient;
     }
 
-    public void registerUser(String username, String password, String passwordCheck) throws ValidationException, UnirestException {
-        System.out.printf("Username: %s | Password: %s | Password Check: %s\n", username, password, passwordCheck);
+    public void registerUser(String username, String password, String passwordCheck) throws ValidationException, UnirestException, UnexpectedResponseException {
+        System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n", username, password.length(), passwordCheck.length());
 
         // Create the User object from parameters.
         UserModel user = this.userResolver.createUser(username, password, passwordCheck);
@@ -52,10 +48,12 @@ public class RegistrationController {
         HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/users", user);
 
         // Process HTTP response. Throw Exception if User invalid. Return void/true if Successful.
-        if (response.getStatus() == 201) {
-        } else if (response.getStatus() == 422) {
+        if (response.getStatus() == 422) {
             // Validation failed or username taken.
             this.userValidator.throwErrorsFromResponse(response);
+        } else if (response.getStatus() != 201) {
+            // Unexpected response code. e.g. 500
+            throw new UnexpectedResponseException(response);
         }
     }
 }
