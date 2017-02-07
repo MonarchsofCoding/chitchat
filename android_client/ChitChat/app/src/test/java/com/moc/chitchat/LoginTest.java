@@ -20,7 +20,6 @@ public class LoginTest {
     private String passwordTyped;
     private ServerComms mockServerComms;
     private LoginController mockLoginController;
-    //private JSONObject mockJSON;
 
     @Before
     public void prep_controller() {
@@ -67,7 +66,6 @@ public class LoginTest {
         String expectedOutput  = "ERROR: the password cannot be empty.\n";
         assertEquals(outContent.toString(), expectedOutput);
     }
-
 
     @Test
     public void false_PassInput() {

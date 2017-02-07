@@ -74,7 +74,6 @@ public class ServerComms {
 
         @Override
         protected Void doInBackground(Void... params) {
-            int serverResponseCode = 0;
             try {
                 serverConn.connect();
                 OutputStreamWriter requestStream = new OutputStreamWriter(serverConn.getOutputStream());
