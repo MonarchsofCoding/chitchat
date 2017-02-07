@@ -1,0 +1,92 @@
+\documentclass[11pt,a4paper]{report}
+
+\begin{document}
+\title{Distributed Chat Application: Initial Report}
+\author{Monarchs of Coding:\\
+  Aigerim Serikbekova\\
+  Aydin Akyol\\
+  Fareed Qaseem\\
+  Spyridon Kousidis\\
+  Ozhan Azizi\\
+  Vijendra Patel}
+\date{February 2017}
+\maketitle
+
+
+\chapter{Project description}
+
+\section{Introduction}
+Chat systems are nowadays widespread with the success of the internet. For this project we have been asked to develop a distributed chat system where users can search for other users in the system and communicate securely with them. The system is made of three sub-systems which are: a server written in Elixir and hosted on Amazon Web Services, a Java Desktop application, and an Android app. To comprehend the main idea of the chat system we have to know the basic concept for the communication process between clients and the server.
+
+
+\section{Priority Features}
+\begin{itemize}
+  \item Registering New Profile: When a user uses the system for the first time, he has to register a new profile which will contain his information and his credentials as well. By registering a profile, the user's index will be added to the system database which will allow other users to find this user during the chat process.
+  \item Sign-in Process: After the user registers his profile, he will get an ID and a password which he will use to access the system from now on. User will be authenticated by the system and authorized to access the list of the users, his existing chats, and the history of his existing chats.
+  \item Contacts Look-up: When a user want to exchange messages with another user, he has to find him in the users list using his ID, or his name. Otherwise, the user will not be able to exchange messages with the user he is trying to reach.
+  \item Exchanging Messages: The main process of the system, which allow two users to exchange messages immediately, and securely. And to make sure there will be no lost messages, this process will maintain any recovery actions after any failure that might occur to the system to assure that every sent message will be delivered to the user that it was sent to.
+  \item Listing Existing Chats: Which means that the user will be able to see a list of the users he exchanged messages with before.
+  \item Chats History: Which means that the user will be able to read any messages that he exchanged with other users before.
+  \item Sign-out Process: When a user wants to leave the system he has to sign out to make sure that no one can use his device to impersonate him.
+\end{itemize}
+
+\section{Non-priority Features}
+\begin{itemize}
+  \item Deleting a Chat: A user is able to remove their chats and history.
+  \item Managing a User's Profile: A user is able to manage additional information about themselves e.g. Biography, email, picture, etc.
+  \item Pariticapation in Group Chats: A user is able to create, manage and participate in a group chat with multiple other users.
+  \item Multimedia Messages: A user is able to send images, files etc. as a message.
+\end{itemize}
+
+\section{Model-View-Controller (MVC)}
+MVC is an extremely popular paradigm for developing large applications. Many development frameworks across languages have adopted this pattern, proving its success. Developing with MVC results in breaking a system down into 3 sets of components:
+\begin{itemize}
+  \item Models, which represent an entity in the system e.g. a Person and their attributes;
+  \item Views which are usually to present a representation of an entity and often an interface to Controllers;
+  \item Controllers define the actions that a user can perform with a Model through a View.
+\end{itemize}
+
+\subsection{Dependency Injection/Inversion of Control (DI/IoC)}
+Dependency Injection/Inversion of Control further helps break a system down by using a service-orientated structure.
+This means that we can have thin Controllers (from MVC) where high-level code in the controller calls lower-level code in dependent services that execute business logic.
+This helps us to adhere to further conventions where we create small functions with descriptive names which keeps code understandable, rather than doAll() functions.
+
+\subsection{Unit Testing}
+
+Having unit testing gives us easier regression testing and more confidence in new code that is written. We use coverage metrics to find code that has not been covered and we aim to use Test Driven Development(TDD) once we are more comfortable with the languages we have chosen.
+
+\section{Project organisation}
+
+\subsection{Agile with Trello}
+
+We have chosen to use the Agile software development methodology as it allows us to start working and focusing on features as soon as possible and avoid creating designs that make more permanent design decisions. We have based our workflow on Kanban where we have the following columns/phases:
+\begin{itemize}
+  \item Backlog: This contains \emph{feature} ideas. These may break down into smaller sub-features in the Specify phase.
+  \item Specify: This contains \emph{cards} (known as features) that we are discussing the implementation of. We discuss what work is needed to be done in order the complete the feature and we specify the acceptance criteria.
+  \item Implement: This contains \emph{cards} that are currently being developed on. We tick off sub-pieces of work that we have done.
+  \item Test/QA: This contains \emph{cards} that have been implemented and have been deployed to our Testing environment. We then manually test the feature against the acceptance criteria.
+  \item Deployed: This contains \emph{cards} that have been completed, tested and deployed to our Production environment and are considered finished.
+\end{itemize}
+
+\subsection{Branching Strategy with Git Flow}
+We decided to use a branching strategy for dividing up our work. The reason to have multiple branches is to aid us with parallel development, it is easier to track feature and fix any bugs that have occurred.
+
+The source code on the \emph{develop} branch reflects the state of the next development changes. Once the team agrees on the development branch state and it is stable, then all of the changes would be merged into the master branch.
+The \emph{master} branch is considered as the stable source code in the project. It is the main branch that reflects on the progress of this distributed chat application.
+
+When any faults have occurred, we can easily create a separate branch to fix the bugs. Therefore it is clear and does not affect others on development if they are implementing a new feature. Once fixed, this would be merged back into the develop branch. Hence this supports parallel development as others can continue on working on something while this bug is quickly fixed.
+
+We have separate branches for implementing new features as it is easier to track and multiple of team-members are able to work on different features. Once the feature is completed it is merged back into the develop branch and then the \emph{feature} branch would be deleted. This branching strategy is decentralised but still centralised as we are creating new feature branches and integrating back into the develop branch. One of the advantages of using this branch strategy is that we are able to pull from each other branches to create sub teams when working on a bigger feature.
+
+When merging back into a branch, we can clearly see the difference on what was implemented and any changes that have occurred. Therefore this helps us to keep track of our changes between features.
+We have to manage these branches, so we need to delete which branches that are not being used anymore.
+The benefits of using branching technique is that we are working on independent features, so a team member work won't effect others, until it is time to merge back into develop branch and we would require code review.
+
+
+\subsection{Continuous Integration with Travis CI}
+We are using Travis CI as our continuous integration platform. When we push our commits to GitHub, Travis picks these up automatically and runs our tests, uploads the test artefacts and notifies us of the results. This helps us perform automated regression testing and gives us confidence in the code we've written.
+
+\subsection{Communication with Slack}
+We are using Slack to communicate with each other and organise meetings. We are also using the GitHub and Travis integrations so that we are notified when there are new commits and of the build/test results from those commits.
+
+\end{document}
