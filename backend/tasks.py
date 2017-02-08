@@ -12,10 +12,17 @@ def build(ctx):
   """
   Builds a Docker container for the Backend
   """
+  git = vcs.Git()
+
   lxc.Docker.build(cli,
       dockerfile='Dockerfile.app',
-      tag="chitchat-backend"
+      tag="monarchsofcoding/chitchat:{0}".format(git.get_version())
   )
+
+  lxc.Docker.login(cli)
+
+  lxc.Docker.push(cli, "monarchsofcoding/chitchat:{0}".format(git.get_version()))
+  lxc.Docker.push(cli, "monarchsofcoding/chitchat:latest")
 
 @task
 def test(ctx):
