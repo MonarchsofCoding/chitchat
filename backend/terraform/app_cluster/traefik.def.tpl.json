@@ -1,0 +1,34 @@
+[
+  {
+    "name": "traefik",
+    "image": "traefik:morbier",
+    "command": [
+      "--ecs",
+      "--ecs.region=eu-west-1",
+      "--ecs.cluster=chit-chat",
+      "--ecs.watch=true",
+      "--ecs.exposedBydefault=true",
+      "--loglevel=DEBUG",
+      "--web=true"
+    ],
+    "cpu": 50,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80
+      },
+      {
+        "containerPort": 8080
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "traefik-container-logs",
+        "awslogs-region": "${cloudwatch_region}",
+        "awslogs-stream-prefix": "traefik"
+      }
+    }
+  }
+]

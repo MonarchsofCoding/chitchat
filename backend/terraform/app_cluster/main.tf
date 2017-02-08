@@ -3,106 +3,12 @@ provider "aws" {
 }
 
 ## AWS ECS - Elastic Container Service
-
 resource "aws_ecs_cluster" "app" {
   name = "${var.cluster_name}"
 }
 
-### ECS ChitChat App containers
-
-data "template_file" "ecs_chit-chat_def" {
-  template = "${file("chit-chat-def.tpl.json")}"
-  vars {
-    secret_key_base = "${var.backend_secret_key_base}"
-    database_username = "${var.backend_database_username}"
-    database_password = "${var.backend_database_password}"
-    database_name = "${var.backend_database_name}"
-    ecs_postgres_name = "${var.backend_database_ecs_name}"
-
-    cloudwatch_log_group = "${aws_cloudwatch_log_group.chit_chat.arn}"
-    cloudwatch_region = "${var.aws_region}"
-  }
-}
-
-resource "aws_ecs_task_definition" "chit_chat" {
-  family = "chit-chat"
-  container_definitions = "${data.template_file.ecs_chit-chat_def.rendered}"
-}
-
-resource "aws_ecs_service" "chat_chat" {
-  name = "chit-chat"
-  cluster = "${aws_ecs_cluster.app.id}"
-  task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
-  desired_count = 3
-  iam_role = "${aws_iam_role.ecs_service.arn}"
-
-  placement_strategy {
-    type = "binpack"
-    field = "cpu"
-  }
-
-  load_balancer {
-    target_group_arn = "${aws_alb_target_group.app.id}"
-    container_name   = "chit-chat"
-    container_port   = "80"
-  }
-
-  depends_on = [
-    "aws_iam_role_policy.ecs_service",
-    "aws_alb_listener.front_end",
-  ]
-}
-
-#### Log Group for ChitChat App
-resource "aws_cloudwatch_log_group" "chit_chat" {
-  name = "chit-chat-container-logs"
-
-  retention_in_days = 7
-
-  tags {
-    Environment = "production"
-    Application = "serviceA"
-  }
-}
-
-### ECS Postgres containers
-
-data "template_file" "ecs_postgres_def" {
-  template = "${file("postgres-def.tpl.json")}"
-  vars {
-    db_username = "${var.backend_database_username}"
-    db_password = "${var.backend_database_password}"
-    db_name = "${var.backend_database_name}"
-  }
-}
-
-resource "aws_ecs_task_definition" "postgres" {
-  family = "postgres"
-  container_definitions = "${data.template_file.ecs_postgres_def.rendered}"
-}
-
-resource "aws_ecs_service" "postgres" {
-  name = "postgres"
-  cluster = "${aws_ecs_cluster.app.id}"
-  task_definition = "${aws_ecs_task_definition.postgres.arn}"
-  desired_count = 1
-  /*iam_role = "${aws_iam_role.ecs_service.arn}"*/
-  depends_on = ["aws_iam_role_policy.ecs_service"]
-
-  placement_strategy {
-    type = "binpack"
-    field = "cpu"
-  }
-
-  /*load_balancer {
-    elb_name = "${aws_elb.foo.name}"
-    container_name = "mongo"
-    container_port = 8080
-  }*/
-}
 
 ### ECS IAM Roles
-
 resource "aws_iam_role" "ecs_service" {
   name = "tf_example_ecs_role"
 
@@ -243,6 +149,7 @@ resource "aws_iam_instance_profile" "app" {
   roles = ["${aws_iam_role.app_instance.name}"]
 }
 
+// TODO: Reduce AWS Policy to follow Principal of Least Privilege!
 resource "aws_iam_role_policy" "app_instance" {
   name = "tf_app_policy"
   role = "${aws_iam_role.app_instance.name}"
@@ -254,13 +161,8 @@ resource "aws_iam_role_policy" "app_instance" {
     {
       "Effect": "Allow",
       "Action": [
-        "ecs:CreateCluster",
-        "ecs:DeregisterContainerInstance",
-        "ecs:DiscoverPollEndpoint",
-        "ecs:Poll",
-        "ecs:RegisterContainerInstance",
-        "ecs:StartTelemetrySession",
-        "ecs:Submit*",
+        "ec2:*",
+        "ecs:*",
         "ecr:GetAuthorizationToken",
         "ecr:BatchCheckLayerAvailability",
         "ecr:GetDownloadUrlForLayer",
@@ -298,7 +200,6 @@ EOF
 }
 
 ## Security Groups
-
 resource "aws_security_group" "alb_sg" {
   description = "Controls access to and from the ALB"
 
@@ -346,16 +247,16 @@ resource "aws_security_group" "instance_sg" {
   }
 }
 
-## Application Load Balancer
-resource "aws_alb_target_group" "app" {
-  name     = "tf-chit-chat-alb-tg"
+## Application Load Balancer to Traefik
+resource "aws_alb_target_group" "traefik" {
+  name     = "traefik-alb-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.app.id}"
 }
 
-resource "aws_alb" "app" {
-  name            = "tf-chit-chat-alb-ecs"
+resource "aws_alb" "traefik" {
+  name            = "traefik-alb-ecs"
   subnets         = ["${aws_subnet.app.*.id}"]
   security_groups = ["${aws_security_group.alb_sg.id}"]
 
@@ -364,13 +265,62 @@ resource "aws_alb" "app" {
   }
 }
 
-resource "aws_alb_listener" "front_end" {
-  load_balancer_arn = "${aws_alb.app.id}"
+resource "aws_alb_listener" "traefik" {
+  load_balancer_arn = "${aws_alb.traefik.id}"
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.app.id}"
+    target_group_arn = "${aws_alb_target_group.traefik.id}"
     type             = "forward"
+  }
+}
+
+### Traefik containers
+data "template_file" "ecs_traefik_def" {
+  template = "${file("traefik.def.tpl.json")}"
+  vars {
+    cloudwatch_log_group = "${aws_cloudwatch_log_group.traefik.arn}"
+    cloudwatch_region = "${var.aws_region}"
+  }
+}
+
+resource "aws_ecs_task_definition" "traefik" {
+  family = "traefik"
+  container_definitions = "${data.template_file.ecs_traefik_def.rendered}"
+}
+
+resource "aws_ecs_service" "traefik" {
+  name = "traefik"
+  cluster = "${var.cluster_name}"
+  task_definition = "${aws_ecs_task_definition.traefik.arn}"
+  desired_count = 1
+  iam_role = "${aws_iam_role.ecs_service.arn}"
+
+  placement_strategy {
+    type = "binpack"
+    field = "cpu"
+  }
+
+  load_balancer {
+    target_group_arn = "${aws_alb_target_group.traefik.id}"
+    container_name   = "traefik"
+    container_port   = "80"
+  }
+
+  depends_on = [
+    "aws_iam_role_policy.ecs_service",
+    "aws_alb_listener.traefik",
+  ]
+}
+
+#### Log Group for Traefik
+resource "aws_cloudwatch_log_group" "traefik" {
+  name = "traefik-container-logs"
+
+  retention_in_days = 7
+
+  tags {
+    Name = "Traefik"
   }
 }

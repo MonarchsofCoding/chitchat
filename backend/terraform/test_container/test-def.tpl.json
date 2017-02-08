@@ -1,0 +1,17 @@
+[
+  {
+    "name": "test-hello",
+    "image": "dockercloud/hello-world",
+    "cpu": 50,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80
+      }
+    ],
+    "dockerLabels": {
+      "traefik.enable": "true"
+    }
+  }
+]

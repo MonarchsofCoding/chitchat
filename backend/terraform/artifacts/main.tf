@@ -41,3 +41,13 @@ resource "aws_s3_bucket_object" "index" {
     content_type = "text/html"
     etag = "${md5(file("artifacts.html"))}"
 }
+
+
+// Terraform State configuration
+resource "aws_s3_bucket" "terragrunt" {
+    bucket = "kcl-chitchat-terraform-state"
+    acl = "private"
+    versioning {
+        enabled = true
+    }
+}

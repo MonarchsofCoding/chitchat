@@ -1,16 +1,13 @@
 [
   {
-    "name": "chit-chat",
-    "image": "vjftw/chitchat-backend-test:abcde",
+    "name": "chit-chat_${environment}",
+    "image": "monarchsofcoding/chitchat:${backend_version}",
     "cpu": 50,
     "memory": 512,
     "essential": true,
     "portMappings": [
       {
         "containerPort": 80
-      },
-      {
-        "containerPort": 443
       }
     ],
     "logConfiguration": {
@@ -50,6 +47,9 @@
         "Name": "MIX_ENV",
         "Value": "prod"
       }
-    ]
+    ],
+    "dockerLabels": {
+      "traefik.enable": "true"
+    }
   }
 ]
