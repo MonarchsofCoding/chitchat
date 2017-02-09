@@ -10,7 +10,7 @@ resource "aws_ecs_cluster" "app" {
 
 ### ECS IAM Roles
 resource "aws_iam_role" "ecs_service" {
-  name = "tf_example_ecs_role"
+  name = "${var.cluster_name}.traefik.ecs_role"
 
   assume_role_policy = <<EOF
 {
@@ -30,7 +30,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "ecs_service" {
-  name = "tf_example_ecs_policy"
+  name = "${var.cluster_name}.traefik.ecs_policy"
   role = "${aws_iam_role.ecs_service.name}"
 
   policy = <<EOF
@@ -100,8 +100,8 @@ resource "aws_route53_zone" "service_discovery" {
 
 ## Compute
 
-resource "aws_autoscaling_group" "chit_chat" {
-  name                 = "tf-chit-chat-asg"
+resource "aws_autoscaling_group" "app_cluster" {
+  name                 = "${var.cluster_name}.asg"
   vpc_zone_identifier  = ["${aws_subnet.app.*.id}"]
   min_size             = "1"
   max_size             = "3"
@@ -118,10 +118,6 @@ data "template_file" "user_data" {
     ecs_log_level      = "info"
     ecs_agent_version  = "latest"
   }
-}
-
-output "user_data" {
-  value = "${data.template_file.user_data.rendered}"
 }
 
 resource "aws_launch_configuration" "app" {
@@ -145,13 +141,13 @@ resource "aws_launch_configuration" "app" {
 }
 
 resource "aws_iam_instance_profile" "app" {
-  name  = "tf-ecs-instprofile"
+  name  = "${var.cluster_name}.ecs-instprofile"
   roles = ["${aws_iam_role.app_instance.name}"]
 }
 
 // TODO: Reduce AWS Policy to follow Principal of Least Privilege!
 resource "aws_iam_role_policy" "app_instance" {
-  name = "tf_app_policy"
+  name = "${var.cluster_name}.app_policy"
   role = "${aws_iam_role.app_instance.name}"
 
   policy = <<EOF
@@ -180,7 +176,7 @@ EOF
 }
 
 resource "aws_iam_role" "app_instance" {
-  name = "tf-ecs-example-instance-role"
+  name = "${var.cluster_name}.ecs-instance-role"
 
   assume_role_policy = <<EOF
 {
@@ -204,7 +200,7 @@ resource "aws_security_group" "alb_sg" {
   description = "Controls access to and from the ALB"
 
   vpc_id = "${aws_vpc.app.id}"
-  name   = "tf-chit-chat-alb-sg"
+  name   = "${var.cluster_name}.alb-sg"
 
   ingress {
     protocol    = "tcp"
@@ -227,7 +223,7 @@ resource "aws_security_group" "alb_sg" {
 resource "aws_security_group" "instance_sg" {
   description = "Controls access to nodes in ECS cluster"
   vpc_id      = "${aws_vpc.app.id}"
-  name        = "tf-chit-chat-ecs-sg"
+  name        = "${var.cluster_name}.ecs-sg"
 
   ingress {
     protocol  = "tcp"
@@ -235,8 +231,15 @@ resource "aws_security_group" "instance_sg" {
     to_port   = 65535
 
     security_groups = [
-      "${aws_security_group.alb_sg.id}",
+      "${aws_security_group.alb_sg.id}"
     ]
+  }
+
+  ingress {
+    protocol = "tcp"
+    from_port = 0
+    to_port = 65535
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   egress {
@@ -249,14 +252,23 @@ resource "aws_security_group" "instance_sg" {
 
 ## Application Load Balancer to Traefik
 resource "aws_alb_target_group" "traefik" {
-  name     = "traefik-alb-tg"
+  name     = "${var.cluster_name}-traefik-tg"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.app.id}"
+
+  health_check {
+    healthy_threshold = 3
+    unhealthy_threshold = 3
+    timeout = 3
+    protocol = "HTTP"
+    interval = 5
+    matcher = "200,404"
+  }
 }
 
 resource "aws_alb" "traefik" {
-  name            = "traefik-alb-ecs"
+  name            = "${var.cluster_name}-traefik-alb"
   subnets         = ["${aws_subnet.app.*.id}"]
   security_groups = ["${aws_security_group.alb_sg.id}"]
 
@@ -280,6 +292,9 @@ resource "aws_alb_listener" "traefik" {
 data "template_file" "ecs_traefik_def" {
   template = "${file("traefik.def.tpl.json")}"
   vars {
+    aws_region = "${var.aws_region}"
+    cluster_name = "${var.cluster_name}"
+    domain_name = "${var.domain_name}"
     cloudwatch_log_group = "${aws_cloudwatch_log_group.traefik.arn}"
     cloudwatch_region = "${var.aws_region}"
   }
@@ -316,11 +331,35 @@ resource "aws_ecs_service" "traefik" {
 
 #### Log Group for Traefik
 resource "aws_cloudwatch_log_group" "traefik" {
-  name = "traefik-container-logs"
+  name = "${var.cluster_name}.traefik-container-logs"
 
   retention_in_days = 7
 
   tags {
-    Name = "Traefik"
+    Name = "${var.cluster_name} - Traefik"
+  }
+}
+
+
+## Route 53 Domain
+
+resource "aws_route53_zone" "tld" {
+   name = "${var.domain_name}"
+}
+
+output "zone_id" {
+  value = "${aws_route53_zone.tld.zone_id}"
+}
+
+resource "aws_route53_record" "alb" {
+
+  zone_id = "${aws_route53_zone.tld.zone_id}"
+  name = "${var.domain_name}"
+  type = "A"
+
+  alias {
+    name = "${aws_alb.traefik.dns_name}"
+    zone_id = "${aws_alb.traefik.zone_id}"
+    evaluate_target_health = false
   }
 }

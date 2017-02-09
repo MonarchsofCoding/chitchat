@@ -13,7 +13,7 @@
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "chit-chat-container-logs",
+        "awslogs-group": "${environment}.chit-chat-container-logs",
         "awslogs-region": "${cloudwatch_region}",
         "awslogs-stream-prefix": "chit-chat"
       }
@@ -49,7 +49,8 @@
       }
     ],
     "dockerLabels": {
-      "traefik.enable": "true"
+      "traefik.enable": "true",
+      "traefik.frontend.rule": "Host:${domain}"
     }
   }
 ]

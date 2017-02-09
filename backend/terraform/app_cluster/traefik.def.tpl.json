@@ -4,11 +4,12 @@
     "image": "traefik:morbier",
     "command": [
       "--ecs",
-      "--ecs.region=eu-west-1",
-      "--ecs.cluster=chit-chat",
+      "--ecs.region=${aws_region}",
+      "--ecs.cluster=${cluster_name}",
       "--ecs.watch=true",
-      "--ecs.exposedBydefault=true",
-      "--loglevel=DEBUG",
+      "--ecs.exposedBydefault=false",
+      "--ecs.domain=${domain_name}",
+      "--loglevel=INFO",
       "--web=true"
     ],
     "cpu": 50,
@@ -25,7 +26,7 @@
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "traefik-container-logs",
+        "awslogs-group": "${cluster_name}.traefik-container-logs",
         "awslogs-region": "${cloudwatch_region}",
         "awslogs-stream-prefix": "traefik"
       }

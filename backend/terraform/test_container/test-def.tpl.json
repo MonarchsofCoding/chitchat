@@ -11,7 +11,8 @@
       }
     ],
     "dockerLabels": {
-      "traefik.enable": "true"
+      "traefik.enable": "true",
+      "traefik.frontend.rule": "Host:test.monarchsofcoding.com"
     }
   }
 ]

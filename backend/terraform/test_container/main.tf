@@ -9,7 +9,7 @@ resource "aws_ecs_task_definition" "chit_chat" {
 
 resource "aws_ecs_service" "chat_chat" {
   name = "test-hello"
-  cluster = "chit-chat"
+  cluster = "${var.cluster_name}"
   task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
   desired_count = 1
 
@@ -17,4 +17,14 @@ resource "aws_ecs_service" "chat_chat" {
     type = "binpack"
     field = "cpu"
   }
+}
+
+resource "aws_route53_record" "test" {
+
+  zone_id = "${var.zone_id}"
+  name = "test.monarchsofcoding.com"
+  type = "CNAME"
+
+  ttl = 600
+  records = ["monarchsofcoding.com"]
 }
