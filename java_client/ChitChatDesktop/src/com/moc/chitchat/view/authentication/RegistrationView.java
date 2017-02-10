@@ -30,7 +30,7 @@ public class RegistrationView extends JFrame implements ActionListener {
     private JPasswordField passwordField;
     private JPasswordField passwordCheckField;
 
-    @Autowired
+    @ d
     RegistrationView(RegistrationController registrationController) {
         this.registrationController = registrationController;
 
