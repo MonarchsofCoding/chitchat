@@ -1,17 +1,22 @@
 package com.moc.chitchat.view.authentication;
 
-
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * RegistrationView provides the window used for registering a User.
@@ -84,22 +89,25 @@ public class RegistrationView extends JFrame implements ActionListener {
                 String.valueOf(this.passwordCheckField.getPassword())
             );
             JOptionPane.showMessageDialog(frame, "Success! You have now registered!");
-        } catch (ValidationException e) {
-            Errors errors = e.getErrors();
+        } catch (ValidationException validException) {
+            Errors errors = validException.getErrors();
 
             if (errors.getFieldError().getField().equals(("username"))) {
-                JOptionPane.showMessageDialog(frame, "Username " + errors.getFieldError("username").getDefaultMessage());
+                JOptionPane.showMessageDialog(frame, "Username "
+                        + errors.getFieldError("username").getDefaultMessage());
             }
 
             if (errors.getFieldError().getField().equals("password")) {
-                JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
+                JOptionPane.showMessageDialog(frame, "Password "
+                        + errors.getFieldError("password").getDefaultMessage());
             }
 
             if (errors.getFieldError().getField().equals("passwordCheck")) {
-                JOptionPane.showMessageDialog(frame, "Password again " + errors.getFieldError("passwordCheck").getDefaultMessage());
+                JOptionPane.showMessageDialog(frame, "Password again "
+                        + errors.getFieldError("passwordCheck").getDefaultMessage());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception defaultError) {
+            defaultError.printStackTrace();
         }
 
 
