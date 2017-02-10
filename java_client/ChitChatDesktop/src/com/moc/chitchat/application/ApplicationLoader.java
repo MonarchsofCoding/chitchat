@@ -40,8 +40,11 @@ public class ApplicationLoader {
 
         if (args.length > 0) {
             switch (args[0]) {
-                case "dev": this.configuration.setDevelopmentMode(); break;
-                case "test": this.configuration.setTestingMode(); break;
+                case "dev": this.configuration.setDevelopmentMode();
+                            break;
+
+                case "test": this.configuration.setTestingMode();
+                            break;
             }
         }
 

@@ -1,11 +1,11 @@
 package com.moc.chitchat.application;
 
-import org.springframework.stereotype.Component;
-
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import javax.swing.JWindow;
+
+import org.springframework.stereotype.Component;
 
 /**
  * SplashWindow provides a loading window to display to the User while the application loads.

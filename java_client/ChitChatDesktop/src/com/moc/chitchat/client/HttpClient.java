@@ -22,11 +22,11 @@ public class HttpClient {
     }
 
     /**
-     *
+     *  Attempts to post the object to the server via Http request.
      * @param uri adds the location of the url
      * @param object adds the object to JSONString to the body
      * @return response in Unirest
-     * @throws UnirestException
+     * @throws UnirestException - If invalid post with the httpClient
      */
     public HttpResponse<JsonNode> post(String uri, JSONString object) throws UnirestException {
         return Unirest
