@@ -1,18 +1,16 @@
 package com.moc.chitchat.validator;
 
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
+import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.MapBindingResult;
 import org.springframework.validation.Validator;
-
-import java.util.HashMap;
 
 @Component
 public class UserValidator implements Validator {
@@ -39,6 +37,11 @@ public class UserValidator implements Validator {
         }
     }
 
+    /**
+     * Validating the user of it's username and password to sign up.
+     * @param user - validate the UserModel user
+     * @throws ValidationException - if username or password is incorrect
+     */
     public void validate(UserModel user) throws ValidationException {
         MapBindingResult errors = new MapBindingResult(new HashMap<String,String>(), UserModel.class.getName());
         this.validate(user, errors);
@@ -49,11 +52,18 @@ public class UserValidator implements Validator {
 
     }
 
-    public void throwErrorsFromResponse(HttpResponse<JsonNode> response) throws ValidationException
-    {
+    /**
+     * Checks username and password if its valid from the server.
+     * @param response - using the response to see results from server
+     * @throws ValidationException - any errors from server throws ValidationException
+     */
+    public void throwErrorsFromResponse(HttpResponse<JsonNode> response) throws ValidationException {
         JSONObject serverErrors = response.getBody().getObject().getJSONObject("errors");
 
-        MapBindingResult validationErrors = new MapBindingResult(new HashMap<String,String>(), UserModel.class.getName());
+        MapBindingResult validationErrors =
+                new MapBindingResult(
+                new HashMap<String,String>(),
+                UserModel.class.getName());
 
 
         if (!serverErrors.isNull("username")) {

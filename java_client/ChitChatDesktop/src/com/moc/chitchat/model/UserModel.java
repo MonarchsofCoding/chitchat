@@ -1,6 +1,5 @@
 package com.moc.chitchat.model;
 
-
 import org.json.JSONObject;
 import org.json.JSONString;
 

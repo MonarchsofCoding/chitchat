@@ -87,18 +87,15 @@ public class RegistrationView extends JFrame implements ActionListener {
         } catch (ValidationException e) {
             Errors errors = e.getErrors();
 
-            if (errors.getFieldError().getField().equals(("username")))
-            {
+            if (errors.getFieldError().getField().equals(("username"))) {
                 JOptionPane.showMessageDialog(frame, "Username " + errors.getFieldError("username").getDefaultMessage());
             }
 
-            if (errors.getFieldError().getField().equals("password"))
-            {
+            if (errors.getFieldError().getField().equals("password")) {
                 JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
             }
 
-            if (errors.getFieldError().getField().equals("passwordCheck"))
-            {
+            if (errors.getFieldError().getField().equals("passwordCheck")) {
                 JOptionPane.showMessageDialog(frame, "Password again " + errors.getFieldError("passwordCheck").getDefaultMessage());
             }
         } catch (Exception e) {
