@@ -1,3 +1,32 @@
+## Paramaters
+data "aws_vpc" "app_cluster" {
+  tags {
+    cluster = "${var.cluster_name}"
+  }
+}
+
+/*data "aws_subnet" "app_cluster" {
+  tags {
+    cluster = "${var.cluster_name}"
+  }
+}*/
+
+data "aws_subnet" "app_cluster" {
+  vpc_id            = "${data.aws_vpc.app_cluster.id}"
+  state             = "available"
+  availability_zone = "${element(split(",", var.aws_availability_zones), count.index)}"
+
+  tags {
+    cluster = "${var.cluster_name}"
+  }
+
+  count = "${length(split(",", var.aws_availability_zones))}"
+}
+
+data "aws_route53_zone" "organisation" {
+  name = "monarchsofcoding.com."
+}
+
 ### ECS ChitChat App containers
 data "template_file" "ecs_chit-chat_def" {
   template = "${file("${path.module}/chit-chat-def.tpl.json")}"
@@ -27,11 +56,24 @@ resource "aws_ecs_service" "chat_chat" {
   cluster = "${var.cluster_name}"
   task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
   desired_count = 2
+  iam_role = "${aws_iam_role.ecs_service.arn}"
+
 
   placement_strategy {
     type = "binpack"
     field = "cpu"
   }
+
+  load_balancer {
+    target_group_arn = "${aws_alb_target_group.front_end.id}"
+    container_name   = "chit-chat_${var.environment}"
+    container_port   = "80"
+  }
+
+  depends_on = [
+    "aws_iam_role_policy.ecs_service",
+    "aws_alb_listener.front_end",
+  ]
 }
 
 #### Log Group for ChitChat App
@@ -77,10 +119,144 @@ resource "aws_ecs_service" "postgres" {
 
 resource "aws_route53_record" "domain" {
 
-  zone_id = "${var.zone_id}"
+  zone_id = "${data.aws_route53_zone.organisation.zone_id}"
   name = "${var.domain}"
-  type = "CNAME"
+  type = "A"
 
-  ttl = 600
-  records = ["${var.traefik_alb_domain}"]
+  alias {
+    name = "${aws_alb.front_end.dns_name}"
+    zone_id = "${aws_alb.front_end.zone_id}"
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_alb" "front_end" {
+  name            = "chit-chat-${var.environment}-alb"
+  subnets         = ["${data.aws_subnet.app_cluster.*.id}"]
+  security_groups = ["${aws_security_group.alb_sg.id}"]
+
+  provisioner "local-exec" {
+    command = "sleep 10"
+  }
+}
+
+resource "aws_alb_target_group" "front_end" {
+  name     = "chit-chat-${var.environment}-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "${data.aws_vpc.app_cluster.id}"
+
+  health_check {
+    healthy_threshold = 3
+    unhealthy_threshold = 3
+    timeout = 3
+    protocol = "HTTP"
+    interval = 5
+    matcher = "200,404"
+  }
+}
+
+resource "aws_security_group" "alb_sg" {
+  description = "Controls access to and from the ALB"
+
+  vpc_id = "${data.aws_vpc.app_cluster.id}"
+  name   = "chit-chat.${var.environment}.alb-sg"
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = [
+      "0.0.0.0/0",
+    ]
+  }
+}
+
+resource "aws_iam_role" "ecs_service" {
+  name = "chit-chat.${var.environment}.ecs_role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "ecs_service" {
+  name = "chit-chat.${var.environment}.ecs_policy"
+  role = "${aws_iam_role.ecs_service.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:Describe*",
+        "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+        "elasticloadbalancing:DeregisterTargets",
+        "elasticloadbalancing:Describe*",
+        "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+        "elasticloadbalancing:RegisterTargets"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+data "aws_acm_certificate" "chit_chat" {
+  domain = "chitchat.monarchsofcoding.com"
+  statuses = ["ISSUED"]
+}
+
+resource "aws_alb_listener" "front_end" {
+  load_balancer_arn = "${aws_alb.front_end.id}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.front_end.id}"
+    type             = "forward"
+  }
+}
+
+resource "aws_alb_listener" "front_end_ssl" {
+  load_balancer_arn = "${aws_alb.front_end.id}"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy = "ELBSecurityPolicy-2015-05"
+  certificate_arn = "${data.aws_acm_certificate.chit_chat.arn}"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.front_end.id}"
+    type             = "forward"
+  }
 }

@@ -1,8 +1,3 @@
-variable "zone_id" {
-  type = "string"
-  description = "The domain name for the Traefik ALB"
-}
-
 variable "database_password" {
   type = "string"
   description = "The domain name for the Traefik ALB"

@@ -2,60 +2,16 @@ provider "aws" {
     region = "${var.aws_region}"
 }
 
+data "aws_route53_zone" "organisation" {
+  name = "${var.domain_name}."
+}
+
 ## AWS ECS - Elastic Container Service
 resource "aws_ecs_cluster" "app" {
   name = "${var.cluster_name}"
 }
 
-
-### ECS IAM Roles
-resource "aws_iam_role" "ecs_service" {
-  name = "${var.cluster_name}.traefik.ecs_role"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2008-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ecs.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "ecs_service" {
-  name = "${var.cluster_name}.traefik.ecs_policy"
-  role = "${aws_iam_role.ecs_service.name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ec2:Describe*",
-        "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
-        "elasticloadbalancing:DeregisterTargets",
-        "elasticloadbalancing:Describe*",
-        "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-        "elasticloadbalancing:RegisterTargets"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
-
 ## Network
-
 data "aws_availability_zones" "available" {}
 
 resource "aws_vpc" "app" {
@@ -63,6 +19,10 @@ resource "aws_vpc" "app" {
 
   enable_dns_support = true
   enable_dns_hostnames = true
+
+  tags {
+    cluster = "${var.cluster_name}"
+  }
 }
 
 resource "aws_subnet" "app" {
@@ -70,6 +30,14 @@ resource "aws_subnet" "app" {
   cidr_block        = "${cidrsubnet(aws_vpc.app.cidr_block, 8, count.index)}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   vpc_id            = "${aws_vpc.app.id}"
+
+  tags {
+    cluster = "${var.cluster_name}"
+  }
+}
+
+output "subnets" {
+  value = ["${aws_subnet.app.*.id}"]
 }
 
 resource "aws_internet_gateway" "app" {
@@ -196,44 +164,10 @@ EOF
 }
 
 ## Security Groups
-resource "aws_security_group" "alb_sg" {
-  description = "Controls access to and from the ALB"
-
-  vpc_id = "${aws_vpc.app.id}"
-  name   = "${var.cluster_name}.alb-sg"
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-
-    cidr_blocks = [
-      "0.0.0.0/0",
-    ]
-  }
-}
-
 resource "aws_security_group" "instance_sg" {
   description = "Controls access to nodes in ECS cluster"
   vpc_id      = "${aws_vpc.app.id}"
   name        = "${var.cluster_name}.ecs-sg"
-
-  ingress {
-    protocol  = "tcp"
-    from_port = 0
-    to_port   = 65535
-
-    security_groups = [
-      "${aws_security_group.alb_sg.id}"
-    ]
-  }
 
   ingress {
     protocol = "tcp"
@@ -247,119 +181,5 @@ resource "aws_security_group" "instance_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
-## Application Load Balancer to Traefik
-resource "aws_alb_target_group" "traefik" {
-  name     = "${var.cluster_name}-traefik-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = "${aws_vpc.app.id}"
-
-  health_check {
-    healthy_threshold = 3
-    unhealthy_threshold = 3
-    timeout = 3
-    protocol = "HTTP"
-    interval = 5
-    matcher = "200,404"
-  }
-}
-
-resource "aws_alb" "traefik" {
-  name            = "${var.cluster_name}-traefik-alb"
-  subnets         = ["${aws_subnet.app.*.id}"]
-  security_groups = ["${aws_security_group.alb_sg.id}"]
-
-  provisioner "local-exec" {
-    command = "sleep 10"
-  }
-}
-
-resource "aws_alb_listener" "traefik" {
-  load_balancer_arn = "${aws_alb.traefik.id}"
-  port              = "80"
-  protocol          = "HTTP"
-
-  default_action {
-    target_group_arn = "${aws_alb_target_group.traefik.id}"
-    type             = "forward"
-  }
-}
-
-### Traefik containers
-data "template_file" "ecs_traefik_def" {
-  template = "${file("traefik.def.tpl.json")}"
-  vars {
-    aws_region = "${var.aws_region}"
-    cluster_name = "${var.cluster_name}"
-    domain_name = "${var.domain_name}"
-    cloudwatch_log_group = "${aws_cloudwatch_log_group.traefik.arn}"
-    cloudwatch_region = "${var.aws_region}"
-  }
-}
-
-resource "aws_ecs_task_definition" "traefik" {
-  family = "traefik"
-  container_definitions = "${data.template_file.ecs_traefik_def.rendered}"
-}
-
-resource "aws_ecs_service" "traefik" {
-  name = "traefik"
-  cluster = "${var.cluster_name}"
-  task_definition = "${aws_ecs_task_definition.traefik.arn}"
-  desired_count = 1
-  iam_role = "${aws_iam_role.ecs_service.arn}"
-
-  placement_strategy {
-    type = "binpack"
-    field = "cpu"
-  }
-
-  load_balancer {
-    target_group_arn = "${aws_alb_target_group.traefik.id}"
-    container_name   = "traefik"
-    container_port   = "80"
-  }
-
-  depends_on = [
-    "aws_iam_role_policy.ecs_service",
-    "aws_alb_listener.traefik",
-  ]
-}
-
-#### Log Group for Traefik
-resource "aws_cloudwatch_log_group" "traefik" {
-  name = "${var.cluster_name}.traefik-container-logs"
-
-  retention_in_days = 7
-
-  tags {
-    Name = "${var.cluster_name} - Traefik"
-  }
-}
-
-
-## Route 53 Domain
-
-resource "aws_route53_zone" "tld" {
-   name = "${var.domain_name}"
-}
-
-output "zone_id" {
-  value = "${aws_route53_zone.tld.zone_id}"
-}
-
-resource "aws_route53_record" "alb" {
-
-  zone_id = "${aws_route53_zone.tld.zone_id}"
-  name = "${var.domain_name}"
-  type = "A"
-
-  alias {
-    name = "${aws_alb.traefik.dns_name}"
-    zone_id = "${aws_alb.traefik.zone_id}"
-    evaluate_target_health = false
   }
 }

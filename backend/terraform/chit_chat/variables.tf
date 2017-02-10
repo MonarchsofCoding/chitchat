@@ -33,12 +33,6 @@ variable "container_version" {
   description = "The domain name for the Traefik ALB"
 }
 
-variable "zone_id" {
-  type = "string"
-  description = "The domain name for the Traefik ALB"
-}
-
-variable "traefik_alb_domain" {
-  type = "string"
-  description = "The domain name for the Traefik ALB"
+variable "aws_availability_zones" {
+  default = "list"
 }

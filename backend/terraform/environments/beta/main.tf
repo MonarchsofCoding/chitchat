@@ -7,12 +7,12 @@ module "main" {
 
   environment = "beta"
   domain = "beta.chitchat.monarchsofcoding.com"
-  traefik_alb_domain = "monarchsofcoding.com"
 
   container_version = "${var.container_version}"
 
   secret_key_base = "${var.secret_key_base}"
   database_password = "${var.database_password}"
 
-  zone_id = "${var.zone_id}"
+  aws_availability_zones = "eu-west-1a,eu-west-1b,eu-west-1c"
+
 }
