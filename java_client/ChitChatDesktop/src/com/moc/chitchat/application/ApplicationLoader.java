@@ -1,5 +1,6 @@
 package com.moc.chitchat.application;
 
+import com.moc.chitchat.view.authentication.LoginView;
 import com.moc.chitchat.view.authentication.RegistrationView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,23 +12,26 @@ import org.springframework.stereotype.Component;
 public class ApplicationLoader {
 
     private SplashWindow splashWindow;
-    private RegistrationView registrationView;
     private Configuration configuration;
-
+    private LoginView loginView;
+//    private RegistrationView registrationView;
     /**
      * Constructor for the ApplicationLoader.
      * @param splashWindow the splash window.
-     * @param registrationView The view for Registration.
+//     * @param registrationView The view for Registration.
+     * @param loginView The view for Login
      * @param configuration The configuration for the application.
      */
     @Autowired
     ApplicationLoader(
         SplashWindow splashWindow,
-        RegistrationView registrationView,
+        LoginView loginView,
+//        RegistrationView registrationView,
         Configuration configuration
     ) {
         this.splashWindow = splashWindow;
-        this.registrationView = registrationView;
+        this.loginView = loginView;
+//        this.registrationView = registrationView;
         this.configuration = configuration;
     }
 
@@ -48,6 +52,7 @@ public class ApplicationLoader {
         this.splashWindow.dispose();
 
         // Show Registration/Login Window
-        this.registrationView.setVisible(true);
+//        this.registrationView.setVisible(true);
+        this.loginView.setVisible(true);
     }
 }

@@ -1,6 +1,5 @@
 package com.moc.chitchat.view.authentication;
 
-
 import com.moc.chitchat.controller.authentication.LoginController;
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
@@ -16,75 +15,82 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * RegistrationView provides the window used for registering a User.
+ * Created by spiros on 09/02/17.
  */
 @Component
-public class RegistrationView extends JFrame implements ActionListener {
+public class LoginView extends JFrame implements ActionListener {
 
-    private RegistrationController registrationController;
+    private LoginController loginController;
     private JTextField usernameField;
     private JPasswordField passwordField;
-    private JPasswordField passwordCheckField;
+    private RegistrationView registrationView;
 
     @Autowired
-    RegistrationView(RegistrationController registrationController) {
-        this.registrationController = registrationController;
+    LoginView(LoginController loginController, RegistrationView registrationView) {
+        this.loginController = loginController;
+        this.registrationView = registrationView;
         this.buildInterface();
     }
 
     private void buildInterface() {
         this.setVisible(false);
 
-        JPanel registerForm = new JPanel(new MigLayout());
+        JPanel loginForm = new JPanel(new MigLayout());
 
         JLabel usernameLbl = new JLabel("Username ");
-        registerForm.add(usernameLbl);
+        loginForm.add(usernameLbl);
         this.usernameField = new JTextField(20);
-        registerForm.add(this.usernameField, new CC().wrap());
+        loginForm.add(this.usernameField, new CC().wrap());
 
         JLabel passwordLbl = new JLabel("Password ");
-        registerForm.add(passwordLbl);
+        loginForm.add(passwordLbl);
         this.passwordField = new JPasswordField(20);
         this.passwordField.addActionListener(this);
-        registerForm.add(this.passwordField, new CC().wrap());
+        loginForm.add(this.passwordField, new CC().wrap());
 
-        JLabel passwordCheckLbl = new JLabel("Password again ");
-        registerForm.add(passwordCheckLbl);
-        this.passwordCheckField = new JPasswordField(20);
-        this.passwordCheckField.setActionCommand("register");
-        this.passwordCheckField.addActionListener(this);
-        registerForm.add(this.passwordCheckField, new CC().wrap());
+        JButton loginBtn = new JButton("Login");
+        loginBtn.setActionCommand("login");
+        loginBtn.addActionListener(this);
+        loginForm.add(loginBtn, new CC().grow());
+
 
         JButton registerBtn = new JButton("Register");
         registerBtn.setActionCommand("register");
         registerBtn.addActionListener(this);
-        registerForm.add(registerBtn, new CC().span(2).grow());
+        loginForm.add(registerBtn, new CC().grow());
 
-        this.add(registerForm);
+        this.add(loginForm);
 
         this.pack();
         this.setLocationRelativeTo(null);
-//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         switch (actionEvent.getActionCommand()) {
+            case "login":
+                this.loginAction();
+
             case "register":
                 this.registerAction();
+
         }
     }
 
     private void registerAction() {
+        registrationView.setVisible(true);
+    }
+
+    private void loginAction() {
         JFrame frame = new JFrame();
         try {
-            UserModel user = this.registrationController.registerUser(
-                this.usernameField.getText(),
-                String.valueOf(this.passwordField.getPassword()),
-                String.valueOf(this.passwordCheckField.getPassword())
+            UserModel user = this.loginController.loginUser(
+                    this.usernameField.getText(),
+                    String.valueOf(this.passwordField.getPassword())
+
             );
-            JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
-            frame.dispose();
+          //  JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
         } catch (ValidationException e) {
             Errors errors = e.getErrors();
 
@@ -98,10 +104,7 @@ public class RegistrationView extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
             }
 
-            if (errors.getFieldError().getField().equals("passwordCheck"))
-            {
-                JOptionPane.showMessageDialog(frame, "Password again " + errors.getFieldError("passwordCheck").getDefaultMessage());
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,3 +112,4 @@ public class RegistrationView extends JFrame implements ActionListener {
 
     }
 }
+
