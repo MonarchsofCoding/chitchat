@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -67,9 +66,6 @@ public class RegisterUserActivity extends AppCompatActivity {
                         JSONObject registerObject = new JSONObject();
                         registerObject.put("username",usernameInput.getText().toString());
                         registerObject.put("password",passwordInput.getText().toString());
-
-
-
                         if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString(),registerObject)) {
                             Toast.makeText(registerContext, "The registration process is successfull.", Toast.LENGTH_LONG).show();
                             thisActivity.finish();

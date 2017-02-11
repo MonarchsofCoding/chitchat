@@ -27,15 +27,15 @@ public class UserValidator implements Validator {
         UserModel user = (UserModel) target;
 
         if (user.getUsername().isEmpty()) {
-            errors.rejectValue("username", "field.required");
+            errors.rejectValue("username", "field.required", "cannot be empty");
         }
 
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            errors.rejectValue("password", "field.required");
+            errors.rejectValue("password", "field.required", "cannot be empty");
         }
 
         if (user.getPasswordCheck() == null || !user.getPasswordCheck().equals(user.getPassword())) {
-            errors.rejectValue("passwordCheck", "password.mismatch");
+            errors.rejectValue("passwordCheck", "password.mismatch", "should match password");
         }
     }
 
@@ -59,8 +59,9 @@ public class UserValidator implements Validator {
         if (!serverErrors.isNull("username")) {
             JSONArray usernameErrors = serverErrors.getJSONArray("username");
 
+
             for (Object errorString:usernameErrors) {
-                validationErrors.rejectValue("username", errorString.toString());
+                validationErrors.rejectValue("username", "server.invalid", errorString.toString());
             }
         }
 
@@ -68,9 +69,10 @@ public class UserValidator implements Validator {
             JSONArray passwordErrors = serverErrors.getJSONArray("password");
 
             for (Object errorString:passwordErrors){
-                validationErrors.rejectValue("password", errorString.toString());
+                validationErrors.rejectValue("password", "server.invalid", errorString.toString());
             }
         }
+
         throw new ValidationException(validationErrors);
 
 

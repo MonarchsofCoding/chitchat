@@ -96,20 +96,4 @@ public class RegisterTest {
         }
         assertEquals(exceptionMessage, "ERROR: The two password inputs do not match!\n");
     }
-
-
-    // @Test
-    // public void false_PassInput() {
-    //     usernameTyped = "aydinakyol";
-    //     passwordTyped = "Abc123";
-    //     passwordReTyped = "Abc123";
-    //     try {
-    //         mockRegisterController.registerUser(usernameTyped, passwordTyped, passwordReTyped,mockJSON);
-    //     }
-    //     catch (Exception e) {
-    //         exceptionMessage = e.getMessage();
-    //     }
-    //     assertEquals(exceptionMessage, "ERROR: the password does not match with the desired " +
-    //         "password pattern.\n");
-    // }
 }

@@ -76,20 +76,31 @@ public class RegistrationView extends JFrame implements ActionListener {
     }
 
     private void registerAction() {
+        JFrame frame = new JFrame();
         try {
             this.registrationController.registerUser(
                 this.usernameField.getText(),
                 String.valueOf(this.passwordField.getPassword()),
                 String.valueOf(this.passwordCheckField.getPassword())
             );
-            JFrame frame = new JFrame();
             JOptionPane.showMessageDialog(frame, "Success! You have now registered!");
         } catch (ValidationException e) {
-            // Do validation or error handling. TODO: throw and catch more descriptive exceptions.
-            System.out.println("Exception caught!");
             Errors errors = e.getErrors();
 
-            System.out.println(errors.toString());
+            if (errors.getFieldError().getField().equals(("username")))
+            {
+                JOptionPane.showMessageDialog(frame, "Username " + errors.getFieldError("username").getDefaultMessage());
+            }
+
+            if (errors.getFieldError().getField().equals("password"))
+            {
+                JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
+            }
+
+            if (errors.getFieldError().getField().equals("passwordCheck"))
+            {
+                JOptionPane.showMessageDialog(frame, "Password again " + errors.getFieldError("passwordCheck").getDefaultMessage());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
