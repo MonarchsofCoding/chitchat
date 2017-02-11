@@ -6,10 +6,19 @@ from invoke_tools import lxc, system, vcs
 
 cli = Client(base_url='unix://var/run/docker.sock', timeout=600)
 
-# system.Info.print_all()
+@task
+def build(ctx):
+    """
+    Build release JAR
+    """
+    pass
 
-repo = vcs.Git()
-# repo.print_all()
+@task
+def deploy(ctx):
+    """
+    Upload Release to S3
+    """
+    pass
 
 
 @task

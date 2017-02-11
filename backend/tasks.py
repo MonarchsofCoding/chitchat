@@ -13,16 +13,53 @@ def build(ctx):
   Builds a Docker container for the Backend
   """
   git = vcs.Git()
+  version = git.get_version()
 
   lxc.Docker.build(cli,
       dockerfile='Dockerfile.app',
-      tag="monarchsofcoding/chitchat:{0}".format(git.get_version())
+      tag="monarchsofcoding/chitchat:{0}".format(version)
   )
 
   lxc.Docker.login(cli)
 
-  lxc.Docker.push(cli, "monarchsofcoding/chitchat:{0}".format(git.get_version()))
+  lxc.Docker.push(cli, "monarchsofcoding/chitchat:{0}".format(version))
   lxc.Docker.push(cli, "monarchsofcoding/chitchat:latest")
+
+@task
+def deploy(ctx):
+  """
+  Deploys container to AWS ECS
+  """
+  if os.getenv("TRAVIS_PULL_REQUEST") != "false":
+    exit("This is a PR, so not deploying.")
+
+  if os.getenv("TRAVIS_BRANCH") == "master":
+    env_dir = "production"
+  elif os.getenv("TRAVIS_BRANCH") == "develop":
+    env_dir = "beta"
+  else:
+    exit("Not master or develop, so not deploying.")
+
+  cli.pull("articulate/terragrunt", "0.8.6")
+
+  git = vcs.Git()
+  version = git.get_version()
+
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="apply",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": os.getenv("beta_DB_PASSWORD"),
+      "TF_VAR_secret_key_base": os.getenv("beta_SECRET_KEY_BASE"),
+      "TF_VAR_container_version": version
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env_dir)
+  )
 
 @task
 def test(ctx):
