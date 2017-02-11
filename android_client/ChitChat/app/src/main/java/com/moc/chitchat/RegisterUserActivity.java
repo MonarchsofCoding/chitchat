@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.Result;
 
@@ -58,7 +59,7 @@ public class RegisterUserActivity extends AppCompatActivity implements View.OnCl
                 passwordInput.getText().toString(),
                 passwordReInput.getText().toString());
 
-            userValidateResult = FluentValidator.checkAll().on(user, new UserValidator()).doValidate().result(toSimple());
+            userValidateResult = FluentValidator.checkAll().on(user, new UserInputValidator()).doValidate().result(toSimple());
             if (!userValidateResult.isSuccess()) {
                 throw new Exception(userValidateResult.getErrors().toString());
             }
