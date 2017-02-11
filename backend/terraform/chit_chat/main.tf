@@ -1,15 +1,12 @@
-## Paramaters
+provider "aws" {
+    region = "${var.aws_region}"
+}
+
 data "aws_vpc" "app_cluster" {
   tags {
     cluster = "${var.cluster_name}"
   }
 }
-
-/*data "aws_subnet" "app_cluster" {
-  tags {
-    cluster = "${var.cluster_name}"
-  }
-}*/
 
 data "aws_subnet" "app_cluster" {
   vpc_id            = "${data.aws_vpc.app_cluster.id}"
