@@ -43,6 +43,9 @@ android {
             resValue "string", "server_url", "https://chitchat.moc.com/api/v1/users"
         }
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 }
 
 dependencies {

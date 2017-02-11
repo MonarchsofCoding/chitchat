@@ -9,6 +9,7 @@ public class UserResponseValidator {
 
     public String validateResponse (VolleyError error) {
         StringBuilder response = new StringBuilder();
+
         try {
             JSONObject serverErrors = new JSONObject(new String(error.networkResponse.data)).getJSONObject("errors");
             if (serverErrors.has("username")) {
@@ -27,7 +28,13 @@ public class UserResponseValidator {
                 }
             }
         } catch (Exception e){
-            return e.getMessage();
+            response.append("Unexpected error happened. ");
+            if (error.networkResponse != null) {
+                response.append("Response code: " + error.networkResponse.statusCode);
+            }
+            else {
+                response.append("Server is unreachable.");
+            }
         }
         finally {
             return response.toString();
