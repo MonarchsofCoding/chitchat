@@ -13,7 +13,7 @@
     "environment": [
       {
         "Name": "SERVICE_5432_NAME",
-        "Value": "postgres"
+        "Value": "postgres_${environment}"
       },
       {
         "Name" : "POSTGRES_USER",

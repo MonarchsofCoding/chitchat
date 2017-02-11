@@ -1,0 +1,18 @@
+# Configure Terragrunt to use DynamoDB for locking
+lock = {
+  backend = "dynamodb"
+  config {
+    state_file_id = "kcl-chitchat-app"
+  }
+}
+
+# Configure Terragrunt to automatically store tfstate files in an S3 bucket
+remote_state = {
+  backend = "s3"
+  config {
+    encrypt = "true"
+    bucket = "kcl-chitchat-terraform-state"
+    key = "app_cluster/terraform.tfstate"
+    region = "eu-west-1"
+  }
+}
