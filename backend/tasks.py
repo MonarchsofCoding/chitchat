@@ -11,9 +11,9 @@ def __check_branch():
     exit("This is a PR, so not deploying.")
 
   if os.getenv("TRAVIS_BRANCH") == "master":
-    env_dir = "production"
+    return "production"
   elif os.getenv("TRAVIS_BRANCH") == "develop":
-    env_dir = "beta"
+    return "beta"
   else:
     exit("Not master or develop, so not deploying.")
 
@@ -41,7 +41,7 @@ def deploy(ctx):
   """
   Deploys container to AWS ECS
   """
-  __check_branch()
+  env_dir = __check_branch()
 
   cli.pull("articulate/terragrunt", "0.8.6")
 
@@ -54,8 +54,8 @@ def deploy(ctx):
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
       "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
-      "TF_VAR_database_password": os.getenv("beta_DB_PASSWORD"),
-      "TF_VAR_secret_key_base": os.getenv("beta_SECRET_KEY_BASE"),
+      "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
+      "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
       "TF_VAR_container_version": version
     },
     volumes=[
