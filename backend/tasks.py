@@ -6,30 +6,7 @@ from invoke_tools import lxc, system, vcs
 
 cli = Client(base_url='unix://var/run/docker.sock', timeout=600)
 
-
-@task
-def build(ctx):
-  """
-  Builds a Docker container for the Backend
-  """
-  git = vcs.Git()
-  version = git.get_version()
-
-  lxc.Docker.build(cli,
-      dockerfile='Dockerfile.app',
-      tag="monarchsofcoding/chitchat:{0}".format(version)
-  )
-
-  lxc.Docker.login(cli)
-
-  lxc.Docker.push(cli, "monarchsofcoding/chitchat:{0}".format(version))
-  lxc.Docker.push(cli, "monarchsofcoding/chitchat:latest")
-
-@task
-def deploy(ctx):
-  """
-  Deploys container to AWS ECS
-  """
+def __check_branch():
   if os.getenv("TRAVIS_PULL_REQUEST") != "false":
     exit("This is a PR, so not deploying.")
 
@@ -39,6 +16,32 @@ def deploy(ctx):
     env_dir = "beta"
   else:
     exit("Not master or develop, so not deploying.")
+
+@task
+def build(ctx):
+  """
+  Builds a Docker container for the Backend
+  """
+  __check_branch()
+  git = vcs.Git()
+
+  version = git.get_version()
+
+  lxc.Docker.build(cli,
+      dockerfile='Dockerfile.app',
+      tag="monarchsofcoding/chitchat:{0}".format(version)
+  )
+
+  lxc.Docker.login(cli)
+
+  lxc.Docker.push(cli, ["monarchsofcoding/chitchat:{0}".format(version)])
+
+@task
+def deploy(ctx):
+  """
+  Deploys container to AWS ECS
+  """
+  __check_branch()
 
   cli.pull("articulate/terragrunt", "0.8.6")
 

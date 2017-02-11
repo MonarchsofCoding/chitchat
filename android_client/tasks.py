@@ -51,7 +51,8 @@ def publish_test_artifacts(ctx):
   local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/productionRelease/"
   local_lint = "app/build/outputs/lint-results-betaDebug.html"
 
-  lxc.Docker.run(cli,
+  try:
+    lxc.Docker.run(cli,
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/coverage/ --recursive'.format(local_coverage, s3_artifacts),
       volumes=[
@@ -63,9 +64,12 @@ def publish_test_artifacts(ctx):
           "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
           "AWS_DEFAULT_REGION": "eu-west-1"
       }
-  )
+    )
+  except Exception:
+    pass
 
-  lxc.Docker.run(cli,
+  try:
+    lxc.Docker.run(cli,
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/tests/ --recursive'.format(local_tests, s3_artifacts),
       volumes=[
@@ -77,9 +81,12 @@ def publish_test_artifacts(ctx):
           "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
           "AWS_DEFAULT_REGION": "eu-west-1"
       }
-  )
+    )
+  except Exception:
+    pass
 
-  lxc.Docker.run(cli,
+  try:
+    lxc.Docker.run(cli,
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/lint/index.html'.format(local_lint, s3_artifacts),
       volumes=[
@@ -91,4 +98,6 @@ def publish_test_artifacts(ctx):
           "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
           "AWS_DEFAULT_REGION": "eu-west-1"
       }
-  )
+    )
+  except Exception:
+    pass

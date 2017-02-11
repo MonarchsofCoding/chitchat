@@ -75,21 +75,25 @@ def publish_test_artifacts(ctx):
     local_tests = "build/reports/tests/test/"
     local_checkstyle = "build/reports/checkstyle/"
 
-    lxc.Docker.run(cli,
-        tag="garland/aws-cli-docker:latest",
-        command='aws s3 cp {0} {1}/coverage/ --recursive'.format(local_coverage, s3_artifacts),
-        volumes=[
-            "{0}/ChitChatDesktop:/app".format(os.getcwd())
-        ],
-        working_dir="/app",
-        environment={
-            "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
-            "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
-            "AWS_DEFAULT_REGION": "eu-west-1"
-        }
-    )
+    try:
+      lxc.Docker.run(cli,
+          tag="garland/aws-cli-docker:latest",
+          command='aws s3 cp {0} {1}/coverage/ --recursive'.format(local_coverage, s3_artifacts),
+          volumes=[
+              "{0}/ChitChatDesktop:/app".format(os.getcwd())
+          ],
+          working_dir="/app",
+          environment={
+              "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+              "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+              "AWS_DEFAULT_REGION": "eu-west-1"
+          }
+      )
+    except Exception:
+      pass
 
-    lxc.Docker.run(cli,
+    try:
+      lxc.Docker.run(cli,
         tag="garland/aws-cli-docker:latest",
         command='aws s3 cp {0} {1}/tests/ --recursive'.format(local_tests, s3_artifacts),
         volumes=[
@@ -101,9 +105,12 @@ def publish_test_artifacts(ctx):
             "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
             "AWS_DEFAULT_REGION": "eu-west-1"
         }
-    )
+      )
+    except Exception:
+      pass
 
-    lxc.Docker.run(cli,
+    try:
+      lxc.Docker.run(cli,
         tag="garland/aws-cli-docker:latest",
         command='aws s3 cp {0} {1}/checkstyle/ --recursive'.format(local_checkstyle, s3_artifacts),
         volumes=[
@@ -115,4 +122,6 @@ def publish_test_artifacts(ctx):
             "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
             "AWS_DEFAULT_REGION": "eu-west-1"
         }
-    )
+      )
+    except Exception:
+      pass
