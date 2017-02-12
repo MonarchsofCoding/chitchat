@@ -73,8 +73,6 @@ public class LoginControllerTest {
                 "aaa"
         );
 
-        // Verify that UserValidator.validate was called
-        verify(mockUserValidator).validate(mockUser);
     }
 
 
@@ -114,8 +112,6 @@ public class LoginControllerTest {
             assertEquals("Validation Exception", e.getMessage());
         }
 
-        // Verify that UserValidator.validate was called
-        verify(mockUserValidator).validate(mockUser);
         // Verify the UserValidator.throwErrorsFromResponse was called
         verify(mockUserValidator).throwErrorsFromResponse(mockResponse);
     }
@@ -151,8 +147,6 @@ public class LoginControllerTest {
             assertEquals("Unexpected Response code: 500", e.getMessage());
         }
 
-        // Verify that UserValidator.validate was called
-        verify(mockUserValidator).validate(mockUser);
     }
 
 }
