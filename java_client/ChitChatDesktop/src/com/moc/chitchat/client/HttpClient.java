@@ -21,6 +21,13 @@ public class HttpClient {
         this.configuration = configuration;
     }
 
+    /**
+     *  Attempts to post the object to the server via Http request.
+     * @param uri adds the location of the url
+     * @param object adds the object to JSONString to the body
+     * @return response in Unirest
+     * @throws UnirestException - If invalid post with the httpClient
+     */
     public HttpResponse<JsonNode> post(String uri, JSONString object) throws UnirestException {
         return Unirest
             .post(configuration.getBackendAddress() + uri)
@@ -28,7 +35,7 @@ public class HttpClient {
             .header("Content-Type", "application/json")
             .body(object.toJSONString())
             .asJson()
-        ;
+            ;
     }
 
 

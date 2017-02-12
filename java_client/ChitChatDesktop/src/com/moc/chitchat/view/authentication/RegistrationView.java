@@ -1,7 +1,5 @@
 package com.moc.chitchat.view.authentication;
 
-
-import com.moc.chitchat.controller.authentication.LoginController;
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -22,6 +20,7 @@ import java.awt.event.ActionListener;
 public class RegistrationView extends JFrame implements ActionListener {
 
     private RegistrationController registrationController;
+
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JPasswordField passwordCheckField;
@@ -29,6 +28,7 @@ public class RegistrationView extends JFrame implements ActionListener {
     @Autowired
     RegistrationView(RegistrationController registrationController) {
         this.registrationController = registrationController;
+
         this.buildInterface();
     }
 
@@ -83,27 +83,30 @@ public class RegistrationView extends JFrame implements ActionListener {
                 String.valueOf(this.passwordField.getPassword()),
                 String.valueOf(this.passwordCheckField.getPassword())
             );
-            JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
+            JOptionPane.showMessageDialog(frame, String.format(
+                    "Success! You have now registered %s!",
+                    user.getUsername())
+            );
             frame.dispose();
-        } catch (ValidationException e) {
-            Errors errors = e.getErrors();
+        } catch (ValidationException validationException) {
+            Errors errors = validationException.getErrors();
 
-            if (errors.getFieldError().getField().equals(("username")))
-            {
-                JOptionPane.showMessageDialog(frame, "Username " + errors.getFieldError("username").getDefaultMessage());
+            if (errors.getFieldError().getField().equals(("username"))) {
+                JOptionPane.showMessageDialog(frame, "Username "
+                        + errors.getFieldError("username").getDefaultMessage());
             }
 
-            if (errors.getFieldError().getField().equals("password"))
-            {
-                JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
+            if (errors.getFieldError().getField().equals("password")) {
+                JOptionPane.showMessageDialog(frame, "Password "
+                        + errors.getFieldError("password").getDefaultMessage());
             }
 
-            if (errors.getFieldError().getField().equals("passwordCheck"))
-            {
-                JOptionPane.showMessageDialog(frame, "Password again " + errors.getFieldError("passwordCheck").getDefaultMessage());
+            if (errors.getFieldError().getField().equals("passwordCheck")) {
+                JOptionPane.showMessageDialog(frame, "Password again "
+                        + errors.getFieldError("passwordCheck").getDefaultMessage());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception defaultError) {
+            defaultError.printStackTrace();
         }
 
 

@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertEquals;
  * Created by aakyo on 23/01/2017.
  */
 
-
+/*
 public class LoginTest {
 
     private String usernameTyped;
@@ -81,3 +81,4 @@ public class LoginTest {
         assertEquals(outContent.toString(), expectedOutput);
     }
 }
+*/

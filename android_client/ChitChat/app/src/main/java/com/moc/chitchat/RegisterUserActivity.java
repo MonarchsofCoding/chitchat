@@ -10,77 +10,90 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import com.baidu.unbiz.fluentvalidator.Result;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toSimple;
 
 /**
  * Created by aakyo on 19/01/2017.
  */
 
-public class RegisterUserActivity extends AppCompatActivity {
+public class RegisterUserActivity extends AppCompatActivity implements View.OnClickListener{
 
     final Context registerContext = this;
-    final Activity thisActivity = this;
-    private RegisterController rController;
+    final Activity registerUserActivity = this;
+    Result userValidateResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        try {
-            rController = new RegisterController(new ServerComms(getResources().getString(R.string.server_url).toString()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         Window registerWindow = getWindow();
         registerWindow.setTitle("Register");
 
-        final EditText usernameInput = (EditText) findViewById(R.id.username_input);
-        final EditText passwordInput = (EditText) findViewById(R.id.password_input);
-        final EditText passwordReInput = (EditText) findViewById(R.id.reinput_password_input);
-
         Button registerButton = (Button) findViewById(R.id.register_button);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(usernameInput.getText().toString().equals("")) {
-                    System.out.println("ERROR: the username cannot be empty.");
-                    Toast.makeText(registerContext, "The username cannot be empty.",
-                        Toast.LENGTH_LONG).show();
-                }
-                else if(passwordInput.getText().toString().equals("") ||
-                    passwordReInput.getText().toString().equals("")) {
-                    System.out.println("ERROR: the password cannot be empty.");
-                    Toast.makeText(registerContext, "The password cannot be empty.",
-                        Toast.LENGTH_LONG).show();
-                }
-                else if(!passwordInput.getText().toString().equals(passwordReInput.getText().toString())) {
-                    System.out.println("ERROR: The two password inputs do not match!");
-                    Toast.makeText(registerContext, "The two password inputs do not match!",
-                        Toast.LENGTH_LONG).show();
-                }
-                else {
-                    System.out.println("GUI Input Check for Registration Request: OK.");
-                    try {
-                        JSONObject registerObject = new JSONObject();
-                        registerObject.put("username",usernameInput.getText().toString());
-                        registerObject.put("password",passwordInput.getText().toString());
-                        if(rController.registerUser(usernameInput.getText().toString(),passwordInput.getText().toString(),passwordReInput.getText().toString(),registerObject)) {
-                            Toast.makeText(registerContext, "The registration process is successfull.", Toast.LENGTH_LONG).show();
-                            thisActivity.finish();
-                            overridePendingTransition(R.transition.anim_exit1,R.transition.anim_exit2);
-                        }
-                        else {
-                            Toast.makeText(registerContext, "The registration process is unsuccessfull.", Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-                        System.out.println(e.toString());
-                        Toast.makeText(registerContext, "Something went wrong on our side. Try again.", Toast.LENGTH_LONG).show();
-                    }
-                }
+        registerButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        try {
+            EditText usernameInput = (EditText) findViewById(R.id.username_input);
+            EditText passwordInput = (EditText) findViewById(R.id.password_input);
+            EditText passwordReInput = (EditText) findViewById(R.id.reinput_password_input);
+
+            UserModel user = new UserModel(usernameInput.getText().toString(),
+                passwordInput.getText().toString(),
+                passwordReInput.getText().toString());
+
+            userValidateResult = FluentValidator.checkAll().on(user, new UserInputValidator()).doValidate().result(toSimple());
+            if (!userValidateResult.isSuccess()) {
+                throw new Exception(userValidateResult.getErrors().toString());
             }
-        });
+
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST,
+                registerContext.getResources().getString(R.string.server_url).toString(),
+                user.getJSON(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println("Registration is successful. Response: " + response);
+                        Toast.makeText(registerContext, "Registration is successful.", Toast.LENGTH_LONG).show();
+                        ExitActivity();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            throw new Exception(new UserResponseValidator().validateResponse(error));
+                        } catch (Exception registerFail) {
+                            Toast.makeText(registerContext, registerFail.getMessage().toString()
+                                .replace("[","")
+                                .replace("]",""), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            Volley.newRequestQueue(registerContext).add(jsonRequest);
+        }
+        catch (Exception registerFail) {
+            Toast.makeText(registerContext, registerFail.getMessage().toString()
+                .replace("[","")
+                .replace("]",""), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -89,9 +102,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     public void ExitActivity() {
-        thisActivity.finish();
+        this.finish();
         overridePendingTransition(R.transition.anim_exit1,R.transition.anim_exit2);
     }
-
-
 }

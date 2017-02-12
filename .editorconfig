@@ -1,0 +1,11 @@
+root = true
+
+# python
+[*.py]
+indent_style = space
+indent_size = 2
+
+# yml
+[*.yml]
+indent_style = space
+indent_size = 2

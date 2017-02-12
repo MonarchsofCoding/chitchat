@@ -41,3 +41,4 @@ resource "aws_s3_bucket_object" "index" {
     content_type = "text/html"
     etag = "${md5(file("artifacts.html"))}"
 }
+

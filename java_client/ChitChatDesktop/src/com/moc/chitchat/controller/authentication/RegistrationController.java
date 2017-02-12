@@ -35,8 +35,20 @@ public class RegistrationController {
         this.httpClient = httpClient;
     }
 
-    public UserModel registerUser(String username, String password, String passwordCheck) throws ValidationException, UnirestException, UnexpectedResponseException {
-        System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n", username, password.length(), passwordCheck.length());
+    /**
+     * Registering the user using the username, password and passwordCheck.
+     * @param username - this provides the input field username
+     * @param password - this provides the input field password
+     * @param passwordCheck - this provides the input field passwordCheck
+     * @throws ValidationException - If invalid username,password or passwordcheck
+     * @throws UnirestException - If invalid post with the httpClient
+     * @throws UnexpectedResponseException - Unexpected response
+     */
+    public UserModel registerUser(String username, String password, String passwordCheck)
+            throws ValidationException, UnirestException, UnexpectedResponseException {
+
+        System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n",
+                username, password.length(), passwordCheck.length());
 
         // Create the User object from parameters.
         UserModel user = this.userResolver.createUser(username, password, passwordCheck);
@@ -49,7 +61,6 @@ public class RegistrationController {
 
         // Process HTTP response. Throw Exception if User invalid. Return void/true if Successful.
         if (response.getStatus() == 422) {
-            System.out.println(response.getRawBody());
             // Validation failed or username taken.
             this.userValidator.throwErrorsFromResponse(response);
         } else if (response.getStatus() != 201) {
