@@ -3,7 +3,6 @@ defmodule ChitChat.UserController do
 
   alias ChitChat.User
 
-
   @doc """
   Lists all of the Users
   """
@@ -20,7 +19,7 @@ defmodule ChitChat.UserController do
   def create(conn, user_params) do
     changeset = User.changeset(%User{}, user_params)
 
-    case ChitChat.RegistrationDomain.register(changeset, Repo) do
+    case User.register(Repo, changeset) do
       {:ok, user} ->
         conn
         |> put_status(:created)

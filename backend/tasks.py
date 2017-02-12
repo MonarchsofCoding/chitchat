@@ -52,51 +52,27 @@ def test(ctx):
     import time
     time.sleep(10)
 
+    setup = "mix local.hex --force && mix local.rebar --force && mix deps.get"
+    tests = "mix test --color --trace"
+    coverage = "mix coveralls.html --color"
+    lint = "mix credo --strict"
+
     try:
       lxc.Docker.run(cli,
           tag="{0}-dev".format("chitchat-backend"),
-          command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix test --color --trace"',
+          command='/bin/sh -c "{0} && {1} && {2}; {3}"'.format(setup, tests, coverage, lint),
           volumes=[
               "{0}/chit_chat:/app".format(os.getcwd())
           ],
           working_dir="/app",
           environment={
+            "TERM": "xterm-color",
             "MIX_ENV": "test"
           },
           links={
             postgres_container.get('Id'): "postgres"
           }
       )
-
-      lxc.Docker.run(cli,
-         tag="{0}-dev".format("chitchat-backend"),
-         command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix coveralls.html"',
-         volumes=[
-           "{0}/chit_chat:/app".format(os.getcwd())
-         ],
-         working_dir="/app",
-         environment={
-          "MIX_ENV": "test"
-         },
-         links={
-           postgres_container.get('Id'): "postgres"
-         }
-       )
-
-      lxc.Docker.run(cli,
-         tag="{0}-dev".format("chitchat-backend"),
-         command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix credo"',
-         volumes=[
-           "{0}/chit_chat:/app".format(os.getcwd())
-         ],
-         working_dir="/app",
-         environment={
-          "MIX_ENV": "test"
-         },
-         links={
-           postgres_container.get('Id'): "postgres"
-         }
-       )
 
     finally:
       cli.stop(postgres_container.get('Id'))

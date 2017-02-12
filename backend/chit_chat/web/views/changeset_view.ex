@@ -1,6 +1,8 @@
 defmodule ChitChat.ChangesetView do
   use ChitChat.Web, :view
 
+  alias Ecto.Changeset
+
   @doc """
   Traverses and translates changeset errors.
 
@@ -9,7 +11,7 @@ defmodule ChitChat.ChangesetView do
   """
   @spec translate_errors({}) :: {}
   def translate_errors(changeset) do
-    Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
+    Changeset.traverse_errors(changeset, &translate_error/1)
   end
 
   @spec render(String, {}) :: {}
