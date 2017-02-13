@@ -1,6 +1,5 @@
-package com.moc.chitchat.model.resolver;
+package com.moc.chitchat.resolver;
 
-import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.model.UserModel;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;

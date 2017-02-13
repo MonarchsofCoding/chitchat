@@ -1,4 +1,4 @@
-package com.moc.chitchat.model.resolver;
+package com.moc.chitchat.resolver;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
@@ -6,11 +6,9 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-import com.moc.chitchat.resolver.ErrorResponseResolver;
+
 import java.io.UnsupportedEncodingException;
 import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Mockito.*;
 
 /**
  * ErrorResponsesResolverTest provides the tests for the ErrorResponsesResolver

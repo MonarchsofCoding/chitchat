@@ -1,17 +1,15 @@
-package com.moc.chitchat.model.controller;
+package com.moc.chitchat.controller;
 
 import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.moc.chitchat.client.HttpClient;
-import com.moc.chitchat.controller.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
