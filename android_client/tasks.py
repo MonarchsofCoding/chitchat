@@ -22,6 +22,10 @@ def build(ctx):
     """
     Build productionRelease APK
     """
+    lxc.Docker.clean(cli, [
+      "ChitChat/app/build",
+    ])
+
     lxc.Docker.build(cli,
         dockerfile='Dockerfile.dev',
         tag="{0}-dev".format("chitchat-androidclient")
@@ -51,7 +55,7 @@ def deploy(ctx):
 
   lxc.Docker.run(cli,
     tag="garland/aws-cli-docker:latest",
-    command='aws s3 cp {0} {1}/ChitChat-{2}-release-unsigned.apk'.format(local_apk, s3_artifacts, bin_version),
+    command='aws s3 cp {0} {1}/ChitChat-{2}-release-unsigned.apk'.format(local_apk, s3_binaries, bin_version),
     volumes=[
         "{0}/ChitChat:/app".format(os.getcwd())
     ],

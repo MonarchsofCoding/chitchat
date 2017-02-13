@@ -51,7 +51,7 @@ def deploy(ctx):
 
   lxc.Docker.run(cli,
     tag="garland/aws-cli-docker:latest",
-    command='aws s3 cp {0} {1}/ChitChat.jar'.format(local_jar, s3_artifacts),
+    command='aws s3 cp {0} {1}/ChitChat.jar'.format(local_jar, s3_binaries),
     volumes=[
         "{0}/ChitChat:/app".format(os.getcwd())
     ],
