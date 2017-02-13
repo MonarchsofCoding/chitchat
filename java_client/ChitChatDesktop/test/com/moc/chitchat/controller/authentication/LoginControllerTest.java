@@ -52,9 +52,8 @@ public class LoginControllerTest {
         // Stub the UserResolver to return a UserModel
         UserModel mockUser = mock(UserModel.class);
         when(
-                this.mockUserResolver.createUser(
+                this.mockUserResolver.createLoginUser(
                         "spiros",
-                        "aaa",
                         "aaa"
                 )
         ).thenReturn(mockUser);
@@ -81,9 +80,8 @@ public class LoginControllerTest {
         // Stub the UserResolver to return a UserModel
         UserModel mockUser = mock(UserModel.class);
         when(
-                this.mockUserResolver.createUser(
+                this.mockUserResolver.createLoginUser(
                         "spiros",
-                        "aaa",
                         "aaa"
                 )
         ).thenReturn(mockUser);
@@ -121,9 +119,8 @@ public class LoginControllerTest {
         // Stub the UserResolver to return a UserModel
         UserModel mockUser = mock(UserModel.class);
         when(
-                this.mockUserResolver.createUser(
+                this.mockUserResolver.createLoginUser(
                         "spiros",
-                        "aaa",
                         "aaa"
                 )
         ).thenReturn(mockUser);

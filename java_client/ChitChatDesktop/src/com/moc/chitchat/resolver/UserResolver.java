@@ -26,6 +26,12 @@ public class UserResolver {
 
         return user;
     }
+    public UserModel createLoginUser(String username, String password){
+        UserModel user = new UserModel(username);
+
+        user.setPassword(password);
+        return user;
+    }
 
     /**
      * createUser returns a new User with the given parameters applied.

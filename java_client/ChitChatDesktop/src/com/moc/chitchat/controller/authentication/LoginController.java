@@ -39,7 +39,7 @@ public class LoginController {
        // System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n", username, password.length());
 
         // Create the User object from parameters.
-        UserModel user = userResolver.createUser(username,password,password);
+        UserModel user = userResolver.createLoginUser(username,password);
 
 
         // Register the User object on the backend via a HTTP request.
