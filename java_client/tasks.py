@@ -53,7 +53,7 @@ def deploy(ctx):
     tag="garland/aws-cli-docker:latest",
     command='aws s3 cp {0} {1}/ChitChat.jar'.format(local_jar, s3_binaries),
     volumes=[
-        "{0}/ChitChat:/app".format(os.getcwd())
+        "{0}/ChitChatDesktop:/app".format(os.getcwd())
     ],
     working_dir="/app",
     environment={
