@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class UserValidatorTest {
-git sta
+
     @Mock
     private ErrorResponseResolver mockResponse;
 
