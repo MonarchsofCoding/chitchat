@@ -1,5 +1,10 @@
-FROM elixir:slim
+FROM elixir:latest
+
+RUN apt-get update -y
+RUN apt-get install -y inotify-tools
 
 RUN mkdir /app
+
+WORKDIR /app
 
 VOLUME /app

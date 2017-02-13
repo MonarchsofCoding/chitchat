@@ -1,6 +1,7 @@
 defmodule ChitChat.PageController do
   use ChitChat.Web, :controller
 
+  @spec index(Conn, {}) :: nil
   def index(conn, _params) do
     render conn, "index.html"
   end

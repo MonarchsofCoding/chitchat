@@ -8,6 +8,7 @@ defmodule ChitChat.ErrorHelpers do
   @doc """
   Generates tag for inlined form input errors.
   """
+  @spec error_tag(Form, Field) :: nil
   def error_tag(form, field) do
     if error = form.errors[field] do
       content_tag :span, translate_error(error), class: "help-block"
@@ -17,6 +18,7 @@ defmodule ChitChat.ErrorHelpers do
   @doc """
   Translates an error message using gettext.
   """
+  @spec translate_error({}) :: nil
   def translate_error({msg, opts}) do
     # Because error messages were defined within Ecto, we must
     # call the Gettext module passing our Gettext backend. We

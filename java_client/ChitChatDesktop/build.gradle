@@ -1,19 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
+
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
 apply plugin: "jacoco" // Jacoco Code Coverage
 apply plugin: 'checkstyle'
+apply plugin: 'org.springframework.boot'
+//apply plugin: 'javafx-gradle-plugin'
+
 
 repositories {
     mavenCentral()
 }
 
+
 dependencies {
-    // compile "joda-time:joda-time:2.2"
+    // Spring MVC Framework
+    compile 'org.springframework:spring-context:4.3.5.RELEASE'
+    // https://mvnrepository.com/artifact/commons-logging/commons-logging
+    compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+    // https://mvnrepository.com/artifact/com.miglayout/miglayout-swing
+    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.0'
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20160810'
+    // UniRest HTTP client
+    compile 'com.mashape.unirest:unirest-java:1.4.9'
+
     testCompile "junit:junit:4.12"
+    testCompile 'org.mockito:mockito-core:2.+'
 }
 
-mainClassName = 'com.moc.chitchat.Main'
+mainClassName = 'com.moc.chitchat.Application'
 
 sourceSets.main.java.srcDirs = ['src']
 sourceSets.test.java.srcDirs = ['test']
@@ -21,8 +46,8 @@ sourceSets.test.java.srcDirs = ['test']
 jar {
     manifest {
         attributes(
-            'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-            'Main-Class': 'com.moc.chitchat.Main'
+//            'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+            'Main-Class': 'com.moc.chitchat.Application'
         )
     }
 }
@@ -38,7 +63,19 @@ jacoco {
     reportsDir = file("$buildDir/JacocoCoverageReport")
 }
 
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: 'com/moc/chitchat/view**')
+        })
+    }
+}
+
 checkstyle {
     toolVersion = "7.4"
     sourceSets = [project.sourceSets.main]
+}
+
+task printGradleHomeDir << {
+    println gradle.gradleHomeDir
 }

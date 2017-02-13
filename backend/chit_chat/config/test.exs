@@ -17,3 +17,6 @@ config :chit_chat, ChitChat.Repo,
   database: "chit_chat_test",
   hostname: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Use less encryption rounds in test environment
+config :comeonin, :bcrypt_log_rounds, 4
