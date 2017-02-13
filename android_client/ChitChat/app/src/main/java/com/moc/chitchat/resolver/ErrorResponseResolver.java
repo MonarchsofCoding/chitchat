@@ -19,6 +19,7 @@ public class ErrorResponseResolver {
      */
     public JSONObject getResponseBody(VolleyError error) {
         try {
+            //When no server connection, exception happens.
             return new JSONObject(new String(error.networkResponse.data, "UTF-8"));
         } catch (JSONException | UnsupportedEncodingException e) {
             e.printStackTrace();
