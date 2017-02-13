@@ -6,19 +6,62 @@ from invoke_tools import lxc, system, vcs
 
 cli = Client(base_url='unix://var/run/docker.sock', timeout=600)
 
+def __check_branch():
+  if os.getenv("TRAVIS_PULL_REQUEST") != "false":
+    exit("This is a PR, so not deploying.")
+
+  if os.getenv("TRAVIS_BRANCH") == "master":
+    return "production"
+  elif os.getenv("TRAVIS_BRANCH") == "develop":
+    return "beta"
+  else:
+    exit("Not master or develop, so not deploying.")
+
 @task
 def build(ctx):
     """
     Build productionRelease APK
     """
+    lxc.Docker.build(cli,
+        dockerfile='Dockerfile.dev',
+        tag="{0}-dev".format("chitchat-androidclient")
+    )
+
+    lxc.Docker.run(cli,
+        tag="{0}-dev".format("chitchat-androidclient"),
+        command='/bin/bash -c "cd app && gradle build"',
+        volumes=[
+            "{0}/ChitChat:/app".format(os.getcwd())
+        ],
+        working_dir="/app",
+        environment={}
+    )
     pass
 
 @task
 def deploy(ctx):
-    """
-    Upload Release to S3
-    """
-    pass
+  """
+  Upload Release to S3
+  """
+  bin_version = __check_branch()
+  cli.pull("garland/aws-cli-docker", "latest")
+
+  s3_binaries = "s3://kcl-chit-chat-artifacts/binaries/{0}/{1}/android_client".format(bin_version, os.getenv("TRAVIS_BUILD_NUMBER"))
+  local_apk = "app/build/outputs/apk/app-{0}-release-unsigned.apk".format(bin_version)
+
+  lxc.Docker.run(cli,
+    tag="garland/aws-cli-docker:latest",
+    command='aws s3 cp {0} {1}/ChitChat-{2}-release-unsigned.apk'.format(local_apk, s3_artifacts, bin_version),
+    volumes=[
+        "{0}/ChitChat:/app".format(os.getcwd())
+    ],
+    working_dir="/app",
+    environment={
+        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+        "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+        "AWS_DEFAULT_REGION": "eu-west-1"
+    }
+  )
 
 @task
 def test(ctx):
