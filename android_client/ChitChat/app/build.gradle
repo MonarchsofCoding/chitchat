@@ -10,7 +10,7 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
+apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
 apply plugin: 'com.neenbedankt.android-apt'
 
