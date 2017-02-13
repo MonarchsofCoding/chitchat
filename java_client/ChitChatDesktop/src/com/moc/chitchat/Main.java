@@ -1,6 +1,9 @@
 package com.moc.chitchat;
 
 import com.moc.chitchat.application.ApplicationLoader;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
-public class Application {
+public class Main extends Application {
 
     /**
      * main provides the entry point for this application.
@@ -19,10 +22,17 @@ public class Application {
      *             Defaults to `prod`. Modes: `dev`, `test`, `prod`.
      */
     public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
+        Application.launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Platform.setImplicitExit(true);
+        ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         System.out.println(context.getApplicationName());
 
         ApplicationLoader applicationLoader = context.getBean(ApplicationLoader.class);
-        applicationLoader.load(args);
+
+        applicationLoader.load(primaryStage, this.getParameters().getUnnamed());
     }
 }
