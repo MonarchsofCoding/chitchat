@@ -37,8 +37,7 @@ android {
     }
     productFlavors {
         development {
-//            resValue "string", "server_url", "http://10.0.2.2:4000"
-            resValue "string", "server_url", "http://172.18.0.1:4000"
+            resValue "string", "server_url", "http://10.0.2.2:4000"
         }
         beta {
             resValue "string", "server_url", "https://beta.chitchat.monarchsofcofing.com"
