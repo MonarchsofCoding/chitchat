@@ -29,7 +29,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Platform.setImplicitExit(true);
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-        System.out.println(context.getApplicationName());
 
         ApplicationLoader applicationLoader = context.getBean(ApplicationLoader.class);
 

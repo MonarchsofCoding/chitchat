@@ -1,6 +1,6 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.view.MainView;
+import com.moc.chitchat.view.authentication.AuthenticationStage;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ApplicationLoader {
 
     private Configuration configuration;
-    private MainView mainView;
+    private AuthenticationStage authenticationStage;
 
     /**
      * Constructor for the ApplicationLoader.
@@ -22,11 +22,11 @@ public class ApplicationLoader {
      */
     @Autowired
     ApplicationLoader(
-        MainView mainView,
-        Configuration configuration
+        Configuration configuration,
+        AuthenticationStage authenticationStage
     ) {
-        this.mainView = mainView;
         this.configuration = configuration;
+        this.authenticationStage = authenticationStage;
     }
 
     /**
@@ -44,6 +44,10 @@ public class ApplicationLoader {
                     break;
             }
         }
-        this.mainView.load(stage);
+
+        // AuthenticationStage
+        this.authenticationStage.showAndWait();
+
+        System.out.println("Authentication Finished!");
     }
 }
