@@ -11,7 +11,7 @@ import org.junit.Test;
 public class UserResolverTest {
 
     @Test
-    public void testCreateUser() {
+    public void testCreateReginsterUser() {
         String expectedusername = "SuperFood";
         String expectedpassword = "poiuytrewq";
         String expectedpasswordCheck = "poiuytrewq";
@@ -25,5 +25,19 @@ public class UserResolverTest {
         assertEquals(expectedusername, user.getUsername());
         assertEquals(expectedpassword, user.getPassword());
         assertEquals(expectedpasswordCheck, user.getPasswordCheck());
+    }
+    @Test
+    public void testCreateLoginUser() {
+        String expectedusername = "SuperFood";
+        String expectedpassword = "poiuytrewq";
+
+
+        UserResolver userResolver = new UserResolver();
+
+        UserModel user = userResolver.createLoginUser(expectedusername,
+                expectedpassword);
+
+        assertEquals(expectedusername, user.getUsername());
+        assertEquals(expectedpassword, user.getPassword());
     }
 }
