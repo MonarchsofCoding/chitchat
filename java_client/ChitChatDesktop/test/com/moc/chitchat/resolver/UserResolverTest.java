@@ -35,4 +35,19 @@ public class UserResolverTest {
 
         assertEquals(expectedUsername, user.getUsername());
     }
+
+    @Test
+    public void testCreateLoginUser()
+    {
+        String expectedUsename = "Vjftw";
+        String expectedPasswordlgn = "aaaaaaaa";
+        UserResolver userResolver = new UserResolver();
+        UserModel user = userResolver.createLoginUser(expectedUsename,expectedPasswordlgn);
+
+        assertEquals(expectedUsename,user.getUsername());
+        assertEquals(expectedPasswordlgn,user.getPassword());
+
+
+
+    }
 }
