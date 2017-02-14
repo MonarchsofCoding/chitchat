@@ -159,6 +159,16 @@ public class RegistrationActivity extends Activity
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        this.ExitActivity();
+    }
+
+    @Override
+    public void onBackPressed() {
+        ExitActivity();
+    }
+
+    public void ExitActivity() {
         this.finish();
+        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
     }
 }
