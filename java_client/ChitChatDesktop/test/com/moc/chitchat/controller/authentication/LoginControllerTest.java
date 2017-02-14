@@ -63,7 +63,7 @@ public class LoginControllerTest {
         when(mockResponse.getStatus())
                 .thenReturn(200);
         // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.post("/api/v1/users", mockUser))
+        when(this.mockHttpClient.post("/api/v1/auth", mockUser))
                 .thenReturn(mockResponse);
 
         // Run the function to test
@@ -92,7 +92,7 @@ public class LoginControllerTest {
         when(mockResponse.getStatus())
                 .thenReturn(401);
         // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.post("/api/v1/users", mockUser))
+        when(this.mockHttpClient.post("/api/v1/auth", mockUser))
                 .thenReturn(mockResponse);
 
         // Mock the ValidationException
@@ -131,7 +131,7 @@ public class LoginControllerTest {
         when(mockResponse.getStatus())
                 .thenReturn(500);
         // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.post("/api/v1/users", mockUser))
+        when(this.mockHttpClient.post("/api/v1/auth", mockUser))
                 .thenReturn(mockResponse);
 
         // Run the function to test
