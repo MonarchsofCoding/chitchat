@@ -71,9 +71,11 @@ public class LoginView extends JFrame implements ActionListener {
         switch (actionEvent.getActionCommand()) {
             case "login":
                 this.loginAction();
+                break;
 
             case "register":
                 this.registerAction();
+                break;
 
         }
     }
@@ -90,19 +92,9 @@ public class LoginView extends JFrame implements ActionListener {
                     String.valueOf(this.passwordField.getPassword())
 
             );
-          //  JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
+           JOptionPane.showMessageDialog(frame, String.format("Success! You have now login with %s!", user.getUsername()));
         } catch (ValidationException e) {
-            Errors errors = e.getErrors();
-
-            if (errors.getFieldError().getField().equals(("username")))
-            {
-                JOptionPane.showMessageDialog(frame, "Username " + errors.getFieldError("username").getDefaultMessage());
-            }
-
-            if (errors.getFieldError().getField().equals("password"))
-            {
-                JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
-            }
+                JOptionPane.showMessageDialog(frame, "Wrong Credentials or you have not sign up yet");
 
 
         } catch (Exception e) {

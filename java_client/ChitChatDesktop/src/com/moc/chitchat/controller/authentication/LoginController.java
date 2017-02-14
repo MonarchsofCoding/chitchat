@@ -43,7 +43,7 @@ public class LoginController {
 
 
         // Register the User object on the backend via a HTTP request.
-        HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/users", user);
+        HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/auth", user);
 
         // Process HTTP response. Throw Exception if User invalid. Return void/true if Successful.
         if (response.getStatus() == 401) {
