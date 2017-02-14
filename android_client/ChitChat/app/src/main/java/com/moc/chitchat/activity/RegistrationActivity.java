@@ -134,9 +134,9 @@ public class RegistrationActivity extends Activity
             }
 
             if (responseErrors.has("password")) {
-                JSONArray usernameErrors = responseErrors.getJSONArray("password");
+                JSONArray passwordErrors = responseErrors.getJSONArray("password");
                 Toast.makeText(this,
-                        String.format("Password: %s", usernameErrors.toString()),
+                        String.format("Password: %s", passwordErrors.toString()),
                         Toast.LENGTH_LONG).show();
             }
         } catch (JSONException e) {
