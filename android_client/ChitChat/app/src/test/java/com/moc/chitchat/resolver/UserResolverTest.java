@@ -18,7 +18,7 @@ public class UserResolverTest {
 
         UserResolver userResolver = new UserResolver();
 
-        UserModel user = userResolver.create(expectedusername,
+        UserModel user = userResolver.createRegisterUser(expectedusername,
                                             expectedpassword,
                                             expectedpasswordCheck);
 
