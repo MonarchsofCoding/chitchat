@@ -1,15 +1,18 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
 apply plugin: 'checkstyle'
+apply plugin: 'com.neenbedankt.android-apt'
 
 checkstyle {
     toolVersion = "7.4"
@@ -28,23 +31,24 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
         development {
-            resValue "string", "server_url", "http://10.0.2.2:4000/api/v1/users"
+            resValue "string", "server_url", "http://10.0.2.2:4000"
         }
         beta {
-            resValue "string", "server_url", "https://beta.chitchat.moc.com/api/v1/users"
+            resValue "string", "server_url", "https://beta.chitchat.monarchsofcofing.com"
         }
         production {
-            resValue "string", "server_url", "https://chitchat.moc.com/api/v1/users"
+            resValue "string", "server_url", "https://chitchat.monarchsofcoding.com"
         }
     }
-    lintOptions {
-        disable 'InvalidPackage'
+    compileOptions.incremental = false
+    testOptions {
+//        unitTests.returnDefaultValues = true
     }
 }
 
@@ -53,14 +57,14 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.google.dagger:dagger:2.8'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.google.dagger:dagger:2.9'
+    apt "com.google.dagger:dagger-compiler:2.9"
+    provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.baidu.unbiz:fluent-validator:1.0.6'
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.+'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.+'
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.+"
+    testCompile "org.mockito:mockito-core:2.7.5"
+    testCompile 'org.json:json:20160810'
 }
 
 tasks.withType(Test) {

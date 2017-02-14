@@ -39,11 +39,11 @@ public class LoginController {
        // System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n", username, password.length());
 
         // Create the User object from parameters.
-        UserModel user = userResolver.createUser(username,password,password);
+        UserModel user = userResolver.createLoginUser(username,password);
 
 
         // Register the User object on the backend via a HTTP request.
-        HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/users", user);
+        HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/auth", user);
 
         // Process HTTP response. Throw Exception if User invalid. Return void/true if Successful.
         if (response.getStatus() == 401) {
