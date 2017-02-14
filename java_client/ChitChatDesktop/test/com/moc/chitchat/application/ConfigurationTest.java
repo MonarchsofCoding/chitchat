@@ -13,7 +13,7 @@ public class ConfigurationTest {
     public void testConstructor() {
         Configuration configuration = new Configuration();
 
-        assertEquals(configuration.getBackendAddress(), "https://chitchat.moc.com");
+        assertEquals(configuration.getBackendAddress(), "https://chitchat.monarchsofcoding.com");
     }
 
     @Test
@@ -31,6 +31,6 @@ public class ConfigurationTest {
 
         configuration.setTestingMode();
 
-        assertEquals(configuration.getBackendAddress(), "https://beta.chitchat.moc.com");
+        assertEquals(configuration.getBackendAddress(), "https://beta.chitchat.monarchsofcoding.com");
     }
 }
