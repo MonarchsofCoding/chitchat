@@ -31,14 +31,27 @@ def build(ctx):
         tag="{0}-dev".format("chitchat-androidclient")
     )
 
+    bin_version = __check_branch()
+    build_dir = "build/outputs/apk"
+
+    zipalign = "zipalign -v -p 4 {1}/app-{0}-release-unsigned.apk {1}/app-{0}-release-unsigned-aligned.apk".format(bin_version, build_dir)
+
+    sign = "apksigner sign --ks /app/android.jks --ks-key-alias ChitChatKey --ks-pass env:ANDROID_STORE_PASSWORD --key-pass env:ANDROID_KEY_PASSWORD --out {1}/app-{0}-release.apk {1}/app-{0}-release-unsigned-aligned.apk".format(bin_version, build_dir)
+
+    verify = "apksigner verify {1}/app-{0}-release.apk".format(bin_version, build_dir)
+
     lxc.Docker.run(cli,
         tag="{0}-dev".format("chitchat-androidclient"),
-        command='/bin/bash -c "cd app && gradle build"',
+        command='/bin/bash -c "cd app && gradle assembleRelease && {0} && {1} && {2}"'.format(zipalign, sign, verify),
         volumes=[
             "{0}/ChitChat:/app".format(os.getcwd())
         ],
         working_dir="/app",
-        environment={}
+        environment={
+          "ANDROID_KEY_PASSWORD": os.getenv("ANDROID_KEY_PASSWORD"),
+          "ANDROID_STORE_FILE": "/app/android.jks",
+          "ANDROID_STORE_PASSWORD": os.getenv("ANDROID_STORE_PASSWORD")
+        }
     )
     pass
 
@@ -51,11 +64,11 @@ def deploy(ctx):
   cli.pull("garland/aws-cli-docker", "latest")
 
   s3_binaries = "s3://kcl-chit-chat-artifacts/binaries/{0}/{1}/android_client".format(bin_version, os.getenv("TRAVIS_BUILD_NUMBER"))
-  local_apk = "app/build/outputs/apk/app-{0}-release-unsigned.apk".format(bin_version)
+  local_apk = "app/build/outputs/apk/app-{0}-release.apk".format(bin_version)
 
   lxc.Docker.run(cli,
     tag="garland/aws-cli-docker:latest",
-    command='aws s3 cp {0} {1}/ChitChat-{2}-release-unsigned.apk'.format(local_apk, s3_binaries, bin_version),
+    command='aws s3 cp {0} {1}/ChitChat-{2}-release.apk'.format(local_apk, s3_binaries, bin_version),
     volumes=[
         "{0}/ChitChat:/app".format(os.getcwd())
     ],

@@ -15,7 +15,7 @@ public class UserResolver {
      * @param passwordCheck the password check for the User.
      * @return a new User with the given parameters.
      */
-    public UserModel create(String username, String password, String passwordCheck) {
+    public UserModel createRegisterUser(String username, String password, String passwordCheck) {
         UserModel user = new UserModel(username);
 
         user
@@ -23,6 +23,13 @@ public class UserResolver {
             .setPasswordCheck(passwordCheck)
         ;
 
+        return user;
+    }
+
+    public UserModel createLoginUser(String username, String password){
+        UserModel user = new UserModel(username);
+
+        user.setPassword(password);
         return user;
     }
 }

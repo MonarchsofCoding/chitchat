@@ -18,15 +18,21 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
  * RegistrationView provides the window used for registering a User.
  */
 @Component
-public class RegistrationView implements EventHandler<ActionEvent> {
+public class RegistrationView extends BaseView implements EventHandler<ActionEvent> {
 
     private RegistrationController registrationController;
 
     private TextField usernameField;
+    private Label usernameErrors;
     private PasswordField passwordField;
+    private Label passwordErrors;
     private PasswordField passwordCheckField;
+    private Label passwordCheckErrors;
 
     private Button registerBtn;
+    private Button loginBtn;
+
+    private AuthenticationStage stage;
 
     @Autowired
     RegistrationView(
@@ -35,36 +41,56 @@ public class RegistrationView implements EventHandler<ActionEvent> {
         this.registrationController = registrationController;
     }
 
-    public MigPane buildContentPane() {
+    public void setStage(AuthenticationStage stage) {
+        this.stage = stage;
+    }
+
+    @Override
+    public MigPane getContentPane() {
         MigPane registerPane = new MigPane();
-        registerPane.setLayout("fill");
 
-        Label usernameLbl = new Label("Username ");
-        registerPane.add(usernameLbl, "span 2");
+        MigPane registerForm = new MigPane();
+
         this.usernameField = new TextField();
-        this.usernameField.setStyle("-fx-alignment: center;");
-        registerPane.add(this.usernameField, "wrap");
+        this.usernameField.setPromptText("Username");
+        registerForm.add(this.usernameField, "wrap");
+        this.usernameErrors = new Label();
+        registerForm.add(this.usernameErrors, "wrap");
 
-        Label passwordLbl = new Label("Password ");
-        registerPane.add(passwordLbl, "span 2");
         this.passwordField = new PasswordField();
+        this.passwordField.setPromptText("Password");
         this.passwordField.setOnAction(this);
-        registerPane.add(this.passwordField, "span");
+        registerForm.add(this.passwordField, "span");
+        this.passwordErrors = new Label();
+        registerForm.add(this.passwordErrors, "wrap");
 
-        Label passwordCheckLbl = new Label("Password ");
-        registerPane.add(passwordCheckLbl, "span 2");
         this.passwordCheckField = new PasswordField();
+        this.passwordCheckField.setPromptText("Re-Password");
         this.passwordCheckField.setOnAction(this);
-        registerPane.add(this.passwordCheckField, "span");
+        registerForm.add(this.passwordCheckField, "span");
+        this.passwordCheckErrors = new Label();
+        registerForm.add(this.passwordCheckErrors, "wrap");
 
         this.registerBtn = new Button("Register");
         this.registerBtn.setOnAction(this);
-        registerPane.add(registerBtn, "");
+        registerForm.add(this.registerBtn, "wrap, grow");
+
+        this.loginBtn = new Button("Login");
+        this.loginBtn.setOnAction(this);
+        registerForm.add(this.loginBtn, "wrap, grow");
+
+        registerPane.add(registerForm, "span, split 2, center");
 
         return registerPane;
     }
 
     private void registerAction() {
+        this.usernameField.setDisable(true);
+        this.passwordField.setDisable(true);
+        this.passwordCheckField.setDisable(true);
+        this.registerBtn.setDisable(true);
+        this.loginBtn.setDisable(true);
+
         try {
             UserModel user = this.registrationController.registerUser(
                 this.usernameField.getText(),
@@ -75,23 +101,32 @@ public class RegistrationView implements EventHandler<ActionEvent> {
 //                    "Success! You have now registered %s!",
 //                    user.getUsername())
 //            );
+            System.out.println(String.format(
+                    "Success! You have now registered %s!", user.getUsername()));
+
+            this.loginBtn.setDisable(false);
+
         } catch (ValidationException validationException) {
+            this.usernameField.setDisable(false);
+            this.passwordField.setDisable(false);
+            this.passwordCheckField.setDisable(false);
+            this.registerBtn.setDisable(false);
+            this.loginBtn.setDisable(false);
+
             Errors errors = validationException.getErrors();
 
-//            if (errors.getFieldError().getField().equals(("username"))) {
-//                JOptionPane.showMessageDialog(frame, "Username "
-//                        + errors.getFieldError("username").getDefaultMessage());
-//            }
-//
-//            if (errors.getFieldError().getField().equals("password")) {
-//                JOptionPane.showMessageDialog(frame, "Password "
-//                        + errors.getFieldError("password").getDefaultMessage());
-//            }
-//
-//            if (errors.getFieldError().getField().equals("passwordCheck")) {
-//                JOptionPane.showMessageDialog(frame, "Password again "
-//                        + errors.getFieldError("passwordCheck").getDefaultMessage());
-//            }
+            if (errors.hasFieldErrors("username")) {
+                this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
+            }
+
+            if (errors.hasFieldErrors("password")) {
+                this.passwordErrors.setText(errors.getFieldError("password").getDefaultMessage());
+            }
+
+            if (errors.hasFieldErrors("passwordCheck")) {
+                this.passwordCheckErrors.setText(errors.getFieldError("passwordCheck").getDefaultMessage());
+            }
+
         } catch (Exception defaultError) {
             defaultError.printStackTrace();
         }
@@ -101,6 +136,8 @@ public class RegistrationView implements EventHandler<ActionEvent> {
     public void handle(ActionEvent actionEvent) {
         if (actionEvent.getSource() == this.registerBtn) {
             this.registerAction();
+        } else if (actionEvent.getSource() == this.loginBtn) {
+            this.stage.showLogin();
         }
     }
 }

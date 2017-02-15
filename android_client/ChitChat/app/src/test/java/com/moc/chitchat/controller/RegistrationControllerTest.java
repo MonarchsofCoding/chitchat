@@ -54,7 +54,7 @@ public class RegistrationControllerTest {
     public void testSuccesfulRegisterUser() throws ValidationException{
             UserModel mockUser = mock(UserModel.class);
             //Stub the UserResolver to return UserModel
-            when(   this.mockUserResolver.create("vjpatel",
+            when(   this.mockUserResolver.createRegisterUser("vjpatel",
                     "aaa",
                     "aaa")
 
