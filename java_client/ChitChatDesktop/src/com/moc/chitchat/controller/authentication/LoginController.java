@@ -54,6 +54,7 @@ public class LoginController {
             System.out.println(response.getStatus());
 
             this.userValidator.throwErrorsFromResponse(response);
+
         } else if (response.getStatus() != 200) {
             // Unexpected response code. e.g. 500
 

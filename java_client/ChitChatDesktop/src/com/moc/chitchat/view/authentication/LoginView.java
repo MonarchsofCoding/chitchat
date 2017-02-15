@@ -75,22 +75,35 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
             this.stage.close();
 
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Success Login");
+            alert.setTitle("Information of Login");
+            alert.setContentText("You hane now entered as "+user.getUsername());
+            alert.show();
           //  JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
         } catch (ValidationException e) {
             Errors errors = e.getErrors();
-
-            if (errors.getFieldError().getField().equals(("username")))
-            {
-//                JOptionPane.showMessageDialog(frame, "Username " + errors.getFieldError("username").getDefaultMessage());
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Unsuccesfull Login");
+            if(errors.hasErrors()) {
+                if (errors.getFieldError().getField().equals(("username"))) {
+                    alert.setContentText("Username " + errors.getFieldError("username").getDefaultMessage());
+                    alert.show();
+                }
+                if (errors.getFieldError().getField().equals("password")) {
+                    alert.setContentText("Password " + errors.getFieldError("password").getDefaultMessage());
+                    alert.show();
+                }
             }
 
-            if (errors.getFieldError().getField().equals("password"))
-            {
-//                JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
-            }
+                    alert.setContentText("Wrong credentials or you have not registered yet !");
+                    alert.show();
 
 
         } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Unexpected error from server");
+            alert.show();
             e.printStackTrace();
         }
     }

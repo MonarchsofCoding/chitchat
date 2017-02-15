@@ -27,7 +27,7 @@ public class MainStage extends Stage {
         this.setY((resY - height)/2);
 
 
-        this.setTitle("Chit Chat");
+        this.setTitle("Welcome to Chit Chat");
         this.searchPane = searchPane;
 
         MigPane basePane = new MigPane();

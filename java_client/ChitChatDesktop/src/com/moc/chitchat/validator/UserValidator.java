@@ -47,7 +47,7 @@ public class UserValidator implements Validator {
         this.validate(user, errors);
 
         if (errors.hasErrors()) {
-            throw new ValidationException(errors);
+           throw new ValidationException(errors);
         }
 
     }
