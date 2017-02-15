@@ -10,24 +10,27 @@ defmodule ChitChat.UserControllerTest do
   test "lists all entries on index" do
 
     users = [
-      User.changeset(%User{}, %{username: "alice", password: "password1234"}),
-      User.changeset(%User{}, %{username: "bob", password: "password123"})
+      User.register_changeset(%User{}, %{username: "alice", password: "password1234"}),
+      User.register_changeset(%User{}, %{username: "bob", password: "password123"})
     ]
 
     Enum.each(users, &Repo.insert!(&1))
 
-    response = build_conn()
-    |> get(user_path(build_conn(), :index))
-    |> json_response(200)
+    # response = build_conn()
+    # |> get(user_path(build_conn(), :index))
+    # |> json_response(200)
+    #
+    # expected = %{
+    #   "data" => [
+    #     %{"username" => "alice"},
+    #     %{"username" => "bob"}
+    #   ]
+    # }
+    #
 
-    expected = %{
-      "data" => [
-        %{"username" => "alice"},
-        %{"username" => "bob"}
-      ]
-    }
+    conn = get conn, user_path(conn, :index), %{username: "ali"}
 
-    assert response == expected
+    assert json_response(conn, 200) == %{"data" => [%{"username" => "alice"}]}
 
   end
 

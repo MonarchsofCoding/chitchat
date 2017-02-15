@@ -4,12 +4,27 @@ defmodule ChitChat.UserController do
   alias ChitChat.User
 
   @doc """
-  Lists all of the Users
+  Lists all of the Users filtered by User.username
   """
   @spec index(Conn, {}) :: nil
-  def index(conn, _params) do
-    users = Repo.all(User)
-    render(conn, "index.json", users: users)
+  def index(conn, user_params) do
+
+    changeset = User.search_changeset(%User{}, user_params)
+
+    case changeset.valid? do
+      true ->
+        username_query = changeset.params["username"]
+        users = Repo.all(from u in User, where: ilike(u.username, ^"%#{username_query}%"))
+
+        conn
+        |> put_status(200)
+        |> render("index.json", users: users)
+
+      false ->
+        conn
+        |> put_status(:bad_request)
+        |> render(ChitChat.ChangesetView, "error.json", changeset: changeset)
+    end
   end
 
   @doc """
@@ -17,7 +32,7 @@ defmodule ChitChat.UserController do
   """
   @spec create(Conn, {}) :: nil
   def create(conn, user_params) do
-    changeset = User.changeset(%User{}, user_params)
+    changeset = User.register_changeset(%User{}, user_params)
 
     case User.register(Repo, changeset) do
       {:ok, user} ->

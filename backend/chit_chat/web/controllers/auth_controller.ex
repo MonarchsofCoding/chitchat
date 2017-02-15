@@ -6,7 +6,7 @@ defmodule ChitChat.AuthController do
 
   @spec create(Conn, {}) :: nil
   def create(conn, user_params) do
-    changeset = User.changeset(%User{}, user_params)
+    changeset = User.register_changeset(%User{}, user_params)
 
     case User.find_and_confirm_password(Repo, changeset) do
       {:ok, user} ->

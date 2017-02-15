@@ -17,14 +17,25 @@ defmodule ChitChat.User do
   end
 
   @doc """
-  Builds a changeset based on the struct and params.
+  Builds a changeset based on the struct and params for registration
   """
-  @spec changeset(struct, {}) :: struct
-  def changeset(struct, params \\ %{}) do
+  @spec register_changeset(struct, {}) :: struct
+  def register_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:username, :password])
     |> validate_required([:username, :password])
     |> validate_length(:password, min: 8)
+    |> validate_length(:username, min: 3)
+  end
+
+  @doc """
+  Builds a changeset based on the struct and params for searching
+  """
+  @spec search_changeset(struct, {}) :: struct
+  def search_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:username])
+    |> validate_required([:username])
     |> validate_length(:username, min: 3)
   end
 
