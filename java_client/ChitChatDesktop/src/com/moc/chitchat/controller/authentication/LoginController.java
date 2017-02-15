@@ -3,6 +3,7 @@ package com.moc.chitchat.controller.authentication;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
@@ -24,15 +25,18 @@ public class LoginController {
     private UserResolver userResolver;
     private HttpClient httpClient;
     private UserValidator userValidator;
+    private Configuration configuration;
     @Autowired
     LoginController(
             UserResolver userResolver,
             HttpClient httpClient,
-            UserValidator userValidator
+            UserValidator userValidator,
+            Configuration configuration
     ) {
         this.userResolver = userResolver;
         this.httpClient = httpClient;
         this.userValidator = userValidator;
+        this.configuration = configuration;
     }
 
     public UserModel loginUser(String username, String password) throws UnirestException, UnexpectedResponseException, ValidationException {
@@ -55,6 +59,8 @@ public class LoginController {
 
             throw new UnexpectedResponseException(response);
         }
+
+        this.configuration.setLoggedInUser(user);
             //open chatroom
         return user;
     }
