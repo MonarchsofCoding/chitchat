@@ -9,8 +9,6 @@ import com.moc.chitchat.application.Configuration;
 import org.json.JSONString;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
