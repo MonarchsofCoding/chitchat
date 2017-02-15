@@ -1,107 +1,109 @@
 package com.moc.chitchat.view.authentication;
 
+import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.controller.authentication.LoginController;
-import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
-import net.miginfocom.layout.CC;
-import net.miginfocom.swing.MigLayout;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.tbee.javafx.scene.layout.fxml.MigPane;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-/**
- * Created by spiros on 09/02/17.
- */
 @Component
-public class LoginView extends JFrame implements ActionListener {
+public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
     private LoginController loginController;
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private RegistrationView registrationView;
+    private Configuration configuration;
+
+    private TextField usernameField;
+    private PasswordField passwordField;
+    private Button loginBtn;
+    private Button registerBtn;
+
+    private AuthenticationStage stage;
 
     @Autowired
-    LoginView(LoginController loginController, RegistrationView registrationView) {
+    LoginView(
+        LoginController loginController,
+        Configuration configuration
+    ) {
         this.loginController = loginController;
-        this.registrationView = registrationView;
-        this.buildInterface();
+        this.configuration = configuration;
     }
 
-    private void buildInterface() {
-        this.setVisible(false);
-
-        JPanel loginForm = new JPanel(new MigLayout());
-
-        JLabel usernameLbl = new JLabel("Username ");
-        loginForm.add(usernameLbl);
-        this.usernameField = new JTextField(20);
-        loginForm.add(this.usernameField, new CC().wrap());
-
-        JLabel passwordLbl = new JLabel("Password ");
-        loginForm.add(passwordLbl);
-        this.passwordField = new JPasswordField(20);
-        this.passwordField.addActionListener(this);
-        loginForm.add(this.passwordField, new CC().wrap());
-
-        JButton loginBtn = new JButton("Login");
-        loginBtn.setActionCommand("login");
-        loginBtn.addActionListener(this);
-        loginForm.add(loginBtn, new CC().grow());
-
-
-        JButton registerBtn = new JButton("Register");
-        registerBtn.setActionCommand("register");
-        registerBtn.addActionListener(this);
-        loginForm.add(registerBtn, new CC().grow());
-
-        this.add(loginForm);
-
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public void setStage(AuthenticationStage stage) {
+        this.stage = stage;
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        switch (actionEvent.getActionCommand()) {
-            case "login":
-                this.loginAction();
-                break;
+    public MigPane getContentPane() {
+        MigPane loginPane = new MigPane();
 
-            case "register":
-                this.registerAction();
-                break;
+        MigPane loginForm = new MigPane();
 
-        }
-    }
+        this.usernameField = new TextField();
+        this.usernameField.setPromptText("Username");
+        loginForm.add(this.usernameField, "span, wrap");
 
-    private void registerAction() {
-        registrationView.setVisible(true);
+        this.passwordField = new PasswordField();
+        this.passwordField.setPromptText("Password");
+        this.passwordField.setOnAction(this);
+        loginForm.add(this.passwordField, "span, wrap");
+
+        this.loginBtn = new Button("Login");
+        this.loginBtn.setOnAction(this);
+        loginForm.add(this.loginBtn, "wrap, grow");
+
+        this.registerBtn = new Button("Register");
+        this.registerBtn.setOnAction(this);
+        loginForm.add(this.registerBtn, "wrap, grow");
+
+        loginPane.add(loginForm, "span, split 2, center");
+
+        return loginPane;
     }
 
     private void loginAction() {
-        JFrame frame = new JFrame();
         try {
             UserModel user = this.loginController.loginUser(
-                    this.usernameField.getText(),
-                    String.valueOf(this.passwordField.getPassword())
-
+                this.usernameField.getText(),
+                this.passwordField.getText()
             );
-           JOptionPane.showMessageDialog(frame, String.format("Success! You have now login with %s!", user.getUsername()));
+            this.configuration.setLoggedInUser(user);
+
+          //  JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
         } catch (ValidationException e) {
-                JOptionPane.showMessageDialog(frame, "Wrong Credentials or you have not sign up yet");
+            Errors errors = e.getErrors();
+
+            if (errors.getFieldError().getField().equals(("username")))
+            {
+//                JOptionPane.showMessageDialog(frame, "Username " + errors.getFieldError("username").getDefaultMessage());
+            }
+
+            if (errors.getFieldError().getField().equals("password"))
+            {
+//                JOptionPane.showMessageDialog(frame, "Password " + errors.getFieldError("password").getDefaultMessage());
+            }
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-
+    @Override
+    public void handle(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == this.passwordField || actionEvent.getSource() == this.loginBtn) {
+            this.loginAction();
+        } else if (actionEvent.getSource() == this.registerBtn) {
+            this.stage.showRegister();
+        }
     }
 }
 

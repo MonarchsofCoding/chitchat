@@ -1,9 +1,11 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.view.authentication.LoginView;
-import com.moc.chitchat.view.authentication.RegistrationView;
+import com.moc.chitchat.view.authentication.AuthenticationStage;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * ApplicationLoader provides everything to do with loading the application.
@@ -11,36 +13,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationLoader {
 
-    private SplashWindow splashWindow;
     private Configuration configuration;
-    private LoginView loginView;
-    
+    private AuthenticationStage authenticationStage;
+
     /**
      * Constructor for the ApplicationLoader.
-     * @param splashWindow the splash window.
-     * @param loginView The view for Login
      * @param configuration The configuration for the application.
      */
     @Autowired
     ApplicationLoader(
-        SplashWindow splashWindow,
-        LoginView loginView,
-        Configuration configuration
+        Configuration configuration,
+        AuthenticationStage authenticationStage
     ) {
-        this.splashWindow = splashWindow;
-        this.loginView = loginView;
         this.configuration = configuration;
+        this.authenticationStage = authenticationStage;
     }
 
     /**
      * load: Sets up the application.
      */
-    public void load(String[] args) {
-        this.splashWindow.setVisible(true);
-        // Do loading things...
-
-        if (args.length > 0) {
-            switch (args[0]) {
+    public void load(Stage stage, List<String> args) {
+        if (args.size() > 0) {
+            switch (args.get(0)) {
                 case "dev":
                     this.configuration.setDevelopmentMode();
                     break;
@@ -51,9 +45,9 @@ public class ApplicationLoader {
             }
         }
 
-        this.splashWindow.dispose();
+        // AuthenticationStage
+        this.authenticationStage.showAndWait();
 
-        // Show Registration/Login Window
-        this.loginView.setVisible(true);
+        System.out.println("Authentication Finished!");
     }
 }
