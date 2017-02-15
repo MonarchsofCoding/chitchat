@@ -51,7 +51,7 @@ public class Configuration {
         this.currentLoggedInUser = user;
     }
 
-    public UserModel getLoggedInUser(UserModel user) {
+    public UserModel getLoggedInUser() {
         return this.currentLoggedInUser;
     }
 }

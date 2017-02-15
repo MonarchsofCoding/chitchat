@@ -1,6 +1,8 @@
 package com.moc.chitchat.resolver;
 
 import com.moc.chitchat.model.UserModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,5 +42,12 @@ public class UserResolver {
      */
     public UserModel createUser(String username) {
         return new UserModel(username);
+    }
+
+    public UserModel getUserModelViaJSonObject(JSONObject jsonObject){
+        String username = jsonObject.getString("username");
+        UserModel user = new UserModel(username);
+
+        return user;
     }
 }

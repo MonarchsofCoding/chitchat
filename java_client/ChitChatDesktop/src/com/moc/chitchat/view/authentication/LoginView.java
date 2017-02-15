@@ -19,7 +19,6 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
     private LoginController loginController;
-    private Configuration configuration;
 
     private TextField usernameField;
     private PasswordField passwordField;
@@ -30,11 +29,9 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
     @Autowired
     LoginView(
-        LoginController loginController,
-        Configuration configuration
+        LoginController loginController
     ) {
         this.loginController = loginController;
-        this.configuration = configuration;
     }
 
     public void setStage(AuthenticationStage stage) {
@@ -75,7 +72,8 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
                 this.usernameField.getText(),
                 this.passwordField.getText()
             );
-            this.configuration.setLoggedInUser(user);
+
+            this.stage.close();
 
           //  JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
         } catch (ValidationException e) {
