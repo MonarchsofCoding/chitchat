@@ -12,6 +12,8 @@ public class AuthenticationStage extends Stage {
 
     private Scene loginScene;
     private Scene registrationScene;
+    private Scene MainChatScene;
+
 
     @Autowired
     public AuthenticationStage(
@@ -37,12 +39,14 @@ public class AuthenticationStage extends Stage {
         registrationView.setHeight(height);
         this.registrationScene = registrationView.getScene();
 
-        this.setTitle("Chit Chat");
+
+
+        this.setTitle("Chit Chat Application");
 
         this.showLogin();
     }
 
-    void showLogin() {
+    public void showLogin() {
         this.setScene(this.loginScene);
     }
 
