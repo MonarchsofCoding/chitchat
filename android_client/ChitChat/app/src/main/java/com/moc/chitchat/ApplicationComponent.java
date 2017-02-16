@@ -3,6 +3,7 @@ package com.moc.chitchat;
 
 import com.moc.chitchat.activity.LoginActivity;
 import com.moc.chitchat.activity.RegistrationActivity;
+import com.moc.chitchat.activity.SearchUserActivity;
 
 import javax.inject.Singleton;
 
@@ -18,5 +19,6 @@ public interface ApplicationComponent {
 
     void inject(RegistrationActivity activity);
     void inject(LoginActivity activity);
+    void inject(SearchUserActivity activity);
 
 }

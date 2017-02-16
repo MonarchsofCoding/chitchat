@@ -169,6 +169,6 @@ public class RegistrationActivity extends Activity
 
     public void ExitActivity() {
         this.finish();
-        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
+        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
     }
 }
