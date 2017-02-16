@@ -83,4 +83,21 @@ public class ApplicationLoaderTest {
         verify(mockAuthenticationStage).showAndWait();
     }
 
+    @Test
+    public void testLoadProdByDefaultWithUnknownArg() {
+        Configuration mockConfiguration = mock(Configuration.class);
+        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage);
+
+        Stage mockStage = mock(Stage.class);
+
+        List<String> args = new ArrayList<>();
+        args.add("aaa");
+
+        applicationLoader.load(mockStage, args);
+
+        verify(mockAuthenticationStage).showAndWait();
+    }
+
 }

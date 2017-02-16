@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * ApplicationLoader provides everything to do with loading the application.
@@ -33,16 +34,10 @@ public class ApplicationLoader {
      * load: Sets up the application.
      */
     public void load(Stage stage, List<String> args) {
-        if (args.size() > 0) {
-            switch (args.get(0)) {
-                case "dev":
-                    this.configuration.setDevelopmentMode();
-                    break;
-
-                case "test":
-                    this.configuration.setTestingMode();
-                    break;
-            }
+        if (args.size() > 0 && args.get(0).equals("dev")) {
+            this.configuration.setDevelopmentMode();
+        } else if (args.size() > 0 && args.get(0).equals("test")) {
+            this.configuration.setTestingMode();
         }
 
         // AuthenticationStage
