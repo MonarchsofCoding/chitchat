@@ -3,6 +3,7 @@ package com.moc.chitchat.controller.authentication;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by spiros on 11/02/17.
+ *  LoginControllerTest provides test for the LoginController
  */
 public class LoginControllerTest {
 
@@ -29,6 +30,7 @@ public class LoginControllerTest {
     @Mock private UserResolver mockUserResolver;
     @Mock private UserValidator mockUserValidator;
     @Mock private HttpClient mockHttpClient;
+    @Mock private Configuration configuration;
 
     @InjectMocks
     private LoginController loginController;
@@ -71,7 +73,6 @@ public class LoginControllerTest {
                 "spiros",
                 "aaa"
         );
-
     }
 
 
