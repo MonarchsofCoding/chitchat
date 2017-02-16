@@ -41,9 +41,9 @@ public class UserSearchController {
     public List<UserModel> searchUser(String username)
             throws UnirestException, UnexpectedResponseException {
         Map<String, Object> mapper = new HashMap<String, Object>();
-        mapper.put("Username", username);
+        mapper.put("username", username);
 
-        HttpResponse<JsonNode> response = this.httpClient.get("/api/v1/user", mapper);
+        HttpResponse<JsonNode> response = this.httpClient.get("/api/v1/users", mapper);
 
         if (response.getStatus() != 200) {
             // Unexpected response code. e.g. 500
