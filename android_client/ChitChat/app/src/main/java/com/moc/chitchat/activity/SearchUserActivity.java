@@ -79,7 +79,7 @@ public class SearchUserActivity extends Activity
         try {
 
             Toast.makeText(this,
-                String.format("The user you are trying to found is not connected or not existing."),
+                String.format("The user you are trying to found is not connected or not existing"),
                 Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,7 +151,6 @@ public class SearchUserActivity extends Activity
         //Basically do nothing.
         return false;
     }
-
 
     //When the user clicks on an user.
     @Override
