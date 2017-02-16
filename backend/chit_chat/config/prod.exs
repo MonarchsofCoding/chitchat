@@ -68,3 +68,7 @@ config :chit_chat, ChitChat.Repo,
   database: System.get_env("DATABASE_NAME"),
   port: System.get_env("DATABASE_PORT"),
   size: 20 # The amount of database connections in the pool
+
+# Guardian JWT Authentication
+config :guardian, Guardian
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
