@@ -38,8 +38,7 @@ public class UserSearchController {
         this.userResolver = userResolver;
     }
 
-    public List<UserModel> searchUser(String username)
-            throws UnirestException, UnexpectedResponseException {
+    public List<UserModel> searchUser(String username) throws UnirestException, UnexpectedResponseException {
         Map<String, Object> mapper = new HashMap<String, Object>();
         mapper.put("username", username);
 
