@@ -78,7 +78,7 @@ public class LoginActivity extends Activity
     private void registerButton() {
         Intent registerIntent = new Intent(this, RegistrationActivity.class);
         startActivity(registerIntent);
-        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
+        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
     }
 
     /**
@@ -114,6 +114,9 @@ public class LoginActivity extends Activity
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Intent searchIntent = new Intent(this, SearchUserActivity.class);
+        startActivity(searchIntent);
+        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
         this.ExitActivity();
     }
 
