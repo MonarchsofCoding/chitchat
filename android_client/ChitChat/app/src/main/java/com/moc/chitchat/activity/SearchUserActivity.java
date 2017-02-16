@@ -3,8 +3,12 @@ package com.moc.chitchat.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -13,7 +17,11 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.controller.SearchUserController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -25,6 +33,7 @@ public class SearchUserActivity extends Activity
     implements View.OnClickListener,
     TabLayout.OnTabSelectedListener,
     SearchView.OnQueryTextListener,
+    ListView.OnItemClickListener,
     Response.Listener<JSONObject>,
     Response.ErrorListener {
 
@@ -34,6 +43,7 @@ public class SearchUserActivity extends Activity
 
     TabLayout menuTabs;
     SearchView searchBar;
+    ListView usersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,8 @@ public class SearchUserActivity extends Activity
 
         searchBar = (SearchView) findViewById(R.id.search_bar);
         searchBar.setOnQueryTextListener(this);
+
+        usersList = (ListView) findViewById(R.id.users_list);
     }
 
     //For buttons
@@ -63,15 +75,37 @@ public class SearchUserActivity extends Activity
     //For Volley Error response
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println(error);
-        //TODO: Implement error handling
+        System.out.println("Error registering");
+        try {
+
+            Toast.makeText(this,
+                String.format("The user you are trying to found is not connected or not existing."),
+                Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //For Volley Success response
     @Override
     public void onResponse(JSONObject response) {
-        System.out.println(response);
-        //TODO: Implement filling the ListView according to the response
+        try {
+            List<String> userList = new ArrayList<String>();
+
+            JSONArray usernameArray = (JSONArray) response.get("data");
+            for(int i = 0; i < usernameArray.length(); i++) {
+                userList.add(usernameArray.getJSONObject(i).get("username").toString());
+            }
+
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                userList);
+
+            usersList.setAdapter(arrayAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //For a selected tab
@@ -79,11 +113,9 @@ public class SearchUserActivity extends Activity
     public void onTabSelected(TabLayout.Tab tab) {
         String tabName = tab.getText().toString();
         if(tabName.equals("Chats")) {
-            System.out.println(1);
             //TODO: Open Chats Activity
         }
         else if(tabName.equals("Current Chat")) {
-            System.out.println(2);
             //TODO: Open Current Chat Activity
         }
     }
@@ -118,5 +150,12 @@ public class SearchUserActivity extends Activity
     public boolean onQueryTextChange(String newText) {
         //Basically do nothing.
         return false;
+    }
+
+
+    //When the user clicks on an user.
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //TODO: Open a chat activity with the user selected.
     }
 }

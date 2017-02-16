@@ -88,7 +88,6 @@ public class LoginActivity extends Activity
     @Override
     public void onErrorResponse(VolleyError error) {
         System.out.println("Error registering");
-
         try {
 
             Toast.makeText(this,
