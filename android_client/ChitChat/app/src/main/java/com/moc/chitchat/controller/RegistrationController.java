@@ -74,7 +74,7 @@ public class RegistrationController {
         );
 
         // Create a User object
-        UserModel user = this.userResolver.create(
+        UserModel user = this.userResolver.createRegisterUser(
                 username,
                 password,
                 passwordCheck
@@ -94,5 +94,4 @@ public class RegistrationController {
         );
 
     }
-
 }

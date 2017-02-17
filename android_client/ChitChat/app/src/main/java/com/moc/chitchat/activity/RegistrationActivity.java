@@ -134,9 +134,9 @@ public class RegistrationActivity extends Activity
             }
 
             if (responseErrors.has("password")) {
-                JSONArray usernameErrors = responseErrors.getJSONArray("password");
+                JSONArray passwordErrors = responseErrors.getJSONArray("password");
                 Toast.makeText(this,
-                        String.format("Password: %s", usernameErrors.toString()),
+                        String.format("Password: %s", passwordErrors.toString()),
                         Toast.LENGTH_LONG).show();
             }
         } catch (JSONException e) {
@@ -159,6 +159,16 @@ public class RegistrationActivity extends Activity
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        this.ExitActivity();
+    }
+
+    @Override
+    public void onBackPressed() {
+        ExitActivity();
+    }
+
+    public void ExitActivity() {
         this.finish();
+        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
     }
 }

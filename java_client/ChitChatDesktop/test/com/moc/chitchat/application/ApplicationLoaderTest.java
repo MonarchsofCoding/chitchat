@@ -1,7 +1,12 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.view.authentication.RegistrationView;
+import com.moc.chitchat.view.authentication.AuthenticationStage;
+import com.moc.chitchat.view.authentication.LoginView;
+import javafx.stage.Stage;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -15,11 +20,10 @@ public class ApplicationLoaderTest {
 
     @Test
     public void testConstructor() {
-        SplashWindow mockSplashWindow = mock(SplashWindow.class);
-        RegistrationView mockRegistrationView = mock(RegistrationView.class);
         Configuration mockConfiguration = mock(Configuration.class);
+        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockSplashWindow, mockRegistrationView, mockConfiguration);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage);
 
         assertNotNull(applicationLoader);
         assertEquals(applicationLoader.getClass(), ApplicationLoader.class);
@@ -27,47 +31,73 @@ public class ApplicationLoaderTest {
 
     @Test
     public void testLoadDefaultProdEnvironment() {
-        SplashWindow mockSplashWindow = mock(SplashWindow.class);
-        RegistrationView mockRegistrationView = mock(RegistrationView.class);
         Configuration mockConfiguration = mock(Configuration.class);
+        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockSplashWindow, mockRegistrationView, mockConfiguration);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage);
 
-        String[] args = {};
+        Stage mockStage = mock(Stage.class);
 
-        applicationLoader.load(args);
+        List<String> args = new ArrayList<>();
 
-        verify(mockSplashWindow).setVisible(true);
+        applicationLoader.load(mockStage, args);
+
+        verify(mockAuthenticationStage).showAndWait();
     }
 
     @Test
     public void testLoadTestEnvironment() {
-        SplashWindow mockSplashWindow = mock(SplashWindow.class);
-        RegistrationView mockRegistrationView = mock(RegistrationView.class);
         Configuration mockConfiguration = mock(Configuration.class);
+        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockSplashWindow, mockRegistrationView, mockConfiguration);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage);
 
-        String[] args = {"test"};
+        Stage mockStage = mock(Stage.class);
 
-        applicationLoader.load(args);
+        List<String> args = new ArrayList<>();
+        args.add("test");
 
-        verify(mockSplashWindow).setVisible(true);
+        applicationLoader.load(mockStage, args);
+
+        verify(mockConfiguration).setTestingMode();
+
+        verify(mockAuthenticationStage).showAndWait();
     }
 
     @Test
     public void testLoadDevEnvironment() {
-        SplashWindow mockSplashWindow = mock(SplashWindow.class);
-        RegistrationView mockRegistrationView = mock(RegistrationView.class);
         Configuration mockConfiguration = mock(Configuration.class);
+        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockSplashWindow, mockRegistrationView, mockConfiguration);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage);
 
-        String[] args = {"dev"};
+        Stage mockStage = mock(Stage.class);
 
-        applicationLoader.load(args);
+        List<String> args = new ArrayList<>();
+        args.add("dev");
 
-        verify(mockSplashWindow).setVisible(true);
+        applicationLoader.load(mockStage, args);
+
+        verify(mockConfiguration).setDevelopmentMode();
+
+        verify(mockAuthenticationStage).showAndWait();
+    }
+
+    @Test
+    public void testLoadProdByDefaultWithUnknownArg() {
+        Configuration mockConfiguration = mock(Configuration.class);
+        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage);
+
+        Stage mockStage = mock(Stage.class);
+
+        List<String> args = new ArrayList<>();
+        args.add("aaa");
+
+        applicationLoader.load(mockStage, args);
+
+        verify(mockAuthenticationStage).showAndWait();
     }
 
 }

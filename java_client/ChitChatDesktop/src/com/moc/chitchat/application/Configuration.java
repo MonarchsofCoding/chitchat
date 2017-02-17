@@ -1,5 +1,6 @@
 package com.moc.chitchat.application;
 
+import com.moc.chitchat.model.UserModel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +14,8 @@ public class Configuration {
     private static final String DEV_BACKEND_ADDRESS = "http://localhost:4000";
 
     private String backendAddress;
+
+    private UserModel currentLoggedInUser;
 
     Configuration() {
         this.backendAddress = PROD_BACKEND_ADDRESS;
@@ -42,5 +45,13 @@ public class Configuration {
         System.out.println("\nEntering Testing Mode!\n"); // TODO: Use Apache Commons logger!
 
         this.backendAddress = TEST_BACKEND_ADDRESS;
+    }
+
+    public void setLoggedInUser(UserModel user) {
+        this.currentLoggedInUser = user;
+    }
+
+    public UserModel getLoggedInUser() {
+        return this.currentLoggedInUser;
     }
 }

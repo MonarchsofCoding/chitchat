@@ -56,6 +56,7 @@ def deploy(ctx):
       "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
       "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
       "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
+      "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env_dir)),
       "TF_VAR_container_version": version
     },
     volumes=[
@@ -92,51 +93,27 @@ def test(ctx):
     import time
     time.sleep(10)
 
+    setup = "mix local.hex --force && mix local.rebar --force && mix deps.get"
+    tests = "mix test --color --trace"
+    coverage = "mix coveralls.html --color"
+    lint = "mix credo --strict"
+
     try:
       lxc.Docker.run(cli,
           tag="{0}-dev".format("chitchat-backend"),
-          command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix test --color --trace"',
+          command='/bin/sh -c "{0} && {1} && {2}; {3}"'.format(setup, tests, coverage, lint),
           volumes=[
               "{0}/chit_chat:/app".format(os.getcwd())
           ],
           working_dir="/app",
           environment={
+            "TERM": "xterm-color",
             "MIX_ENV": "test"
           },
           links={
             postgres_container.get('Id'): "postgres"
           }
       )
-
-      lxc.Docker.run(cli,
-         tag="{0}-dev".format("chitchat-backend"),
-         command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix coveralls.html"',
-         volumes=[
-           "{0}/chit_chat:/app".format(os.getcwd())
-         ],
-         working_dir="/app",
-         environment={
-          "MIX_ENV": "test"
-         },
-         links={
-           postgres_container.get('Id'): "postgres"
-         }
-       )
-
-      lxc.Docker.run(cli,
-         tag="{0}-dev".format("chitchat-backend"),
-         command='/bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix credo"',
-         volumes=[
-           "{0}/chit_chat:/app".format(os.getcwd())
-         ],
-         working_dir="/app",
-         environment={
-          "MIX_ENV": "test"
-         },
-         links={
-           postgres_container.get('Id'): "postgres"
-         }
-       )
 
     finally:
       cli.stop(postgres_container.get('Id'))

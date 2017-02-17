@@ -1,8 +1,12 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.view.authentication.RegistrationView;
+import com.moc.chitchat.view.authentication.AuthenticationStage;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * ApplicationLoader provides everything to do with loading the application.
@@ -10,47 +14,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationLoader {
 
-    private SplashWindow splashWindow;
-    private RegistrationView registrationView;
     private Configuration configuration;
+    private AuthenticationStage authenticationStage;
 
     /**
      * Constructor for the ApplicationLoader.
-     * @param splashWindow the splash window.
-     * @param registrationView The view for Registration.
      * @param configuration The configuration for the application.
      */
     @Autowired
     ApplicationLoader(
-        SplashWindow splashWindow,
-        RegistrationView registrationView,
-        Configuration configuration
+        Configuration configuration,
+        AuthenticationStage authenticationStage
     ) {
-        this.splashWindow = splashWindow;
-        this.registrationView = registrationView;
         this.configuration = configuration;
+        this.authenticationStage = authenticationStage;
     }
 
     /**
      * load: Sets up the application.
      */
-    public void load(String[] args) {
-        this.splashWindow.setVisible(true);
-        // Do loading things...
-
-        if (args.length > 0) {
-            switch (args[0]) {
-                case "dev": this.configuration.setDevelopmentMode();
-                            break;
-
-                case "test": this.configuration.setTestingMode();
-                            break;
-            }
+    public void load(Stage stage, List<String> args) {
+        if (args.size() > 0 && args.get(0).equals("dev")) {
+            this.configuration.setDevelopmentMode();
+        } else if (args.size() > 0 && args.get(0).equals("test")) {
+            this.configuration.setTestingMode();
         }
 
-        this.splashWindow.dispose();
+        // AuthenticationStage
+        this.authenticationStage.showAndWait();
 
-        // Show Registration/Login Window
-        this.registrationView.setVisible(true);
+        System.out.println("Authentication Finished!");
     }
 }

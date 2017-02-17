@@ -2,114 +2,142 @@ package com.moc.chitchat.view.authentication;
 
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import net.miginfocom.layout.CC;
-import net.miginfocom.swing.MigLayout;
-
+import com.moc.chitchat.model.UserModel;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
+import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 /**
  * RegistrationView provides the window used for registering a User.
  */
 @Component
-public class RegistrationView extends JFrame implements ActionListener {
+public class RegistrationView extends BaseView implements EventHandler<ActionEvent> {
 
     private RegistrationController registrationController;
 
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JPasswordField passwordCheckField;
+    private TextField usernameField;
+    private Label usernameErrors;
+    private PasswordField passwordField;
+    private Label passwordErrors;
+    private PasswordField passwordCheckField;
+    private Label passwordCheckErrors;
+
+    private Button registerBtn;
+    private Button loginBtn;
+
+    private AuthenticationStage stage;
 
     @Autowired
-    RegistrationView(RegistrationController registrationController) {
+    RegistrationView(
+            RegistrationController registrationController
+    ) {
         this.registrationController = registrationController;
-
-        this.buildInterface();
     }
 
-    private void buildInterface() {
-        this.setVisible(false);
-
-        JPanel registerForm = new JPanel(new MigLayout());
-
-        JLabel usernameLbl = new JLabel("Username ");
-        registerForm.add(usernameLbl);
-        this.usernameField = new JTextField(20);
-        registerForm.add(this.usernameField, new CC().wrap());
-
-        JLabel passwordLbl = new JLabel("Password ");
-        registerForm.add(passwordLbl);
-        this.passwordField = new JPasswordField(20);
-        this.passwordField.addActionListener(this);
-        registerForm.add(this.passwordField, new CC().wrap());
-
-        JLabel passwordCheckLbl = new JLabel("Password again ");
-        registerForm.add(passwordCheckLbl);
-        this.passwordCheckField = new JPasswordField(20);
-        this.passwordCheckField.setActionCommand("register");
-        this.passwordCheckField.addActionListener(this);
-        registerForm.add(this.passwordCheckField, new CC().wrap());
-
-        JButton registerBtn = new JButton("Register");
-        registerBtn.setActionCommand("register");
-        registerBtn.addActionListener(this);
-        registerForm.add(registerBtn, new CC().span(2).grow());
-
-        this.add(registerForm);
-
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public void setStage(AuthenticationStage stage) {
+        this.stage = stage;
     }
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        switch (actionEvent.getActionCommand()) {
-            case "register":
-                this.registerAction();
-        }
+    public MigPane getContentPane() {
+        MigPane registerPane = new MigPane();
+
+        MigPane registerForm = new MigPane();
+
+        this.usernameField = new TextField();
+        this.usernameField.setPromptText("Username");
+        registerForm.add(this.usernameField, "wrap");
+        this.usernameErrors = new Label();
+        registerForm.add(this.usernameErrors, "wrap");
+
+        this.passwordField = new PasswordField();
+        this.passwordField.setPromptText("Password");
+        this.passwordField.setOnAction(this);
+        registerForm.add(this.passwordField, "span");
+        this.passwordErrors = new Label();
+        registerForm.add(this.passwordErrors, "wrap");
+
+        this.passwordCheckField = new PasswordField();
+        this.passwordCheckField.setPromptText("Re-Password");
+        this.passwordCheckField.setOnAction(this);
+        registerForm.add(this.passwordCheckField, "span");
+        this.passwordCheckErrors = new Label();
+        registerForm.add(this.passwordCheckErrors, "wrap");
+
+        this.registerBtn = new Button("Register");
+        this.registerBtn.setOnAction(this);
+        registerForm.add(this.registerBtn, "wrap, grow");
+
+        this.loginBtn = new Button("Login");
+        this.loginBtn.setOnAction(this);
+        registerForm.add(this.loginBtn, "wrap, grow");
+
+        registerPane.add(registerForm, "span, split 2, center");
+
+        return registerPane;
     }
 
     private void registerAction() {
-        JFrame frame = new JFrame();
+        this.usernameField.setDisable(true);
+        this.passwordField.setDisable(true);
+        this.passwordCheckField.setDisable(true);
+        this.registerBtn.setDisable(true);
+        this.loginBtn.setDisable(true);
+
         try {
-            this.registrationController.registerUser(
+            UserModel user = this.registrationController.registerUser(
                 this.usernameField.getText(),
-                String.valueOf(this.passwordField.getPassword()),
-                String.valueOf(this.passwordCheckField.getPassword())
+                String.valueOf(this.passwordField.getText()),
+                String.valueOf(this.passwordCheckField.getText())
             );
-            JOptionPane.showMessageDialog(frame, "Success! You have now registered!");
-        } catch (ValidationException validException) {
-            Errors errors = validException.getErrors();
+//            JOptionPane.showMessageDialog(frame, String.format(
+//                    "Success! You have now registered %s!",
+//                    user.getUsername())
+//            );
+            System.out.println(String.format(
+                    "Success! You have now registered %s!", user.getUsername()));
 
-            if (errors.getFieldError().getField().equals(("username"))) {
-                JOptionPane.showMessageDialog(frame, "Username "
-                        + errors.getFieldError("username").getDefaultMessage());
+            this.loginBtn.setDisable(false);
+
+        } catch (ValidationException validationException) {
+            this.usernameField.setDisable(false);
+            this.passwordField.setDisable(false);
+            this.passwordCheckField.setDisable(false);
+            this.registerBtn.setDisable(false);
+            this.loginBtn.setDisable(false);
+
+            Errors errors = validationException.getErrors();
+
+            if (errors.hasFieldErrors("username")) {
+                this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
             }
 
-            if (errors.getFieldError().getField().equals("password")) {
-                JOptionPane.showMessageDialog(frame, "Password "
-                        + errors.getFieldError("password").getDefaultMessage());
+            if (errors.hasFieldErrors("password")) {
+                this.passwordErrors.setText(errors.getFieldError("password").getDefaultMessage());
             }
 
-            if (errors.getFieldError().getField().equals("passwordCheck")) {
-                JOptionPane.showMessageDialog(frame, "Password again "
-                        + errors.getFieldError("passwordCheck").getDefaultMessage());
+            if (errors.hasFieldErrors("passwordCheck")) {
+                this.passwordCheckErrors.setText(errors.getFieldError("passwordCheck").getDefaultMessage());
             }
+
         } catch (Exception defaultError) {
             defaultError.printStackTrace();
         }
+    }
 
-
+    @Override
+    public void handle(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == this.registerBtn) {
+            this.registerAction();
+        } else if (actionEvent.getSource() == this.loginBtn) {
+            this.stage.showLogin();
+        }
     }
 }

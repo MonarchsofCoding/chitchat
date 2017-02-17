@@ -44,7 +44,7 @@ public class RegistrationController {
      * @throws UnirestException - If invalid post with the httpClient
      * @throws UnexpectedResponseException - Unexpected response
      */
-    public void registerUser(String username, String password, String passwordCheck)
+    public UserModel registerUser(String username, String password, String passwordCheck)
             throws ValidationException, UnirestException, UnexpectedResponseException {
 
         System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n",
@@ -67,5 +67,7 @@ public class RegistrationController {
             // Unexpected response code. e.g. 500
             throw new UnexpectedResponseException(response);
         }
+
+        return user;
     }
 }

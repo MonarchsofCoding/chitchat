@@ -1,5 +1,5 @@
 provider "aws" {
-    region = "${var.aws_region}"
+  region = "${var.aws_region}"
 }
 
 data "aws_vpc" "app_cluster" {
@@ -27,37 +27,38 @@ data "aws_route53_zone" "organisation" {
 ### ECS ChitChat App containers
 data "template_file" "ecs_chit-chat_def" {
   template = "${file("${path.module}/chit-chat-def.tpl.json")}"
+
   vars {
-    secret_key_base = "${var.secret_key_base}"
-    environment = "${var.environment}"
-    database_username = "chit-chat_${var.environment}"
-    database_password = "${var.database_password}"
-    database_name = "chit-chat_${var.environment}"
-    ecs_postgres_name = "postgres_${var.environment}.servicediscovery.internal"
-    domain = "${var.domain}"
+    secret_key_base    = "${var.secret_key_base}"
+    guadian_secret_key = "${var.guardian_secret_key}"
+    environment        = "${var.environment}"
+    database_username  = "chit-chat_${var.environment}"
+    database_password  = "${var.database_password}"
+    database_name      = "chit-chat_${var.environment}"
+    ecs_postgres_name  = "postgres_${var.environment}.servicediscovery.internal"
+    domain             = "${var.domain}"
 
     backend_version = "${var.container_version}"
 
     cloudwatch_log_group = "${aws_cloudwatch_log_group.chit_chat.arn}"
-    cloudwatch_region = "${var.aws_region}"
+    cloudwatch_region    = "${var.aws_region}"
   }
 }
 
 resource "aws_ecs_task_definition" "chit_chat" {
-  family = "chit-chat_${var.environment}"
+  family                = "chit-chat_${var.environment}"
   container_definitions = "${data.template_file.ecs_chit-chat_def.rendered}"
 }
 
 resource "aws_ecs_service" "chat_chat" {
-  name = "chit-chat_${var.environment}"
-  cluster = "${var.cluster_name}"
+  name            = "chit-chat_${var.environment}"
+  cluster         = "${var.cluster_name}"
   task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
-  desired_count = 2
-  iam_role = "${aws_iam_role.ecs_service.arn}"
-
+  desired_count   = 2
+  iam_role        = "${aws_iam_role.ecs_service.arn}"
 
   placement_strategy {
-    type = "binpack"
+    type  = "binpack"
     field = "cpu"
   }
 
@@ -80,7 +81,7 @@ resource "aws_cloudwatch_log_group" "chit_chat" {
   retention_in_days = 7
 
   tags {
-    Name = "Chit Chat"
+    Name        = "Chit Chat"
     Environment = "${var.environment}"
   }
 }
@@ -88,41 +89,40 @@ resource "aws_cloudwatch_log_group" "chit_chat" {
 ### ECS Postgres containers
 data "template_file" "ecs_postgres_def" {
   template = "${file("${path.module}/postgres-def.tpl.json")}"
+
   vars {
     db_username = "chit-chat_${var.environment}"
     db_password = "${var.database_password}"
-    db_name = "chit-chat_${var.environment}"
+    db_name     = "chit-chat_${var.environment}"
     environment = "${var.environment}"
   }
 }
 
 resource "aws_ecs_task_definition" "postgres" {
-  family = "postgres_${var.environment}"
+  family                = "postgres_${var.environment}"
   container_definitions = "${data.template_file.ecs_postgres_def.rendered}"
 }
 
 resource "aws_ecs_service" "postgres" {
-  name = "postgres_${var.environment}"
-  cluster = "${var.cluster_name}"
+  name            = "postgres_${var.environment}"
+  cluster         = "${var.cluster_name}"
   task_definition = "${aws_ecs_task_definition.postgres.arn}"
-  desired_count = 1
+  desired_count   = 1
 
   placement_strategy {
-    type = "binpack"
+    type  = "binpack"
     field = "cpu"
   }
-
 }
 
 resource "aws_route53_record" "domain" {
-
   zone_id = "${data.aws_route53_zone.organisation.zone_id}"
-  name = "${var.domain}"
-  type = "A"
+  name    = "${var.domain}"
+  type    = "A"
 
   alias {
-    name = "${aws_alb.front_end.dns_name}"
-    zone_id = "${aws_alb.front_end.zone_id}"
+    name                   = "${aws_alb.front_end.dns_name}"
+    zone_id                = "${aws_alb.front_end.zone_id}"
     evaluate_target_health = false
   }
 }
@@ -144,12 +144,12 @@ resource "aws_alb_target_group" "front_end" {
   vpc_id   = "${data.aws_vpc.app_cluster.id}"
 
   health_check {
-    healthy_threshold = 3
+    healthy_threshold   = 3
     unhealthy_threshold = 3
-    timeout = 3
-    protocol = "HTTP"
-    interval = 5
-    matcher = "200,404"
+    timeout             = 3
+    protocol            = "HTTP"
+    interval            = 5
+    matcher             = "200,404"
   }
 }
 
@@ -230,7 +230,7 @@ EOF
 }
 
 data "aws_acm_certificate" "chit_chat" {
-  domain = "chitchat.monarchsofcoding.com"
+  domain   = "chitchat.monarchsofcoding.com"
   statuses = ["ISSUED"]
 }
 
@@ -249,8 +249,8 @@ resource "aws_alb_listener" "front_end_ssl" {
   load_balancer_arn = "${aws_alb.front_end.id}"
   port              = "443"
   protocol          = "HTTPS"
-  ssl_policy = "ELBSecurityPolicy-2015-05"
-  certificate_arn = "${data.aws_acm_certificate.chit_chat.arn}"
+  ssl_policy        = "ELBSecurityPolicy-2015-05"
+  certificate_arn   = "${data.aws_acm_certificate.chit_chat.arn}"
 
   default_action {
     target_group_arn = "${aws_alb_target_group.front_end.id}"

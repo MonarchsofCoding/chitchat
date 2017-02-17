@@ -22,7 +22,8 @@ defmodule ChitChat.Router do
   scope "/api/v1", ChitChat do
     pipe_through :api # Use the API stack
 
-    resources "/users", UserController, except: [:new, :edit]
+    resources "/users", UserController, only: [:create, :show, :index]
+    resources "/auth", AuthController, only: [:create]
   end
 
 end
