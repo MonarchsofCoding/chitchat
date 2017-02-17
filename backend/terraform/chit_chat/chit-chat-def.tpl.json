@@ -28,6 +28,10 @@
         "Value": "${secret_key_base}"
       },
       {
+        "Name": "GUARDIAN_SECRET_KEY",
+        "Value": "${guadian_secret_key}"
+      },
+      {
         "Name": "DATABASE_USERNAME",
         "Value": "${database_username}"
       },

@@ -56,6 +56,7 @@ def deploy(ctx):
       "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
       "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
       "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
+      "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env_dir)),
       "TF_VAR_container_version": version
     },
     volumes=[

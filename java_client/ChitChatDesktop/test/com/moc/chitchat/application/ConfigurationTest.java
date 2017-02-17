@@ -1,7 +1,9 @@
 package com.moc.chitchat.application;
 
+import com.moc.chitchat.model.UserModel;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -32,5 +34,23 @@ public class ConfigurationTest {
         configuration.setTestingMode();
 
         assertEquals(configuration.getBackendAddress(), "https://beta.chitchat.monarchsofcoding.com");
+    }
+
+    @Test
+    public void testGetLoggedInUser() {
+        Configuration configuration = new Configuration();
+
+        assertEquals(null, configuration.getLoggedInUser());
+    }
+
+    @Test
+    public void testSetLoggedInUser() {
+        Configuration configuration = new Configuration();
+
+        UserModel mockUser = mock(UserModel.class);
+
+        configuration.setLoggedInUser(mockUser);
+
+        assertEquals(mockUser, configuration.getLoggedInUser());
     }
 }
