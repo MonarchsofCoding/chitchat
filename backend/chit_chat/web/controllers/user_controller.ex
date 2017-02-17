@@ -1,37 +1,45 @@
 defmodule ChitChat.UserController do
   use ChitChat.Web, :controller
+  use Guardian.Phoenix.Controller
 
   alias ChitChat.User
 
   @doc """
   Lists all of the Users filtered by User.username
   """
-  @spec index(Conn, {}) :: nil
-  def index(conn, user_params) do
+  @spec index(Conn, any, any, any) :: nil
+  def index(conn, user_params, user, claims) do
 
-    changeset = User.search_changeset(%User{}, user_params)
+    case claims do
+      {:ok, user} ->
+        user = ChitChat.GuardianSerializer.from_token(user["sub"])
+        user_search = User.search_changeset(%User{}, user_params)
 
-    case changeset.valid? do
-      true ->
-        username_query = changeset.params["username"]
-        users = Repo.all(from u in User, where: ilike(u.username, ^"%#{username_query}%"))
+        case user_search.valid? do
+          true ->
+            username_query = user_search.params["username"]
+            users = Repo.all(from u in User, where: ilike(u.username, ^"%#{username_query}%"))
 
+            conn
+            |> put_status(200)
+            |> render("index.json", users: users)
+          false ->
+            conn
+            |> put_status(:bad_request)
+            |> render(ChitChat.ChangesetView, "error.json", changeset: user_search)
+        end
+      {:error, :no_session} ->
         conn
-        |> put_status(200)
-        |> render("index.json", users: users)
-
-      false ->
-        conn
-        |> put_status(:bad_request)
-        |> render(ChitChat.ChangesetView, "error.json", changeset: changeset)
+        |> put_status(:unauthorized)
     end
+
   end
 
   @doc """
   Creates a new User with the given parameters
   """
-  @spec create(Conn, {}) :: nil
-  def create(conn, user_params) do
+  # @spec create(Conn, {}) :: nil
+  def create(conn, user_params, _user, _claims) do
     changeset = User.register_changeset(%User{}, user_params)
 
     case User.register(Repo, changeset) do

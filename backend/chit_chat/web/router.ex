@@ -11,6 +11,7 @@ defmodule ChitChat.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Guardian.Plug.VerifyHeader, realm: "Bearer"
   end
 
   scope "/", ChitChat do
