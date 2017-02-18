@@ -103,6 +103,7 @@ jacoco {
 
 jacocoAndroidUnitTestReport {
     excludes += ['com/moc/chitchat/activity/**',
+                 'com/moc/chitchat/client/**',
                  'com/moc/chitchat/controller/*_Factory.class',
                  'com/moc/chitchat/ApplicationModule.class',
                  'com/moc/chitchat/ChitChatApplication.class']
