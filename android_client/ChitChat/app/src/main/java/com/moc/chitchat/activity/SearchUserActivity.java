@@ -40,7 +40,6 @@ public class SearchUserActivity extends Activity
     @Inject SearchUserController searchUserController;
     @Inject ErrorResponseResolver errorResponseResolver;
 
-
     TabLayout menuTabs;
     SearchView searchBar;
     ListView usersList;
