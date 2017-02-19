@@ -6,7 +6,7 @@ import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.AuthenticationStage;
 import com.moc.chitchat.view.authentication.BaseView;
-import com.sun.xml.internal.bind.v2.TODO;
+//import com.sun.xml.internal.bind.v2.TODO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;

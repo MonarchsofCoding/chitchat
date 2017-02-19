@@ -35,6 +35,9 @@ public class UserSearchControllerTest {
     @Mock private HttpClient mockHttpClient;
     @Mock private UserResolver mockuserresolver;
 
+    @Mock
+    private HttpResponse<JsonNode> mockResponse;
+
     @InjectMocks
     private UserSearchController userSearchController;
 
@@ -56,37 +59,40 @@ public class UserSearchControllerTest {
     public void testSuccessfulSearchUser() throws UnirestException, UnexpectedResponseException {
 
         Map<String, Object> mockmapper = new HashMap<String, Object>();
-        mockmapper.put("username", "spir");
+        mockmapper.put("username", "john");
 
-        // Create and define the mocked response to return 200 (success)
-        HttpResponse<JsonNode> mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-        when(mockResponse.getStatus())
-                .thenReturn(200);
+        UserModel user = new UserModel("john");
+
+        JsonNode thebody = mock(JsonNode.class);
+        when(this.mockResponse.getBody()).thenReturn(thebody);
+
         // Stub the HTTPClient to return the mocked response
         when(this.mockHttpClient.get("/api/v1/users", mockmapper))
                 .thenReturn(mockResponse);
 
+        // Create and define the mocked response to return 200 (success)
+        when(mockResponse.getStatus())
+                .thenReturn(200);
 
-       JSONArray mockjsonArray = mockResponse.getBody().getObject().getJSONArray("data");
-        List<UserModel> mockfoundUsers = new ArrayList<>();
+        String name = "john";
+        JSONObject username = new JSONObject();
+        username.put("username", name);
 
-        for(Object obj: mockjsonArray){
-            JSONObject jsonObject = (JSONObject) obj;
-            mockfoundUsers.add(mockuserresolver.getUserModelViaJSonObject(jsonObject));
-        }
+        JSONArray data = new JSONArray();
+        data.put(username);
 
+        JSONObject obj = new JSONObject();
+        obj.put("data", data);
+
+        when(thebody.getObject()).thenReturn(obj);
+
+        List<UserModel> foundUsers = new ArrayList<>();
 
         // Run the function to test
-        this.userSearchController.searchUser(
-                "spir"
+        foundUsers = this.userSearchController.searchUser("john");
 
-        );
-
+        assertEquals(1, foundUsers.size());
+        assertEquals(user.getUsername(), foundUsers.get(0).getUsername());
 
     }
-
-
-
-
-
 }
