@@ -1,9 +1,7 @@
 package com.moc.chitchat.view.main;
 
-import com.moc.chitchat.model.UserModel;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;

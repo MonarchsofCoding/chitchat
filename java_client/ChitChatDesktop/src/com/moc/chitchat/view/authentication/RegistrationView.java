@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
-import static javafx.scene.input.KeyCode.T;
-
 /**
  * RegistrationView provides the window used for registering a User.
  */
@@ -102,7 +100,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Success Registration");
             alert.setTitle("Information of Registration");
-            alert.setContentText("You hane now registered as "+user.getUsername());
+            alert.setContentText("You have now registered as "+user.getUsername());
             alert.show();
 
             this.stage.showLogin();

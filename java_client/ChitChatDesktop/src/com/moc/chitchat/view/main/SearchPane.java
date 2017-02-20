@@ -1,14 +1,11 @@
 package com.moc.chitchat.view.main;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.moc.chitchat.application.ApplicationLoader;
 import com.moc.chitchat.controller.authentication.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.AuthenticationStage;
 import com.moc.chitchat.view.authentication.BaseView;
-//import com.sun.xml.internal.bind.v2.TODO;
-import com.moc.chitchat.view.authentication.LoginView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -22,8 +19,6 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 import javax.xml.soap.Text;
 import java.util.List;
 import java.util.Optional;
-
-import static javafx.scene.control.ButtonType.CANCEL;
 
 
 /**

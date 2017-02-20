@@ -1,6 +1,5 @@
 package com.moc.chitchat.view.authentication;
 
-import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.controller.authentication.LoginController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
