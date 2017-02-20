@@ -73,13 +73,9 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
                 this.passwordField.getText()
             );
 
-            this.stage.close();
+            this.stage.hide();
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Success Login");
-            alert.setTitle("Information of Login");
-            alert.setContentText("You hane now entered as "+user.getUsername());
-            alert.show();
+
           //  JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
         } catch (ValidationException e) {
             Errors errors = e.getErrors();

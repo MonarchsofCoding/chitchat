@@ -105,7 +105,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
             alert.setContentText("You hane now registered as "+user.getUsername());
             alert.show();
 
-            this.loginBtn.setDisable(false);
+            this.stage.showLogin();
 
         } catch (ValidationException validationException) {
             this.usernameField.setDisable(false);

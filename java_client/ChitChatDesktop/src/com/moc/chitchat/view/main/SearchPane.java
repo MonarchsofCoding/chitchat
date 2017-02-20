@@ -1,6 +1,7 @@
 package com.moc.chitchat.view.main;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.ApplicationLoader;
 import com.moc.chitchat.controller.authentication.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.model.UserModel;
@@ -20,6 +21,9 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 import javax.xml.soap.Text;
 import java.util.List;
+import java.util.Optional;
+
+import static javafx.scene.control.ButtonType.CANCEL;
 
 
 /**
@@ -35,8 +39,10 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
     private ListView<String> searchlist;
     private ObservableList<String> names;
     private TextArea DisplayMessages;
-    private AuthenticationStage stage;
+    private MainStage stage;
+    private AuthenticationStage stag;
     private Text chatTitle;
+
 
     @Autowired
     public SearchPane(
@@ -46,7 +52,7 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
     }
 
 
-    public void setStage(AuthenticationStage stage) {
+    public void setStage(MainStage stage) {
                this.stage = stage;
     }
 
@@ -126,7 +132,7 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
             e.printStackTrace();
         } catch (UnexpectedResponseException e) {
                Alert alert = new Alert(Alert.AlertType.ERROR);
-               alert.setHeaderText("Username must contain at least 3 characters");
+               alert.setContentText("Username must contain at least 3 characters");
                alert.show();
 
         }
@@ -145,7 +151,15 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
             System.out.println("you clicked send");
         }
         if(event.getSource()==this.logoutBtn){
-            this.stage.showLogin();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("Chit Chat Exit");
+            alert.setContentText("Are you sure that you want to log out ?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get()== ButtonType.OK)this.stage.hide();
+            else{alert.close();}
+
+
 
            //we have to connect the logout with login screen
         }
