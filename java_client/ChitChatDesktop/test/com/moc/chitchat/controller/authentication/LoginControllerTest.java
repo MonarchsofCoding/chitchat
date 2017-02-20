@@ -10,6 +10,7 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -68,6 +69,18 @@ public class LoginControllerTest {
         when(this.mockHttpClient.post("/api/v1/auth", mockUser))
                 .thenReturn(mockResponse);
 
+        // Mock the authorisation token
+        JsonNode bodyResponse = mock(JsonNode.class);
+        when(mockResponse.getBody()).thenReturn(bodyResponse);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("authToken", "some_string");
+
+        JSONObject bodyJson = new JSONObject();
+        bodyJson.put("data", jsonObject);
+
+        when(bodyResponse.getObject()).thenReturn(bodyJson);
+
         // Run the function to test
         this.loginController.loginUser(
                 "spiros",
@@ -100,6 +113,18 @@ public class LoginControllerTest {
         ValidationException mockValidationException = mock(ValidationException.class);
         when(mockValidationException.getMessage())
                 .thenReturn("Validation Exception");
+
+        // Mock the authorisation token
+        JsonNode bodyResponse = mock(JsonNode.class);
+        when(mockResponse.getBody()).thenReturn(bodyResponse);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("authToken", "some_string");
+
+        JSONObject bodyJson = new JSONObject();
+        bodyJson.put("data", jsonObject);
+
+        when(bodyResponse.getObject()).thenReturn(bodyJson);
 
         // Run the function to test
         try {
