@@ -2,10 +2,7 @@ package com.moc.chitchat.application;
 
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.AuthenticationStage;
-<<<<<<< HEAD
 import com.moc.chitchat.view.authentication.LoginView;
-=======
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
 import com.moc.chitchat.view.main.MainStage;
 import javafx.stage.Stage;
 import org.junit.Test;
@@ -29,14 +26,10 @@ public class ApplicationLoaderTest {
         Configuration mockConfiguration = mock(Configuration.class);
         AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
         MainStage mockMainStage = mock(MainStage.class);
-
-<<<<<<< HEAD
         ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
 
         applicationLoader = new ApplicationLoader(
-=======
-        ApplicationLoader applicationLoader = new ApplicationLoader(
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
+
                 mockConfiguration,
                 mockAuthenticationStage,
                 mockMainStage
@@ -51,7 +44,7 @@ public class ApplicationLoaderTest {
         Configuration mockConfiguration = mock(Configuration.class);
         AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
         MainStage mockMainStage = mock(MainStage.class);
-<<<<<<< HEAD
+
 
         ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
         when(mockConfiguration.getLoggedInUser()).thenReturn(null);
@@ -62,19 +55,17 @@ public class ApplicationLoaderTest {
                 mockMainStage
         );
 
-=======
 
         when(mockConfiguration.getLoggedInUser()).thenReturn(null);
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(
+        applicationLoader = new ApplicationLoader(
                 mockConfiguration,
                 mockAuthenticationStage,
                 mockMainStage
         );
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
+
 
         Stage mockStage = mock(Stage.class);
-
         List<String> args = new ArrayList<>();
 
         applicationLoader.load(mockStage, args);
@@ -88,7 +79,7 @@ public class ApplicationLoaderTest {
         AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
         MainStage mockMainStage = mock(MainStage.class);
 
-<<<<<<< HEAD
+
 
         ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
 
@@ -101,16 +92,16 @@ public class ApplicationLoaderTest {
                 mockMainStage
         );
 
-=======
+
         when(mockConfiguration.getLoggedInUser()).thenReturn(null);
 
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(
+        applicationLoader = new ApplicationLoader(
                 mockConfiguration,
                 mockAuthenticationStage,
                 mockMainStage
         );
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
+
 
         Stage mockStage = mock(Stage.class);
 
@@ -129,7 +120,7 @@ public class ApplicationLoaderTest {
         Configuration mockConfiguration = mock(Configuration.class);
         AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
         MainStage mockMainStage = mock(MainStage.class);
-<<<<<<< HEAD
+
 
 
         ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
@@ -142,22 +133,19 @@ public class ApplicationLoaderTest {
                 mockMainStage
         );
 
-=======
-
         when(mockConfiguration.getLoggedInUser()).thenReturn(null);
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(
+        applicationLoader = new ApplicationLoader(
                 mockConfiguration,
                 mockAuthenticationStage,
                 mockMainStage
         );
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
+
 
         Stage mockStage = mock(Stage.class);
 
         List<String> args = new ArrayList<>();
         args.add("dev");
-
         applicationLoader.load(mockStage, args);
 
         verify(mockConfiguration).setDevelopmentMode();
@@ -171,7 +159,7 @@ public class ApplicationLoaderTest {
         AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
         MainStage mockMainStage = mock(MainStage.class);
 
-<<<<<<< HEAD
+
 
         ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
 
@@ -183,15 +171,14 @@ public class ApplicationLoaderTest {
                 mockMainStage
         );
 
-=======
         when(mockConfiguration.getLoggedInUser()).thenReturn(null);
 
-        ApplicationLoader applicationLoader = new ApplicationLoader(
+        applicationLoader = new ApplicationLoader(
                 mockConfiguration,
                 mockAuthenticationStage,
                 mockMainStage
         );
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
+
 
         Stage mockStage = mock(Stage.class);
 

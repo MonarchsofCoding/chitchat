@@ -61,7 +61,6 @@ public class UserSearchControllerTest {
         Map<String, Object> mockmapper = new HashMap<>();
         mockmapper.put("username", "john");
 
-<<<<<<< HEAD
 
         UserModel user;
         user = new UserModel("john");
@@ -71,10 +70,9 @@ public class UserSearchControllerTest {
       JsonNode bodyResponse = mock(JsonNode.class);
         when(this.mockResponse.getBody()).thenReturn(bodyResponse);
 
-=======
-        JsonNode bodyResponse = mock(JsonNode.class);
+        bodyResponse = mock(JsonNode.class);
         when(this.mockResponse.getBody()).thenReturn(bodyResponse);
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
+
 
         // Stub the HTTPClient to return the mocked response
         when(this.mockHttpClient.get("/api/v1/users", mockmapper))
@@ -89,7 +87,7 @@ public class UserSearchControllerTest {
 
         JSONArray usersJson = new JSONArray();
         usersJson.put(johnJson);
-<<<<<<< HEAD
+
 
         JSONObject bodyJson = new JSONObject();
         bodyJson.put("data", usersJson);
@@ -103,21 +101,19 @@ public class UserSearchControllerTest {
 
         List<UserModel> foundUsers = new ArrayList<>();
         foundUsers.add(mockUserResolver.getUserModelViaJSonObject(johnJson.put("username","john")));
-=======
-
-        JSONObject bodyJson = new JSONObject();
+        bodyJson = new JSONObject();
         bodyJson.put("data", usersJson);
 
         when(bodyResponse.getObject()).thenReturn(bodyJson);
 
         // Mock the UserResolver
-        UserModel john = new UserModel("john");
+        john = new UserModel("john");
         when(this.mockUserResolver.getUserModelViaJSonObject(johnJson)).thenReturn(john);
 
->>>>>>> 4e8ac77234ecf3d8ab977134416d80bf7725ba7f
+
 
         // Run the function to test
-        List<UserModel> foundUsers = this.userSearchController.searchUser("john");
+        foundUsers = this.userSearchController.searchUser("john");
 
         assertEquals(1, foundUsers.size());
         assertEquals("john", foundUsers.get(0).getUsername());
