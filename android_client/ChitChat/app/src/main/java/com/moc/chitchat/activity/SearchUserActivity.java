@@ -132,18 +132,25 @@ public class SearchUserActivity extends Activity
     //When a user submits a search
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Map<String,String> requestHeaders = new HashMap<String,String>();
-        requestHeaders.put(
-            "authorization",
-            "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
+        if(query.length() >= 3) {
+            Map<String, String> requestHeaders = new HashMap<String, String>();
+            requestHeaders.put(
+                "authorization",
+                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
 
-        searchUserController.searchUser(
-            this,
-            this,
-            this,
-            query,
-            requestHeaders
-        );
+            searchUserController.searchUser(
+                this,
+                this,
+                this,
+                query,
+                requestHeaders
+            );
+        }
+        else {
+            Toast.makeText(this,
+                String.format("You can only do a search with an input longer than 3 characters"),
+                Toast.LENGTH_LONG).show();
+        }
         return false;
     }
 
