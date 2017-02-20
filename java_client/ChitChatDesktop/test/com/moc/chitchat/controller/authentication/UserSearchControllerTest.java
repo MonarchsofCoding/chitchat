@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 public class UserSearchControllerTest {
 
     @Mock private HttpClient mockHttpClient;
-    @Mock private UserResolver mockuserresolver;
+    @Mock private UserResolver mockUserResolver;
 
     @Mock
     private HttpResponse<JsonNode> mockResponse;
@@ -58,41 +58,41 @@ public class UserSearchControllerTest {
     @Test
     public void testSuccessfulSearchUser() throws UnirestException, UnexpectedResponseException {
 
-        Map<String, Object> mockmapper = new HashMap<String, Object>();
+        Map<String, Object> mockmapper = new HashMap<>();
         mockmapper.put("username", "john");
 
-        UserModel user = new UserModel("john");
-
-        JsonNode thebody = mock(JsonNode.class);
-        when(this.mockResponse.getBody()).thenReturn(thebody);
+        JsonNode bodyResponse = mock(JsonNode.class);
+        when(this.mockResponse.getBody()).thenReturn(bodyResponse);
 
         // Stub the HTTPClient to return the mocked response
         when(this.mockHttpClient.get("/api/v1/users", mockmapper))
-                .thenReturn(mockResponse);
+                .thenReturn(this.mockResponse);
 
         // Create and define the mocked response to return 200 (success)
         when(mockResponse.getStatus())
                 .thenReturn(200);
 
-        String name = "john";
-        JSONObject username = new JSONObject();
-        username.put("username", name);
+        JSONObject johnJson = new JSONObject();
+        johnJson.put("username", "john");
 
-        JSONArray data = new JSONArray();
-        data.put(username);
+        JSONArray usersJson = new JSONArray();
+        usersJson.put(johnJson);
 
-        JSONObject obj = new JSONObject();
-        obj.put("data", data);
+        JSONObject bodyJson = new JSONObject();
+        bodyJson.put("data", usersJson);
 
-        when(thebody.getObject()).thenReturn(obj);
+        when(bodyResponse.getObject()).thenReturn(bodyJson);
 
-        List<UserModel> foundUsers = new ArrayList<>();
+        // Mock the UserResolver
+        UserModel john = new UserModel("john");
+        when(this.mockUserResolver.getUserModelViaJSonObject(johnJson)).thenReturn(john);
+
 
         // Run the function to test
-        foundUsers = this.userSearchController.searchUser("john");
+        List<UserModel> foundUsers = this.userSearchController.searchUser("john");
 
         assertEquals(1, foundUsers.size());
-        assertEquals(user.getUsername(), foundUsers.get(0).getUsername());
+        assertEquals("john", foundUsers.get(0).getUsername());
 
     }
 }
