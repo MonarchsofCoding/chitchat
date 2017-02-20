@@ -12,13 +12,10 @@ import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
-import org.springframework.validation.MapBindingResult;
 
-import java.util.HashMap;
 
 /**
- * Created by spiros on 09/02/17.
+ * LoginController is the controller for login feature
  */
 @Component
 public class LoginController {
@@ -60,6 +57,9 @@ public class LoginController {
 
             throw new UnexpectedResponseException(response);
         }
+
+        // Set the authorization token to the user
+        user.setAuthToken(response.getBody().getObject().getJSONObject("data").get("authToken").toString());
 
         this.configuration.setLoggedInUser(user);
             //open chatroom

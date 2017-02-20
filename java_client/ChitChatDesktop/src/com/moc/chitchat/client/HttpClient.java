@@ -54,6 +54,10 @@ public class HttpClient {
                 .header("accept", "application/json")
                 .header("Content-Type", "application/json");
 
+        if(this.configuration.getLoggedInUser()!=null){
+            req.header("Authorization", "bearer " + this.configuration.getLoggedInUser().getAuthToken());
+        }
+
         for(Map.Entry<String, Object> entry : query.entrySet()){
             req.queryString(entry.getKey(), entry.getValue());
         }
