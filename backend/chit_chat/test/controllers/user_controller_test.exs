@@ -3,34 +3,47 @@ defmodule ChitChat.UserControllerTest do
 
   alias ChitChat.User
 
-  setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
-  end
-
-  test "lists all entries on index" do
-
+  test "returns filtered list of users when request is authenticated and query param is valid" do
     users = [
-      User.register_changeset(%User{}, %{username: "alice", password: "password1234"}),
-      User.register_changeset(%User{}, %{username: "bob", password: "password123"})
+      %{username: "alice", password: "password1233"},
+      %{username: "bob", password: "password1234"},
+      %{username: "bobob", password: "password1235"}
     ]
 
-    Enum.each(users, &Repo.insert!(&1))
+    # Add users
+    Enum.each(users, fn(x) -> {
+        build_conn()
+        |> put_req_header("accept", "application/json")
+        |> post("/api/v1/users", x)
+        |> json_response(201)
+      } end
+    )
 
-    # response = build_conn()
-    # |> get(user_path(build_conn(), :index))
-    # |> json_response(200)
-    #
-    # expected = %{
-    #   "data" => [
-    #     %{"username" => "alice"},
-    #     %{"username" => "bob"}
-    #   ]
-    # }
-    #
+    # Authenticate
+    auth_response = build_conn()
+      |> put_req_header("accept", "application/json")
+      |> post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> json_response(200)
 
-    conn = get conn, user_path(conn, :index), %{username: "ali"}
+    auth_token = auth_response["data"]["authToken"]
 
-    assert json_response(conn, 200) == %{"data" => [%{"username" => "alice"}]}
+    search_response = build_conn()
+      |> put_req_header("accept", "application/json")
+      |> put_req_header("authorization", "Bearer #{auth_token}")
+      |> get("/api/v1/users?username=bob")
+      |> json_response(200)
+
+    assert search_response == %{
+      "data" => [
+        %{"username" => "bob"},
+        %{"username" => "bobob"}
+      ]
+    }
+
+
+    # conn = get conn, user_path(conn, :index), %{username: "ali"}
+
+    # assert json_response(conn, 200) == %{"data" => [%{"username" => "bob"}, %{"username" => "bobob"}]}
 
   end
 

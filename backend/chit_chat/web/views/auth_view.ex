@@ -12,4 +12,11 @@ defmodule ChitChat.AuthView do
     }
   end
 
+  @spec render(String, {}) :: {}
+  def render("unauthorized.json", %{}) do
+    %{
+      error: "Unauthorized"
+    }
+  end
+
 end
