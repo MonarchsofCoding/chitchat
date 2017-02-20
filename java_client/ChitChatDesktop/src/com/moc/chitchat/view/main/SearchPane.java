@@ -7,6 +7,7 @@ import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.AuthenticationStage;
 import com.moc.chitchat.view.authentication.BaseView;
 //import com.sun.xml.internal.bind.v2.TODO;
+import com.moc.chitchat.view.authentication.LoginView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
@@ -120,7 +121,7 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
           
         } catch (UnirestException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Server error connection");
+            alert.setHeaderText(e.getMessage());
             alert.show();
             e.printStackTrace();
         } catch (UnexpectedResponseException e) {
@@ -144,6 +145,7 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
             System.out.println("you clicked send");
         }
         if(event.getSource()==this.logoutBtn){
+            this.stage.showLogin();
 
            //we have to connect the logout with login screen
         }

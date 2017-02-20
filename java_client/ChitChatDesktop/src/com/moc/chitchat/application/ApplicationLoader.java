@@ -24,7 +24,7 @@ public class ApplicationLoader {
      * @param configuration The configuration for the application.
      */
     @Autowired
-    ApplicationLoader(
+    public ApplicationLoader(
         Configuration configuration,
         AuthenticationStage authenticationStage,
         MainStage mainStage

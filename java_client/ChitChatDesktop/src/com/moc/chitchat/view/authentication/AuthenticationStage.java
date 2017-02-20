@@ -1,5 +1,6 @@
 package com.moc.chitchat.view.authentication;
 
+import com.moc.chitchat.view.main.SearchPane;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ public class AuthenticationStage extends Stage {
     @Autowired
     public AuthenticationStage(
         LoginView loginView,
-        RegistrationView registrationView
+        RegistrationView registrationView,
+        SearchPane searchpane
     ) {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int resX = gd.getDisplayMode().getWidth();
@@ -38,6 +40,8 @@ public class AuthenticationStage extends Stage {
         registrationView.setWidth(width);
         registrationView.setHeight(height);
         this.registrationScene = registrationView.getScene();
+        MainChatScene = searchpane.getScene();
+
 
 
 
@@ -53,4 +57,7 @@ public class AuthenticationStage extends Stage {
     void showRegister() {
         this.setScene(this.registrationScene);
     }
+    void showMainChatScene(){this.setScene(this.MainChatScene);}
+
 }
+

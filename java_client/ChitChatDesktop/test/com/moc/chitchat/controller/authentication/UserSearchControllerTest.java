@@ -61,7 +61,8 @@ public class UserSearchControllerTest {
         Map<String, Object> mockmapper = new HashMap<String, Object>();
         mockmapper.put("username", "john");
 
-        UserModel user = new UserModel("john");
+        UserModel user;
+        user = new UserModel("john");
 
         JsonNode thebody = mock(JsonNode.class);
         when(this.mockResponse.getBody()).thenReturn(thebody);
@@ -87,6 +88,7 @@ public class UserSearchControllerTest {
         when(thebody.getObject()).thenReturn(obj);
 
         List<UserModel> foundUsers = new ArrayList<>();
+        foundUsers.add(mockuserresolver.getUserModelViaJSonObject(username.put("username","john")));
 
         // Run the function to test
         foundUsers = this.userSearchController.searchUser("john");

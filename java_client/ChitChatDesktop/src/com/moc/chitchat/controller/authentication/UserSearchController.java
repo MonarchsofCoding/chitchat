@@ -45,8 +45,12 @@ public class UserSearchController {
         HttpResponse<JsonNode> response = this.httpClient.get("/api/v1/users", mapper);
 
         if (response.getStatus() != 200) {
-            // Unexpected response code. e.g. 500
-            throw new UnexpectedResponseException(response);
+
+            if(response.getStatus()==500) {
+
+                throw new UnirestException("Server error connection") ;
+            }
+            else throw new UnexpectedResponseException(response);
         }
 
         JSONArray jsonArray = response.getBody().getObject().getJSONArray("data");
