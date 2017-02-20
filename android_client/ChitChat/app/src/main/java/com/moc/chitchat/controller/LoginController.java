@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
@@ -29,6 +30,11 @@ public class LoginController {
     private HttpClient httpClient;
 
     /**
+     * SessionConfiguration
+     */
+    private SessionConfiguration sessionConfiguration;
+
+    /**
      * LoginController constructor.
      * @param userResolver To resolve parameters into User objects.
      * @param httpClient To send HTTP(S) requests.
@@ -36,11 +42,13 @@ public class LoginController {
     @Inject
     public LoginController(
         UserResolver userResolver,
-        HttpClient httpClient
+        HttpClient httpClient,
+        SessionConfiguration sessionConfiguration
 
     ) {
         this.userResolver = userResolver;
         this.httpClient = httpClient;
+        this.sessionConfiguration = sessionConfiguration;
     }
 
     /**
@@ -68,6 +76,14 @@ public class LoginController {
             username,
             password
         );
+
+
+        /**
+         * Setting the current user object
+         * If the login is successful, this line is doing a correct action.
+         * If not, then the cleanCurrentUser in ErrorResponse ensures no false login happened.
+         */
+        this.sessionConfiguration.setCurrentUser(user);
 
         // Make a POST request to login with the User object.
         this.httpClient.sendRequest(

@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.SearchUserController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
@@ -22,6 +23,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -30,8 +33,7 @@ import javax.inject.Inject;
  */
 
 public class SearchUserActivity extends Activity
-    implements View.OnClickListener,
-    TabLayout.OnTabSelectedListener,
+    implements TabLayout.OnTabSelectedListener,
     SearchView.OnQueryTextListener,
     ListView.OnItemClickListener,
     Response.Listener<JSONObject>,
@@ -39,6 +41,7 @@ public class SearchUserActivity extends Activity
 
     @Inject SearchUserController searchUserController;
     @Inject ErrorResponseResolver errorResponseResolver;
+    @Inject SessionConfiguration sessionConfiguration;
 
     TabLayout menuTabs;
     SearchView searchBar;
@@ -63,12 +66,6 @@ public class SearchUserActivity extends Activity
         searchBar.setOnQueryTextListener(this);
 
         usersList = (ListView) findViewById(R.id.users_list);
-    }
-
-    //For buttons
-    @Override
-    public void onClick(View v) {
-
     }
 
     //For Volley Error response
@@ -135,11 +132,17 @@ public class SearchUserActivity extends Activity
     //When a user submits a search
     @Override
     public boolean onQueryTextSubmit(String query) {
+        Map<String,String> requestHeaders = new HashMap<String,String>();
+        requestHeaders.put(
+            "authorization",
+            "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
+
         searchUserController.searchUser(
             this,
             this,
             this,
-            query
+            query,
+            requestHeaders
         );
         return false;
     }

@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.LoginController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
@@ -32,6 +33,7 @@ public class LoginActivity extends Activity
 
     @Inject LoginController loginController;
     @Inject ErrorResponseResolver errorResponseResolver;
+    @Inject SessionConfiguration sessionConfiguration;
 
     EditText usernameField;
     EditText passwordField;
@@ -92,6 +94,8 @@ public class LoginActivity extends Activity
             "Invalid credentials or you didn't registered yet",
             Toast.LENGTH_LONG
         ).show();
+
+        sessionConfiguration.cleanCurrentUser(); //Ensuring no one logged in accidentally
     }
 
     /**
@@ -106,6 +110,11 @@ public class LoginActivity extends Activity
             String username = response.getJSONObject("data").get("username").toString();
             Toast.makeText(this,
                 String.format("Successfully logged in: %s", username), Toast.LENGTH_LONG).show();
+
+            sessionConfiguration.setCurrentUser(
+                sessionConfiguration.getCurrentUser()
+                    .setAuthToken(response.getJSONObject("data").get("authToken").toString())
+            );
         } catch (JSONException e) {
             e.printStackTrace();
         }
