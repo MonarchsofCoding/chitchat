@@ -51,7 +51,5 @@ public class ApplicationLoader {
             this.mainStage.showAndWait();
         }
 
-        System.out.println(this.configuration.getLoggedInUser().getUsername());
-
     }
 }
