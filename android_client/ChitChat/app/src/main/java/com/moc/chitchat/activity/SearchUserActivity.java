@@ -29,7 +29,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * SearchUserController provides the View and Actions involved with searching a User.
+ * SearchUserActivity provides the View and Actions involved with searching a User.
  */
 
 public class SearchUserActivity extends Activity
