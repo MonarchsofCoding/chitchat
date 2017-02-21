@@ -5,7 +5,6 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
-import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import org.json.JSONArray;
@@ -24,11 +23,10 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by spiros on 16/02/17.
+ * UserSearchControllerTest provides the tests for UserSearchController
  */
 public class UserSearchControllerTest {
 
@@ -110,13 +108,32 @@ public class UserSearchControllerTest {
         john = new UserModel("john");
         when(this.mockUserResolver.getUserModelViaJSonObject(johnJson)).thenReturn(john);
 
-
-
         // Run the function to test
         foundUsers = this.userSearchController.searchUser("john");
 
         assertEquals(1, foundUsers.size());
         assertEquals("john", foundUsers.get(0).getUsername());
+    }
 
+    @Test
+    public void testServerErrorException() throws UnirestException{
+        Map<String, Object> mockmapper = new HashMap<>();
+        mockmapper.put("username", "john");
+
+        UserModel user;
+        user = new UserModel("john");
+
+        // Stub the HTTPClient to return the mocked response
+        when(this.mockHttpClient.get("/api/v1/users", mockmapper))
+                .thenReturn(this.mockResponse);
+
+        // Create and define the mocked response to return not 200. i.e failure
+        when(mockResponse.getStatus())
+                .thenReturn(422);
+        try {
+            this.userSearchController.searchUser("john");
+        } catch (UnexpectedResponseException e) {
+            assertEquals("Unexpected Response code: 422", e.getMessage());
+        }
     }
 }

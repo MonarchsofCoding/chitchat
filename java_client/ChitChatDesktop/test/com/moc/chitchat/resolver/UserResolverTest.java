@@ -1,6 +1,7 @@
 package com.moc.chitchat.resolver;
 
 import com.moc.chitchat.model.UserModel;
+import org.json.JSONObject;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -46,8 +47,16 @@ public class UserResolverTest {
 
         assertEquals(expectedUsename,user.getUsername());
         assertEquals(expectedPasswordlgn,user.getPassword());
+    }
 
+    @Test
+    public void testGetUserModelViaJSonObject() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", "bob_dillion");
 
+        UserResolver userResolver = new UserResolver();
+        UserModel userModel = userResolver.getUserModelViaJSonObject(jsonObject);
 
+        assertEquals("bob_dillion", userModel.getUsername());
     }
 }
