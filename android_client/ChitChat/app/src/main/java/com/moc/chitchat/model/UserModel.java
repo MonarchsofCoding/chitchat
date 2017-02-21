@@ -92,6 +92,7 @@ public class UserModel {
      * setAuthToken sets an auth token to the user
      * @param aToken the token to be set
      * @return the user
+     *
      */
     public UserModel setAuthToken(String aToken) {
         this.authToken = aToken;

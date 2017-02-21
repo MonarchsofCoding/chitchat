@@ -22,10 +22,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by aakyo on 18/02/2017.
- */
-
 public class SearchUserControllerTest {
 
     @Mock private HttpClient mockHttpClient;
@@ -68,8 +64,6 @@ public class SearchUserControllerTest {
             mockResponselistener,
             mockErrorListener,
             null);
-
-
 
 
     }

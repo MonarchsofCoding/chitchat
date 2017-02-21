@@ -2,12 +2,6 @@ package com.moc.chitchat.application;
 
 import com.moc.chitchat.model.UserModel;
 
-import javax.inject.Inject;
-
-/**
- * Created by aakyo on 20/02/2017.
- */
-
 public class SessionConfiguration {
 
     /**
