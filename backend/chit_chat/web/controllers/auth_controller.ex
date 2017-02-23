@@ -4,6 +4,15 @@ defmodule ChitChat.AuthController do
   alias ChitChat.User
   alias Guardian.Plug
 
+  @spec authenticate(ChitChat.User) :: {}
+  def authenticate(user) do
+    if user != nil do
+      {:ok, user}
+    else
+      {:error, :unauthorized}
+    end
+  end
+
   @spec create(Conn, {}) :: nil
   def create(conn, user_params) do
     changeset = User.register_changeset(%User{}, user_params)

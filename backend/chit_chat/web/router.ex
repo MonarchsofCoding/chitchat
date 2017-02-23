@@ -26,6 +26,7 @@ defmodule ChitChat.Router do
 
     resources "/users", UserController, only: [:create, :show, :index]
     resources "/auth", AuthController, only: [:create]
+    resources "/messages", MessageController, only: [:create]
   end
 
 end

@@ -15,4 +15,9 @@ defmodule ChitChat.UserRepository do
     )
   end
 
+  @spec find_by_username(String) :: User
+  def find_by_username(username) do
+    Repo.get_by(User, username: username)
+  end
+
 end
