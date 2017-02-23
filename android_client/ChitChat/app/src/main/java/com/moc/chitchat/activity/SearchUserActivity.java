@@ -133,17 +133,11 @@ public class SearchUserActivity extends Activity
     @Override
     public boolean onQueryTextSubmit(String query) {
         if(query.length() >= 3) {
-            Map<String, String> requestHeaders = new HashMap<String, String>();
-            requestHeaders.put(
-                "authorization",
-                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
-
             searchUserController.searchUser(
                 this,
                 this,
                 this,
-                query,
-                requestHeaders
+                query
             );
         }
         else {
