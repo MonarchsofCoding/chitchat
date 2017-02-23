@@ -73,7 +73,6 @@ public class SearchUserActivity extends Activity
     public void onErrorResponse(VolleyError error) {
         System.out.println("Error registering");
         try {
-
             Toast.makeText(this,
                 String.format("The user you are trying to found is not connected or not existing"),
                 Toast.LENGTH_LONG).show();
@@ -133,11 +132,17 @@ public class SearchUserActivity extends Activity
     @Override
     public boolean onQueryTextSubmit(String query) {
         if(query.length() >= 3) {
+            Map<String, String> requestHeaders = new HashMap<String, String>();
+            requestHeaders.put(
+                "authorization",
+                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
+
             searchUserController.searchUser(
                 this,
                 this,
                 this,
-                query
+                query,
+                requestHeaders
             );
         }
         else {

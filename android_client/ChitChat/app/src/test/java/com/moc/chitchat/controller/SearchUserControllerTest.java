@@ -53,7 +53,8 @@ public class SearchUserControllerTest {
             mockContext,
             mockResponselistener,
             mockErrorListener,
-            "spi");
+            "spi",
+            null);
 
 
         this.mockHttpClient.sendRequestWithHeader(mockContext,

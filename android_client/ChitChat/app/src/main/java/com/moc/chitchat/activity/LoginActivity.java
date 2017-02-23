@@ -89,7 +89,7 @@ public class LoginActivity extends Activity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error registering");
+        System.out.println("Error on login");
         Toast.makeText(this,
             "Invalid credentials or you didn't registered yet",
             Toast.LENGTH_LONG
