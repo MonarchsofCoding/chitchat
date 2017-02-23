@@ -1,9 +1,5 @@
 package com.moc.chitchat.controller;
 
-/**
- * Created by aakyo on 16/02/2017.
- */
-
 import android.content.Context;
 
 import com.android.volley.Request;
@@ -13,6 +9,7 @@ import com.moc.chitchat.client.HttpClient;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -41,13 +38,25 @@ public class SearchUserController {
         this.sessionConfiguration = sessionConfiguration;
     }
 
+    /**
+     *
+     * @param context the Android Context.
+     * @param successListener The HTTP success listener.
+     * @param errorListener The HTTP error listener.
+     * @param queryString the searched username string
+     */
     public void searchUser (
         Context context,
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,
-        String queryString,
-        Map<String,String> requestHeaders
+        String queryString
         ) {
+
+        Map<String, String> requestHeaders = new HashMap<String, String>();
+        requestHeaders.put(
+            "authorization",
+            "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
+
         // Make a GET request to find all the connected users.
         this.httpClient.sendRequestWithHeader(
             context,
