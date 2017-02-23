@@ -41,6 +41,17 @@ public class UserModelTest {
     }
 
     @Test
+    public void testSetAuthToken()
+    {
+        String userName = "George";
+        UserModel userModel = new UserModel(userName);
+        String expectedAuthToken = "jahgewlgwGfewFwe34gbrg342k2pkpf9";
+        userModel.setAuthToken(expectedAuthToken);
+
+        assertEquals(expectedAuthToken, userModel.getAuthToken());
+    }
+
+    @Test
     public void testToJSONObject() {
         String expectedUserName = "Ozhan";
         UserModel userModel = new UserModel(expectedUserName);
