@@ -1,6 +1,7 @@
 package com.moc.chitchat;
 
 
+import com.moc.chitchat.activity.CurrentChatActivity;
 import com.moc.chitchat.activity.LoginActivity;
 import com.moc.chitchat.activity.RegistrationActivity;
 import com.moc.chitchat.activity.SearchUserActivity;
@@ -20,5 +21,6 @@ public interface ApplicationComponent {
     void inject(RegistrationActivity activity);
     void inject(LoginActivity activity);
     void inject(SearchUserActivity activity);
+    void inject(CurrentChatActivity activity);
 
 }

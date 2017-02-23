@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 
@@ -15,9 +16,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * Provides the actions performed by the SearchUserActivity
+ * Provides the actions performed by the CurrentChatActivity
  */
-public class SearchUserController {
+
+public class CurrentChatController {
 
     /**
      * HttpClient
@@ -29,42 +31,45 @@ public class SearchUserController {
      */
     private SessionConfiguration sessionConfiguration;
 
+    /**
+     * CurrentChatConfiguration
+     */
+    private CurrentChatConfiguration currentChatConfiguration;
+
     @Inject
-    public SearchUserController(
+    public CurrentChatController(
         HttpClient httpClient,
-        SessionConfiguration sessionConfiguration
+        SessionConfiguration sessionConfiguration,
+        CurrentChatConfiguration currentChatConfiguration
+
     ) {
         this.httpClient = httpClient;
         this.sessionConfiguration = sessionConfiguration;
+        this.currentChatConfiguration = currentChatConfiguration;
     }
 
-    /**
-     *
-     * @param context the Android Context.
-     * @param successListener The HTTP success listener.
-     * @param errorListener The HTTP error listener.
-     * @param queryString the searched username string
-     */
-    public void searchUser (
+    public void sendMessageToRecipient (
         Context context,
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,
-        String queryString,
+        String message,
         Map<String,String> requestHeaders
-        ) {
+    ) {
 
+        //TODO: Will do a better programming practice here once we implement the message model
+        HashMap<String, String> messageMap = new HashMap<>();
+        messageMap.put("message", message);
+        messageMap.put("recipient", currentChatConfiguration.getCurrentRecipientUsername());
 
-        // Make a GET request to find all the connected users.
+        // Make a POST request to send the message.
         this.httpClient.sendRequestWithHeader(
             context,
-            Request.Method.GET,
-            "/api/v1/users?username=" + queryString,
-            null,
+            Request.Method.POST,
+            "/api/v1/messages",
+            new JSONObject(messageMap),
             successListener,
             errorListener,
             requestHeaders
         );
     }
-
-
 }

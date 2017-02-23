@@ -2,6 +2,8 @@ package com.moc.chitchat;
 
 import android.app.Application;
 
+import com.moc.chitchat.activity.CurrentChatActivity;
+import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
@@ -59,4 +61,8 @@ public class ApplicationModule {
     @Provides
     @Singleton
     SessionConfiguration provideSessionConfiguration() {return new SessionConfiguration();}
+
+    @Provides
+    @Singleton
+    CurrentChatConfiguration provideCurrentChatConfiguration() {return new CurrentChatConfiguration();}
 }

@@ -1,6 +1,7 @@
 package com.moc.chitchat.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.widget.AdapterView;
@@ -14,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.SearchUserController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
@@ -29,7 +31,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * SearchUserController provides the View and Actions involved with searching a User.
+ * SearchUserActivity provides the View and Actions involved with searching a User.
  */
 
 public class SearchUserActivity extends Activity
@@ -42,6 +44,7 @@ public class SearchUserActivity extends Activity
     @Inject SearchUserController searchUserController;
     @Inject ErrorResponseResolver errorResponseResolver;
     @Inject SessionConfiguration sessionConfiguration;
+    @Inject CurrentChatConfiguration currentChatConfiguration;
 
     TabLayout menuTabs;
     SearchView searchBar;
@@ -66,6 +69,7 @@ public class SearchUserActivity extends Activity
         searchBar.setOnQueryTextListener(this);
 
         usersList = (ListView) findViewById(R.id.users_list);
+        usersList.setOnItemClickListener(this);
     }
 
     //For Volley Error response
@@ -108,11 +112,30 @@ public class SearchUserActivity extends Activity
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         String tabName = tab.getText().toString();
+
+        TabLayout.Tab tabToSelect = menuTabs.getTabAt(1); //Locks the Search tab since we may
+        tabToSelect.select();                             //stay in this activity
+
         if(tabName.equals("Chats")) {
             //TODO: Open Chats Activity
         }
         else if(tabName.equals("Current Chat")) {
-            //TODO: Open Current Chat Activity
+            String currentReceiverUsername = currentChatConfiguration.getCurrentRecipientUsername();
+
+            if(!currentReceiverUsername.equals("")) {
+                Intent currentChatIntent = new Intent(getBaseContext(), CurrentChatActivity.class);
+                currentChatIntent.putExtra(
+                    "recipient_username",
+                    currentReceiverUsername);
+                startActivity(currentChatIntent);
+
+                overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
+                this.ExitActivity();
+            }
+            else {
+                Toast.makeText(this,
+                    String.format("There is no current chat"), Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -136,8 +159,8 @@ public class SearchUserActivity extends Activity
             Map<String, String> requestHeaders = new HashMap<String, String>();
             requestHeaders.put(
                 "authorization",
-                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
 
+                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
             searchUserController.searchUser(
                 this,
                 this,
@@ -157,13 +180,31 @@ public class SearchUserActivity extends Activity
     //When the search text is changed.
     @Override
     public boolean onQueryTextChange(String newText) {
-        //Basically do nothing.
+        if(newText.contains(" ")) {
+            searchBar.setQuery(newText.replace(" ",""),false);
+        }
         return false;
     }
 
     //When the user clicks on an user.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO: Open a chat activity with the user selected.
+        String newRecipientUsername = parent.getItemAtPosition(position).toString();
+
+        currentChatConfiguration.setCurrentRecipientUsername(newRecipientUsername);
+
+        Intent currentChatIntent = new Intent(getBaseContext(), CurrentChatActivity.class);
+        currentChatIntent.putExtra(
+            "recipient_username",
+            newRecipientUsername);
+        startActivity(currentChatIntent);
+
+        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
+        this.ExitActivity();
+    }
+
+    public void ExitActivity() {
+        this.finish();
+        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
     }
 }
