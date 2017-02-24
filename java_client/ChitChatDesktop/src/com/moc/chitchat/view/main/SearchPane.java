@@ -4,7 +4,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.controller.authentication.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.model.UserModel;
-import com.moc.chitchat.view.authentication.AuthenticationStage;
 import com.moc.chitchat.view.authentication.BaseView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,9 +16,7 @@ import javafx.event.EventHandler;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 import com.moc.chitchat.exception.ValidationException;
 
-import javax.xml.soap.Text;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -30,14 +27,11 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
 
     private UserSearchController userSearchController;
 
-    private TextField usernameField,messagesend;
-    private Button searchBtn,sendBtn, logoutBtn;
+    private TextField usernameField;
+    private Button searchBtn;
     private ListView<String> searchlist;
     private ObservableList<String> names;
-    private TextArea DisplayMessages;
     private MainStage stage;
-    private AuthenticationStage stag;
-    private Text chatTitle;
 
 
     @Autowired
@@ -63,7 +57,7 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
         ///Search AREA @@@@@@@@@@@???????????????????/////
         this.usernameField = new TextField();
         this.usernameField.setPromptText("Find User");
-        searchForm.add(this.usernameField, "span, cell 0 2 , align left");
+        searchForm.add(this.usernameField, "span, cell 0 2 , align left, grow");
 
         this.searchBtn = new Button("Search");
         this.searchBtn.setOnAction(this);
@@ -93,10 +87,6 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
             for(int i=0;i<listusers.size(); i++) {
                 names.add(listusers.get(i).getUsername());
             }
-
-
-
-
            searchlist.setItems(names);
           
         } catch (UnirestException e) {
@@ -125,22 +115,6 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
         if (event.getSource() == this.searchBtn) {
            searchlist.getItems().clear();
            this.searchAction();
-        }
-        if (event.getSource()== this.sendBtn){
-            System.out.println("you clicked send");
-        }
-        if(event.getSource()==this.logoutBtn){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText("Chit Chat Exit");
-            alert.setContentText("Are you sure that you want to log out ?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()== ButtonType.OK)this.stage.hide();
-            else{alert.close();}
-
-
-
-           //we have to connect the logout with login screen
         }
     }
 }
