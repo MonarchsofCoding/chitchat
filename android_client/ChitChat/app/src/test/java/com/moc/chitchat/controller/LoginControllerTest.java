@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -34,12 +35,14 @@ public class LoginControllerTest {
     @Mock private Context mockcontext;
     @Mock private Response.Listener mockResponselistener;
     @Mock private Response.ErrorListener mockErrorListener;
+    @Mock private SessionConfiguration mockSessionConfiguration;
 
     @InjectMocks
     private LoginController loginController;
 
     @Before
     public void initMocks(){
+
         MockitoAnnotations.initMocks(this);
     }
 

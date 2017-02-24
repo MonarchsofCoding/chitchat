@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.LoginController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
@@ -32,6 +33,7 @@ public class LoginActivity extends Activity
 
     @Inject LoginController loginController;
     @Inject ErrorResponseResolver errorResponseResolver;
+    @Inject SessionConfiguration sessionConfiguration;
 
     EditText usernameField;
     EditText passwordField;
@@ -78,7 +80,7 @@ public class LoginActivity extends Activity
     private void registerButton() {
         Intent registerIntent = new Intent(this, RegistrationActivity.class);
         startActivity(registerIntent);
-        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
+        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
     }
 
     /**
@@ -87,11 +89,13 @@ public class LoginActivity extends Activity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error registering");
+        System.out.println("Error on login");
         Toast.makeText(this,
             "Invalid credentials or you didn't registered yet",
             Toast.LENGTH_LONG
         ).show();
+
+        sessionConfiguration.cleanCurrentUser(); //Ensuring no one logged in accidentally
     }
 
     /**
@@ -106,9 +110,17 @@ public class LoginActivity extends Activity
             String username = response.getJSONObject("data").get("username").toString();
             Toast.makeText(this,
                 String.format("Successfully logged in: %s", username), Toast.LENGTH_LONG).show();
+
+            sessionConfiguration.setCurrentUser(
+                sessionConfiguration.getCurrentUser()
+                    .setAuthToken(response.getJSONObject("data").get("authToken").toString())
+            );
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Intent searchIntent = new Intent(this, SearchUserActivity.class);
+        startActivity(searchIntent);
+        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
         this.ExitActivity();
     }
 

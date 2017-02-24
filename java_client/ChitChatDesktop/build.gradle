@@ -30,9 +30,9 @@ dependencies {
     // https://mvnrepository.com/artifact/commons-logging/commons-logging
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
     // https://mvnrepository.com/artifact/com.miglayout/miglayout-swing
-//    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.0'
+    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.0'
 
-    // https://mvnrepository.com/artifact/com.miglayout/miglayout-javafx
+    //https://mvnrepository.com/artifact/com.miglayout/miglayout-javafx
     compile group: 'com.miglayout', name: 'miglayout-javafx', version: '5.0'
 
     // https://mvnrepository.com/artifact/org.json/json
@@ -80,7 +80,7 @@ jacoco {
 jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: 'com/moc/chitchat/view**')
+            fileTree(dir: it, exclude: ['com/moc/chitchat/view**', 'com/moc/chitchat/client/'])
         })
     }
 }

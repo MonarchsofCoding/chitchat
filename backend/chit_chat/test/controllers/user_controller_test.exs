@@ -7,56 +7,126 @@ defmodule ChitChat.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
-  test "lists all entries on index" do
-
+  def create_test_users(conn) do
     users = [
-      User.changeset(%User{}, %{username: "alice", password: "password1234"}),
-      User.changeset(%User{}, %{username: "bob", password: "password123"})
+      %{username: "alice", password: "password1233"},
+      %{username: "bob", password: "password1234"},
+      %{username: "bobob", password: "password1235"}
     ]
 
-    Enum.each(users, &Repo.insert!(&1))
-
-    response = build_conn()
-    |> get(user_path(build_conn(), :index))
-    |> json_response(200)
-
-    expected = %{
-      "data" => [
-        %{"username" => "alice"},
-        %{"username" => "bob"}
-      ]
-    }
-
-    assert response == expected
-
+    Enum.each(users, fn(x) -> {
+      conn
+      |> recycle()
+      |> post("/api/v1/users", x)
+      |> json_response(201)
+    } end
+    )
   end
 
-  test "creates and renders User resource when data is valid", %{conn: conn} do
-    conn = post conn, user_path(conn, :create), %{username: "bob", password: "password123"}
+  describe "index" do
+    test "returns filtered list of users when request is authenticated and query param is valid", %{conn: conn} do
 
-    assert json_response(conn, 201)["data"]["username"]
-    assert Repo.get_by(User, %{username: "bob"})
+      create_test_users(conn)
+      auth_response = conn
+      |> recycle()
+      |> post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> json_response(200)
+
+      auth_token = auth_response["data"]["authToken"]
+
+      search_response = conn
+      |> recycle()
+      |> put_req_header("authorization", "Bearer #{auth_token}")
+      |> get("/api/v1/users?username=bob")
+      |> json_response(200)
+
+      assert search_response == %{
+        "data" => [
+          %{"username" => "bob"},
+          %{"username" => "bobob"}
+        ]
+      }
+    end
+
+    test "returns Unauthorized when the request is not authenticated", %{conn: conn} do
+      conn
+        |> get("/api/v1/users?username=bob")
+        |> json_response(401)
+    end
+
+    test "Removes authenticated user from the response", %{conn: conn} do
+      create_test_users(conn)
+      auth_response = conn
+      |> recycle()
+      |> post("/api/v1/auth", %{username: "bob", password: "password1234"})
+      |> json_response(200)
+
+      auth_token = auth_response["data"]["authToken"]
+
+      search_response = conn
+      |> recycle()
+      |> put_req_header("authorization", "Bearer #{auth_token}")
+      |> get("/api/v1/users?username=bob")
+      |> json_response(200)
+
+      assert search_response == %{
+        "data" => [
+          %{"username" => "bobob"}
+        ]
+      }
+    end
+
+    test "returns 400 when username parameter is invalid (too short)", %{conn: conn} do
+
+      conn
+      |> post("/api/v1/users", %{username: "bob", password: "password123"})
+      |> json_response(201)
+
+      auth_response = conn
+      |> recycle()
+      |> post("/api/v1/auth", %{username: "bob", password: "password123"})
+      |> json_response(200)
+
+      auth_token = auth_response["data"]["authToken"]
+
+      conn
+        |> recycle()
+        |> put_req_header("authorization", "Bearer #{auth_token}")
+        |> get("/api/v1/users?username=bo")
+        |> json_response(400)
+    end
   end
 
-  test "does not create User resource and renders errors when data is invalid", %{conn: conn} do
-    conn = post conn, user_path(conn, :create), %{}
+  describe "create" do
+    test "creates and renders User resource when data is valid", %{conn: conn} do
+      response = conn
+      |> post("/api/v1/users", %{username: "bob", password: "password123"})
+      |> json_response(201)
 
-    assert json_response(conn, 422)["errors"] != %{}
-  end
+      assert response["data"]["username"] == "bob"
+      assert Repo.get_by(User, %{username: "bob"})
+    end
 
-  test "does not create duplicate User resource and renders errors when username is already taken", %{conn: conn} do
+    test "does not create User resource and renders errors when data is invalid", %{conn: conn} do
+      conn = conn
+      |> post("/api/v1/users", %{username: "bo", password: "aa"})
 
-    conn = post conn, user_path(conn, :create), %{
-      username: "bob",
-      password: "password123"
-    }
+      assert json_response(conn, 422)["errors"] != %{}
+    end
 
-    conn = post conn, user_path(conn, :create), %{
-      username: "bob",
-      password: "password1234"
-    }
+    test "does not create duplicate User resource and renders errors when username is already taken", %{conn: conn} do
+      conn
+      |> post("/api/v1/users", %{username: "bob", password: "password123"})
+      |> json_response(201)
 
-    assert json_response(conn, 422)["errors"] != %{}
+      conn = conn
+      |> recycle()
+      |> put_req_header("accept", "application/json")
+      |> post("/api/v1/users", %{username: "bob", password: "password123"})
+
+      assert json_response(conn, 422)["errors"] != %{}
+
+    end
   end
 
 end

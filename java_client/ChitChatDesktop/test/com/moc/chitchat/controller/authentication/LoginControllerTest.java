@@ -3,12 +3,14 @@ package com.moc.chitchat.controller.authentication;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -20,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 /**
- * Created by spiros on 11/02/17.
+ *  LoginControllerTest provides test for the LoginController
  */
 public class LoginControllerTest {
 
@@ -29,6 +31,7 @@ public class LoginControllerTest {
     @Mock private UserResolver mockUserResolver;
     @Mock private UserValidator mockUserValidator;
     @Mock private HttpClient mockHttpClient;
+    @Mock private Configuration configuration;
 
     @InjectMocks
     private LoginController loginController;
@@ -66,12 +69,23 @@ public class LoginControllerTest {
         when(this.mockHttpClient.post("/api/v1/auth", mockUser))
                 .thenReturn(mockResponse);
 
+        // Mock the authorisation token
+        JsonNode bodyResponse = mock(JsonNode.class);
+        when(mockResponse.getBody()).thenReturn(bodyResponse);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("authToken", "some_string");
+
+        JSONObject bodyJson = new JSONObject();
+        bodyJson.put("data", jsonObject);
+
+        when(bodyResponse.getObject()).thenReturn(bodyJson);
+
         // Run the function to test
         this.loginController.loginUser(
                 "spiros",
                 "aaa"
         );
-
     }
 
 
@@ -99,6 +113,18 @@ public class LoginControllerTest {
         ValidationException mockValidationException = mock(ValidationException.class);
         when(mockValidationException.getMessage())
                 .thenReturn("Validation Exception");
+
+        // Mock the authorisation token
+        JsonNode bodyResponse = mock(JsonNode.class);
+        when(mockResponse.getBody()).thenReturn(bodyResponse);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("authToken", "some_string");
+
+        JSONObject bodyJson = new JSONObject();
+        bodyJson.put("data", jsonObject);
+
+        when(bodyResponse.getObject()).thenReturn(bodyJson);
 
         // Run the function to test
         try {

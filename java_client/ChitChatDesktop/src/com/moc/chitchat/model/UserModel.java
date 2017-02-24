@@ -23,6 +23,7 @@ public class UserModel implements JSONString {
      */
     private String passwordCheck;
 
+    private String authToken;
 
     /**
      * UserModel Constructor.
@@ -92,5 +93,13 @@ public class UserModel implements JSONString {
         ;
 
         return jsonObject.toString();
+    }
+
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
+    }
+
+    public String getAuthToken() {
+        return this.authToken;
     }
 }

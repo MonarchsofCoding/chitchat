@@ -2,6 +2,7 @@ package com.moc.chitchat;
 
 import android.app.Application;
 
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 import com.moc.chitchat.resolver.UserResolver;
@@ -54,4 +55,8 @@ public class ApplicationModule {
     ErrorResponseResolver provideErrorResponseResolver() {
         return new ErrorResponseResolver();
     }
+
+    @Provides
+    @Singleton
+    SessionConfiguration provideSessionConfiguration() {return new SessionConfiguration();}
 }

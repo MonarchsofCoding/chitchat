@@ -17,7 +17,7 @@ defmodule ChitChat.GuardianSerializer do
     {:error, "Unknown resource type"}
   end
 
-  @spec from_token(any) :: struct
+  @spec from_token(any) :: ChitChat.User
   def from_token("User:" <> id) do
     {:ok, Repo.get(User, id)}
   end

@@ -24,6 +24,11 @@ public class UserModel {
     private String passwordCheck;
 
     /**
+     * authToken of the user to authenticate while doing requests to the server
+     */
+    private String authToken;
+
+    /**
      * UserModel constructor
      * @param username the username of the User.
      */
@@ -48,6 +53,20 @@ public class UserModel {
     }
 
     /**
+     * getPasswordCheck returns the check password of the User.
+     * @return the password check of the user
+     */
+    public String getPasswordCheck() {
+        return this.passwordCheck;
+    }
+
+    /**
+     * getAuthToken returns the authToken
+     * @return the token
+     */
+    public String getAuthToken() {return this.authToken;}
+
+    /**
      * setPassword sets the password for the User.
      * @param password the new password.
      * @return the user.
@@ -59,20 +78,24 @@ public class UserModel {
     }
 
     /**
-     * getPasswordCheck returns the check password of the User.
-     * @return the password check of the user
-     */
-    public String getPasswordCheck() {
-        return this.passwordCheck;
-    }
-
-    /**
      * setPasswordCheck sets the check password for the User.
      * @param passwordCheck the new check password.
      * @return the user.
      */
     public UserModel setPasswordCheck(String passwordCheck) {
         this.passwordCheck = passwordCheck;
+
+        return this;
+    }
+
+    /**
+     * setAuthToken sets an auth token to the user
+     * @param aToken the token to be set
+     * @return the user
+     *
+     */
+    public UserModel setAuthToken(String aToken) {
+        this.authToken = aToken;
 
         return this;
     }

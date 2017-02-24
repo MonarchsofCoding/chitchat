@@ -49,7 +49,16 @@ public class UserModelTest {
 
         String expectedString = String.format("{\"password\":\"%s\",\"username\":\"%s\"}", expectedPassword, expectedUserName);
         assertEquals(expectedString, userModel.toJSONString());
+    }
 
+    @Test
+    public void setAuthToken() {
+        String authToken = "some_String";
+        String name = "halo";
+        UserModel userModel = new UserModel(name);
+        userModel.setAuthToken(authToken);
+
+        assertEquals(authToken, userModel.getAuthToken());
     }
 
 }
