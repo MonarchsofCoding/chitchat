@@ -1,4 +1,4 @@
-package com.moc.chitchat.controller.authentication;
+package com.moc.chitchat.controller;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -6,8 +6,10 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
+import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
+import com.moc.chitchat.validator.UserValidator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -23,6 +25,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +36,7 @@ public class UserSearchControllerTest {
 
     @Mock private HttpClient mockHttpClient;
     @Mock private UserResolver mockUserResolver;
+    @Mock private UserValidator mockUserValidator;
 
     @Mock
     private HttpResponse<JsonNode> mockResponse;
@@ -55,7 +59,7 @@ public class UserSearchControllerTest {
     }
 
     @Test
-    public void testSuccessfulSearchUser() throws UnirestException, UnexpectedResponseException {
+    public void testSuccessfulSearchUser() throws UnirestException, UnexpectedResponseException, ValidationException {
 
         Map<String, Object> mockmapper = new HashMap<>();
         mockmapper.put("username", "john");
@@ -117,12 +121,9 @@ public class UserSearchControllerTest {
     }
 
     @Test
-    public void testServerErrorException() throws UnirestException{
+    public void testValidationError() throws UnirestException, UnexpectedResponseException, ValidationException{
         Map<String, Object> mockmapper = new HashMap<>();
         mockmapper.put("username", "john");
-
-        UserModel user;
-        user = new UserModel("john");
 
         // Stub the HTTPClient to return the mocked response
         when(this.mockHttpClient.get("/api/v1/users", mockmapper))
@@ -130,11 +131,39 @@ public class UserSearchControllerTest {
 
         // Create and define the mocked response to return not 200. i.e failure
         when(mockResponse.getStatus())
-                .thenReturn(422);
+                .thenReturn(400);
+
+        ValidationException mockValidationException = mock(ValidationException.class);
+        when(mockValidationException.getMessage())
+                .thenReturn("Validation Exception");
+
+        doThrow(mockValidationException).when(this.mockUserValidator).throwErrorsFromResponse(mockResponse);
+
+        try {
+            this.userSearchController.searchUser("john");
+        } catch (ValidationException e) {
+            assertEquals("Validation Exception", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testUnexpectedResponse() throws UnirestException, ValidationException {
+        Map<String, Object> mockmapper = new HashMap<>();
+        mockmapper.put("username", "john");
+
+        // Stub the HTTPClient to return the mocked response
+        when(this.mockHttpClient.get("/api/v1/users", mockmapper))
+                .thenReturn(this.mockResponse);
+
+        // Create and define the mocked response to return not 200. i.e failure
+        when(mockResponse.getStatus())
+                .thenReturn(500);
+
         try {
             this.userSearchController.searchUser("john");
         } catch (UnexpectedResponseException e) {
-            assertEquals("Unexpected Response code: 422", e.getMessage());
+            assertEquals("Unexpected Response code: 500", e.getMessage());
         }
+
     }
 }

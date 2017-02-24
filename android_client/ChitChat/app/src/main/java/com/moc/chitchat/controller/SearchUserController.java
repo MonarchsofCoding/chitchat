@@ -53,7 +53,6 @@ public class SearchUserController {
         Map<String,String> requestHeaders
         ) {
 
-
         // Make a GET request to find all the connected users.
         this.httpClient.sendRequestWithHeader(
             context,
