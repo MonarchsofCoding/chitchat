@@ -23,9 +23,7 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 import javax.xml.soap.Text;
 import java.util.List;
 
-/**
- * Created by spiros on 24/02/2017.
- */
+
 public class ChatListPane extends BaseView {
 
     private ChatController chatController;
@@ -36,7 +34,7 @@ public class ChatListPane extends BaseView {
 
     @Autowired
     public ChatListPane(
-            ChatController ChatController
+        ChatController ChatController
     ) {
         this.chatController = chatController;
     }

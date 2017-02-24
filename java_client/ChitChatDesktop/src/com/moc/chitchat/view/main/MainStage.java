@@ -16,8 +16,9 @@ public class MainStage extends Stage {
 
     @Autowired
     public MainStage(
-            SearchPane searchPane
-            ChatListPane chatListPane;
+            SearchPane searchPane,
+//            ChatListPane chatListPane,
+            ConversationPane conversationPane
     ) {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int resX = gd.getDisplayMode().getWidth();
@@ -38,6 +39,7 @@ public class MainStage extends Stage {
         basePane.setLayout("fill");
 
         basePane.add(searchPane.getContentPane(), "dock west");
+        basePane.add(conversationPane.getContentPane(), "grow");
 
         this.setScene(new Scene(basePane));
 

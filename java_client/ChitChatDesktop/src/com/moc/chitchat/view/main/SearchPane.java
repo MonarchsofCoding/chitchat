@@ -43,9 +43,8 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
 
 
     public void setStage(MainStage stage) {
-               this.stage = stage;
+        this.stage = stage;
     }
-
 
 
     public MigPane getContentPane() {
@@ -53,8 +52,6 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
 
         MigPane searchForm = new MigPane();
 
-
-        ///Search AREA @@@@@@@@@@@???????????????????/////
         this.usernameField = new TextField();
         this.usernameField.setPromptText("Find User");
         searchForm.add(this.usernameField, "span, cell 0 2 , align left, grow");
@@ -63,14 +60,12 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
         this.searchBtn.setOnAction(this);
         searchForm.add(this.searchBtn, "cell 0 3, grow");
 
-
-
-        this.searchlist = new ListView<String>();
-        searchForm.add(this.searchlist,"grow,cell 0 1");
+        this.searchlist = new ListView<>();
+        searchForm.add(this.searchlist, "grow,cell 0 1");
         this.searchlist.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("you clicked the "+searchlist.getSelectionModel().getSelectedItem());
+                System.out.println("you clicked the " + searchlist.getSelectionModel().getSelectedItem());
 
             }
         });
@@ -80,41 +75,38 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
         return searchPane;
     }
 
-    private void searchAction(){
+    private void searchAction() {
         try {
-           List<UserModel> listusers = this.userSearchController.searchUser(this.usernameField.getText());
-            names  = FXCollections.observableArrayList();
-            for(int i=0;i<listusers.size(); i++) {
-                names.add(listusers.get(i).getUsername());
-            }
-           searchlist.setItems(names);
-          
-        } catch (UnirestException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(e.getMessage());
-            alert.show();
-            e.printStackTrace();
-        } catch (UnexpectedResponseException e) {
-               Alert alert = new Alert(Alert.AlertType.ERROR);
-               alert.setContentText("Username must contain at least 3 characters");
-               alert.show();
+            List<UserModel> listUsers = this.userSearchController.searchUser(this.usernameField.getText());
 
-        } catch (ValidationException e) {
+            System.out.println(listUsers.size());
+
+            names = FXCollections.observableArrayList();
+            for (UserModel user : listUsers) {
+                names.add(user.getUsername());
+            }
+            searchlist.setItems(names);
+
+        } catch (UnirestException unirestException) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(unirestException.getMessage());
+            alert.show();
+        } catch (UnexpectedResponseException unexpectedResponseException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Unauthorized");
             alert.show();
-            e.printStackTrace();
+        } catch (ValidationException validationException) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(validationException.getErrors().getFieldError("username").getDefaultMessage());
+            alert.show();
         }
-
     }
-
-
 
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == this.searchBtn) {
-           searchlist.getItems().clear();
-           this.searchAction();
+            searchlist.getItems().clear();
+            this.searchAction();
         }
     }
 }
