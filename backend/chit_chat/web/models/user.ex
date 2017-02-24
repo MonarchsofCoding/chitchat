@@ -16,6 +16,53 @@ defmodule ChitChat.User do
     timestamps()
   end
 
+  def changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:username, :password])
+  end
+
+  def validate_login_changeset(changeset) do
+    changeset
+    |> validate_required([:username, :password])
+    |> validate_length(:password, min: 8)
+    |> validate_length(:username, min: 3)
+
+    if changeset.valid? do
+      {:ok, changeset}
+    else
+      {:error, changeset}
+    end
+  end
+
+  def validate_search_changeset(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3)
+
+    # if changeset.valid? do
+    #   {:ok, changeset}
+    # else
+    #   {:error, changeset}
+    # end
+  end
+
+  @spec authenticate(Ecto.Changeset, Plug.Conn) :: User
+  def authenticate(changeset, conn) do
+    with {:ok, user} <- ChitChat.UserRepository.find_by_username(changeset.params["username"]),
+        {:ok, user} <- confirm_password(user, changeset)
+    do
+      new_conn = Plug.api_sign_in(conn, user)
+      jwt = Plug.current_token(new_conn)
+      {:ok, claims} = Plug.claims(new_conn)
+      exp = Map.get(claims, "exp")
+
+      {:ok, user, jwt, exp}
+    else
+      {:error, changeset}
+    end
+  end
+
+
   @doc """
   Builds a changeset based on the struct and params for registration
   """
@@ -55,20 +102,29 @@ defmodule ChitChat.User do
 
   end
 
-  @doc """
-
-  """
-  @spec find_and_confirm_password(Repo, Ecto.Changeset) :: struct
-  def find_and_confirm_password(repo, changeset) do
-    user = repo.get_by(ChitChat.User, username: changeset.params["username"])
-    if user do
-      if Bcrypt.checkpw(changeset.params["password"], user.hashed_password) do
+  def confirm_password(user, changeset) do
+    case Bcrypt.checkpw(changeset.params["password"], user.hashed_password) do
+      true ->
         {:ok, user}
-      else
+      false ->
         {:error, changeset}
-      end
-    else
-      {:error, changeset}
     end
   end
+  #
+  # @doc """
+  #
+  # """
+  # @spec find_and_confirm_password(Repo, Ecto.Changeset) :: struct
+  # def find_and_confirm_password(repo, changeset) do
+  #   user = repo.get_by(ChitChat.User, username: changeset.params["username"])
+  #   if user do
+  #     if Bcrypt.checkpw(changeset.params["password"], user.hashed_password) do
+  #       {:ok, user}
+  #     else
+  #       {:error, changeset}
+  #     end
+  #   else
+  #     {:error, changeset}
+  #   end
+  # end
 end

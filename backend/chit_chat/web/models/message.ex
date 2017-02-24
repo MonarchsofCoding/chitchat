@@ -49,17 +49,17 @@ defmodule ChitChat.Message do
 
   @spec find_recipient(Ecto.Changeset) :: {}
   def find_recipient(changeset) do
-    user = UserRepository.find_by_username(changeset.params["recipient"])
 
-    if user != nil do
-      {:ok, user}
-    else
-      changeset = changeset
-      |> change
-      |> add_error(:recipient, "does not exist")
+    case UserRepository.find_by_username(changeset.params["recipient"]) do
+      {:ok, user} ->
+        {:ok, user}
+      {:error} ->
+        changeset = changeset
+        |> change
+        |> add_error(:recipient, "does not exist")
 
-      {:error, changeset}
-    end
+        {:error, changeset}
+      end
   end
 
 end

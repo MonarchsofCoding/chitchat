@@ -15,7 +15,10 @@ defmodule ChitChat.UserController do
 
     case user != nil do
       true ->
-        user_search = User.search_changeset(%User{}, user_params)
+        user_search = User.changeset(%User{}, user_params)
+
+        user_search = User.validate_search_changeset(user_search)
+        # user_search = User.search_changeset(%User{}, user_params)
 
         case user_search.valid? do
           true ->
