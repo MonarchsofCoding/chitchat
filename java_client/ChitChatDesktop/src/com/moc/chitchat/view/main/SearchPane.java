@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
+import com.moc.chitchat.exception.ValidationException;
 
 import javax.xml.soap.Text;
 import java.util.List;
@@ -130,6 +131,11 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
                alert.setContentText("Username must contain at least 3 characters");
                alert.show();
 
+        } catch (ValidationException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Unauthorized");
+            alert.show();
+            e.printStackTrace();
         }
 
     }

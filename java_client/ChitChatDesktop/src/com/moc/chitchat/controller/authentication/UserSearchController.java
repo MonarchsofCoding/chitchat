@@ -5,8 +5,10 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
+import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
+import com.moc.chitchat.validator.UserValidator;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,29 +27,31 @@ public class UserSearchController {
 
     private HttpClient httpClient;
     private UserResolver userResolver;
+    private UserValidator userValidator;
 
     @Autowired
     public UserSearchController(
             HttpClient httpClient,
-            UserResolver userResolver
+            UserResolver userResolver,
+            UserValidator userValidator
     ){
         this.httpClient = httpClient;
         this.userResolver = userResolver;
+        this.userValidator = userValidator;
     }
 
-    public List<UserModel> searchUser(String username) throws UnirestException, UnexpectedResponseException {
+    public List<UserModel> searchUser(String username)
+            throws UnirestException, UnexpectedResponseException, ValidationException {
         Map<String, Object> mapper = new HashMap<>();
         mapper.put("username", username);
 
         HttpResponse<JsonNode> response = this.httpClient.get("/api/v1/users", mapper);
 
-        if (response.getStatus() != 200) {
-
-            if(response.getStatus()==500) {
-
-                throw new UnirestException("Server error connection") ;
-            }
-            else throw new UnexpectedResponseException(response);
+        if (response.getStatus() == 400) {
+            this.userValidator.throwErrorsFromResponse(response);
+        }
+        else if (response.getStatus() != 200) {
+            throw new UnexpectedResponseException(response);
         }
 
         JSONArray jsonArray = response.getBody().getObject().getJSONArray("data");
