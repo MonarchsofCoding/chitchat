@@ -1,4 +1,7 @@
 defmodule ChitChat.Router do
+  @moduledoc """
+  provides the router configuration.
+  """
   use ChitChat.Web, :router
 
   pipeline :browser do

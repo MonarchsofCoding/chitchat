@@ -1,4 +1,7 @@
 defmodule ChitChat.AuthController do
+  @moduledoc """
+  provides the authentication functions.
+  """
   use ChitChat.Web, :controller
 
   alias ChitChat.User
@@ -18,7 +21,7 @@ defmodule ChitChat.AuthController do
   def create(conn, user_params) do
 
     with changeset <- User.changeset(%User{}, user_params),
-        {:ok, changeset} <- User.validate_login_or_register_changeset(changeset),
+        {:ok, changeset} <- User.validate_login_or_register(changeset),
         {:ok, user} <- User.find_and_check_password(changeset)
     do
       new_conn = Plug.api_sign_in(conn, user)

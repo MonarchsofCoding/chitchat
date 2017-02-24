@@ -58,6 +58,7 @@ defmodule ChitChat.Mixfile do
       {:excoveralls, "~> 0.5", only: :test},
 #     {:distillery, "~> 1.0"},
       {:credo, "~> 0.5", only: [:dev, :test]},
+      {:dogma, "~> 0.1", only: [:dev, :test]},
       {:guardian, "~> 0.14"},
       {:jose, "~> 1.8"}
     ]

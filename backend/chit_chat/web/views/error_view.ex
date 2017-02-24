@@ -1,4 +1,7 @@
 defmodule ChitChat.ErrorView do
+  @moduledoc """
+  provides the error views.
+  """
   use ChitChat.Web, :view
 
   alias Plug.Conn.Status

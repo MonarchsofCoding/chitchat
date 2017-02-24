@@ -6,6 +6,7 @@ defmodule ChitChat.User do
   use ChitChat.Web, :model
 
   alias Comeonin.Bcrypt
+  alias ChitChat.UserRepository
 
   schema "users" do
     field :username, :string
@@ -16,12 +17,14 @@ defmodule ChitChat.User do
     timestamps()
   end
 
+  @spec changeset(struct, {}) :: Ecto.Changeset
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:username, :password])
   end
 
-  def validate_login_or_register_changeset(changeset) do
+  @spec validate_login_or_register(Ecto.Changeset) :: {}
+  def validate_login_or_register(changeset) do
     changeset = changeset
     |> validate_required([:username, :password])
     |> validate_length(:password, min: 8)
@@ -35,7 +38,8 @@ defmodule ChitChat.User do
 
   end
 
-  def validate_search_changeset(changeset) do
+  @spec validate_search(Ecto.Changeset) :: {}
+  def validate_search(changeset) do
     changeset = changeset
     |> validate_required([:username])
     |> validate_length(:username, min: 3)
@@ -48,14 +52,16 @@ defmodule ChitChat.User do
 
   end
 
+  @spec search_all(String, User) :: {}
   def search_all(username, user) do
-    ChitChat.UserRepository.search(username, user)
+    UserRepository.search(username, user)
   end
 
   @spec find_and_check_password(Ecto.Changeset) :: User
   def find_and_check_password(changeset) do
 
-    with {:ok, user} <- ChitChat.UserRepository.find_by_username(changeset.params["username"]),
+    with {:ok, user} <- UserRepository.find_by_username(
+                        changeset.params["username"]),
         {:ok, user} <- confirm_password(user, changeset)
     do
       {:ok, user}
@@ -77,12 +83,15 @@ defmodule ChitChat.User do
   def register(changeset) do
     changeset
     |> unique_constraint(:username)
-    |> put_change(:hashed_password, Bcrypt.hashpwsalt(changeset.params["password"]))
-    |> ChitChat.UserRepository.create()
+    |> put_change(:hashed_password, Bcrypt.hashpwsalt(
+                          changeset.params["password"]))
+    |> UserRepository.create()
   end
 
+  @spec confirm_password(User, Ecto.Changeset) :: {}
   def confirm_password(user, changeset) do
-    case Bcrypt.checkpw(changeset.params["password"], user.hashed_password) do
+    case Bcrypt.checkpw(changeset.params["password"],
+                        user.hashed_password) do
       true ->
         {:ok, user}
       false ->

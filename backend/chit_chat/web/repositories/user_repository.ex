@@ -27,6 +27,7 @@ defmodule ChitChat.UserRepository do
     end
   end
 
+  @spec create(Ecto.Changeset) :: {}
   def create(changeset) do
     Repo.insert(changeset)
   end

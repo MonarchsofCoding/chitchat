@@ -1,4 +1,7 @@
 defmodule ChitChat.MessageView do
+  @moduledoc """
+  provides message json responses.
+  """
   use ChitChat.Web, :view
 
   @spec render(String, {}) :: {}

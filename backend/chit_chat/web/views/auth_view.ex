@@ -1,4 +1,7 @@
 defmodule ChitChat.AuthView do
+  @moduledoc """
+  provides the authentication serialization.
+  """
   use ChitChat.Web, :view
 
   @spec render(String, {:user, :jwt, :exp}) :: {}
@@ -9,13 +12,6 @@ defmodule ChitChat.AuthView do
         authToken: jwt,
         exp: exp
       }
-    }
-  end
-
-  @spec render(String, {}) :: {}
-  def render("unauthorized.json", %{}) do
-    %{
-      error: "Unauthorized"
     }
   end
 

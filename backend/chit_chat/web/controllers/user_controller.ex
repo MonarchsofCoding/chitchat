@@ -1,13 +1,14 @@
 defmodule ChitChat.UserController do
+  @moduledoc """
+  provides the user functions.
+  """
   use ChitChat.Web, :controller
   use Guardian.Phoenix.Controller
 
   alias ChitChat.User
   alias ChitChat.ChangesetView
-  alias ChitChat.AuthView
   alias ChitChat.ErrorView
   alias ChitChat.AuthController
-  alias ChitChat.UserRepository
 
   @doc """
   Lists all of the Users filtered by User.username
@@ -17,7 +18,7 @@ defmodule ChitChat.UserController do
 
     with {:ok, user} <- AuthController.authenticate(user),
         changeset <- User.changeset(%User{}, user_params),
-        {:ok, changeset} <- User.validate_search_changeset(changeset),
+        {:ok, changeset} <- User.validate_search(changeset),
         {:ok, users} <- User.search_all(changeset.params["username"], user)
     do
       conn
@@ -42,7 +43,7 @@ defmodule ChitChat.UserController do
   def create(conn, user_params, _user, _claims) do
 
     with changeset <- User.changeset(%User{}, user_params),
-        {:ok, changeset} <- User.validate_login_or_register_changeset(changeset),
+        {:ok, changeset} <- User.validate_login_or_register(changeset),
         {:ok, user} <- User.register(changeset)
     do
       conn

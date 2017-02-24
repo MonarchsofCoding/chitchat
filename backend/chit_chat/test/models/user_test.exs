@@ -9,14 +9,14 @@ defmodule ChitChat.UserTest do
   test "changeset with valid attributes" do
     changeset = User.changeset(%User{}, @valid_attrs)
 
-    {:ok, changeset} = User.validate_login_or_register_changeset(changeset)
+    {:ok, changeset} = User.validate_login_or_register(changeset)
     assert changeset.valid?
   end
 
   test "changeset with invalid attributes" do
     changeset = User.changeset(%User{}, @invalid_attrs)
 
-    {:error, changeset} = User.validate_login_or_register_changeset(changeset)
+    {:error, changeset} = User.validate_login_or_register(changeset)
 
     refute changeset.valid?
   end
