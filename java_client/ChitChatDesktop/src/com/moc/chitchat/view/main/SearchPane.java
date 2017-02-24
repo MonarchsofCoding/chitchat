@@ -81,28 +81,6 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
             }
         });
 
-        //Chat- AREA""""""""
-
-        this.DisplayMessages = new TextArea();
-        this.DisplayMessages.setPromptText("Empty Text Area");
-        searchForm.add(this.DisplayMessages, "cell 1 1 ,grow");
-
-        this.messagesend = new TextField();
-        this.messagesend.setPromptText("Type your message");
-        searchForm.add(this.messagesend,"cell 1 2 ,grow");
-
-        this.sendBtn = new Button("Send");
-        this.sendBtn.setOnAction(this);
-        searchForm.add(this.sendBtn,"cell 1 3 , align right ");
-
-        //****Menu Bar****//
-        this.logoutBtn = new Button("logout");
-        this.logoutBtn.setOnAction(this);
-        searchForm.add(this.logoutBtn,"cell 0 0 , align left");
-
-
-
-
         searchPane.add(searchForm, "dock north");
 
         return searchPane;
