@@ -9,10 +9,12 @@ defmodule ChitChat.UserRepository do
 
   @spec search(String, User) :: []
   def search(username_fragment, excluded_user) do
-    Repo.all(from u in User,
+    users = Repo.all(from u in User,
       where: ilike(u.username, ^"%#{username_fragment}%") and
       u.username != ^excluded_user.username
     )
+
+    {:ok, users}
   end
 
   @spec find_by_username(String) :: User
@@ -23,6 +25,10 @@ defmodule ChitChat.UserRepository do
     else
       {:error}
     end
+  end
+
+  def create(changeset) do
+    Repo.insert(changeset)
   end
 
 end
