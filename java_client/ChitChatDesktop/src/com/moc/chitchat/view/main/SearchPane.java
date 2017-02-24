@@ -1,7 +1,7 @@
 package com.moc.chitchat.view.main;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.moc.chitchat.controller.authentication.UserSearchController;
+import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.BaseView;

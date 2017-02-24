@@ -1,4 +1,4 @@
-package com.moc.chitchat.controller.authentication;
+package com.moc.chitchat.controller;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
