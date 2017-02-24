@@ -1,4 +1,4 @@
 .idea
 .gradle
 *.iml
-backend/terraform/travis-gcp-credentials.json
+*.DS_Store
