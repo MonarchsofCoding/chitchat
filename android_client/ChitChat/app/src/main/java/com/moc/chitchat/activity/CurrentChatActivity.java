@@ -12,9 +12,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.CurrentChatController;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,6 +46,7 @@ public class CurrentChatActivity extends Activity
 
     @Inject CurrentChatController currentChatController;
     @Inject SessionConfiguration sessionConfiguration;
+    @Inject CurrentChatConfiguration currentChatConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,7 @@ public class CurrentChatActivity extends Activity
                 this,
                 this,
                 messageText.getText().toString(),
+                currentChatConfiguration.getCurrentRecipientUsername(),
                 requestHeaders
             );
         }
@@ -106,7 +110,14 @@ public class CurrentChatActivity extends Activity
     //For Volley Success response
     @Override
     public void onResponse(JSONObject response) {
-        System.out.println(response);
+        try {
+            messagePanel.setText(messagePanel.getText().toString() + "\n" +
+                response.getJSONObject("data").get("sender") + ": " +
+                response.getJSONObject("data").get("message"));
+            messageText.setText("");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     //For a selected tab

@@ -53,13 +53,12 @@ public class CurrentChatController {
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,
         String message,
+        String recipient,
         Map<String,String> requestHeaders
     ) {
-
-        //TODO: Will do a better programming practice here once we implement the message model
         HashMap<String, String> messageMap = new HashMap<>();
         messageMap.put("message", message);
-        messageMap.put("recipient", currentChatConfiguration.getCurrentRecipientUsername());
+        messageMap.put("recipient", recipient);
 
         // Make a POST request to send the message.
         this.httpClient.sendRequestWithHeader(

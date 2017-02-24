@@ -4,33 +4,32 @@ import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.ValidationException;
-import com.moc.chitchat.model.UserModel;
-import com.moc.chitchat.resolver.UserResolver;
-import com.moc.chitchat.validator.UserValidator;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.HashMap;
+
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class SearchUserControllerTest {
+public class CurrentChatControllerTest {
 
     @Mock private HttpClient mockHttpClient;
     @Mock private Context mockContext;
     @Mock private Response.Listener mockResponselistener;
     @Mock private Response.ErrorListener mockErrorListener;
 
-    @InjectMocks
-    private SearchUserController searchUserController;
+    @InjectMocks private CurrentChatController currentChatController;
+    @InjectMocks private CurrentChatConfiguration mockCurrentChatConfiguration;
 
     @Before
     public void initMocks(){
@@ -39,30 +38,33 @@ public class SearchUserControllerTest {
 
     @Test
     public void testConstructor() throws ValidationException {
-        assertNotNull(this.searchUserController);
+        assertNotNull(this.currentChatController);
         assertEquals(
-            this.searchUserController.getClass(), SearchUserController.class
+            this.currentChatController.getClass(), CurrentChatController.class
         );
     }
 
     @Test
-    public void testSuccesfulSearchUser() throws ValidationException{
+    public void testSuccesfulSendMessage() throws ValidationException{
 
-        this.searchUserController.searchUser (
+        this.currentChatController.sendMessageToRecipient (
             mockContext,
             mockResponselistener,
             mockErrorListener,
-            "spi",
+            "Hello!",
+            "george",
             null);
 
 
-        this.mockHttpClient.sendRequestWithHeader(mockContext,
+        this.mockHttpClient.sendRequestWithHeader(
+            mockContext,
             Request.Method.POST,
-            "/api/v1/users?username=" + "spi",
+            "/api/v1/messages",
             null,
             mockResponselistener,
             mockErrorListener,
-            null);
+            null
+        );
 
 
     }
