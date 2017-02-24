@@ -12,9 +12,12 @@ import java.awt.*;
 public class MainStage extends Stage {
 
     private SearchPane searchPane;
+    private ChatListPane chatListPane;
+
     @Autowired
     public MainStage(
             SearchPane searchPane
+            ChatListPane chatListPane;
     ) {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int resX = gd.getDisplayMode().getWidth();

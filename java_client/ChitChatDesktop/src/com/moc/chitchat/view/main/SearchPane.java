@@ -1,7 +1,7 @@
 package com.moc.chitchat.view.main;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.moc.chitchat.controller.authentication.UserSearchController;
+import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.AuthenticationStage;
@@ -18,7 +18,6 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 import javax.xml.soap.Text;
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -33,7 +32,6 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
     private Button searchBtn,sendBtn, logoutBtn;
     private ListView<String> searchlist;
     private ObservableList<String> names;
-    private TextArea DisplayMessages;
     private MainStage stage;
     private AuthenticationStage stag;
     private Text chatTitle;
@@ -80,26 +78,6 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
             }
         });
 
-        //Chat- AREA""""""""
-
-        this.DisplayMessages = new TextArea();
-        this.DisplayMessages.setPromptText("Empty Text Area");
-        searchForm.add(this.DisplayMessages, "cell 1 1 ,grow");
-
-        this.messagesend = new TextField();
-        this.messagesend.setPromptText("Type your message");
-        searchForm.add(this.messagesend,"cell 1 2 ,grow");
-
-        this.sendBtn = new Button("Send");
-        this.sendBtn.setOnAction(this);
-        searchForm.add(this.sendBtn,"cell 1 3 , align right ");
-
-        //****Menu Bar****//
-        this.logoutBtn = new Button("logout");
-        this.logoutBtn.setOnAction(this);
-        searchForm.add(this.logoutBtn,"cell 0 0 , align left");
-
-
 
 
         searchPane.add(searchForm, "dock north");
@@ -142,21 +120,9 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
            searchlist.getItems().clear();
            this.searchAction();
         }
-        if (event.getSource()== this.sendBtn){
-            System.out.println("you clicked send");
-        }
-        if(event.getSource()==this.logoutBtn){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText("Chit Chat Exit");
-            alert.setContentText("Are you sure that you want to log out ?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get()== ButtonType.OK)this.stage.hide();
-            else{alert.close();}
-
 
 
            //we have to connect the logout with login screen
         }
     }
-}
+
