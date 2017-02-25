@@ -1,5 +1,9 @@
 package com.moc.chitchat.view.main;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.controller.MessageController;
+import com.moc.chitchat.exception.UnexpectedResponseException;
+import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.view.authentication.BaseView;
@@ -8,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -25,12 +30,19 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
     private Conversation conversation;
     private ObservableList<Message> messages;
 
+    private MessageController messageController;
+
     private TextField newMessageField;
+
+    public ConversationView(MessageController messageController) {
+        this.messageController = messageController;
+    }
 
     /**
      * Returns the content pane for this view.
      * It is by default empty at the start whilst no conversation is selected.
      * TODO: we could add a nice message or instruction telling the user to select a conversation first.
+     *
      * @return the content pane
      */
     @Override
@@ -42,11 +54,12 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
     /**
      * Updates the content pane to show the messages in the given conversation.
+     *
      * @param c the conversation to show.
      */
     void showConversation(Conversation c) {
         this.conversation = c;
-        for (Node n: this.conversationPane.getChildren()) {
+        for (Node n : this.conversationPane.getChildren()) {
             this.conversationPane.remove(n);
         }
 
@@ -66,12 +79,22 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
     @Override
     public void handle(ActionEvent event) {
-
-        // TODO: Replace with call to MessageController e.g. this.messageController.send(this.conversation.getOtherParticipant(), this.newMessageField.getText())
-        // which should return the Message
-        // that you can then do this.messages.add(message)
-        this.messages.add(new Message(this.conversation.getOtherParticipant(), this.conversation.getOtherParticipant(), this.newMessageField.getText()));
-
+        try {
+            Message message = this.messageController.send(
+                    this.conversation.getOtherParticipant(),
+                    this.newMessageField.getText());
+            this.messages.add(message);
+        } catch (UnirestException unirestException) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(unirestException.getMessage());
+            alert.show();
+        } catch (ValidationException validationException) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(validationException.getErrors().getFieldError("errors").getDefaultMessage());
+            alert.show();
+        } catch (UnexpectedResponseException unexpectedResponse) {
+            unexpectedResponse.printStackTrace();
+        }
         // TODO: we will probably need to set the Messages list in Conversation to be an ObservableList.
     }
 }
