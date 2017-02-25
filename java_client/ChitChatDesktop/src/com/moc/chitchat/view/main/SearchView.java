@@ -1,14 +1,19 @@
 package com.moc.chitchat.view.main;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.BaseView;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
@@ -23,29 +28,32 @@ import java.util.List;
  *
  */
 @Component
-public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
+public class SearchView extends BaseView implements EventHandler<ActionEvent> {
 
     private UserSearchController userSearchController;
+    private ChitChatData chitChatData;
 
     private TextField usernameField;
-    private Button searchBtn;
-    private ListView<String> searchlist;
-    private ObservableList<String> names;
-    private MainStage stage;
+    private ListView<UserModel> searchList;
+    private ObservableList<UserModel> observableUserList;
 
+    private Button searchBtn;
+    private Button startConversationBtn;
+
+    private WestView westView;
 
     @Autowired
-    public SearchPane(
-            UserSearchController userSearchController
+    public SearchView(
+        UserSearchController userSearchController,
+        ChitChatData chitChatData
     ) {
         this.userSearchController = userSearchController;
+        this.chitChatData = chitChatData;
     }
 
-
-    public void setStage(MainStage stage) {
-        this.stage = stage;
+    public void setWestView(WestView westView) {
+        this.westView = westView;
     }
-
 
     public MigPane getContentPane() {
         MigPane searchPane = new MigPane();
@@ -54,38 +62,31 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
 
         this.usernameField = new TextField();
         this.usernameField.setPromptText("Find User");
-        searchForm.add(this.usernameField, "span, cell 0 2 , align left, grow");
+        this.usernameField.setOnAction(this);
+        searchForm.add(this.usernameField, "span, grow");
 
         this.searchBtn = new Button("Search");
         this.searchBtn.setOnAction(this);
-        searchForm.add(this.searchBtn, "cell 0 3, grow");
+        searchForm.add(this.searchBtn, "span, grow");
 
-        this.searchlist = new ListView<>();
-        searchForm.add(this.searchlist, "grow,cell 0 1");
-        this.searchlist.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println("you clicked the " + searchlist.getSelectionModel().getSelectedItem());
+        this.observableUserList = FXCollections.observableArrayList();
+        this.searchList = new ListView<>(this.observableUserList);
+        searchForm.add(this.searchList, "span, grow");
 
-            }
-        });
+        this.startConversationBtn = new Button("Start Chat");
+        this.startConversationBtn.setOnAction(this);
+        searchForm.add(this.startConversationBtn, "span");
 
-        searchPane.add(searchForm, "dock north");
+        searchPane.add(searchForm, "grow");
 
         return searchPane;
     }
 
     private void searchAction() {
         try {
+            this.observableUserList.clear();
             List<UserModel> listUsers = this.userSearchController.searchUser(this.usernameField.getText());
-
-            System.out.println(listUsers.size());
-
-            names = FXCollections.observableArrayList();
-            for (UserModel user : listUsers) {
-                names.add(user.getUsername());
-            }
-            searchlist.setItems(names);
+            this.observableUserList.addAll(listUsers);
 
         } catch (UnirestException unirestException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -102,11 +103,20 @@ public class SearchPane extends BaseView implements EventHandler<ActionEvent> {
         }
     }
 
+    private void startConversation() {
+        UserModel selectedUser = this.searchList.getSelectionModel().getSelectedItem();
+        System.out.println(String.format("Starting conversation with: %s", selectedUser));
+
+        this.chitChatData.setActiveConversation(selectedUser);
+        this.westView.setConversationListView();
+    }
+
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == this.searchBtn) {
-            searchlist.getItems().clear();
             this.searchAction();
+        } else if (event.getSource() == this.startConversationBtn) {
+            this.startConversation();
         }
     }
 }

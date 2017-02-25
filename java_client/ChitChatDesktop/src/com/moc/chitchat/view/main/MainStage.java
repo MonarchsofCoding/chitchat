@@ -11,14 +11,10 @@ import java.awt.*;
 @Component
 public class MainStage extends Stage {
 
-    private SearchPane searchPane;
-    private ChatListPane chatListPane;
-
     @Autowired
     public MainStage(
-            SearchPane searchPane,
-//            ChatListPane chatListPane,
-            ConversationPane conversationPane
+        WestView westView,
+        ConversationView conversationView
     ) {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         int resX = gd.getDisplayMode().getWidth();
@@ -32,17 +28,15 @@ public class MainStage extends Stage {
 
 
         this.setTitle("Welcome to Chit Chat ");
-        this.searchPane = searchPane;
-        searchPane.setStage(this);
 
         MigPane basePane = new MigPane();
         basePane.setLayout("fill");
 
-        basePane.add(searchPane.getContentPane(), "dock west");
-        basePane.add(conversationPane.getContentPane(), "grow");
+        MigPane westPane = westView.getContentPane();
+        basePane.add(westPane, "dock west");
+        basePane.add(conversationView.getContentPane(), "grow");
 
         this.setScene(new Scene(basePane));
-
     }
 
 }

@@ -102,4 +102,8 @@ public class UserModel implements JSONString {
     public String getAuthToken() {
         return this.authToken;
     }
+
+    public String toString() {
+        return this.username;
+    }
 }
