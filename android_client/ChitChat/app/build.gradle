@@ -11,12 +11,7 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco-android'
-apply plugin: 'checkstyle'
 apply plugin: 'com.neenbedankt.android-apt'
-
-checkstyle {
-    toolVersion = "7.4"
-}
 
 android {
     compileSdkVersion 25
@@ -108,4 +103,45 @@ jacocoAndroidUnitTestReport {
                  'com/moc/chitchat/controller/*_Factory.class',
                  'com/moc/chitchat/ApplicationModule.class',
                  'com/moc/chitchat/ChitChatApplication.class']
+}
+
+apply plugin: 'checkstyle'
+checkstyle {
+    toolVersion = "7.4"
+}
+
+task checkstyle (type: Checkstyle) {
+    description 'Runs Checkstyle inspection against Android sourcesets.'
+    group = 'Code Quality'
+
+    ignoreFailures = false
+    showViolations = false
+    source 'src/main', 'src/release', 'src/androidTest/java'
+    include '**/*.java'
+    exclude '**/gen/**'
+    exclude '**/R.java'
+    exclude '**/BuildConfig.java'
+    reports {
+        xml.destination "$project.buildDir/reports/checkstyle/checkstyle-report.xml"
+    }
+    classpath = files()
+    configFile = file("config/checkstyle.xml")
+
+    configProperties.lineWidth = 120
+    showViolations = true
+}
+
+task checkstyleReport << {
+    if (file("$buildDir/reports/checkstyle/checkstyle-report.xml").exists()) {
+        ant.xslt(in: "$project.buildDir/reports/checkstyle/checkstyle-report.xml",
+                style:"config/checkstyle-noframes-sorted.xsl",
+                out:"$project.buildDir/reports/checkstyle/checkstyle-report.html"
+        )
+    }
+}
+
+gradle.taskGraph.afterTask {Task task, TaskState state ->
+    if (task.name in ['checkstyle']) {
+        checkstyleReport.execute()
+    }
 }
