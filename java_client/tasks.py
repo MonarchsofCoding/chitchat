@@ -30,7 +30,7 @@ def build(ctx):
 
   lxc.Docker.run(cli,
       tag="{0}-dev".format("chitchat-javaclient"),
-      command='/bin/bash -c "vnc4server -geometry 1920x1080 && export DISPLAY=:1 && gradle build"',
+      command='/bin/bash -c "vnc4server -geometry 1920x1080 && export DISPLAY=:1 && gradle jfxJar && zip -r ChitChatDesktop.zip build/jfx/app"',
       volumes=[
           "{0}/ChitChatDesktop:/app".format(os.getcwd())
       ],
@@ -47,11 +47,11 @@ def deploy(ctx):
   cli.pull("garland/aws-cli-docker", "latest")
 
   s3_binaries = "s3://kcl-chit-chat-artifacts/binaries/{0}/{1}/java_client".format(bin_version, os.getenv("TRAVIS_BUILD_NUMBER"))
-  local_jar = "build/libs/app.jar"
+  local_jar = "ChitChatDesktop.zip"
 
   lxc.Docker.run(cli,
     tag="garland/aws-cli-docker:latest",
-    command='aws s3 cp {0} {1}/ChitChat.jar'.format(local_jar, s3_binaries),
+    command='aws s3 cp {0} {1}/ChitChatDesktop.zip'.format(local_jar, s3_binaries),
     volumes=[
         "{0}/ChitChatDesktop:/app".format(os.getcwd())
     ],

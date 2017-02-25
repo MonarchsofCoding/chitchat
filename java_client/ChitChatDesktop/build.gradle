@@ -59,11 +59,19 @@ jar {
 }
 
 jfx {
-    // minimal requirement for jfxJar-task
+    verbose = true
     mainClass = 'com.moc.chitchat.Main'
-
-    // minimal requirement for jfxNative-task
     vendor = 'Monarchs of Coding'
+    jfxMainAppJarName = "ChitChatDesktop.jar"
+
+    copyAdditionalAppResourcesToJar = true
+
+    // jfxNative installer
+    identifier = null
+    vendor = "Monarchs of Coding"
+    nativeReleaseVersion = "0.0"
+    appName = "chit_chat"
+
 }
 
 test {

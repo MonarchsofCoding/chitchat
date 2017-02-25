@@ -7,5 +7,5 @@ VOLUME /app
 WORKDIR /app
 
 RUN apt-get update -y
-RUN apt-get install -y vnc4server
+RUN apt-get install -y vnc4server zip
 RUN echo "docker\ndocker\n|n" | vncpasswd
