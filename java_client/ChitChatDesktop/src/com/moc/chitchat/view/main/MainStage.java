@@ -8,9 +8,17 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 import java.awt.*;
 
+/**
+ * MainStage provides the main application window.
+ */
 @Component
 public class MainStage extends Stage {
 
+    /**
+     * Constructor for the main application window.
+     * @param westView
+     * @param conversationView
+     */
     @Autowired
     public MainStage(
         WestView westView,

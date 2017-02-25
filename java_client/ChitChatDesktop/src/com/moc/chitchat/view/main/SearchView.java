@@ -4,16 +4,12 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
+import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.authentication.BaseView;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
@@ -25,7 +21,7 @@ import java.util.List;
 
 
 /**
- *
+ * SearchView provides the view for searching Users.
  */
 @Component
 public class SearchView extends BaseView implements EventHandler<ActionEvent> {
@@ -42,6 +38,11 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
 
     private WestView westView;
 
+    /**
+     * SearchView constructor.
+     * @param userSearchController the controller holding functions for searching Users.
+     * @param chitChatData the application data state.
+     */
     @Autowired
     public SearchView(
         UserSearchController userSearchController,
@@ -51,10 +52,19 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.chitChatData = chitChatData;
     }
 
-    public void setWestView(WestView westView) {
+    /**
+     * sets the WestView.
+     * Used automatically switch from the SearchView to the ConversationListView.
+     * @param westView the west view.
+     */
+    void setWestView(WestView westView) {
         this.westView = westView;
     }
 
+    /**
+     * Returns the content pane for this view.
+     * @return the content pane.
+     */
     public MigPane getContentPane() {
         MigPane searchPane = new MigPane();
 
@@ -82,6 +92,9 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         return searchPane;
     }
 
+    /**
+     * Searches for users using the parameters set.
+     */
     private void searchAction() {
         try {
             this.observableUserList.clear();
@@ -92,23 +105,25 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(unirestException.getMessage());
             alert.show();
-        } catch (UnexpectedResponseException unexpectedResponseException) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Unauthorized");
-            alert.show();
         } catch (ValidationException validationException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText(validationException.getErrors().getFieldError("username").getDefaultMessage());
             alert.show();
+        } catch (UnexpectedResponseException e) {
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Starts a conversation using the selected user from the user list.
+     */
     private void startConversation() {
         UserModel selectedUser = this.searchList.getSelectionModel().getSelectedItem();
-        System.out.println(String.format("Starting conversation with: %s", selectedUser));
+        // TODO: show error if no user is selected (selectedUser == null)
 
-        this.chitChatData.setActiveConversation(selectedUser);
-        this.westView.setConversationListView();
+        System.out.println(String.format("Starting conversation with: %s", selectedUser));
+        Conversation conversation = this.chitChatData.getConversation(selectedUser);
+        this.westView.showConversationListView(conversation);
     }
 
     @Override

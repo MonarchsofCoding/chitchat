@@ -39,4 +39,8 @@ public class Message {
         this.message = message;
     }
 
+    public String toString() {
+        return String.format("%s: %s", this.from.getUsername(), this.message);
+    }
+
 }
