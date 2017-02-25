@@ -97,7 +97,6 @@ checkstyle {
     toolVersion = "7.4"
     configFile = file("config/checkstyle/checkstyle.xml")
     sourceSets = [project.sourceSets.main]
-    maxWarnings = 0
     showViolations = true
 }
 

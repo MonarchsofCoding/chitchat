@@ -1,4 +1,4 @@
-FROM frekele/gradle:3.3-jdk8
+FROM frekele/gradle:3.4-jdk8
 
 RUN mkdir /app
 
