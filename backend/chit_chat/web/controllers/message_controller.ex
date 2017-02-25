@@ -1,4 +1,7 @@
 defmodule ChitChat.MessageController do
+  @moduledoc """
+  provides the message functions
+  """
   use ChitChat.Web, :controller
   use Guardian.Phoenix.Controller
 

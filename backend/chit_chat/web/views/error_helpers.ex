@@ -10,7 +10,8 @@ defmodule ChitChat.ErrorHelpers do
   """
   @spec error_tag(Form, Field) :: nil
   def error_tag(form, field) do
-    if error = form.errors[field] do
+    error = form.errors[field]
+    if error do
       content_tag :span, translate_error(error), class: "help-block"
     end
   end
