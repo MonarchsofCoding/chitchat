@@ -1,6 +1,5 @@
 package com.moc.chitchat.view.main;
 
-
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.view.authentication.BaseView;

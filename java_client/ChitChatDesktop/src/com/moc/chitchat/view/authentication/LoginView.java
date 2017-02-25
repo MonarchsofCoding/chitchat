@@ -5,8 +5,9 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
     @Autowired
     LoginView(
-        LoginController loginController
+            LoginController loginController
     ) {
         this.loginController = loginController;
     }
@@ -39,8 +40,6 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
     @Override
     public MigPane getContentPane() {
-        MigPane loginPane = new MigPane();
-
         MigPane loginForm = new MigPane();
 
         this.usernameField = new TextField();
@@ -60,6 +59,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.registerBtn.setOnAction(this);
         loginForm.add(this.registerBtn, "wrap, grow");
 
+        MigPane loginPane = new MigPane();
         loginPane.add(loginForm, "span, split 2, center");
 
         return loginPane;
@@ -68,19 +68,20 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     private void loginAction() {
         try {
             UserModel user = this.loginController.loginUser(
-                this.usernameField.getText(),
-                this.passwordField.getText()
+                    this.usernameField.getText(),
+                    this.passwordField.getText()
             );
 
             this.stage.hide();
 
 
-          //  JOptionPane.showMessageDialog(frame, String.format("Success! You have now registered %s!", user.getUsername()));
-        } catch (ValidationException e) {
-            Errors errors = e.getErrors();
+            //  JOptionPane.showMessageDialog(frame,
+            // String.format("Success! You have now registered %s!", user.getUsername()));
+        } catch (ValidationException validationException) {
+            Errors errors = validationException.getErrors();
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Unsuccesfull Login");
-            if(errors.hasErrors()) {
+            if (errors.hasErrors()) {
                 if (errors.getFieldError().getField().equals(("username"))) {
                     alert.setContentText("Username " + errors.getFieldError("username").getDefaultMessage());
                     alert.show();
@@ -91,15 +92,15 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
                 }
             }
 
-                    alert.setContentText("Wrong credentials or you have not registered yet !");
-                    alert.show();
+            alert.setContentText("Wrong credentials or you have not registered yet !");
+            alert.show();
 
 
-        } catch (Exception e) {
+        } catch (Exception exception) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setContentText("Unexpected error from server");
             alert.show();
-            e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
