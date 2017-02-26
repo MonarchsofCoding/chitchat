@@ -1,6 +1,5 @@
 package com.moc.chitchat.view.authentication;
 
-
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -22,6 +21,10 @@ public abstract class BaseView {
 
     protected abstract MigPane getContentPane();
 
+    /**
+     * getScene creates a new scene for the baseview.
+     * @return - returns a new scene
+     */
     public Scene getScene() {
 
         MigPane base = new MigPane();
