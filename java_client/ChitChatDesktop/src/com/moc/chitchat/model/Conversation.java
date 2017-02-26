@@ -5,11 +5,8 @@ import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Conversation class shows the list of messages between users
+ * Conversation class shows the list of messages between users.
  */
 public class Conversation implements Observable {
 
@@ -26,8 +23,13 @@ public class Conversation implements Observable {
         return this.otherParticipant;
     }
 
-    public Conversation addMessage(Message m) {
-        this.messages.add(m);
+    /**
+     * addMessage adds the message object to the Conversation between the two users.
+     * @param message - The message object that will be added.
+     * @return - returns the conversation
+     */
+    public Conversation addMessage(Message message) {
+        this.messages.add(message);
 
         return this;
     }

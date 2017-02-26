@@ -4,7 +4,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
+
 import java.util.HashMap;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -39,21 +41,23 @@ public class UserValidator implements Validator {
 
     /**
      * Validating the user of it's username and password to sign up.
+     *
      * @param user - validate the UserModel user
      * @throws ValidationException - if username or password is incorrect
      */
     public void validate(UserModel user) throws ValidationException {
-        MapBindingResult errors = new MapBindingResult(new HashMap<String,String>(), UserModel.class.getName());
+        MapBindingResult errors = new MapBindingResult(new HashMap<String, String>(), UserModel.class.getName());
         this.validate(user, errors);
 
         if (errors.hasErrors()) {
-           throw new ValidationException(errors);
+            throw new ValidationException(errors);
         }
 
     }
 
     /**
      * Checks username and password if its valid from the server.
+     *
      * @param response - using the response to see results from server
      * @throws ValidationException - any errors from server throws ValidationException
      */
@@ -62,23 +66,23 @@ public class UserValidator implements Validator {
 
         MapBindingResult validationErrors =
                 new MapBindingResult(
-                new HashMap<String,String>(),
-                UserModel.class.getName());
+                        new HashMap<String, String>(),
+                        UserModel.class.getName());
 
 
         if (!serverErrors.isNull("username")) {
             JSONArray usernameErrors = serverErrors.getJSONArray("username");
 
 
-            for (Object errorString:usernameErrors) {
+            for (Object errorString : usernameErrors) {
                 validationErrors.rejectValue("username", "server.invalid", errorString.toString());
             }
         }
 
-        if (!serverErrors.isNull("password")){
+        if (!serverErrors.isNull("password")) {
             JSONArray passwordErrors = serverErrors.getJSONArray("password");
 
-            for (Object errorString:passwordErrors){
+            for (Object errorString : passwordErrors) {
                 validationErrors.rejectValue("password", "server.invalid", errorString.toString());
             }
         }

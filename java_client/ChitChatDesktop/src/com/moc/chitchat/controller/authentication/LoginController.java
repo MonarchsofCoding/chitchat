@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * LoginController is the controller for login feature
+ * LoginController is the controller for login feature.
  */
 @Component
 public class LoginController {
@@ -23,6 +23,7 @@ public class LoginController {
     private HttpClient httpClient;
     private UserValidator userValidator;
     private Configuration configuration;
+
     @Autowired
     LoginController(
             UserResolver userResolver,
@@ -36,11 +37,20 @@ public class LoginController {
         this.configuration = configuration;
     }
 
-    public UserModel loginUser(String username, String password) throws UnirestException, UnexpectedResponseException, ValidationException {
-       // System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n", username, password.length());
+    /**
+     * loginUser logs in the user using the parameters below.
+     * @param username - name of the user
+     * @param password - password for the user
+     * @return - returns a new UserModel
+     * @throws UnirestException - if invalid http request
+     * @throws UnexpectedResponseException - unexpected response
+     * @throws ValidationException - if incorrect username or password
+     */
+    public UserModel loginUser(String username, String password)
+            throws UnirestException, UnexpectedResponseException, ValidationException {
 
         // Create the User object from parameters.
-        UserModel user = userResolver.createLoginUser(username,password);
+        UserModel user = userResolver.createLoginUser(username, password);
 
 
         // Register the User object on the backend via a HTTP request.
@@ -62,7 +72,7 @@ public class LoginController {
         user.setAuthToken(response.getBody().getObject().getJSONObject("data").get("authToken").toString());
 
         this.configuration.setLoggedInUser(user);
-            //open chatroom
+        //open chatroom
         return user;
     }
 
