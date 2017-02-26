@@ -1,4 +1,4 @@
-package com.moc.chitchat.view.authentication;
+package com.moc.chitchat.view;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;

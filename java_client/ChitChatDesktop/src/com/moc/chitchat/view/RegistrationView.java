@@ -1,4 +1,4 @@
-package com.moc.chitchat.view.authentication;
+package com.moc.chitchat.view;
 
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;

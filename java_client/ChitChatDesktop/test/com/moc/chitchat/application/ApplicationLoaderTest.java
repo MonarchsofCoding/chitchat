@@ -1,8 +1,7 @@
 package com.moc.chitchat.application;
 
 import com.moc.chitchat.model.UserModel;
-import com.moc.chitchat.view.authentication.AuthenticationStage;
-import com.moc.chitchat.view.authentication.LoginView;
+import com.moc.chitchat.view.AuthenticationStage;
 import com.moc.chitchat.view.main.MainStage;
 import javafx.stage.Stage;
 import org.junit.Test;

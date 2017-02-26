@@ -1,4 +1,4 @@
-package com.moc.chitchat.view.authentication;
+package com.moc.chitchat.view;
 
 import com.moc.chitchat.controller.authentication.LoginController;
 import com.moc.chitchat.exception.ValidationException;
@@ -43,19 +43,23 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         MigPane loginForm = new MigPane();
 
         this.usernameField = new TextField();
+        this.usernameField.setId("usernameField");
         this.usernameField.setPromptText("Username");
         loginForm.add(this.usernameField, "span, wrap");
 
         this.passwordField = new PasswordField();
         this.passwordField.setPromptText("Password");
+        this.passwordField.setId("passwordField");
         this.passwordField.setOnAction(this);
         loginForm.add(this.passwordField, "span, wrap");
 
         this.loginBtn = new Button("Login");
         this.loginBtn.setOnAction(this);
+        this.loginBtn.setId("loginBtn");
         loginForm.add(this.loginBtn, "wrap, grow");
 
         this.registerBtn = new Button("Register");
+        this.registerBtn.setId("registerBtn");
         this.registerBtn.setOnAction(this);
         loginForm.add(this.registerBtn, "wrap, grow");
 

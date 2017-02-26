@@ -1,4 +1,4 @@
-package com.moc.chitchat.view.authentication;
+package com.moc.chitchat.view;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
