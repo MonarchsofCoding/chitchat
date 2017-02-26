@@ -1,11 +1,11 @@
 package com.moc.chitchat.resolver;
 
 import com.android.volley.VolleyError;
-
+import java.io.UnsupportedEncodingException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+
 
 /**
  * ErrorResponseResolver provides utility methods for use in erroneous responses.
@@ -21,8 +21,8 @@ public class ErrorResponseResolver {
         try {
             //When no server connection, exception happens.
             return new JSONObject(new String(error.networkResponse.data, "UTF-8"));
-        } catch (JSONException | UnsupportedEncodingException e) {
-            e.printStackTrace();
+        } catch (JSONException | UnsupportedEncodingException exce) {
+            exce.printStackTrace();
         }
 
         return new JSONObject();

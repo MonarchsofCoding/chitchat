@@ -16,8 +16,8 @@ public class UserValidator {
     /**
      * validate validates a given User.
      * @param user the User to be validated.
-     * @throws ValidationException
-     */
+     * @throws ValidationException */
+
     public void validate(UserModel user) throws ValidationException {
 
         Map<String, List<String>> errors = new HashMap<>();

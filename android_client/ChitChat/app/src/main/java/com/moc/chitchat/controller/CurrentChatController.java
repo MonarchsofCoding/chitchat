@@ -7,35 +7,30 @@ import com.android.volley.Response;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
-
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.inject.Inject;
+import org.json.JSONObject;
 
-/**
- * Provides the actions performed by the CurrentChatActivity
+
+
+/* Provides the actions performed by the CurrentChatActivity
  */
 
 public class CurrentChatController {
 
-    /**
-     * HttpClient
+    /* HttpClient
      */
     private HttpClient httpClient;
 
-    /**
-     * SessionConfiguration
+    /* SessionConfiguration
      */
     private SessionConfiguration sessionConfiguration;
 
-    /**
-     * CurrentChatConfiguration
+    /* CurrentChatConfiguration
      */
     private CurrentChatConfiguration currentChatConfiguration;
-
+    /* CurrentChatController */
     @Inject
     public CurrentChatController(
         HttpClient httpClient,
@@ -47,8 +42,8 @@ public class CurrentChatController {
         this.sessionConfiguration = sessionConfiguration;
         this.currentChatConfiguration = currentChatConfiguration;
     }
-
-    public void sendMessageToRecipient (
+    /* sendMessageToRecipientr */
+    public void sendMessageToRecipient(
         Context context,
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,

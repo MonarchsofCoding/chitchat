@@ -8,8 +8,7 @@ import java.util.Map;
  */
 public class ValidationException extends Exception {
 
-    /**
-     * errors
+    /*  errors
      */
     private Map<String, List<String>> errors;
 

@@ -9,33 +9,27 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
-
+import javax.inject.Inject;
 import org.json.JSONObject;
 
-import javax.inject.Inject;
 
-/**
- * Provides the actions performed by the RegistrationActivity
+/* Provides the actions performed by the RegistrationActivity
  */
 public class RegistrationController {
 
-    /**
-     * UserResolver
+    /* UserResolver
      */
     private UserResolver userResolver;
 
-    /**
-     * UserValidator
+    /* UserValidator
      */
     private UserValidator userValidator;
 
-    /**
-     * HttpClient
+    /* HttpClient
      */
     private HttpClient httpClient;
 
-    /**
-     * RegistrationController constructor.
+    /* RegistrationController constructor.
      * @param userResolver To resolve parameters into User objects.
      * @param userValidator To validate User objects.
      * @param httpClient To send HTTP(S) requests.
@@ -52,8 +46,7 @@ public class RegistrationController {
         this.httpClient = httpClient;
     }
 
-    /**
-     * registerUser registers a User on the backend. Throws an exception when validation fails.
+    /* registerUser registers a User on the backend. Throws an exception when validation fails.
      * @param context the Android Context.
      * @param successListener The HTTP success listener.
      * @param errorListener The HTTP error listener.

@@ -1,6 +1,5 @@
 package com.moc.chitchat.resolver;
 
-
 import com.moc.chitchat.model.UserModel;
 
 /**

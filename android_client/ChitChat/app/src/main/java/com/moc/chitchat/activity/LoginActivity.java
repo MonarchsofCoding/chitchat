@@ -1,6 +1,5 @@
 package com.moc.chitchat.activity;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,11 +15,11 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.LoginController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
-
+import javax.inject.Inject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.inject.Inject;
+
 
 /**
  * LoginActivity provides the View and Actions involved with logging a User in.
@@ -28,8 +27,7 @@ import javax.inject.Inject;
 public class LoginActivity extends Activity
     implements View.OnClickListener,
         Response.Listener<JSONObject>,
-        Response.ErrorListener
-{
+        Response.ErrorListener {
 
     @Inject LoginController loginController;
     @Inject ErrorResponseResolver errorResponseResolver;
@@ -59,10 +57,10 @@ public class LoginActivity extends Activity
     }
 
     @Override
-    public void onClick(View v) {
-        if(v.getId() == findViewById(R.id.login_button).getId()) {
+    public void onClick(View view) {
+        if(view.getId() == findViewById(R.id.login_button).getId()) {
             loginButton();
-        } else if (v.getId() == findViewById(R.id.register_button).getId()) {
+        } else if (view.getId() == findViewById(R.id.register_button).getId()) {
             registerButton();
         }
     }
@@ -115,21 +113,21 @@ public class LoginActivity extends Activity
                 sessionConfiguration.getCurrentUser()
                     .setAuthToken(response.getJSONObject("data").get("authToken").toString())
             );
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsonexception) {
+            jsonexception.printStackTrace();
         }
         Intent searchIntent = new Intent(this, SearchUserActivity.class);
         startActivity(searchIntent);
         overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
-        this.ExitActivity();
+        this.exitActivity();
     }
 
     @Override
     public void onBackPressed() {
-        ExitActivity();
+        exitActivity();
     }
 
-    public void ExitActivity() {
+    public void exitActivity() {
         this.finish();
         overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
     }
