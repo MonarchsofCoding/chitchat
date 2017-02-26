@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * ChitChatData provides the main application states
+ * ChitChatData provides the main application states.
  */
 @Component
 public class ChitChatData {
@@ -19,7 +19,7 @@ public class ChitChatData {
     private ObservableList<Conversation> conversations;
 
     /**
-     * Constructor for ChitChatData
+     * Constructor for ChitChatData.
      */
     public ChitChatData() {
         this.conversations = FXCollections.observableArrayList();
@@ -31,15 +31,15 @@ public class ChitChatData {
      * @return the conversation associated with the given user.
      */
     public Conversation getConversation(UserModel user) {
-        Conversation c = this.findConversation(user);
+        Conversation conversation = this.findConversation(user);
 
-        if (c == null) {
-            c = new Conversation(user);
+        if (conversation == null) {
+            conversation = new Conversation(user);
             System.out.println(String.format("Created new conversation for: %s", user));
-            this.conversations.add(c);
+            this.conversations.add(conversation);
         }
 
-        return c;
+        return conversation;
     }
 
     /**
