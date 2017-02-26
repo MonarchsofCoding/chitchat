@@ -21,9 +21,6 @@ services:
       DATABASE_NAME: chit_chat_dev
       DATABASE_PORT: 5432
       PORT: 4000
-      MIX_ENV: dev
-    # volumes:
-      # - "./chit_chat:/app"
     ports:
       - 4000:4000
     links:

@@ -3,6 +3,9 @@ FROM elixir:latest
 RUN apt-get update -y
 RUN apt-get install -y inotify-tools
 
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
 RUN mkdir /app
 
 WORKDIR /app

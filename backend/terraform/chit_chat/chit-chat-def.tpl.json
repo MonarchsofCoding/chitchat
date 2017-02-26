@@ -1,7 +1,7 @@
 [
   {
     "name": "chit-chat_${environment}",
-    "image": "monarchsofcoding/chitchat:${backend_version}",
+    "image": "monarchsofcoding/chitchat:release-${backend_version}",
     "cpu": 50,
     "memory": 512,
     "essential": true,
