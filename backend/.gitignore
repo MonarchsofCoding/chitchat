@@ -4,8 +4,10 @@
 chit_chat/_build
 chit_chat/db
 chit_chat/deps
-chit_chat/rel
 chit_chat/*.ez
+*.tar.*
+
+*.dump
 
 # Generated on crash by the VM
 erl_crash.dump
