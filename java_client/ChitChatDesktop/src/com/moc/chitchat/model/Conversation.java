@@ -1,14 +1,12 @@
 package com.moc.chitchat.model;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
  * Conversation class shows the list of messages between users.
  */
-public class Conversation implements Observable {
+public class Conversation {
 
     private UserModel otherParticipant;
 
@@ -42,13 +40,4 @@ public class Conversation implements Observable {
         return this.otherParticipant.getUsername();
     }
 
-    @Override
-    public void addListener(InvalidationListener invalidationListener) {
-
-    }
-
-    @Override
-    public void removeListener(InvalidationListener invalidationListener) {
-
-    }
 }
