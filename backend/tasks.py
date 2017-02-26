@@ -23,7 +23,7 @@ def build(ctx):
   """
   Builds a Docker container for the Backend
   """
-  # __check_branch()
+  __check_branch()
   git = vcs.Git()
   version = git.get_version()
 
