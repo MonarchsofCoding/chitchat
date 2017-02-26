@@ -1,0 +1,149 @@
+import boto3
+import botocore
+import urllib.request
+import subprocess
+import time
+import os
+
+#
+# Uses DyanmoDB to aid in initialising a Docker Swarm using locking.
+#
+
+def main():
+  lock_table_name = "docker_swarm_init_locks"
+  swarm_name = os.getenv("SWARM_NAME")
+  # swarm_name = "test"
+
+  # http://169.254.169.254/latest/meta-data/
+  local_hostname = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/local-hostname').read().decode("utf-8").strip()
+  local_ip = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/local-ipv4').read().decode("utf-8").strip()
+  instance_id = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read().decode("utf-8").strip()
+  # local_ip = "127.0.0.1"
+
+  # Get the service resource.
+  dynamodb = boto3.resource('dynamodb')
+  # lock_table = dynamodb.Table(lock_table_name)
+  # lock_table.delete()
+  # lock_table.wait_until_not_exists()
+  # exit()
+
+  try:
+    lock_table = __create_lock_table(dynamodb, lock_table_name)
+  except Exception:
+    print("Already requested {0} DynamoDB table.".format(lock_table_name))
+    lock_table = dynamodb.Table(lock_table_name)
+
+  print("Waiting for {0} DynamoDB table to exist.".format(lock_table_name))
+  lock_table.wait_until_exists()
+
+  try:
+    __acquire_lock(lock_table, swarm_name, local_ip)
+    # docker swarm init
+    subprocess.run(["docker", "swarm", "init", "--advertise-addr", local_ip, "--listen-addr", "{0}:2377".format(local_ip)], check=True)
+
+    p = subprocess.run(["docker", "swarm", "join-token", "--quiet", "worker"], stdout=subprocess.PIPE)
+    worker_token = p.stdout.decode("utf-8").strip()
+
+    p = subprocess.run(["docker", "swarm", "join-token", "--quiet", "manager"], stdout=subprocess.PIPE)
+    manager_token = p.stdout.decode("utf-8").strip()
+
+    __update_swarm_tokens(lock_table, swarm_name, local_ip, worker_token, manager_token)
+
+    ec2 = boto3.resource('ec2')
+    instance = ec2.Instance(instance_id)
+    instance.create_tags(
+      DryRun=False,
+      Tags=[
+        {
+            'Key': 'swarm_role',
+            'Value': 'manager'
+        },
+      ]
+    )
+
+  except Exception:
+    # TODO: automatic decision on 'worker' or 'manager' (need to track amount of other nodes in the ASG)
+    swarm_info = __get_swarm_info(lock_table, swarm_name, "worker")
+
+    p = subprocess.run(["docker", "swarm", "join", "--token", swarm_info['worker_token'], swarm_info['node_ip']])
+
+    ec2 = boto3.resource('ec2')
+    instance = ec2.Instance(instance_id)
+    instance.create_tags(
+      DryRun=False,
+      Tags=[
+        {
+            'Key': 'swarm_role',
+            'Value': 'worker'
+        },
+      ]
+    )
+
+
+
+def __update_swarm_tokens(table, swarm_name, local_ip, worker_token, manager_token):
+  table.put_item(
+    Item={
+      'swarm_name': swarm_name,
+      'node_ip': local_ip,
+      'worker_token': worker_token,
+      'manager_token': manager_token
+    }
+  )
+
+def __get_swarm_info(table, swarm_name, node_type='worker'):
+  info = table.get_item(
+    Key={
+      'swarm_name': swarm_name
+    }
+  )
+  if "{0}_token".format(node_type) not in info['Item']:
+    time.sleep(5)
+    return __get_swarm_info(table, swarm_name, node_type)
+
+  return info['Item']
+
+
+def __release_lock(table, swarm_name):
+  resp = table.delete_item(
+    Key={
+      'swarm_name': swarm_name
+    }
+  )
+  print("Lock released for {0} swarm".format(swarm_name))
+
+def __acquire_lock(table, swarm_name, local_ip):
+  resp = table.put_item(
+    Item={
+      'swarm_name': swarm_name,
+      'node_ip': local_ip
+    },
+    ConditionExpression=boto3.dynamodb.conditions.Attr('swarm_name').not_exists()
+  )
+  print("Lock acquired for {0} swarm".format(swarm_name))
+
+def __create_lock_table(dynamodb, lock_table_name):
+  print("Requesting creation of DynamoDB table: {0}".format(lock_table_name))
+  lock_table = dynamodb.create_table(
+    TableName=lock_table_name,
+    KeySchema=[
+      {
+        'AttributeName': 'swarm_name',
+        'KeyType': 'HASH'
+      }
+    ],
+    AttributeDefinitions=[
+      {
+        'AttributeName': 'swarm_name',
+        'AttributeType': 'S'
+      }
+    ],
+    ProvisionedThroughput={
+      'ReadCapacityUnits': 5,
+      'WriteCapacityUnits': 5
+    }
+  )
+  return lock_table
+
+if __name__ == "__main__":
+  main()
