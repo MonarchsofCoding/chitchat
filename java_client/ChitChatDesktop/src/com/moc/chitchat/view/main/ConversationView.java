@@ -95,6 +95,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         } catch (UnexpectedResponseException unexpectedResponse) {
             unexpectedResponse.printStackTrace();
         }
+
+        this.newMessageField.clear();
         // TODO: we will probably need to set the Messages list in Conversation to be an ObservableList.
     }
 }
