@@ -31,10 +31,6 @@ environment :prod do
   set include_erts: false
   set include_src: false
   set cookie: :"&!<{2U2S,dO&$m<g/i[Uf22xL7jq.QvVs3>i].gGPxcJdv2gZb|tY$1Rawy}A$!W"
-
-  set commands: [
-    "migrate": "rel/commands/migrate.sh"
-  ]
 end
 
 # You may define one or more releases in this file.
@@ -44,4 +40,6 @@ end
 
 release :chit_chat do
   set version: current_version(:chit_chat)
+
+  set post_start_hook: "rel/hooks/post_start"
 end
