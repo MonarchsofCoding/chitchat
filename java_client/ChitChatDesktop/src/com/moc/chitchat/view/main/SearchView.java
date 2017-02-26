@@ -123,11 +123,16 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
      */
     private void startConversation() {
         UserModel selectedUser = this.searchList.getSelectionModel().getSelectedItem();
-        // TODO: show error if no user is selected (selectedUser == null)
-
-        System.out.println(String.format("Starting conversation with: %s", selectedUser));
-        Conversation conversation = this.chitChatData.getConversation(selectedUser);
-        this.westView.showConversationListView(conversation);
+        if (selectedUser == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("No user was selected");
+            alert.setContentText("Please select a user");
+            alert.show();
+        } else {
+            System.out.println(String.format("Starting conversation with: %s", selectedUser));
+            Conversation conversation = this.chitChatData.getConversation(selectedUser);
+            this.westView.showConversationListView(conversation);
+        }
     }
 
     @Override
