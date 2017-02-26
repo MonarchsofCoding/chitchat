@@ -9,6 +9,12 @@ use Mix.Config
 config :chit_chat,
   ecto_repos: [ChitChat.Repo]
 
+# Mix Docker
+config :mix_docker,
+  image: "monarchsofcoding/chitchat",
+  dockerfile_build: "docker/Dockerfile.build",
+  dockerfile_release: "docker/Dockerfile.release"
+
 # Configures the endpoint
 config :chit_chat, ChitChat.Endpoint,
   url: [host: "localhost"],
