@@ -75,10 +75,16 @@ def test(ctx):
   )
 
   vnc = "vnc4server -geometry 1920x1080 && export DISPLAY=:1"
+  vnc_rec_start = "screen -d -L -m -S vnc2flv flvrec.py -P /vncpasswd -o ChitChatDesktop.flv :1"
+  tests = "gradle test"
+  vnc_rec_stop = "screen -X -S vnc2flv kill"
+  avconv = "avconv -i ChitChatDesktop.flv -c:v libx264 -crf 19 -strict experimental ChitChatDesktop.mp4"
+  static_analysis = "gradle jacocoTestReport; gradle check"
 
   lxc.Docker.run(cli,
     tag="{0}-dev".format("chitchat-javaclient"),
-    command='/bin/bash -c "{0} && gradle test && gradle jacocoTestReport && gradle check"'.format(vnc),
+    command='/bin/bash -c "{0} && {1} && {2}; {3} && {4}; {5}"'.format(
+      vnc, vnc_rec_start, tests, vnc_rec_stop, avconv, static_analysis),
     volumes=[
       "{0}/ChitChatDesktop:/app".format(os.getcwd())
     ],
@@ -95,6 +101,7 @@ def publish_test_artifacts(ctx):
   local_coverage = "build/JacocoCoverageReport/test/html/"
   local_tests = "build/reports/tests/test/"
   local_checkstyle = "build/reports/checkstyle/"
+  local_test_video = "ChitChatDesktop.mp4"
 
   try:
     lxc.Docker.run(cli,
@@ -134,6 +141,23 @@ def publish_test_artifacts(ctx):
     lxc.Docker.run(cli,
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/checkstyle/ --recursive'.format(local_checkstyle, s3_artifacts),
+      volumes=[
+        "{0}/ChitChatDesktop:/app".format(os.getcwd())
+      ],
+      working_dir="/app",
+      environment={
+        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+        "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+        "AWS_DEFAULT_REGION": "eu-west-1"
+      }
+    )
+  except Exception:
+    pass
+
+  try:
+    lxc.Docker.run(cli,
+      tag="garland/aws-cli-docker:latest",
+      command='aws s3 cp {0} {1}/video/ChitChatDesktop-{2}.mp4'.format(local_test_video, s3_artifacts, os.getenv("TRAVIS_BUILD_NUMBER")),
       volumes=[
         "{0}/ChitChatDesktop:/app".format(os.getcwd())
       ],
