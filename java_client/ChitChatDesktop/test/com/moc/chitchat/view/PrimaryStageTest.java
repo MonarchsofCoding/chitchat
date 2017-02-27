@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by spiros on 26/02/2017.
  */
-public class AuthenticationStageTest extends ApplicationTest {
+public class PrimaryStageTest extends ApplicationTest {
 
     @Before
     public void setUpClass() throws Exception{
