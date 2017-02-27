@@ -63,7 +63,7 @@ public class MessageModel {
      *
      * @return String JSON representation of the Message.
      */
-    public JSONObject toJSONObject() throws JSONException {
+    public JSONObject tojsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
         jsonObject

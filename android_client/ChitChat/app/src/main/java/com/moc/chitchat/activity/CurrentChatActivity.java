@@ -21,13 +21,13 @@ import com.moc.chitchat.model.ConversationModel;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * CurrentChatActivity provides the View and Actions involved with searching a User.

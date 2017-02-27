@@ -9,12 +9,12 @@ import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.model.MessageModel;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 
@@ -65,7 +65,7 @@ public class CurrentChatController {
             context,
             Request.Method.POST,
             "/api/v1/messages",
-            message.toJSONObject(),
+            message.tojsonObject(),
             successListener,
             errorListener,
             requestHeaders

@@ -16,10 +16,10 @@ import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.LoginController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
+import javax.inject.Inject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import javax.inject.Inject;
 
 
 /**

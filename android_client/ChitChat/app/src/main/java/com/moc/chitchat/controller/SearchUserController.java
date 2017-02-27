@@ -7,11 +7,11 @@ import com.android.volley.Response;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 
-import org.json.JSONObject;
-
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import org.json.JSONObject;
 
 
 /* Provides the actions performed by the SearchUserActivity.

@@ -1,8 +1,8 @@
 package com.moc.chitchat.model;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
+
+import org.json.JSONObject;
 
 
 /**

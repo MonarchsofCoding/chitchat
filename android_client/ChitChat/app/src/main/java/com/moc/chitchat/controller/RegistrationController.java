@@ -10,9 +10,9 @@ import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 
-import org.json.JSONObject;
-
 import javax.inject.Inject;
+
+import org.json.JSONObject;
 
 
 /* Provides the actions performed by the RegistrationActivity

@@ -6,9 +6,9 @@ import com.moc.chitchat.activity.LoginActivity;
 import com.moc.chitchat.activity.RegistrationActivity;
 import com.moc.chitchat.activity.SearchUserActivity;
 
-import javax.inject.Singleton;
-
 import dagger.Component;
+
+import javax.inject.Singleton;
 
 /**
  * ApplicationComponent provides an interface for the injectable classes.

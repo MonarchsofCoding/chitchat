@@ -84,7 +84,7 @@ public class MessageModelTest {
             .put("recipient", to.getUsername())
             .put("message", messageText);
 
-        assertEquals(expectedJSON.toString(), message.toJSONObject().toString());
+        assertEquals(expectedJSON.toString(), message.tojsonObject().toString());
     }
 
     @Test

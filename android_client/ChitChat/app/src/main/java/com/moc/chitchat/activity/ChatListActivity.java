@@ -59,7 +59,9 @@ public class ChatListActivity extends AppCompatActivity
         getConversations();
     }
 
-    //Gets every ongoing conversation
+    /**
+     * Gets every ongoing conversation.
+     */
     public void getConversations() {
         ArrayList<String> chatsArrayList = new ArrayList<String>();
 

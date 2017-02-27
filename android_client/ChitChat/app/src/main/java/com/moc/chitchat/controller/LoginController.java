@@ -9,10 +9,9 @@ import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 
-import org.json.JSONObject;
-
 import javax.inject.Inject;
 
+import org.json.JSONObject;
 
 /**
  * Created by aakyo on 14/02/2017.

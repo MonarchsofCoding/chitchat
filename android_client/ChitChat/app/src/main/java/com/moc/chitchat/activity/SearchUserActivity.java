@@ -21,9 +21,6 @@ import com.moc.chitchat.controller.SearchUserController;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +28,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * SearchUserActivity provides the View and Actions involved with searching a User.

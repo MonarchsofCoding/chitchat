@@ -10,10 +10,10 @@ import com.moc.chitchat.resolver.ErrorResponseResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
+
+import javax.inject.Singleton;
 
 
 /**

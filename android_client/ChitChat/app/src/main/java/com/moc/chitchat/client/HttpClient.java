@@ -8,10 +8,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.moc.chitchat.R;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONObject;
 
 
 /**
