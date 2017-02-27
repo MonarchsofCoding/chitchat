@@ -3,9 +3,11 @@ package com.moc.chitchat.validator;
 /**
  * Created by aakyo on 13/02/2017.
  */
+
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,7 +27,8 @@ public class UserValidatorTest {
     @Mock
     private ErrorResponseResolver mockResponse;
 
-    @Before public void initMocks() {
+    @Before
+    public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 

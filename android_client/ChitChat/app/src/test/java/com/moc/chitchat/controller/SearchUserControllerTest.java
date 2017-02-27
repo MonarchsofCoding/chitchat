@@ -6,9 +6,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.ValidationException;
-import com.moc.chitchat.model.UserModel;
-import com.moc.chitchat.resolver.UserResolver;
-import com.moc.chitchat.validator.UserValidator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,22 +15,23 @@ import org.mockito.MockitoAnnotations;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class SearchUserControllerTest {
 
-    @Mock private HttpClient mockHttpClient;
-    @Mock private Context mockContext;
-    @Mock private Response.Listener mockResponselistener;
-    @Mock private Response.ErrorListener mockErrorListener;
+    @Mock
+    private HttpClient mockHttpClient;
+    @Mock
+    private Context mockContext;
+    @Mock
+    private Response.Listener mockResponselistener;
+    @Mock
+    private Response.ErrorListener mockErrorListener;
 
     @InjectMocks
     private SearchUserController searchUserController;
 
     @Before
-    public void initMocks(){
+    public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -46,9 +44,9 @@ public class SearchUserControllerTest {
     }
 
     @Test
-    public void testSuccesfulSearchUser() throws ValidationException{
+    public void testSuccesfulSearchUser() throws ValidationException {
 
-        this.searchUserController.searchUser (
+        this.searchUserController.searchUser(
             mockContext,
             mockResponselistener,
             mockErrorListener,
@@ -66,7 +64,6 @@ public class SearchUserControllerTest {
 
 
     }
-
 
 
 }

@@ -18,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,16 +28,24 @@ import static org.mockito.Mockito.when;
 
 public class RegistrationControllerTest {
 
-    @Mock private UserResolver mockUserResolver;
-    @Mock private UserValidator mockUserValidator;
-    @Mock private HttpClient mockHttpClient;
-    @Mock private Context mockcontext;
-    @Mock private Response.Listener mockResponselistener;
-    @Mock private Response.ErrorListener mockErrorListener;
+    @Mock
+    private UserResolver mockUserResolver;
+    @Mock
+    private UserValidator mockUserValidator;
+    @Mock
+    private HttpClient mockHttpClient;
+    @Mock
+    private Context mockcontext;
+    @Mock
+    private Response.Listener mockResponselistener;
+    @Mock
+    private Response.ErrorListener mockErrorListener;
 
-    @InjectMocks private RegistrationController registrationController;
+    @InjectMocks
+    private RegistrationController registrationController;
 
-    @Before public void initMocks(){
+    @Before
+    public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -46,47 +53,44 @@ public class RegistrationControllerTest {
     public void testConstructor() throws ValidationException {
         assertNotNull(this.registrationController);
         assertEquals(
-                this.registrationController.getClass(), RegistrationController.class
+            this.registrationController.getClass(), RegistrationController.class
         );
     }
 
     @Test
-    public void testSuccesfulRegisterUser() throws ValidationException{
-            UserModel mockUser = mock(UserModel.class);
-            //Stub the UserResolver to return UserModel
-            when(   this.mockUserResolver.createRegisterUser("vjpatel",
-                    "aaa",
-                    "aaa")
+    public void testSuccesfulRegisterUser() throws ValidationException {
+        UserModel mockUser = mock(UserModel.class);
+        //Stub the UserResolver to return UserModel
+        when(this.mockUserResolver.createRegisterUser("vjpatel",
+            "aaa",
+            "aaa")
 
 
-            ).thenReturn(mockUser);
+        ).thenReturn(mockUser);
 
-            this.registrationController.registerUser (
-                    mockcontext,
-                    mockResponselistener,
-                    mockErrorListener,
-                    "vjpatel",
-                    "aaa",
-                    "aaa");
-
-
-            this.mockHttpClient.sendRequest(mockcontext,
-                    Request.Method.POST,
-                    "/api/v1/users",
-                    mockUser.toJsonObject(),
-                    mockResponselistener,
-                    mockErrorListener);
-
-         verify(mockUserValidator).validate(mockUser);
+        this.registrationController.registerUser(
+            mockcontext,
+            mockResponselistener,
+            mockErrorListener,
+            "vjpatel",
+            "aaa",
+            "aaa");
 
 
-          
+        this.mockHttpClient.sendRequest(mockcontext,
+            Request.Method.POST,
+            "/api/v1/users",
+            mockUser.toJsonObject(),
+            mockResponselistener,
+            mockErrorListener);
 
-        }
-
+        verify(mockUserValidator).validate(mockUser);
 
 
     }
+
+
+}
 
 
 

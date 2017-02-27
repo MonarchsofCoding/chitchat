@@ -2,6 +2,7 @@ package com.moc.chitchat;
 
 import android.app.Application;
 
+import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
@@ -9,10 +10,10 @@ import com.moc.chitchat.resolver.ErrorResponseResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 
-import dagger.Module;
-import dagger.Provides;
 import javax.inject.Singleton;
 
+import dagger.Module;
+import dagger.Provides;
 
 
 /**
@@ -69,4 +70,12 @@ public class ApplicationModule {
     CurrentChatConfiguration provideCurrentChatConfiguration() {
         return new CurrentChatConfiguration();
     }
+
+    @Provides
+    @Singleton
+    ChitChatMessagesConfiguration provideChitChatMessagesConfiguration() {
+        return new ChitChatMessagesConfiguration();
+    }
+
+
 }

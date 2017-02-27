@@ -1,10 +1,11 @@
 package com.moc.chitchat.resolver;
 
 import com.android.volley.VolleyError;
-import java.io.UnsupportedEncodingException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -14,6 +15,7 @@ public class ErrorResponseResolver {
 
     /**
      * Returns the JSONObject from the error response.
+     *
      * @param error the error from Volley
      * @return The body as a JSONObject
      */

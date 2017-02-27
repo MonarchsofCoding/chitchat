@@ -7,10 +7,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.moc.chitchat.R;
-import java.util.HashMap;
-import java.util.Map;
+
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -24,6 +25,7 @@ public class HttpClient {
 
     /**
      * getRequestQueue returns the RequestQueue for the given Context.
+     *
      * @param context the current context.
      * @return a new request queue if one does not already exist.
      */
@@ -37,30 +39,31 @@ public class HttpClient {
 
     /**
      * sendRequest sends a JSONObject request to the given URI.
-     * @param context the current context.
-     * @param method the HTTP method.
-     * @param uri the URI.
-     * @param body the body as a JSONObject.
+     *
+     * @param context         the current context.
+     * @param method          the HTTP method.
+     * @param uri             the URI.
+     * @param body            the body as a JSONObject.
      * @param successListener the object containing the function to call on success.
-     * @param errorListener the object containing the function to call on error.
+     * @param errorListener   the object containing the function to call on error.
      */
     public void sendRequest(
-            Context context,
-            int method,
-            String uri,
-            JSONObject body,
-            Response.Listener<JSONObject> successListener,
-            Response.ErrorListener errorListener
+        Context context,
+        int method,
+        String uri,
+        JSONObject body,
+        Response.Listener<JSONObject> successListener,
+        Response.ErrorListener errorListener
     ) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                method,
-                String.format("%s%s",
-                    context.getResources().getString(R.string.server_url),
-                    uri
-                ),
-                body,
-                successListener,
-                errorListener
+            method,
+            String.format("%s%s",
+                context.getResources().getString(R.string.server_url),
+                uri
+            ),
+            body,
+            successListener,
+            errorListener
         );
 
         this.getRequestQueue(context).add(jsonObjectRequest);
@@ -68,13 +71,14 @@ public class HttpClient {
 
     /**
      * sendRequestWithHeader sends a JSONObject request to the given URI with provided header.
-     * @param context the current context.
-     * @param method the HTTP method.
-     * @param uri the URI.
-     * @param body the body as a JSONObject.
+     *
+     * @param context         the current context.
+     * @param method          the HTTP method.
+     * @param uri             the URI.
+     * @param body            the body as a JSONObject.
      * @param successListener the object containing the function to call on success.
-     * @param errorListener the object containing the function to call on error.
-     * @param requestHeaders the Map containing the headers for the request.
+     * @param errorListener   the object containing the function to call on error.
+     * @param requestHeaders  the Map containing the headers for the request.
      */
     public void sendRequestWithHeader(
         final Context context,
@@ -103,7 +107,7 @@ public class HttpClient {
                 Map<String, String> headerParams = new HashMap<String, String>();
                 if (requestHeaders != null) {
                     for (Map.Entry<String, String> header : requestHeaders.entrySet()) {
-                        headerParams.put(header.getKey(),header.getValue());
+                        headerParams.put(header.getKey(), header.getValue());
                     }
                 }
                 return headerParams;
