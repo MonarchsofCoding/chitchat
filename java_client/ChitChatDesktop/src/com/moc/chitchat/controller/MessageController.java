@@ -56,7 +56,6 @@ public class MessageController {
             throws UnirestException, ValidationException, UnexpectedResponseException {
 
         Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(), to, message);
-
         HttpResponse<JsonNode> response = httpClient.post("/api/v1/messages", newMessage);
 
         if (response.getStatus() == 422) {
@@ -65,7 +64,7 @@ public class MessageController {
             throw new UnexpectedResponseException(response);
         }
 
-        this.chitChatData.getConversation(to).addMessage(newMessage);
+        this.chitChatData.addMessageToConversation(to, newMessage);
 
         return newMessage;
     }
