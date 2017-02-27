@@ -43,7 +43,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.registrationController = registrationController;
     }
 
-    public void setStage(AuthenticationStage stage) {
+    void setAuthenticationStage(AuthenticationStage stage) {
         this.stage = stage;
     }
 

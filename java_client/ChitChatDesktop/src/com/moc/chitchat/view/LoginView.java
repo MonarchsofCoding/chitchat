@@ -34,17 +34,17 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.loginController = loginController;
     }
 
-    public void setStage(AuthenticationStage stage) {
+    void setAuthenticationStage(AuthenticationStage stage) {
         this.stage = stage;
     }
 
     @Override
     public MigPane getContentPane() {
-        MigPane loginForm = new MigPane();
 
         this.usernameField = new TextField();
         this.usernameField.setId("usernameField");
         this.usernameField.setPromptText("Username");
+        MigPane loginForm = new MigPane();
         loginForm.add(this.usernameField, "span, wrap");
 
         this.passwordField = new PasswordField();
@@ -76,8 +76,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
                     this.passwordField.getText()
             );
 
-            this.stage.hide();
-
+            this.stage.showMainStage();
 
             //  JOptionPane.showMessageDialog(frame,
             // String.format("Success! You have now registered %s!", user.getUsername()));

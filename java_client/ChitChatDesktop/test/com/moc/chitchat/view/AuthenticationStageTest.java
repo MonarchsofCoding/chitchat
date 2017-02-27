@@ -26,11 +26,12 @@ public class AuthenticationStageTest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         stage.show();
     }
+
     @After
     public void AfterEachTest() throws TimeoutException{
-        FxToolkit.hideStage();
-        release(new KeyCode[]{});
-        release(new MouseButton[]{});
+//        FxToolkit.hideStage();
+//        release(new KeyCode[]{});
+//        release(new MouseButton[]{});
     }
     public <T extends Node> T find (final String query){
         return (T) lookup(query).queryAll().iterator().next();
