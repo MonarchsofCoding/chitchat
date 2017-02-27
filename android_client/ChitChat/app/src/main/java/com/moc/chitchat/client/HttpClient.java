@@ -7,19 +7,18 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.moc.chitchat.R;
-
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
+
+
 
 /**
  * HttpClient provides an smaller API wrapper around Volley for the methods we use.
  */
 public class HttpClient {
 
-    /**
-     * RequestQueue
+    /* RequestQueue.
      */
     private RequestQueue requestQueue;
 
@@ -96,9 +95,8 @@ public class HttpClient {
             successListener,
             errorListener
         ) {
-            /**
-             * getHeaders Overridden method for fetching the headers
-             * @return the headers to the request
+            /* getHeaders Overridden method for fetching the headers.
+             * @return the headers to the request.
              */
             @Override
             public Map<String, String> getHeaders() {

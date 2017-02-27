@@ -11,19 +11,18 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
+import com.moc.chitchat.R;
 import com.moc.chitchat.controller.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
-import com.moc.chitchat.R;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
-
+import java.util.List;
+import java.util.Map;
+import javax.inject.Inject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Map;
 
-import javax.inject.Inject;
 
 /**
  * RegistrationActivity provides the View and Actions involved with registering a User.
@@ -31,8 +30,7 @@ import javax.inject.Inject;
 public class RegistrationActivity extends Activity
         implements View.OnClickListener,
         Response.Listener<JSONObject>,
-        Response.ErrorListener
-{
+        Response.ErrorListener {
 
     @Inject RegistrationController registrationController;
     @Inject ErrorResponseResolver errorResponseResolver;
@@ -57,7 +55,7 @@ public class RegistrationActivity extends Activity
         Window registerWindow = this.getWindow();
         registerWindow.setTitle("Register");
 
-        Button registerButton = (Button) this.findViewById(R.id.register_button);
+        Button registerButton =(Button) this.findViewById(R.id.register_button);
         registerButton.setOnClickListener(this);
 
         this.usernameField = (EditText) this.findViewById(R.id.username_input);
@@ -67,10 +65,10 @@ public class RegistrationActivity extends Activity
 
     /**
      * onClick calls registration controller and handles local validation exceptions.
-     * @param v the view that received the click event.
+     *  the view that received the click event.
      */
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         try {
             this.registrationController.registerUser(
                     this,
@@ -80,12 +78,12 @@ public class RegistrationActivity extends Activity
                     this.passwordField.getText().toString(),
                     this.passwordCheckField.getText().toString()
             );
-        } catch (ValidationException e) {
+        } catch (ValidationException excevalid) {
             // Validation implementation with Maps.
             // Could use something other than toasts?
             // Turn the fields red?? Have labels?
             // TODO: can be turned into a function with the field as a parameter.
-            Map<String, List<String>> errors = e.getErrors();
+            Map<String, List<String>> errors = excevalid.getErrors();
 
             if (errors.containsKey("username")) {
                 List<String> usernameErrors = errors.get("username");
@@ -139,8 +137,8 @@ public class RegistrationActivity extends Activity
                         String.format("Password: %s", passwordErrors.toString()),
                         Toast.LENGTH_LONG).show();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsonexcep) {
+            jsonexcep.printStackTrace();
         }
     }
 
@@ -156,18 +154,18 @@ public class RegistrationActivity extends Activity
             String username = response.getJSONObject("data").get("username").toString();
             Toast.makeText(this,
                 String.format("Successfully registered: %s", username), Toast.LENGTH_LONG).show();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsonexception) {
+            jsonexception.printStackTrace();
         }
-        this.ExitActivity();
+        this.exitActivity();
     }
 
     @Override
     public void onBackPressed() {
-        ExitActivity();
+        exitActivity();
     }
 
-    public void ExitActivity() {
+    public void exitActivity() {
         this.finish();
         overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
     }

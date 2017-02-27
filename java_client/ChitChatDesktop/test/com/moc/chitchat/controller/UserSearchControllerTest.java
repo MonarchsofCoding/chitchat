@@ -70,7 +70,7 @@ public class UserSearchControllerTest {
 
         JsonNode thebody = mock(JsonNode.class);
         when(this.mockResponse.getBody()).thenReturn(thebody);
-      JsonNode bodyResponse = mock(JsonNode.class);
+        JsonNode bodyResponse = mock(JsonNode.class);
         when(this.mockResponse.getBody()).thenReturn(bodyResponse);
 
         bodyResponse = mock(JsonNode.class);

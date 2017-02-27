@@ -6,21 +6,23 @@ package com.moc.chitchat.application;
 
 public class CurrentChatConfiguration {
 
-    /**
-     * Current recipient's username
-     */
+    //Current recipient's username.
+
     String currentRecipientUsername = "";
 
-    /**
-     * The messages between the current recipient
-     */
+    /* The messages between the current recipient */
+
     //TODO: Message model here
 
-    public String getCurrentRecipientUsername() { return this.currentRecipientUsername; }
+    public String getCurrentRecipientUsername() {
+        return this.currentRecipientUsername;
+    }
 
     public void setCurrentRecipientUsername(String newRecipient) {
         this.currentRecipientUsername = newRecipient;
     }
 
-    public void cleanCurrentRecipientUsername() { this.currentRecipientUsername = ""; }
+    public void cleanCurrentRecipientUsername() {
+        this.currentRecipientUsername = "";
+    }
 }

@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
@@ -15,15 +14,14 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.CurrentChatController;
-
-import org.json.JSONArray;
+import java.util.HashMap;
+import java.util.Map;
+import javax.inject.Inject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.inject.Inject;
+
 
 /**
  * CurrentChatActivity provides the View and Actions involved with searching a User.
@@ -33,8 +31,7 @@ public class CurrentChatActivity extends Activity
     implements View.OnClickListener,
     TabLayout.OnTabSelectedListener,
     Response.Listener<JSONObject>,
-    Response.ErrorListener
-{
+    Response.ErrorListener {
 
     TabLayout menuTabs;
     TextView recipientLabel;
@@ -78,7 +75,7 @@ public class CurrentChatActivity extends Activity
 
     //For when a button is clicked
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         if(!messageText.getText().toString().equals("")) {
             Map<String, String> requestHeaders = new HashMap<String, String>();
             requestHeaders.put(
@@ -102,8 +99,8 @@ public class CurrentChatActivity extends Activity
         try {
             System.out.println(new JSONObject(new String(error.networkResponse.data)));
             System.out.println("DEBUG");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsonexception) {
+            jsonexception.printStackTrace();
         }
     }
 
@@ -111,12 +108,14 @@ public class CurrentChatActivity extends Activity
     @Override
     public void onResponse(JSONObject response) {
         try {
-            messagePanel.setText(messagePanel.getText().toString() + "\n" +
-                response.getJSONObject("data").get("sender") + ": " +
-                response.getJSONObject("data").get("message"));
+            messagePanel.setText(messagePanel.getText().toString()
+                    + "\n"
+                    + response.getJSONObject("data").get("sender")
+                    + ": "
+                    + response.getJSONObject("data").get("message"));
             messageText.setText("");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsonexception) {
+            jsonexception.printStackTrace();
         }
     }
 
@@ -126,10 +125,9 @@ public class CurrentChatActivity extends Activity
         String tabName = tab.getText().toString();
         //TODO Save chat history to recipient user object in sessionConf
         if(tabName.equals("Chats")) {
-            //LaunchActivityFromTab(Chats.class);
-        }
-        else if(tabName.equals("Search Users")) {
-            LaunchActivityFromTab(SearchUserActivity.class);
+            /** LaunchActivityFromTab(Chats.class).*/
+        } else if(tabName.equals("Search Users")) {
+            launchActivityFromTab(SearchUserActivity.class);
         }
         //ExitActivity();
     }
@@ -140,14 +138,14 @@ public class CurrentChatActivity extends Activity
         //Basically do nothing, at the moment at least.
     }
 
-    //For a re-selected tab
+    //For a re-selected tab.
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
         System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
-        //Basically do nothing.
     }
 
-    public void LaunchActivityFromTab(Class activityToLaunch) {
+    /** {LaunchActivity is starting }. */
+    public void launchActivityFromTab(Class activityToLaunch) {
         Intent toLaunchIntent = new Intent(getBaseContext(), activityToLaunch);
         startActivity(toLaunchIntent);
         overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
