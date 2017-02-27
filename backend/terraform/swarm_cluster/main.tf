@@ -179,6 +179,13 @@ resource "aws_security_group" "instance_sg" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
+  ingress {
+    protocol    = "udp"
+    from_port   = 0
+    to_port     = 65535
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
