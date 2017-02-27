@@ -25,6 +25,11 @@ public class UserResolver {
         return user;
     }
 
+    /**
+     * Usermodel function creates Login User using.
+     * @param username the username.
+     * @param password takes the user's password.
+     */
     public UserModel createLoginUser(String username, String password){
         UserModel user = new UserModel(username);
 

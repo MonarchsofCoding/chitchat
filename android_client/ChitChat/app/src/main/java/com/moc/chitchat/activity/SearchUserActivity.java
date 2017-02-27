@@ -116,9 +116,9 @@ public class SearchUserActivity extends Activity
         TabLayout.Tab tabToSelect = menuTabs.getTabAt(1); //Locks the Search tab since we may
         tabToSelect.select();                             //stay in this activity
 
-        if(tabName.equals("Chats")) {//TODO: Open Chats Activity
-            }
-        else if(tabName.equals("Current Chat")) {
+        if (tabName.equals("Chats")) {//TODO: Open Chats Activity
+
+        } else if (tabName.equals("Current Chat")) {
             String currentReceiverUsername = currentChatConfiguration.getCurrentRecipientUsername();
 
             if(!currentReceiverUsername.equals("")) {
@@ -130,9 +130,9 @@ public class SearchUserActivity extends Activity
 
                 overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
                 this.exitActivity();
+            } else {
+                    Toast.makeText(this, String.format("There is no current chat"), Toast.LENGTH_LONG).show();
             }
-            else {Toast.makeText(this,
-                    String.format("There is no current chat"), Toast.LENGTH_LONG).show();}
         }
      }
 
@@ -165,11 +165,11 @@ public class SearchUserActivity extends Activity
                 query,
                 requestHeaders
             );
-                                 }
-        else {
+        } else {
             Toast.makeText(this,
                 String.format("You can only do a search with an input longer than 3 characters"),
-                Toast.LENGTH_LONG).show();}
+                Toast.LENGTH_LONG).show();
+        }
         return false;
     }
 

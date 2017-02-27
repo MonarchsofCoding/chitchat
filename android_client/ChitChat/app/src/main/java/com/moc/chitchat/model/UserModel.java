@@ -89,8 +89,9 @@ public class UserModel {
         return this;
     }
 
-    /* setAuthToken sets an auth token to the user.
-     * @param aToken the token to be set.
+    /**
+     * setAuthToken sets an auth token to the user.
+     * @param aaToken the token to be set.
      * @return the user.
      *
      */

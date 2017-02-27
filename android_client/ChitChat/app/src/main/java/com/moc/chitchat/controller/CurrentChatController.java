@@ -30,7 +30,10 @@ public class CurrentChatController {
     /* CurrentChatConfiguration
      */
     private CurrentChatConfiguration currentChatConfiguration;
-    /* CurrentChatController */
+
+    /**
+     * {@CurrentChatController}.
+     * */
     @Inject
     public CurrentChatController(
         HttpClient httpClient,
@@ -42,7 +45,9 @@ public class CurrentChatController {
         this.sessionConfiguration = sessionConfiguration;
         this.currentChatConfiguration = currentChatConfiguration;
     }
-    /* sendMessageToRecipientr */
+
+    /**
+     * {@sendMessageToRecipientr}. */
     public void sendMessageToRecipient(
         Context context,
         Response.Listener<JSONObject> successListener,

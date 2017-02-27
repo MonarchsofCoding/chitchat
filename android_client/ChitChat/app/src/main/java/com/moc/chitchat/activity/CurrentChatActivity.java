@@ -125,9 +125,8 @@ public class CurrentChatActivity extends Activity
         String tabName = tab.getText().toString();
         //TODO Save chat history to recipient user object in sessionConf
         if(tabName.equals("Chats")) {
-            /*LaunchActivityFromTab(Chats.class).*/
-        }
-        else if(tabName.equals("Search Users")) {
+            /** LaunchActivityFromTab(Chats.class).*/
+        } else if(tabName.equals("Search Users")) {
             launchActivityFromTab(SearchUserActivity.class);
         }
         //ExitActivity();
@@ -145,6 +144,7 @@ public class CurrentChatActivity extends Activity
         System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
         }
 
+    /** {LaunchActivity is starting }. */
     public void launchActivityFromTab(Class activityToLaunch) {
         Intent toLaunchIntent = new Intent(getBaseContext(), activityToLaunch);
         startActivity(toLaunchIntent);

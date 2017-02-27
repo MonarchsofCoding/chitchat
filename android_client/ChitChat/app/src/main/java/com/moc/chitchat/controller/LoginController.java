@@ -31,7 +31,8 @@ public class LoginController {
      */
     private SessionConfiguration sessionConfiguration;
 
-    /* LoginController constructor.
+    /**
+     *  {LoginController constructor}.
      * @param userResolver To resolve parameters into User objects.
      * @param httpClient To send HTTP(S) requests.
      */

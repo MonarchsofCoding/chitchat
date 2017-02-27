@@ -34,7 +34,8 @@ public class SearchUserController {
         this.sessionConfiguration = sessionConfiguration;
     }
 
-    /* @param context the Android Context.
+    /**
+     * @param context the Android Context.
      * @param successListener The HTTP success listener.
      * @param errorListener The HTTP error listener.
      * @param queryString the searched username string.

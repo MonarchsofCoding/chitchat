@@ -29,7 +29,8 @@ public class RegistrationController {
      */
     private HttpClient httpClient;
 
-    /* RegistrationController constructor.
+    /**
+     *  RegistrationController constructor.
      * @param userResolver To resolve parameters into User objects.
      * @param userValidator To validate User objects.
      * @param httpClient To send HTTP(S) requests.
@@ -46,14 +47,15 @@ public class RegistrationController {
         this.httpClient = httpClient;
     }
 
-    /* registerUser registers a User on the backend. Throws an exception when validation fails.
+    /**
+     *  registerUser registers a User on the backend. Throws an exception when validation fails.
      * @param context the Android Context.
      * @param successListener The HTTP success listener.
      * @param errorListener The HTTP error listener.
      * @param username The username of the new User.
      * @param password The password of the new User.
      * @param passwordCheck The repeated password of the new User.
-     * @throws ValidationException
+     * @throws ValidationException the process of validation is not completed
      */
     public void registerUser(
             Context context,
