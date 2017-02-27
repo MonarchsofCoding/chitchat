@@ -142,7 +142,7 @@ public class CurrentChatActivity extends Activity
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
         System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
-        }
+    }
 
     /** {LaunchActivity is starting }. */
     public void launchActivityFromTab(Class activityToLaunch) {

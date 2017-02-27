@@ -46,7 +46,7 @@ public class SearchUserController {
         Response.ErrorListener errorListener,
         String queryString,
         Map<String,String> requestHeaders
-        ) {
+    ) {
 
         // Make a GET request to find all the connected users.
         this.httpClient.sendRequestWithHeader(

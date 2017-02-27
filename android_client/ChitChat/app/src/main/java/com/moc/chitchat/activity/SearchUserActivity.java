@@ -131,10 +131,10 @@ public class SearchUserActivity extends Activity
                 overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
                 this.exitActivity();
             } else {
-                    Toast.makeText(this, String.format("There is no current chat"), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, String.format("There is no current chat"), Toast.LENGTH_LONG).show();
             }
         }
-     }
+    }
 
     //For a unselected tab
     @Override

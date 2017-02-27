@@ -29,4 +29,4 @@ public class SessionConfiguration {
         this.currentUser = null;
     }
 
- }
+}
