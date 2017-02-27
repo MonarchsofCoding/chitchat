@@ -87,12 +87,25 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         return registerPane;
     }
 
+    private void changeButtonsStatus(boolean enabled) {
+        if (enabled) {
+            // Make the fields enabled
+            this.usernameField.setDisable(false);
+            this.passwordField.setDisable(false);
+            this.passwordCheckField.setDisable(false);
+            this.registerBtn.setDisable(false);
+            this.loginBtn.setDisable(false);
+        } else {
+            this.usernameField.setDisable(true);
+            this.passwordField.setDisable(true);
+            this.passwordCheckField.setDisable(true);
+            this.registerBtn.setDisable(true);
+            this.loginBtn.setDisable(true);
+        }
+    }
+
     private void registerAction() {
-        this.usernameField.setDisable(true);
-        this.passwordField.setDisable(true);
-        this.passwordCheckField.setDisable(true);
-        this.registerBtn.setDisable(true);
-        this.loginBtn.setDisable(true);
+        changeButtonsStatus(false);
 
         try {
             UserModel user = this.registrationController.registerUser(
@@ -105,6 +118,13 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
             alert.setTitle("Information of Registration");
             alert.setContentText("You have now registered as " + user.getUsername());
             alert.show();
+
+            // Clearing the fields
+            this.usernameField.clear();
+            this.passwordField.clear();
+            this.passwordCheckField.clear();
+
+            changeButtonsStatus(true);
 
             this.stage.showLogin();
 

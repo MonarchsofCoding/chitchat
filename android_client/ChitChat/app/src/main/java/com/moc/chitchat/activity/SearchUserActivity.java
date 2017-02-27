@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -20,15 +20,16 @@ import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.SearchUserController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.inject.Inject;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.inject.Inject;
 
 /**
  * SearchUserActivity provides the View and Actions involved with searching a User.
@@ -80,8 +81,8 @@ public class SearchUserActivity extends Activity
             Toast.makeText(this,
                 String.format("The user you are trying to found is not connected or not existing"),
                 Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
 
@@ -102,8 +103,8 @@ public class SearchUserActivity extends Activity
                 userList);
 
             usersList.setAdapter(arrayAdapter);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exept) {
+            exept.printStackTrace();
         }
     }
 
@@ -115,10 +116,9 @@ public class SearchUserActivity extends Activity
         TabLayout.Tab tabToSelect = menuTabs.getTabAt(1); //Locks the Search tab since we may
         tabToSelect.select();                             //stay in this activity
 
-        if(tabName.equals("Chats")) {
-            //TODO: Open Chats Activity
-        }
-        else if(tabName.equals("Current Chat")) {
+        if (tabName.equals("Chats")) {//TODO: Open Chats Activity
+
+        } else if (tabName.equals("Current Chat")) {
             String currentReceiverUsername = currentChatConfiguration.getCurrentRecipientUsername();
 
             if(!currentReceiverUsername.equals("")) {
@@ -129,11 +129,9 @@ public class SearchUserActivity extends Activity
                 startActivity(currentChatIntent);
 
                 overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
-                this.ExitActivity();
-            }
-            else {
-                Toast.makeText(this,
-                    String.format("There is no current chat"), Toast.LENGTH_LONG).show();
+                this.exitActivity();
+            } else {
+                Toast.makeText(this, String.format("There is no current chat"), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -167,8 +165,7 @@ public class SearchUserActivity extends Activity
                 query,
                 requestHeaders
             );
-        }
-        else {
+        } else {
             Toast.makeText(this,
                 String.format("You can only do a search with an input longer than 3 characters"),
                 Toast.LENGTH_LONG).show();
@@ -199,10 +196,10 @@ public class SearchUserActivity extends Activity
         startActivity(currentChatIntent);
 
         overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
-        this.ExitActivity();
+        this.exitActivity();
     }
 
-    public void ExitActivity() {
+    public void exitActivity() {
         this.finish();
         overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
     }

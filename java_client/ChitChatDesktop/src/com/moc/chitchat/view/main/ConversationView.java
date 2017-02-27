@@ -58,6 +58,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
      * @param c the conversation to show.
      */
     void showConversation(Conversation c) {
+        this.conversationPane.getChildren().clear(); // Clear the conversation view
+
         this.conversation = c;
         for (Node n : this.conversationPane.getChildren()) {
             this.conversationPane.remove(n);
@@ -83,6 +85,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
             Message message = this.messageController.send(
                     this.conversation.getOtherParticipant(),
                     this.newMessageField.getText());
+
             this.messages.add(message);
         } catch (UnirestException unirestException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -95,6 +98,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         } catch (UnexpectedResponseException unexpectedResponse) {
             unexpectedResponse.printStackTrace();
         }
+
+        this.newMessageField.clear();
         // TODO: we will probably need to set the Messages list in Conversation to be an ObservableList.
     }
 }

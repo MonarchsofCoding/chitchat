@@ -90,7 +90,7 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
         // TODO: Needs a better toggle action rather than using string comparison
         if (this.togglePaneButton.getText().equals("Search Users")) {
             this.showSearchView();
-        } else {
+        } else if (this.togglePaneButton.getText().equals("Conversations")) {
             this.showConversationListView();
         }
     }
