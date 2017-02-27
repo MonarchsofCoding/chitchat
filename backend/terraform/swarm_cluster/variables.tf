@@ -3,13 +3,7 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "cluster_name" {
+variable "swarm_name" {
   type        = "string"
-  description = "The name of the cluster"
+  description = "The name of the Swarm"
 }
-
-/*variable "domain_name" {
-  type        = "string"
-  description = "The domain name for the Traefik ALB"
-}*/
-

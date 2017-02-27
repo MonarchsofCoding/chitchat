@@ -9,29 +9,33 @@ import os
 # Uses DyanmoDB to aid in initialising a Docker Swarm using locking.
 #
 
+local_hostname = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/local-hostname').read().decode("utf-8").strip()
+local_ip = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/local-ipv4').read().decode("utf-8").strip()
+instance_id = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read().decode("utf-8").strip()
+
+lock_table_name = "docker_swarm_locks"
+dynamodb = boto3.resource('dynamodb')
+ec2 = boto3.resource('ec2')
+instance = ec2.Instance(instance_id)
+
+swarm_name = os.getenv("SWARM_NAME")
+for tag in instance.tags:
+  if tag['Key'] == "swarm":
+    swarm_name = tag['Value'].strip()
+    break
+
 def main():
-  lock_table_name = "docker_swarm_init_locks"
-  swarm_name = os.getenv("SWARM_NAME")
-  # swarm_name = "test"
-
-  # http://169.254.169.254/latest/meta-data/
-  local_hostname = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/local-hostname').read().decode("utf-8").strip()
-  local_ip = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/local-ipv4').read().decode("utf-8").strip()
-  instance_id = urllib.request.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read().decode("utf-8").strip()
-  # local_ip = "127.0.0.1"
-
-  # Get the service resource.
-  dynamodb = boto3.resource('dynamodb')
-  # lock_table = dynamodb.Table(lock_table_name)
-  # lock_table.delete()
-  # lock_table.wait_until_not_exists()
-  # exit()
 
   try:
+    print("Requesting creation of DynamoDB table: {0}".format(lock_table_name))
     lock_table = __create_lock_table(dynamodb, lock_table_name)
   except Exception:
-    print("Already requested {0} DynamoDB table.".format(lock_table_name))
+    print("Using existing {0} DynamoDB table.".format(lock_table_name))
     lock_table = dynamodb.Table(lock_table_name)
+    # lock_table = dynamodb.Table(lock_table_name)
+    # lock_table.delete()
+    # lock_table.wait_until_not_exists()
+    # exit()
 
   print("Waiting for {0} DynamoDB table to exist.".format(lock_table_name))
   lock_table.wait_until_exists()
@@ -49,36 +53,40 @@ def main():
 
     __update_swarm_tokens(lock_table, swarm_name, local_ip, worker_token, manager_token)
 
-    ec2 = boto3.resource('ec2')
-    instance = ec2.Instance(instance_id)
-    instance.create_tags(
-      DryRun=False,
-      Tags=[
-        {
-            'Key': 'swarm_role',
-            'Value': 'manager'
-        },
-      ]
-    )
+    __tag_current_instance('manager')
+
+    # Deploy Portainer on Manager
+    subprocess.run(["docker", "service", "create",
+    "--name", "portainer",
+    "--publish", "9000:9000",
+    "--constraint", "node.role == manager",
+    "--mount", "type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock",
+    "portainer/portainer",
+    "-H", "unix:///var/run/docker.sock"
+    ])
+
 
   except Exception:
     # TODO: automatic decision on 'worker' or 'manager' (need to track amount of other nodes in the ASG)
-    swarm_info = __get_swarm_info(lock_table, swarm_name, "worker")
+    swarm_info = __get_swarm_info(lock_table, swarm_name)
 
     p = subprocess.run(["docker", "swarm", "join", "--token", swarm_info['worker_token'], swarm_info['node_ip']])
 
-    ec2 = boto3.resource('ec2')
-    instance = ec2.Instance(instance_id)
-    instance.create_tags(
-      DryRun=False,
-      Tags=[
-        {
-            'Key': 'swarm_role',
-            'Value': 'worker'
-        },
-      ]
-    )
+    __tag_current_instance('worker')
 
+
+def __tag_current_instance(swarm_role):
+  print("Tagging self with swarm.role: {0}".format(swarm_role))
+
+  instance.create_tags(
+    DryRun=False,
+    Tags=[
+      {
+          'Key': 'swarm.role',
+          'Value': swarm_role
+      },
+    ]
+  )
 
 
 def __update_swarm_tokens(table, swarm_name, local_ip, worker_token, manager_token):
@@ -91,15 +99,15 @@ def __update_swarm_tokens(table, swarm_name, local_ip, worker_token, manager_tok
     }
   )
 
-def __get_swarm_info(table, swarm_name, node_type='worker'):
+def __get_swarm_info(table, swarm_name):
   info = table.get_item(
     Key={
       'swarm_name': swarm_name
     }
   )
-  if "{0}_token".format(node_type) not in info['Item']:
+  if "worker_token" not in info['Item']:
     time.sleep(5)
-    return __get_swarm_info(table, swarm_name, node_type)
+    return __get_swarm_info(table, swarm_name)
 
   return info['Item']
 
@@ -123,7 +131,6 @@ def __acquire_lock(table, swarm_name, local_ip):
   print("Lock acquired for {0} swarm".format(swarm_name))
 
 def __create_lock_table(dynamodb, lock_table_name):
-  print("Requesting creation of DynamoDB table: {0}".format(lock_table_name))
   lock_table = dynamodb.create_table(
     TableName=lock_table_name,
     KeySchema=[

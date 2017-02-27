@@ -2,10 +2,6 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
-data "aws_route53_zone" "organisation" {
-  name = "${var.domain_name}."
-}
-
 ## Network
 data "aws_availability_zones" "available" {}
 
@@ -17,7 +13,8 @@ resource "aws_vpc" "swarm" {
   enable_dns_hostnames = true
 
   tags {
-    cluster = "${var.cluster_name}"
+    swarm = "${var.swarm_name}"
+    Name  = "${var.swarm_name}.swarm"
   }
 }
 
@@ -29,7 +26,8 @@ resource "aws_subnet" "swarm" {
   vpc_id            = "${aws_vpc.swarm.id}"
 
   tags {
-    cluster = "${var.cluster_name}"
+    swarm = "${var.swarm_name}"
+    Name  = "${var.swarm_name}.swarm.${count.index}"
   }
 }
 
@@ -46,6 +44,11 @@ resource "aws_route_table" "swarm" {
     cidr_block = "0.0.0.0/0"
     gateway_id = "${aws_internet_gateway.swarm.id}"
   }
+
+  tags {
+    swarm = "${var.swarm_name}"
+    Name  = "${var.swarm_name}.swarm"
+  }
 }
 
 resource "aws_route_table_association" "swarm" {
@@ -54,21 +57,14 @@ resource "aws_route_table_association" "swarm" {
   route_table_id = "${aws_route_table.swarm.id}"
 }
 
-/*## Route53
-resource "aws_route53_zone" "service_discovery" {
-  name          = "servicediscovery.internal"
-  vpc_id        = "${aws_vpc.app.id}"
-  force_destroy = true
-}*/
-
 ## Compute
 resource "aws_key_pair" "instance" {
-  key_name   = "${var.cluster_name}-instance-key"
+  key_name   = "${var.swarm_name}-instance-key"
   public_key = "${file("instance.pub")}"
 }
 
 resource "aws_autoscaling_group" "swarm" {
-  name                 = "${var.cluster_name}.swarm.asg"
+  name                 = "${var.swarm_name}.swarm.asg"
   vpc_zone_identifier  = ["${aws_subnet.swarm.*.id}"]
   min_size             = "1"
   max_size             = "3"
@@ -77,7 +73,13 @@ resource "aws_autoscaling_group" "swarm" {
 
   tag {
     key                 = "Name"
-    value               = "${var.cluster_name}.swarm"
+    value               = "${var.swarm_name}.swarm"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "swarm"
+    value               = "${var.swarm_name}"
     propagate_at_launch = true
   }
 }
@@ -86,9 +88,7 @@ data "template_file" "user_data" {
   template = "${file("user-data.sh")}"
 
   vars {
-    aws_region = "${var.aws_region}"
-
-    /*ecs_cluster_name  = "${aws_ecs_cluster.app.name}"*/
+    aws_region        = "${var.aws_region}"
     ecs_log_level     = "info"
     ecs_agent_version = "latest"
   }
@@ -112,13 +112,13 @@ resource "aws_launch_configuration" "swarm" {
 }
 
 resource "aws_iam_instance_profile" "swarm" {
-  name  = "${var.cluster_name}.swarm-instprofile"
+  name  = "${var.swarm_name}.swarm-instprofile"
   roles = ["${aws_iam_role.swarm_instance.name}"]
 }
 
 // TODO: Reduce AWS Policy to follow Principal of Least Privilege!
 resource "aws_iam_role_policy" "swarm_instance" {
-  name = "${var.cluster_name}.swarm.policy"
+  name = "${var.swarm_name}.swarm.policy"
   role = "${aws_iam_role.swarm_instance.name}"
 
   policy = <<EOF
@@ -147,7 +147,7 @@ EOF
 }
 
 resource "aws_iam_role" "swarm_instance" {
-  name = "${var.cluster_name}.swarm.instance-role"
+  name = "${var.swarm_name}.swarm.instance-role"
 
   assume_role_policy = <<EOF
 {
@@ -170,7 +170,7 @@ EOF
 resource "aws_security_group" "instance_sg" {
   description = "Controls access to nodes in Swarm cluster"
   vpc_id      = "${aws_vpc.swarm.id}"
-  name        = "${var.cluster_name}.swarm.sg"
+  name        = "${var.swarm_name}.swarm.sg"
 
   ingress {
     protocol    = "tcp"
@@ -184,5 +184,10 @@ resource "aws_security_group" "instance_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    swarm = "${var.swarm_name}"
+    Name  = "${var.swarm_name}.swarm.instance"
   }
 }
