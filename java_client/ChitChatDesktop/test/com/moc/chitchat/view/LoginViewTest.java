@@ -97,12 +97,14 @@ public class LoginViewTest extends PrimaryStageTest {
     }
     /*
     * Testing the LoginButtoa for wrong credentials.
-    * case 2 password less than 8 characters we check it with visible and invisible label of errors.
+    * case 3 password less than 8 characters we check it with visible and invisible label of errors.
     */
     @Test
     public void testLoginBtnPasswordLength(){
-        String username = "sp";
+        String username = "christine";
+        String password = "pantazi";
         clickOn(usernamefield).write(username);
+        clickOn(passwordfield).write(password);
         clickOn(loginButton);
         assertTrue(find(errorslabel).isVisible());
 
