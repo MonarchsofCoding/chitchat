@@ -33,14 +33,12 @@ public class ChitChatDataTest {
         UserModel user = new UserModel("Frank");
         Message message = new Message(user, "This is the message");
 
-
-        Conversation conversation = chitChatData.getConversation(user);
-        conversation.addMessage(message);
+        chitChatData.addMessageToConversation(user, message);
 
         Conversation foundConversations = chitChatData.getConversation(user);
 
-        assertEquals(conversation.getMessages(), foundConversations.getMessages());
-        assertEquals(conversation.getOtherParticipant().getUsername(),
+        assertEquals(message.getMessage(), foundConversations.getMessages().get(0).getMessage());
+        assertEquals(message.getTo().getUsername(),
                 foundConversations.getOtherParticipant().getUsername());
     }
 
@@ -49,16 +47,28 @@ public class ChitChatDataTest {
         ChitChatData chitChatData = new ChitChatData();
 
         UserModel frank = new UserModel("Frank");
-        Message frankMessage = new Message(frank, "This is the message");
-
         UserModel conor = new UserModel("Conor");
-        Message conorMessage = new Message(conor, "This is another message");
 
         chitChatData.getConversation(frank);
         chitChatData.getConversation(conor);
 
-
-        ObservableList<Message> messages = FXCollections.observableArrayList();
         assertEquals(2, chitChatData.getConversations().size());
+    }
+
+    @Test
+    public void testAddToConvo() {
+        ChitChatData chitChatData = new ChitChatData();
+
+        UserModel frank = new UserModel("Frank");
+        Message frankMessage = new Message(frank, "This is the message");
+
+        Message frankMessage2 = new Message(frank, "This is another message");
+
+        chitChatData.addMessageToConversation(frank, frankMessage);
+        chitChatData.addMessageToConversation(frank, frankMessage2);
+
+        assertEquals(2, chitChatData.getConversation(frank).getMessages().size());
+        assertEquals(frankMessage.getMessage(), chitChatData.getConversation(frank).getMessages().get(0).getMessage());
+        assertEquals(frankMessage2.getMessage(), chitChatData.getConversation(frank).getMessages().get(1).getMessage());
     }
 }

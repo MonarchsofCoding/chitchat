@@ -104,7 +104,6 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
             this.observableUserList.clear();
             List<UserModel> listUsers = this.userSearchController.searchUser(this.usernameField.getText());
             this.observableUserList.addAll(listUsers);
-
         } catch (UnirestException unirestException) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(unirestException.getMessage());
@@ -123,6 +122,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
      */
     private void startConversation() {
         UserModel selectedUser = this.searchList.getSelectionModel().getSelectedItem();
+
         if (selectedUser == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("No user was selected");

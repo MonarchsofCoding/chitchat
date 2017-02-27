@@ -1,6 +1,7 @@
 package com.moc.chitchat.application;
 
 import com.moc.chitchat.model.Conversation;
+import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,6 +44,16 @@ public class ChitChatData {
     }
 
     /**
+     * Adds the message to the conversation with the receiver.
+     * @param user - reciever of the message
+     * @param message - message object
+     */
+    public void addMessageToConversation(UserModel user, Message message) {
+        Conversation conversation = getConversation(user);
+        conversation.addMessage(message);
+    }
+
+    /**
      * Returns the conversations.
      * @return the conversations.
      */
@@ -57,7 +68,7 @@ public class ChitChatData {
      */
     private Conversation findConversation(UserModel user) {
         for (Conversation c: this.conversations) {
-            if (c.getOtherParticipant().equals(user)) {
+            if (c.getOtherParticipant().getUsername().equals(user.getUsername())) {
                 return c;
             }
         }
