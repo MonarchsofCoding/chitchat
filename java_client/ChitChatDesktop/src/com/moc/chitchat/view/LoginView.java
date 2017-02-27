@@ -5,7 +5,10 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,11 +41,12 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
     @Override
     public MigPane getContentPane() {
-        MigPane loginForm = new MigPane();
+
 
         this.usernameField = new TextField();
         this.usernameField.setId("usernameField");
         this.usernameField.setPromptText("Username");
+        MigPane loginForm = new MigPane();
         loginForm.add(this.usernameField,"grow,wrap");
 
         this.passwordField = new PasswordField();
@@ -50,7 +54,6 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.passwordField.setId("passwordField");
         this.passwordField.setOnAction(this);
         loginForm.add(this.passwordField,"grow,wrap");
-
 
         this.loginBtn = new Button("Login");
         this.loginBtn.setOnAction(this);
@@ -90,16 +93,11 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         } catch (ValidationException validationException) {
             Errors errors = validationException.getErrors();
             if (errors.hasErrors()) {
-                if (errors.getFieldError().getField().equals(("username"))) {
+                this.unexpectedErrors.setText("Wrong credentials or you have not registered yet !");
+                this.unexpectedErrors.setVisible(true);
 
-                }
-                if (errors.getFieldError().getField().equals("password")) {
-
-                }
             }
 
-            this.unexpectedErrors.setText("Wrong credentials or you have not registered yet !");
-            this.unexpectedErrors.setVisible(true);
 
 
 
