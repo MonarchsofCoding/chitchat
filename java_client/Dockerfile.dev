@@ -6,6 +6,8 @@ VOLUME /app
 
 WORKDIR /app
 
+ENV DEBIAN_FRONTEND noninteractive
+
 RUN apt-get update -y
-RUN apt-get install -y vnc4server zip
+RUN apt-get install -y vnc4server xfce4 zip
 RUN echo "docker\ndocker\n|n" | vncpasswd
