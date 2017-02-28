@@ -24,6 +24,7 @@ public class PrimaryStageTest extends ApplicationTest {
 
     @Override
     public void start(Stage stage) throws Exception {
+        //System.setProperty()
         stage.show();
     }
 

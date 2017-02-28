@@ -158,12 +158,16 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
                 if (errors.hasFieldErrors("username")) {
                     this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
                     this.usernameErrors.setVisible(true);
+                    this.servererrors.setText("Username "+errors.getFieldError("username").getDefaultMessage());
+                    this.servererrors.setVisible(true);
                     //this.servererrors.setText();
                 }
 
                 if (errors.hasFieldErrors("password")) {
                     this.passwordErrors.setText(errors.getFieldError("password").getDefaultMessage());
                     this.passwordErrors.setVisible(true);
+                    this.servererrors.setText("password "+errors.getFieldError("password").getDefaultMessage());
+                    this.servererrors.setVisible(true);
                 }
 
                 if (errors.hasFieldErrors("passwordCheck")) {
@@ -171,8 +175,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
                     this.passwordCheckErrors.setVisible(true);
                 }
             }
-            this.servererrors.setText("Username "+errors.getFieldError("username").getDefaultMessage());
-            this.servererrors.setVisible(true);
+
 
         } catch (Exception defaultError) {
             this.servererrors.setText("Unexpected error from the server");
