@@ -9,8 +9,9 @@ public class UserResolver {
 
     /**
      * create returns a new User with the given parameters applied.
-     * @param username the username for the User.
-     * @param password the password for the User.
+     *
+     * @param username      the username for the User.
+     * @param password      the password for the User.
      * @param passwordCheck the password check for the User.
      * @return a new User with the given parameters.
      */
@@ -27,10 +28,11 @@ public class UserResolver {
 
     /**
      * Usermodel function creates Login User using.
+     *
      * @param username the username.
      * @param password takes the user's password.
      */
-    public UserModel createLoginUser(String username, String password){
+    public UserModel createLoginUser(String username, String password) {
         UserModel user = new UserModel(username);
 
         user.setPassword(password);

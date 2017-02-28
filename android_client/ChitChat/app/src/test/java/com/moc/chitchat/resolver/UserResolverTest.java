@@ -1,8 +1,10 @@
 package com.moc.chitchat.resolver;
 
 import com.moc.chitchat.model.UserModel;
-import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * UserResolverTest provides the tests for the User Resolver
@@ -19,13 +21,14 @@ public class UserResolverTest {
         UserResolver userResolver = new UserResolver();
 
         UserModel user = userResolver.createRegisterUser(expectedusername,
-                                            expectedpassword,
-                                            expectedpasswordCheck);
+            expectedpassword,
+            expectedpasswordCheck);
 
         assertEquals(expectedusername, user.getUsername());
         assertEquals(expectedpassword, user.getPassword());
         assertEquals(expectedpasswordCheck, user.getPasswordCheck());
     }
+
     @Test
     public void testCreateLoginUser() {
         String expectedusername = "SuperFood";
@@ -35,7 +38,7 @@ public class UserResolverTest {
         UserResolver userResolver = new UserResolver();
 
         UserModel user = userResolver.createLoginUser(expectedusername,
-                expectedpassword);
+            expectedpassword);
 
         assertEquals(expectedusername, user.getUsername());
         assertEquals(expectedpassword, user.getPassword());

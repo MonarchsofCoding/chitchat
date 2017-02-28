@@ -1,28 +1,26 @@
 package com.moc.chitchat.application;
 
+import com.moc.chitchat.model.UserModel;
+
 /**
  * To store the information (recipient username and the messages) of the current chat.
  */
 
 public class CurrentChatConfiguration {
 
-    //Current recipient's username.
+    //Current recipient.
 
-    String currentRecipientUsername = "";
+    UserModel currentRecipient = null;
 
-    /* The messages between the current recipient */
-
-    //TODO: Message model here
-
-    public String getCurrentRecipientUsername() {
-        return this.currentRecipientUsername;
+    public UserModel getCurrentRecipient() {
+        return this.currentRecipient;
     }
 
-    public void setCurrentRecipientUsername(String newRecipient) {
-        this.currentRecipientUsername = newRecipient;
+    public void setCurrentRecipient(UserModel newRecipient) {
+        this.currentRecipient = newRecipient;
     }
 
-    public void cleanCurrentRecipientUsername() {
-        this.currentRecipientUsername = "";
+    public void cleanCurrentRecipient() {
+        this.currentRecipient = null;
     }
 }

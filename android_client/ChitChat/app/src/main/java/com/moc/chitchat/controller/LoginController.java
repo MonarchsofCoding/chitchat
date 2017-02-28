@@ -8,10 +8,10 @@ import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
+
 import javax.inject.Inject;
+
 import org.json.JSONObject;
-
-
 
 /**
  * Created by aakyo on 14/02/2017.
@@ -32,9 +32,10 @@ public class LoginController {
     private SessionConfiguration sessionConfiguration;
 
     /**
-     *  {LoginController constructor}.
+     * {LoginController constructor}.
+     *
      * @param userResolver To resolve parameters into User objects.
-     * @param httpClient To send HTTP(S) requests.
+     * @param httpClient   To send HTTP(S) requests.
      */
     @Inject
     public LoginController(
@@ -51,11 +52,12 @@ public class LoginController {
     /**
      * loginUser logges in a User on the backend.
      * No exception thrown, since there is no local validation happens
-     * @param context the Android Context.
+     *
+     * @param context         the Android Context.
      * @param successListener The HTTP success listener.
-     * @param errorListener The HTTP error listener.
-     * @param username The username of the User.
-     * @param password The password of the User.
+     * @param errorListener   The HTTP error listener.
+     * @param username        The username of the User.
+     * @param password        The password of the User.
      */
     public void loginUser(
         Context context,
