@@ -19,7 +19,7 @@ import static org.testfx.matcher.base.NodeMatchers.isVisible;
 public class LoginViewTest extends PrimaryStageTest {
 
     final String loginButton = "#loginBtn";
-    final String usernamefield= "#usernameField";
+    final String usernamefield= "#usernamefield";
     final String passwordfield= "#passwordField";
     final String registerBtn = "#registerBtn";
     final String errorslabel = "#errors";
