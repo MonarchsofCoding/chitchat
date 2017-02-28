@@ -9,12 +9,6 @@ use Mix.Config
 config :chit_chat,
   ecto_repos: [ChitChat.Repo]
 
-# Mix Docker
-config :mix_docker,
-  image: "monarchsofcoding/chitchat",
-  dockerfile_build: "docker/Dockerfile.build",
-  dockerfile_release: "docker/Dockerfile.release"
-
 # Configures the endpoint
 config :chit_chat, ChitChat.Endpoint,
   url: [host: "localhost"],
@@ -27,6 +21,13 @@ config :chit_chat, ChitChat.Endpoint,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :libcluster,
+  topologies: [
+    gossip_example: [
+      strategy: Elixir.Cluster.Strategy.Gossip,
+    ]
+  ]
 
 # Configures Guardian JWT auth system
 config :guardian, Guardian,

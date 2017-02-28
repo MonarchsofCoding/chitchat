@@ -41,5 +41,7 @@ end
 release :chit_chat do
   set version: current_version(:chit_chat)
 
+  set pre_start_hook: "rel/hooks/pre_start"
   set post_start_hook: "rel/hooks/post_start"
+  set vm_args: "vm.args"
 end

@@ -21,7 +21,6 @@ apt-get -y install docker-engine python3 python3-pip
 systemctl enable docker
 systemctl start docker
 
-docker run hello-world
 SCRIPT
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure

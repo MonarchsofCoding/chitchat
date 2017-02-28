@@ -1,2 +1,3 @@
 .terraform
 swarm_cluster/instance
+swarm_cluster/.vagrant

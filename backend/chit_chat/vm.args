@@ -1,0 +1,7 @@
+## Node name
+-name chitchat@${LOCAL_IP}
+
+## Node cookie, used for distribution
+-setcookie ${NODE_COOKIE}
+
+-smp auto

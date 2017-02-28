@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :chit_chat, ChitChat.Endpoint,
-  http: [port: 4000],
+  http: [port: {:system, "PORT"}],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -35,8 +35,8 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :chit_chat, ChitChat.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("DATABASE_USERNAME") || "postgres",
-  password: System.get_env("DATABASE_PASSWORD") || "postgres",
+  username: System.get_env("DATABASE_USERNAME") || "chit_chat_dev",
+  password: System.get_env("DATABASE_PASSWORD") || "chit_chat_dev",
   database: System.get_env("DATABASE_NAME") || "chit_chat_dev",
   hostname: System.get_env("DATABASE_HOSTNAME") || "localhost",
   port: System.get_env("DATABASE_PORT") || 5432,

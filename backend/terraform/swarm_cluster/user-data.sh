@@ -20,8 +20,6 @@ apt-get -y install docker-engine python3 python3-pip
 systemctl enable docker
 systemctl start docker
 
-docker run hello-world
-
 pip install --upgrade pip
 
 pip3 install boto3

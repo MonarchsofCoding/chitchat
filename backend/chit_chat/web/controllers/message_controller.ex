@@ -24,6 +24,7 @@ defmodule ChitChat.MessageController do
          {:ok, message} <- Message.create_with_participants(
                                     changeset, recipient, user)
     do
+      IO.inspect(message)
       ChitChat.Endpoint.broadcast! "user:#{message.destination.username}", "new:message", %{from: message.source.username, body: message.message}
       conn
       |> put_status(:created)

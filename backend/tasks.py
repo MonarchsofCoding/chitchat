@@ -23,9 +23,16 @@ def build(ctx):
   """
   Builds a Docker container for the Backend
   """
-  __check_branch()
+  # __check_branch()
+  lxc.Docker.clean(cli, [
+    "chit_chat/_build",
+    "chit_chat/deps"
+  ])
   git = vcs.Git()
   version = git.get_version()
+
+  # TODO: Upgrade Phoenix as soon as it supports poision 3.0. Doing this stuff isn't pleasant.
+  fix_gossip = "sed -i 's#\[opts\]#opts#' deps/libcluster/lib/strategy/gossip.ex"
 
   lxc.Docker.build(cli,
       dockerfile='Dockerfile.dev',
@@ -34,7 +41,7 @@ def build(ctx):
 
   lxc.Docker.run(cli,
       tag="{0}-dev".format("chitchat-backend"),
-      command='/bin/sh -c "mix do deps.get, deps.compile && mix release --env=prod --verbose"',
+      command='/bin/sh -c "mix do deps.get && {0} && mix deps.compile && mix release --env=prod --verbose"'.format(fix_gossip),
       volumes=[
           "{0}/chit_chat:/app".format(os.getcwd())
       ],
