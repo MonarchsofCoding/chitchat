@@ -10,8 +10,7 @@ import static junit.framework.Assert.assertEquals;
 public class UserModelTest {
 
     @Test
-    public void testConstructor()
-    {
+    public void testConstructor() {
         String expectedUsername = "Jacob";
         UserModel userModel = new UserModel(expectedUsername);
 
@@ -19,8 +18,7 @@ public class UserModelTest {
     }
 
     @Test
-    public void testSetPassword()
-    {
+    public void testSetPassword() {
         String userName = "John";
         UserModel userModel = new UserModel(userName);
         String expectedPassword = "Cyber_Security";
@@ -30,8 +28,7 @@ public class UserModelTest {
     }
 
     @Test
-    public void testSetPasswordCheck()
-    {
+    public void testSetPasswordCheck() {
         String userName = "George";
         UserModel userModel = new UserModel(userName);
         String expectedPassword = "Cyber_Security";
@@ -41,8 +38,7 @@ public class UserModelTest {
     }
 
     @Test
-    public void testSetAuthToken()
-    {
+    public void testSetAuthToken() {
         String userName = "George";
         UserModel userModel = new UserModel(userName);
         String expectedAuthToken = "jahgewlgwGfewFwe34gbrg342k2pkpf9";

@@ -10,8 +10,7 @@ import static junit.framework.Assert.assertEquals;
 public class SessionConfigurationTest {
 
     @Test
-    public void testSetCurrentUser()
-    {
+    public void testSetCurrentUser() {
         String userName = "John";
         UserModel userModel = new UserModel(userName);
         String expectedUsername = "John";
@@ -23,8 +22,7 @@ public class SessionConfigurationTest {
     }
 
     @Test
-    public void testCleanCurrentUser ()
-    {
+    public void testCleanCurrentUser() {
         SessionConfiguration sessionConfiguration = new SessionConfiguration();
         sessionConfiguration.cleanCurrentUser();
     }

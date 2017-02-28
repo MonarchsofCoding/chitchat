@@ -7,32 +7,37 @@ import com.android.volley.Response;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.ValidationException;
+import com.moc.chitchat.model.MessageModel;
 
-import org.json.JSONObject;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashMap;
-
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 
 public class CurrentChatControllerTest {
 
-    @Mock private HttpClient mockHttpClient;
-    @Mock private Context mockContext;
-    @Mock private Response.Listener mockResponselistener;
-    @Mock private Response.ErrorListener mockErrorListener;
+    @Mock
+    private HttpClient mockHttpClient;
+    @Mock
+    private Context mockContext;
+    @Mock
+    private Response.Listener mockResponselistener;
+    @Mock
+    private Response.ErrorListener mockErrorListener;
 
-    @InjectMocks private CurrentChatController currentChatController;
-    @InjectMocks private CurrentChatConfiguration mockCurrentChatConfiguration;
+    @InjectMocks
+    private CurrentChatController currentChatController;
+    @InjectMocks
+    private CurrentChatConfiguration mockCurrentChatConfiguration;
 
     @Before
-    public void initMocks(){
+    public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -45,14 +50,15 @@ public class CurrentChatControllerTest {
     }
 
     @Test
-    public void testSuccesfulSendMessage() throws ValidationException{
+    public void testSuccesfulSendMessage() throws ValidationException, JSONException {
 
-        this.currentChatController.sendMessageToRecipient (
+        MessageModel mockMessage = mock(MessageModel.class);
+
+        this.currentChatController.sendMessageToRecipient(
             mockContext,
             mockResponselistener,
             mockErrorListener,
-            "Hello!",
-            "george",
+            mockMessage,
             null);
 
 
@@ -68,7 +74,6 @@ public class CurrentChatControllerTest {
 
 
     }
-
 
 
 }

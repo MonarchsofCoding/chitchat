@@ -14,6 +14,7 @@ public class ValidationException extends Exception {
 
     /**
      * ValidationException constructor.
+     *
      * @param errors the errors that were generated during validation.
      */
     public ValidationException(Map<String, List<String>> errors) {
@@ -24,6 +25,7 @@ public class ValidationException extends Exception {
 
     /**
      * getErrors returns the map of errors associated with the failed validation.
+     *
      * @return the errors from the validation.
      */
     public Map<String, List<String>> getErrors() {

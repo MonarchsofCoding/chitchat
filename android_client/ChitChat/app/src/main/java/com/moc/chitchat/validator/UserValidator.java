@@ -14,10 +14,11 @@ import java.util.Map;
 public class UserValidator {
 
     /**
-     *  validate validates a given User.
+     * validate validates a given User.
+     *
      * @param user the User to be validated.
      * @throws ValidationException when validation is not correct.
-     * */
+     */
     public void validate(UserModel user) throws ValidationException {
 
         Map<String, List<String>> errors = new HashMap<>();

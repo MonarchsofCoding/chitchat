@@ -1,9 +1,8 @@
 package com.moc.chitchat.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,25 +14,29 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.controller.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
+
 import java.util.List;
 import java.util.Map;
+
 import javax.inject.Inject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-
 /**
  * RegistrationActivity provides the View and Actions involved with registering a User.
  */
-public class RegistrationActivity extends Activity
-        implements View.OnClickListener,
-        Response.Listener<JSONObject>,
-        Response.ErrorListener {
+public class RegistrationActivity extends AppCompatActivity
+    implements View.OnClickListener,
+    Response.Listener<JSONObject>,
+    Response.ErrorListener {
 
-    @Inject RegistrationController registrationController;
-    @Inject ErrorResponseResolver errorResponseResolver;
+    @Inject
+    RegistrationController registrationController;
+    @Inject
+    ErrorResponseResolver errorResponseResolver;
 
     EditText usernameField;
     EditText passwordField;
@@ -41,6 +44,7 @@ public class RegistrationActivity extends Activity
 
     /**
      * onCreate acts as a constructor and sets up the Activity.
+     *
      * @param savedInstanceState the last instance state.
      */
     @Override
@@ -51,11 +55,9 @@ public class RegistrationActivity extends Activity
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
         this.setContentView(R.layout.activity_register);
+        getSupportActionBar().setTitle("Register");
 
-        Window registerWindow = this.getWindow();
-        registerWindow.setTitle("Register");
-
-        Button registerButton =(Button) this.findViewById(R.id.register_button);
+        Button registerButton = (Button) this.findViewById(R.id.register_button);
         registerButton.setOnClickListener(this);
 
         this.usernameField = (EditText) this.findViewById(R.id.username_input);
@@ -65,18 +67,18 @@ public class RegistrationActivity extends Activity
 
     /**
      * onClick calls registration controller and handles local validation exceptions.
-     *  the view that received the click event.
+     * the view that received the click event.
      */
     @Override
     public void onClick(View view) {
         try {
             this.registrationController.registerUser(
-                    this,
-                    this,
-                    this,
-                    this.usernameField.getText().toString(),
-                    this.passwordField.getText().toString(),
-                    this.passwordCheckField.getText().toString()
+                this,
+                this,
+                this,
+                this.usernameField.getText().toString(),
+                this.passwordField.getText().toString(),
+                this.passwordCheckField.getText().toString()
             );
         } catch (ValidationException excevalid) {
             // Validation implementation with Maps.
@@ -89,30 +91,31 @@ public class RegistrationActivity extends Activity
                 List<String> usernameErrors = errors.get("username");
 
                 Toast.makeText(this,
-                        String.format("Username: %s", usernameErrors.toString()),
-                        Toast.LENGTH_LONG).show();
+                    String.format("Username: %s", usernameErrors.toString()),
+                    Toast.LENGTH_LONG).show();
             }
 
             if (errors.containsKey("password")) {
                 List<String> passwordErrors = errors.get("password");
 
                 Toast.makeText(this,
-                        String.format("Password: %s", passwordErrors.toString()),
-                        Toast.LENGTH_LONG).show();
+                    String.format("Password: %s", passwordErrors.toString()),
+                    Toast.LENGTH_LONG).show();
             }
 
             if (errors.containsKey("passwordCheck")) {
                 List<String> passwordCheckErrors = errors.get("passwordCheck");
 
                 Toast.makeText(this,
-                        String.format("Password Check: %s", passwordCheckErrors.toString()),
-                        Toast.LENGTH_LONG).show();
+                    String.format("Password Check: %s", passwordCheckErrors.toString()),
+                    Toast.LENGTH_LONG).show();
             }
         }
     }
 
     /**
      * onErrorResponse handles errors (validation) from the server and displays them to the User.
+     *
      * @param error An error encapsulating the server response.
      */
     @Override
@@ -127,15 +130,15 @@ public class RegistrationActivity extends Activity
             if (responseErrors.has("username")) {
                 JSONArray usernameErrors = responseErrors.getJSONArray("username");
                 Toast.makeText(this,
-                        String.format("Username: %s", usernameErrors.toString()),
-                        Toast.LENGTH_LONG).show();
+                    String.format("Username: %s", usernameErrors.toString()),
+                    Toast.LENGTH_LONG).show();
             }
 
             if (responseErrors.has("password")) {
                 JSONArray passwordErrors = responseErrors.getJSONArray("password");
                 Toast.makeText(this,
-                        String.format("Password: %s", passwordErrors.toString()),
-                        Toast.LENGTH_LONG).show();
+                    String.format("Password: %s", passwordErrors.toString()),
+                    Toast.LENGTH_LONG).show();
             }
         } catch (JSONException jsonexcep) {
             jsonexcep.printStackTrace();
@@ -144,6 +147,7 @@ public class RegistrationActivity extends Activity
 
     /**
      * onResponse handles success responses from the server.
+     *
      * @param response The response that the server sent.
      */
     @Override
@@ -167,6 +171,6 @@ public class RegistrationActivity extends Activity
 
     public void exitActivity() {
         this.finish();
-        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
+        overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
     }
 }

@@ -1,8 +1,8 @@
 package com.moc.chitchat.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,23 +15,27 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.LoginController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
+
 import javax.inject.Inject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 
 /**
  * LoginActivity provides the View and Actions involved with logging a User in.
  */
-public class LoginActivity extends Activity
+public class LoginActivity extends AppCompatActivity
     implements View.OnClickListener,
-        Response.Listener<JSONObject>,
-        Response.ErrorListener {
+    Response.Listener<JSONObject>,
+    Response.ErrorListener {
 
-    @Inject LoginController loginController;
-    @Inject ErrorResponseResolver errorResponseResolver;
-    @Inject SessionConfiguration sessionConfiguration;
+    @Inject
+    LoginController loginController;
+    @Inject
+    ErrorResponseResolver errorResponseResolver;
+    @Inject
+    SessionConfiguration sessionConfiguration;
 
     EditText usernameField;
     EditText passwordField;
@@ -44,7 +48,7 @@ public class LoginActivity extends Activity
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
         this.setContentView(R.layout.activity_login);
-        this.getWindow().setTitle("Login");
+        getSupportActionBar().setTitle("ChitChat");
 
         Button loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(this);
@@ -58,7 +62,7 @@ public class LoginActivity extends Activity
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == findViewById(R.id.login_button).getId()) {
+        if (view.getId() == findViewById(R.id.login_button).getId()) {
             loginButton();
         } else if (view.getId() == findViewById(R.id.register_button).getId()) {
             registerButton();
@@ -78,11 +82,12 @@ public class LoginActivity extends Activity
     private void registerButton() {
         Intent registerIntent = new Intent(this, RegistrationActivity.class);
         startActivity(registerIntent);
-        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
+        overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
     }
 
     /**
      * onErrorResponse handles errors (validation) from the server and displays them to the User.
+     *
      * @param error An error encapsulating the server response.
      */
     @Override
@@ -98,6 +103,7 @@ public class LoginActivity extends Activity
 
     /**
      * onResponse handles success responses from the server.
+     *
      * @param response The response that the server sent.
      */
     @Override
@@ -118,7 +124,7 @@ public class LoginActivity extends Activity
         }
         Intent searchIntent = new Intent(this, SearchUserActivity.class);
         startActivity(searchIntent);
-        overridePendingTransition(R.transition.anim_left1,R.transition.anim_left2);
+        overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
         this.exitActivity();
     }
 
@@ -129,6 +135,6 @@ public class LoginActivity extends Activity
 
     public void exitActivity() {
         this.finish();
-        overridePendingTransition(R.transition.anim_right1,R.transition.anim_right2);
+        overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
     }
 }

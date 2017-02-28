@@ -14,8 +14,8 @@ public class ChitChatApplication extends Application {
         super.onCreate();
 
         myComponent8 = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build()
+            .applicationModule(new ApplicationModule(this))
+            .build()
         ;
     }
 

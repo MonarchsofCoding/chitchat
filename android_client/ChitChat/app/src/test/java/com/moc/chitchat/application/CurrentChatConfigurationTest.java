@@ -13,22 +13,20 @@ import static junit.framework.Assert.assertEquals;
 public class CurrentChatConfigurationTest {
 
     @Test
-    public void testSetCurrentRecipientUsername()
-    {
+    public void testSetCurrentRecipientUsername() {
         String userName = "John";
         UserModel userModel = new UserModel(userName);
         String expectedUsername = "John";
 
         CurrentChatConfiguration currentChatConfiguration = new CurrentChatConfiguration();
-        currentChatConfiguration.setCurrentRecipientUsername(userModel.getUsername());
+        currentChatConfiguration.setCurrentRecipient(userModel);
 
-        assertEquals(expectedUsername, currentChatConfiguration.getCurrentRecipientUsername());
+        assertEquals(expectedUsername, currentChatConfiguration.getCurrentRecipient().getUsername());
     }
 
     @Test
-    public void testCleanCurrentRecipientUsername()
-    {
+    public void testCleanCurrentRecipientUsername() {
         CurrentChatConfiguration currentChatConfiguration = new CurrentChatConfiguration();
-        currentChatConfiguration.cleanCurrentRecipientUsername();
+        currentChatConfiguration.cleanCurrentRecipient();
     }
 }
