@@ -20,12 +20,14 @@ import com.moc.chitchat.controller.CurrentChatController;
 import com.moc.chitchat.model.ConversationModel;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
+import com.moc.chitchat.resolver.ErrorResponseResolver;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,6 +58,8 @@ public class CurrentChatActivity extends AppCompatActivity
     CurrentChatConfiguration currentChatConfiguration;
     @Inject
     ChitChatMessagesConfiguration chitChatMessagesConfiguration;
+    @Inject
+    ErrorResponseResolver errorResponseResolver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +127,23 @@ public class CurrentChatActivity extends AppCompatActivity
     @Override
     public void onErrorResponse(VolleyError error) {
         try {
-            System.out.println(new JSONObject(new String(error.networkResponse.data)));
+            JSONObject response = this.errorResponseResolver.getResponseBody(error);
+
+            JSONObject responseErrors = response.getJSONObject("errors");
+
+            if (responseErrors.has("recipient")) {
+                JSONArray recipientErrors = responseErrors.getJSONArray("recipient");
+                Toast.makeText(this,
+                    String.format("Recipient: %s", recipientErrors.toString()),
+                    Toast.LENGTH_LONG).show();
+            }
+
+            if (responseErrors.has("message")) {
+                JSONArray messageErrors = responseErrors.getJSONArray("message");
+                Toast.makeText(this,
+                    String.format("Message: %s", messageErrors.toString()),
+                    Toast.LENGTH_LONG).show();
+            }
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
         }
