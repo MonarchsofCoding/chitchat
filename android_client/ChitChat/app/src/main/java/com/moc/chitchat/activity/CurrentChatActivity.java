@@ -61,6 +61,8 @@ public class CurrentChatActivity extends AppCompatActivity
     @Inject
     ErrorResponseResolver errorResponseResolver;
 
+    Boolean isActive;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,9 +83,7 @@ public class CurrentChatActivity extends AppCompatActivity
         messageText = (TextView) findViewById(R.id.message_text);
 
         messagePanel = (TextView) findViewById(R.id.message_panel);
-        for (MessageModel message : currentConversation.getMessages()) {
-            addMessageToPanel(message.getFrom().getUsername(), message.getMessage());
-        }
+        getMessagesToDisplay();
 
         sendButton = (Button) findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
@@ -92,6 +92,18 @@ public class CurrentChatActivity extends AppCompatActivity
         TabLayout.Tab tab = menuTabs.getTabAt(2);
         tab.select();
         menuTabs.addOnTabSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActive = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActive = false;
     }
 
     //For when a button is clicked
@@ -225,5 +237,15 @@ public class CurrentChatActivity extends AppCompatActivity
         Intent toLaunchIntent = new Intent(getBaseContext(), activityToLaunch);
         startActivity(toLaunchIntent);
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
+    }
+
+    /**
+     * To fetch messages and display them on screen.
+     */
+    public void getMessagesToDisplay() {
+        for (MessageModel message : currentConversation.getMessages()) {
+            addMessageToPanel(message.getFrom().getUsername(), message.getMessage());
+        }
+
     }
 }

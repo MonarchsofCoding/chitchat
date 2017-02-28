@@ -7,6 +7,7 @@ public class SessionConfiguration {
     /* Current logged in user object
      */
     private UserModel currentUser;
+    private boolean chatRunning = false;
 
     /* getCurrentUser to get the current logged in user
      * @return the current user
@@ -21,6 +22,10 @@ public class SessionConfiguration {
     public void setCurrentUser(UserModel cuser) {
         this.currentUser = cuser;
     }
+
+    public boolean isCurrentChatActivityRunning() { return chatRunning; }
+
+    public void setCurrentChatActivityStatus(boolean newStatus) { chatRunning = newStatus; }
 
     /**
      * cleanCurrentUser to ensure there are no users logged in.

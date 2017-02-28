@@ -26,4 +26,12 @@ public class SessionConfigurationTest {
         SessionConfiguration sessionConfiguration = new SessionConfiguration();
         sessionConfiguration.cleanCurrentUser();
     }
+
+    @Test
+    public void testStatusChangeOnActivity() {
+        SessionConfiguration sessionConfiguration = new SessionConfiguration();
+        sessionConfiguration.setCurrentChatActivityStatus(true);
+
+        assertEquals(true,sessionConfiguration.isCurrentChatActivityRunning());
+    }
 }
