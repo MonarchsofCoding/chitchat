@@ -29,7 +29,10 @@ public class PrimaryStageTest extends ApplicationTest {
 
     @After
     public void AfterEachTest() throws TimeoutException{
-//        FxToolkit.hideStage();
+//        FxToolkit.registerPrimaryStage();
+      //  FxToolkit.setupApplication(Main.class);
+//
+// FxToolkit.hideStage();
 //        release(new KeyCode[]{});
 //        release(new MouseButton[]{});
     }
