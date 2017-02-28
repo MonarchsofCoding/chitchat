@@ -69,7 +69,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         registerForm.add(this.passwordField);
 
         this.passwordErrors = new Label();
-        this.passwordErrors.setId("passwordErrrorsreg");
+        this.passwordErrors.setId("passwordErrorsreg");
         this.passwordErrors.setVisible(false);
         this.passwordErrors.setTextFill(Color.RED);
         registerForm.add(this.passwordErrors, "wrap");
@@ -88,10 +88,12 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
         this.registerBtn = new Button("Register");
         this.registerBtn.setOnAction(this);
+        this.registerBtn.setId("registerBtnreg");
         registerForm.add(this.registerBtn, "wrap, grow");
 
         this.loginBtn = new Button("Login");
         this.loginBtn.setOnAction(this);
+        this.loginBtn.setId("loginBtnreg");
         registerForm.add(this.loginBtn, "wrap, grow");
 
         this.servererrors = new Label();
