@@ -1,8 +1,7 @@
-package com.moc.chitchat.exceptionTest;
+package com.moc.chitchat.exception;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.moc.chitchat.exception.UnexpectedResponseException;
 import org.junit.Test;
 import org.mockito.Mock;
 

@@ -18,8 +18,14 @@ import java.util.concurrent.TimeoutException;
 public class PrimaryStageTest extends ApplicationTest {
 
     @Before
-    public void setUpClass() throws Exception{
-        ApplicationTest.launch(Main.class,"dev");
+    public void setUpClass() throws Exception {
+        String args = "dev";
+
+        if (System.getenv("CHITCHAT_ENV").length() > 0) {
+            args = System.getenv("CHITCHAT_ENV");
+        }
+
+        ApplicationTest.launch(Main.class, args);
     }
 
     @Override

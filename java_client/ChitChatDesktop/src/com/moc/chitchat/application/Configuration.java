@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 public class Configuration {
 
     private static final String PROD_BACKEND_ADDRESS = "https://chitchat.monarchsofcoding.com";
-    private static final String TEST_BACKEND_ADDRESS = "https://beta.chitchat.monarchsofcoding.com";
+    private static final String BETA_BACKEND_ADDRESS = "https://beta.chitchat.monarchsofcoding.com";
+    private static final String TEST_BACKEND_ADDRESS = "http://chitchat:4000";
     private static final String DEV_BACKEND_ADDRESS = "http://localhost:4000";
 
     private String backendAddress;
@@ -39,10 +40,19 @@ public class Configuration {
     }
 
     /**
+     * setBetaMode applies changes to the configuration for use when testing.
+     */
+    void setBetaMode() {
+        System.out.println("\nEntering Beta Mode!\n"); // TODO: Use Apache Commons logger!
+
+        this.backendAddress = BETA_BACKEND_ADDRESS;
+    }
+
+    /**
      * setTestingMode applies changes to the configuration for use when testing.
      */
     void setTestingMode() {
-        System.out.println("\nEntering Testing Mode!\n"); // TODO: Use Apache Commons logger!
+        System.out.println("\nEntering Test Mode!\n"); // TODO: Use Apache Commons logger!
 
         this.backendAddress = TEST_BACKEND_ADDRESS;
     }

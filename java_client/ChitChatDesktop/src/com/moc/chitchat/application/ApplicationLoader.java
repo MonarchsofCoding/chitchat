@@ -37,6 +37,8 @@ public class ApplicationLoader {
             this.configuration.setDevelopmentMode();
         } else if (args.size() > 0 && args.get(0).equals("test")) {
             this.configuration.setTestingMode();
+        } else if (args.size() > 0 && args.get(0).equals("beta")) {
+            this.configuration.setBetaMode();
         }
 
         // Show Authentication

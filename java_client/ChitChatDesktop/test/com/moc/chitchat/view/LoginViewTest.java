@@ -18,11 +18,11 @@ import static org.testfx.matcher.base.NodeMatchers.isVisible;
  */
 public class LoginViewTest extends PrimaryStageTest {
 
-    final String loginButton = "#loginBtn";
-    final String usernamefield= "#usernameField";
-    final String passwordfield= "#passwordField";
-    final String registerBtn = "#registerBtn";
-    final String errorslabel = "#errors";
+    final static String loginButton = "#loginBtn";
+    final static String usernamefield= "#usernameField";
+    final static String passwordfield= "#passwordField";
+    final static String registerBtn = "#registerBtn";
+    final static String errorslabel = "#errors";
 
     /**
      * Testing that an element does not exist on our loginview.
