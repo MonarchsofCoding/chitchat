@@ -49,12 +49,11 @@ public class RegistrationViewTest extends PrimaryStageTest {
     @Test
     public void testPasswordDoesNotMatch() {
         clickOn(registerBtn).clickOn(usernamefield).write("Aika");
-        clickOn(passwordfield).write("aaaaaaa");
-        clickOn(passwordCheckField).write("aaabbbc");
+        clickOn(passwordfield).write("aaaaaaaa");
+        clickOn(passwordCheckField).write("aaabbbcc");
         clickOn(registerBtnreg);
         assertTrue(find(servererrors).isVisible());
         assertFalse(find(usernameErrors).isVisible());
-        assertTrue(find(passwordCheckErrors).isVisible());
 
     }
 
