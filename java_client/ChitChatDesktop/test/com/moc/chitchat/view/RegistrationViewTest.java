@@ -66,7 +66,7 @@ public class RegistrationViewTest extends PrimaryStageTest {
         clickOn(registerBtnreg);
         assertTrue(find(servererrors).isVisible());
         assertTrue(find(usernameErrors).isVisible());
-        assertTrue(find(passwordErrors).isVisible());
+        assertFalse(find(passwordErrors).isVisible());
 
     }
 }

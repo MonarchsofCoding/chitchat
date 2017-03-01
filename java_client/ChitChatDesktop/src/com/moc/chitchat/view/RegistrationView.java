@@ -160,7 +160,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
                     this.usernameErrors.setVisible(true);
                     this.servererrors.setText("Username "+errors.getFieldError("username").getDefaultMessage());
                     this.servererrors.setVisible(true);
-                    //this.servererrors.setText();
                 }
 
                 if (errors.hasFieldErrors("password")) {
@@ -197,7 +196,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
                 this.servererrors.setVisible(true);
             }
             if (!this.passwordCheckField.getText().equals("")) {
-                this.passwordCheckErrors.setVisible(false);
+                this.passwordCheckErrors.setVisible(true);
                 this.servererrors.setVisible(true);
             }
         } else if (actionEvent.getSource() == this.loginBtn) {
