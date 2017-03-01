@@ -24,6 +24,13 @@ config :chit_chat, ChitChat.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :libcluster,
+  topologies: [
+    gossip_example: [
+      strategy: Elixir.Cluster.Strategy.Gossip,
+    ]
+  ]
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

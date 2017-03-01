@@ -13,7 +13,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.dev
-    command: /bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix ecto.create && mix ecto.migrate && mix phoenix.server"
+    command: /bin/sh -c "mix deps.get && mix ecto.create && mix ecto.migrate && mix phoenix.server"
     environment:
       SECRET_KEY_BASE: G9XBaZMFhtWDxAaowHCBrrDVq8xVB3sfro8xiGnFXfidldnvf
       GUARDIAN_SECRET_KEY: cQCWxKpcuixeB4ZAxCs04nrBGdKeJiHcmmCHbZPI6esGcLcfZVz1qw2796p3gWGA
@@ -22,13 +22,11 @@ services:
       DATABASE_PASSWORD: chit_chat_dev
       DATABASE_NAME: chit_chat_dev
       DATABASE_PORT: 5432
-      PORT: 80
+      PORT: 4000
       MIX_ENV: dev
     volumes:
       - "./chit_chat:/app"
     ports:
-      - 80:80
-      - 443:443
       - 4000:4000
     links:
       - database:postgres

@@ -22,13 +22,6 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :libcluster,
-  topologies: [
-    gossip_example: [
-      strategy: Elixir.Cluster.Strategy.Gossip,
-    ]
-  ]
-
 # Configures Guardian JWT auth system
 config :guardian, Guardian,
   allowed_algos: ["HS512"],
