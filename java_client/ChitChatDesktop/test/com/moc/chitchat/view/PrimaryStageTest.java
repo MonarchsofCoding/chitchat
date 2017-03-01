@@ -19,7 +19,7 @@ public class PrimaryStageTest extends ApplicationTest {
 
     @Before
     public void setUpClass() throws Exception{
-        ApplicationTest.launch(Main.class);
+        ApplicationTest.launch(Main.class,"dev");
     }
 
     @Override
