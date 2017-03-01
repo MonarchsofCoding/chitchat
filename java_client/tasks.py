@@ -70,7 +70,7 @@ def test(ctx):
   """
 
   print("Building Backend")
-  # ctx.run("cd ../backend && invoke build")
+  ctx.run("cd ../backend && invoke build")
   git = vcs.Git()
   version = git.get_version()
 
