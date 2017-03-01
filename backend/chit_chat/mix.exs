@@ -32,7 +32,11 @@ defmodule ChitChat.Mixfile do
         :phoenix_ecto,
         :postgrex,
         :comeonin,
-        :jose
+        :jose,
+        :guardian,
+        :elixir_make,
+        :libcluster,
+        :distillery
       ]
     ]
   end
@@ -56,11 +60,13 @@ defmodule ChitChat.Mixfile do
       {:cowboy, "~> 1.0"},
       {:comeonin, "~> 3.0"},
       {:excoveralls, "~> 0.5", only: :test},
-#     {:distillery, "~> 1.0"},
+      {:distillery, "~> 1.0"},
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:dogma, "~> 0.1", only: [:dev, :test]},
       {:guardian, "~> 0.14"},
-      {:jose, "~> 1.8"}
+      {:jose, "~> 1.8"},
+      {:libcluster, "~> 2.0.3"},
+      # {:mix_docker, "~> 0.3.2"}
     ]
   end
 

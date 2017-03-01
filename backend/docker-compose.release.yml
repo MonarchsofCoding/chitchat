@@ -9,11 +9,17 @@ services:
       POSTGRES_PASSWORD: chit_chat_dev
       POSTGRES_DB: chit_chat_dev
 
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
   chitchat_backend:
-    build:
-      context: ./
-      dockerfile: Dockerfile.dev
-    command: /bin/sh -c "mix local.hex --force && mix local.rebar --force && mix deps.get && mix ecto.create && mix ecto.migrate && mix phoenix.server"
+    image: monarchsofcoding/chitchat:release
+    command: /bin/sh -c "export LOCAL_IP=`hostname -i` && /opt/app/bin/chit_chat foreground"
     environment:
       SECRET_KEY_BASE: G9XBaZMFhtWDxAaowHCBrrDVq8xVB3sfro8xiGnFXfidldnvf
       GUARDIAN_SECRET_KEY: cQCWxKpcuixeB4ZAxCs04nrBGdKeJiHcmmCHbZPI6esGcLcfZVz1qw2796p3gWGA
@@ -24,12 +30,12 @@ services:
       DATABASE_PORT: 5432
       PORT: 80
       MIX_ENV: dev
-    volumes:
-      - "./chit_chat:/app"
-    ports:
-      - 80:80
-      - 443:443
-      - 4000:4000
+      VIRTUAL_HOST: chitchat.local
+      NODE_COOKIE: test
+    # volumes:
+      # - "./chit_chat:/app"
+    # ports:
+      # - 4000:4000
     links:
       - database:postgres
     depends_on:

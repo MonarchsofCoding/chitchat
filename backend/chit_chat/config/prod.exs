@@ -13,11 +13,16 @@ use Mix.Config
 # which you typically run after static files are built.
 config :chit_chat, ChitChat.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80]
+  url: [host: "${HOST}", port: 80],
+  secret_key_base: "${SECRET_KEY_BASE}",
+  server: true,
+  root: ".",
+  version: Mix.Project.config[:version]
+
   # cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
-config :logger, level: :info
+# config :logger, level: :info
 
 # ## SSL Support
 #
@@ -56,19 +61,16 @@ config :logger, level: :info
 #     config :chit_chat, ChitChat.Endpoint, server: true
 #
 
-config :chit_chat, ChitChat.Endpoint,
-  secret_key_base: System.get_env("SECRET_KEY_BASE")
-
 # Configure your database
 config :chit_chat, ChitChat.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("DATABASE_USERNAME"),
-  password: System.get_env("DATABASE_PASSWORD"),
-  hostname: System.get_env("DATABASE_HOSTNAME"),
-  database: System.get_env("DATABASE_NAME"),
-  port: System.get_env("DATABASE_PORT"),
+  username: "${DATABASE_USERNAME}",
+  password: "${DATABASE_PASSWORD}",
+  hostname: "${DATABASE_HOSTNAME}",
+  database: "${DATABASE_NAME}",
+  port: "${DATABASE_PORT}",
   size: 20 # The amount of database connections in the pool
 
 # Guardian JWT Authentication
 config :guardian, Guardian,
-  secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+  secret_key: "${GUARDIAN_SECRET_KEY}"

@@ -1,6 +1,7 @@
 from invoke import task
 from docker import Client
 import os
+import shutil
 from invoke_tools import lxc, system, vcs
 
 
@@ -22,19 +23,52 @@ def build(ctx):
   """
   Builds a Docker container for the Backend
   """
-  __check_branch()
+  # __check_branch()
+  lxc.Docker.clean(cli, [
+    "chit_chat/_build",
+    "chit_chat/deps"
+  ])
   git = vcs.Git()
-
   version = git.get_version()
+
+  # TODO: Upgrade Phoenix as soon as it supports poision 3.0. Doing this stuff isn't pleasant.
+  fix_gossip = "sed -i 's#\[opts\]#opts#' deps/libcluster/lib/strategy/gossip.ex"
+
+  lxc.Docker.build(cli,
+      dockerfile='Dockerfile.dev',
+      tag="{0}-dev".format("chitchat-backend")
+  )
+
+  lxc.Docker.run(cli,
+      tag="{0}-dev".format("chitchat-backend"),
+      command='/bin/sh -c "mix do deps.get && {0} && mix deps.compile && mix release --env=prod --verbose"'.format(fix_gossip),
+      volumes=[
+          "{0}/chit_chat:/app".format(os.getcwd())
+      ],
+      working_dir="/app",
+      environment={
+        "TERM": "xterm",
+        "MIX_ENV": "prod"
+      }
+  )
+
+  src = "chit_chat/_build/prod/rel/{0}/releases/{1}/{0}.tar.gz".format("chit_chat", "0.0.1")
+  shutil.copyfile(src, "{0}.tar.gz".format("chit_chat"))
 
   lxc.Docker.build(cli,
       dockerfile='Dockerfile.app',
-      tag="monarchsofcoding/chitchat:{0}".format(version)
+      tag="monarchsofcoding/chitchat:release-{0}".format(version)
+  )
+
+  cli.tag(
+    "monarchsofcoding/chitchat:release-{0}".format(version),
+    "monarchsofcoding/chitchat",
+    "release"
   )
 
   lxc.Docker.login(cli)
 
-  lxc.Docker.push(cli, ["monarchsofcoding/chitchat:{0}".format(version)])
+  lxc.Docker.push(cli, ["monarchsofcoding/chitchat:release-{0}".format(version), "monarchsofcoding/chitchat:release"])
 
 @task
 def deploy(ctx):
@@ -93,7 +127,7 @@ def test(ctx):
     import time
     time.sleep(10)
 
-    setup = "mix local.hex --force && mix local.rebar --force && mix deps.get"
+    setup = "mix deps.get"
     tests = "mix test --color --trace"
     coverage = "mix coveralls.html --color"
     lint = "mix credo --strict"
@@ -102,13 +136,13 @@ def test(ctx):
     try:
       lxc.Docker.run(cli,
           tag="{0}-dev".format("chitchat-backend"),
-          command='/bin/sh -c "{0} && {1} && {2}; {3} && {4}"'.format(setup, tests, coverage, lint, dogma),
+          command='/bin/sh -c "{0}; {1}; {2}; {3}; {4}"'.format(setup, tests, coverage, lint, dogma),
           volumes=[
               "{0}/chit_chat:/app".format(os.getcwd())
           ],
           working_dir="/app",
           environment={
-            "TERM": "xterm-color",
+            "TERM": "xterm",
             "MIX_ENV": "test"
           },
           links={
