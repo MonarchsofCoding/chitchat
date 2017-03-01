@@ -54,7 +54,7 @@ public class HttpClient {
     }
 
     /**
-     * Attempts to get the object from the server via Http request
+     * Attempts to get the object from the server via Http request.
      *
      * @param uri   adds the location of the url
      * @param query - query the server. Can have multiple quries
