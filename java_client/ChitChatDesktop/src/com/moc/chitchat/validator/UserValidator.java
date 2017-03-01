@@ -34,7 +34,7 @@ public class UserValidator implements Validator {
             errors.rejectValue("password", "field.required", "cannot be empty");
         }
 
-        if (user.getPasswordCheck() == null || !user.getPasswordCheck().equals(user.getPassword())) {
+        if (user.getPasswordCheck() == null ||!user.getPasswordCheck().equals(user.getPassword())) {
             errors.rejectValue("passwordCheck", "password.mismatch", "should match password");
         }
     }

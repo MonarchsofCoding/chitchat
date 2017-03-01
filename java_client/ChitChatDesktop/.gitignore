@@ -26,3 +26,7 @@ build
 /captures
 .externalNativeBuild
 .editorconfig
+
+ChitChatDesktop.flv
+ChitChatDesktop.mp4
+screenlog*

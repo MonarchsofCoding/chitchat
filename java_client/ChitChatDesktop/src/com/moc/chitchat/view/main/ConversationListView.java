@@ -2,7 +2,6 @@ package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.model.Conversation;
-import com.moc.chitchat.view.authentication.BaseView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ListView;
@@ -15,7 +14,7 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
  * ConversationListView provides the list of current active conversations.
  */
 @Component
-public class ConversationListView extends BaseView {
+public class ConversationListView {
 
     private ChitChatData chitChatData;
     private ConversationView conversationView;

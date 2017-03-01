@@ -7,6 +7,8 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
         classpath(group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2')
+
+
     }
 }
 
@@ -42,6 +44,9 @@ dependencies {
 
     testCompile "junit:junit:4.12"
     testCompile 'org.mockito:mockito-core:2.+'
+    testCompile "junit:junit:4.10"
+    testCompile "org.testfx:testfx-core:4.0.+"
+    testCompile "org.testfx:testfx-junit:4.0.+"
 }
 
 mainClassName = 'com.moc.chitchat.Application'

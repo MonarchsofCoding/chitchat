@@ -1,7 +1,7 @@
 package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.model.Conversation;
-import com.moc.chitchat.view.authentication.BaseView;
+import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

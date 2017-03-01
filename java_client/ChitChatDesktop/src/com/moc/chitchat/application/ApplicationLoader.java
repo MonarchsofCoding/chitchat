@@ -1,6 +1,6 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.view.authentication.AuthenticationStage;
+import com.moc.chitchat.view.AuthenticationStage;
 import com.moc.chitchat.view.main.MainStage;
 import java.util.List;
 import javafx.stage.Stage;
@@ -15,7 +15,6 @@ public class ApplicationLoader {
 
     private Configuration configuration;
     private AuthenticationStage authenticationStage;
-    private MainStage mainStage;
 
     /**
      * Constructor for the ApplicationLoader.
@@ -24,12 +23,10 @@ public class ApplicationLoader {
     @Autowired
     public ApplicationLoader(
         Configuration configuration,
-        AuthenticationStage authenticationStage,
-        MainStage mainStage
+        AuthenticationStage authenticationStage
     ) {
         this.configuration = configuration;
         this.authenticationStage = authenticationStage;
-        this.mainStage = mainStage;
     }
 
     /**
@@ -42,12 +39,8 @@ public class ApplicationLoader {
             this.configuration.setTestingMode();
         }
 
-        // AuthenticationStage
-        this.authenticationStage.showAndWait();
-
-        if(this.configuration.getLoggedInUser()!=null){
-            this.mainStage.showAndWait();
-        }
-
+        // Show Authentication
+        this.authenticationStage.setPrimaryStage(stage);
+        this.authenticationStage.show();
     }
 }

@@ -7,7 +7,7 @@ import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.UserModel;
-import com.moc.chitchat.view.authentication.BaseView;
+import com.moc.chitchat.view.BaseView;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
