@@ -13,10 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -37,9 +35,9 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
 
     private Button searchBtn;
     private Button startConversationBtn;
-
+    private Label errormessage;
     private WestView westView;
-
+    private Label errorusermessage;
     /**
      * SearchView constructor.
      *
@@ -71,14 +69,21 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
      * @return the content pane.
      */
     public MigPane getContentPane() {
+        this.errorusermessage = new Label();
+        this.errorusermessage.setTextFill(Color.RED);
+        this.errorusermessage.setId("errorusermsgsearch");
+        this.errorusermessage.setVisible(false);
 
         this.usernameField = new TextField();
+        this.usernameField.setId("usernameFieldSearch");
         this.usernameField.setPromptText("Find User");
         this.usernameField.setOnAction(this);
         MigPane searchForm = new MigPane();
+        searchForm.add(this.errorusermessage,"span,wrap");
         searchForm.add(this.usernameField, "span, grow");
 
         this.searchBtn = new Button("Search");
+        this.searchBtn.setId("searchBtn");
         this.searchBtn.setOnAction(this);
         searchForm.add(this.searchBtn, "span, grow");
 
@@ -87,8 +92,15 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         searchForm.add(this.searchList, "span, grow");
 
         this.startConversationBtn = new Button("Start Chat");
+        this.startConversationBtn.setId("StartChatBtn");
         this.startConversationBtn.setOnAction(this);
-        searchForm.add(this.startConversationBtn, "span");
+        searchForm.add(this.startConversationBtn, "span, wrap");
+
+        this.errormessage = new Label();
+        this.errormessage.setId("errormessageSearch");
+        this.errormessage.setVisible(false);
+        this.errormessage.setTextFill(Color.RED);
+        searchForm.add(this.errormessage,"span");
 
         MigPane searchPane = new MigPane();
         searchPane.add(searchForm, "grow");
@@ -102,17 +114,23 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
     private void searchAction() {
         try {
             this.observableUserList.clear();
+            this.errorusermessage.setVisible(false);
             List<UserModel> listUsers = this.userSearchController.searchUser(this.usernameField.getText());
             this.observableUserList.addAll(listUsers);
+            if(this.observableUserList.isEmpty()){
+                this.errorusermessage.setText("No User Available");
+                this.errorusermessage.setVisible(true);
+            }
         } catch (UnirestException unirestException) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(unirestException.getMessage());
-            alert.show();
+
+            this.errorusermessage.setText(unirestException.getMessage());
+            this.errorusermessage.setVisible(true);
         } catch (ValidationException validationException) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText(validationException.getErrors().getFieldError("username").getDefaultMessage());
-            alert.show();
+            this.errorusermessage.setText(validationException.getErrors().getFieldError("username").getDefaultMessage());
+            this.errorusermessage.setVisible(true);
         } catch (UnexpectedResponseException unexpectedResponseException) {
+            this.errorusermessage.setText("Error from Server");
+            this.errorusermessage.setVisible(true);
             unexpectedResponseException.printStackTrace();
         }
     }
@@ -124,12 +142,13 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         UserModel selectedUser = this.searchList.getSelectionModel().getSelectedItem();
 
         if (selectedUser == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("No user was selected");
-            alert.setContentText("Please select a user");
-            alert.show();
+
+            this.errormessage.setText("No user was selected");
+            this.errormessage.setVisible(true);
+
         } else {
             System.out.println(String.format("Starting conversation with: %s", selectedUser));
+            this.errormessage.setVisible(false);
             Conversation conversation = this.chitChatData.getConversation(selectedUser);
             this.westView.showConversationListView(conversation);
         }
@@ -138,8 +157,12 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == this.searchBtn) {
+            this.errorusermessage.setVisible(false);
+            this.errormessage.setVisible(false);
             this.searchAction();
         } else if (event.getSource() == this.startConversationBtn) {
+            this.errorusermessage.setVisible(false);
+            this.errormessage.setVisible(false);
             this.startConversation();
         }
     }

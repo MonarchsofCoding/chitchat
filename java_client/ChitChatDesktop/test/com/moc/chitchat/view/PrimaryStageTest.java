@@ -21,7 +21,7 @@ public class PrimaryStageTest extends ApplicationTest {
     public void setUpClass() throws Exception {
         String args = "dev";
 
-        if (System.getenv("CHITCHAT_ENV").length() > 0) {
+        if (System.getenv("CHITCHAT_ENV") != null && System.getenv("CHITCHAT_ENV").length() > 0) {
             args = System.getenv("CHITCHAT_ENV");
         }
 
