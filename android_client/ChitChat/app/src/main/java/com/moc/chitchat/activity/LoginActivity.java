@@ -15,6 +15,7 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.LoginController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
+import com.moc.chitchat.service.ReceiveMessageService;
 
 import javax.inject.Inject;
 
@@ -124,6 +125,7 @@ public class LoginActivity extends AppCompatActivity
         }
         Intent searchIntent = new Intent(this, SearchUserActivity.class);
         startActivity(searchIntent);
+        startService(new Intent(this, ReceiveMessageService.class));
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
         this.exitActivity();
     }

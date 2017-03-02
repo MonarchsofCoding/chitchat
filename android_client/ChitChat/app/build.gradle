@@ -45,6 +45,12 @@ android {
     testOptions {
 //        unitTests.returnDefaultValues = true
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+    }
+    lintOptions {
+        warning 'InvalidPackage'
+    }
 }
 
 dependencies {
@@ -57,9 +63,7 @@ dependencies {
     apt "com.google.dagger:dagger-compiler:2.9"
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.android.volley:volley:1.0.0'
-    compile('com.github.eoinsha:JavaPhoenixChannels:0.2') {
-        exclude module: 'groovy-all'
-    }
+    compile 'com.github.eoinsha:JavaPhoenixChannels:0.2'
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:2.7.5"
     testCompile 'org.json:json:20160810'
