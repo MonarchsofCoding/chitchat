@@ -12,7 +12,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -82,45 +85,43 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.errormessage.setTextFill(Color.RED);
         this.errormessage.setId("errormessage");
         this.errormessage.setVisible(false);
-        this.conversationPane.add(errormessage,"span,grow,wrap");
+        this.conversationPane.add(errormessage, "span,grow,wrap");
 
         this.sendbtn = new Button("Send");
         this.sendbtn.setId("sendBtnmsg");
         this.sendbtn.setOnAction(this);
-        this.conversationPane.add(sendbtn,"span, align right");
-
-
+        this.conversationPane.add(sendbtn, "span, align right");
 
     }
 
     @Override
     public void handle(ActionEvent event) {
-        if (event.getSource() == this.sendbtn)
-        {
-        try {
-            Message message = this.messageController.send(
-                    this.conversation.getOtherParticipant(),
-                    this.newMessageField.getText());
+        if (event.getSource() == this.sendbtn) {
+            try {
+                Message message = this.messageController.send(
+                        this.conversation.getOtherParticipant(),
+                        this.newMessageField.getText());
 
-                    this.errormessage.setVisible(false);
+                this.errormessage.setVisible(false);
 
-            this.messages.add(message);
-        } catch (UnirestException unirestException) {
+                this.messages.add(message);
+            } catch (UnirestException unirestException) {
 
-            errormessage.setText(unirestException.getMessage());
-            errormessage.setVisible(true);
-        } catch (ValidationException validationException) {
-            String mesg = validationException.getErrors().getFieldError("message").getDefaultMessage().toString();
-            errormessage.setText(mesg);
-            errormessage.setVisible(true);
+                errormessage.setText(unirestException.getMessage());
+                errormessage.setVisible(true);
+            } catch (ValidationException validationException) {
+                String mesg = validationException.getErrors().getFieldError("message").getDefaultMessage().toString();
+                errormessage.setText(mesg);
+                errormessage.setVisible(true);
 
-        } catch (UnexpectedResponseException unexpectedResponse) {
-            errormessage.setText("Unexpected error");
-            errormessage.setVisible(true);
-            unexpectedResponse.printStackTrace();
+            } catch (UnexpectedResponseException unexpectedResponse) {
+                errormessage.setText("Unexpected error");
+                errormessage.setVisible(true);
+                unexpectedResponse.printStackTrace();
+            }
+
+            this.newMessageField.clear();
+            // TODO: we will probably need to set the Messages list in Conversation to be an ObservableList.
         }
-
-        this.newMessageField.clear();
-        // TODO: we will probably need to set the Messages list in Conversation to be an ObservableList.
     }
-}}
+}
