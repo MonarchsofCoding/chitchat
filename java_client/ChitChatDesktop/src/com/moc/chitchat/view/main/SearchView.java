@@ -13,7 +13,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,10 +43,10 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
     private Label errorusermessage;
     /**
      * SearchView constructor.
-     *
      * @param userSearchController the controller holding functions for searching Users.
      * @param chitChatData         the application data state.
      */
+
     @Autowired
     public SearchView(
             UserSearchController userSearchController,
@@ -122,11 +125,11 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
                 this.errorusermessage.setVisible(true);
             }
         } catch (UnirestException unirestException) {
-
             this.errorusermessage.setText(unirestException.getMessage());
             this.errorusermessage.setVisible(true);
         } catch (ValidationException validationException) {
-            this.errorusermessage.setText(validationException.getErrors().getFieldError("username").getDefaultMessage());
+            String errormsg = validationException.getErrors().getFieldError("username").getDefaultMessage().toString();
+            this.errorusermessage.setText(errormsg);
             this.errorusermessage.setVisible(true);
         } catch (UnexpectedResponseException unexpectedResponseException) {
             this.errorusermessage.setText("Error from Server");
