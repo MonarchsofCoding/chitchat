@@ -12,10 +12,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
@@ -33,6 +31,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
     private MessageController messageController;
 
     private TextField newMessageField;
+    private Label errormessage;
+    private Button sendbtn;
 
     public ConversationView(MessageController messageController) {
         this.messageController = messageController;
@@ -72,35 +72,55 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.messages = FXCollections.observableArrayList(c.getMessages());
         ListView<Message> messages = new ListView<>(this.messages);
         this.conversationPane.add(messages, "span");
-
         this.newMessageField = new TextField();
         newMessageField.setPromptText("Enter Message: ");
+        this.newMessageField.setId("newmessageField");
         newMessageField.setOnAction(this);
+        this.conversationPane.add(newMessageField, "span,grow");
 
-        this.conversationPane.add(newMessageField, "span");
+        this.errormessage = new Label();
+        this.errormessage.setTextFill(Color.RED);
+        this.errormessage.setId("errormessage");
+        this.errormessage.setVisible(false);
+        this.conversationPane.add(errormessage,"span,grow,wrap");
+
+        this.sendbtn = new Button("Send");
+        this.sendbtn.setId("sendBtnmsg");
+        this.sendbtn.setOnAction(this);
+        this.conversationPane.add(sendbtn,"span, align right");
+
+
+
     }
 
     @Override
     public void handle(ActionEvent event) {
+        if (event.getSource() == this.sendbtn)
+        {
         try {
             Message message = this.messageController.send(
                     this.conversation.getOtherParticipant(),
                     this.newMessageField.getText());
 
+                    this.errormessage.setVisible(false);
+
             this.messages.add(message);
         } catch (UnirestException unirestException) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(unirestException.getMessage());
-            alert.show();
+
+            errormessage.setText(unirestException.getMessage());
+            errormessage.setVisible(true);
         } catch (ValidationException validationException) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText(validationException.getErrors().getFieldError("errors").getDefaultMessage());
-            alert.show();
+            String mesg = validationException.getErrors().getFieldError("message").getDefaultMessage().toString();
+            errormessage.setText(mesg);
+            errormessage.setVisible(true);
+
         } catch (UnexpectedResponseException unexpectedResponse) {
+            errormessage.setText("Unexpected error");
+            errormessage.setVisible(true);
             unexpectedResponse.printStackTrace();
         }
 
         this.newMessageField.clear();
         // TODO: we will probably need to set the Messages list in Conversation to be an ObservableList.
     }
-}
+}}
