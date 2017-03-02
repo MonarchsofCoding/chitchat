@@ -12,6 +12,7 @@ import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
 import com.moc.chitchat.validator.UserValidator;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,5 +68,17 @@ public class MessageController {
         this.chitChatData.addMessageToConversation(to, newMessage);
 
         return newMessage;
+    }
+
+    public void receive(JsonNode payload) {
+
+        // Extract the message over here.
+        //payload.getObject().
+
+        // this.chitChatData.addMessageToConversation(this.configuration.getLoggedInUser(), message);
+
+        //return newMessage;
+
+        //Message message =new Message();
     }
 }

@@ -3,6 +3,8 @@ buildscript {
         mavenLocal()
         mavenCentral()
 
+
+
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
@@ -23,10 +25,17 @@ apply plugin: 'javafx-gradle-plugin'
 
 repositories {
     mavenCentral()
+    maven {
+        url  "http://dl.bintray.com/javaphoenixchannels/java-phoenix-channels"
+    }
 }
 
 
 dependencies {
+
+    compile('com.github.eoinsha:JavaPhoenixChannels:0.2') {
+        exclude module: 'groovy-all'
+    }
     // Spring MVC Framework
     compile 'org.springframework:spring-context:4.3.5.RELEASE'
     // https://mvnrepository.com/artifact/commons-logging/commons-logging
@@ -42,11 +51,17 @@ dependencies {
     // UniRest HTTP client
     compile 'com.mashape.unirest:unirest-java:1.4.9'
 
+    // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
+    compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
+
+//    compile 'com.github.eoinsha:JavaPhoenixChannels:0.2'
+
     testCompile "junit:junit:4.12"
     testCompile 'org.mockito:mockito-core:2.+'
     testCompile "junit:junit:4.10"
     testCompile "org.testfx:testfx-core:4.0.+"
     testCompile "org.testfx:testfx-junit:4.0.+"
+
 }
 
 mainClassName = 'com.moc.chitchat.Application'

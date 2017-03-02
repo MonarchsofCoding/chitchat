@@ -5,6 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.client.WebSocketClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -72,6 +73,9 @@ public class LoginController {
         user.setAuthToken(response.getBody().getObject().getJSONObject("data").get("authToken").toString());
 
         this.configuration.setLoggedInUser(user);
+
+        WebSocketClient webSocketClient = new WebSocketClient(this.configuration);
+        webSocketClient.startConnection();
         //open chatroom
         return user;
     }

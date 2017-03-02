@@ -4,6 +4,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.client.WebSocketClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
