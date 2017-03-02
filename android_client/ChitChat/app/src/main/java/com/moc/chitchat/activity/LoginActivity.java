@@ -87,7 +87,7 @@ public class LoginActivity extends Activity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error on login");
+        System.out.println("Error on login: Invalid credentials or you didn't registered yet");
         Toast.makeText(this,
             "Invalid credentials or you didn't registered yet",
             Toast.LENGTH_LONG
@@ -102,10 +102,9 @@ public class LoginActivity extends Activity
      */
     @Override
     public void onResponse(JSONObject response) {
-        System.out.println(response.toString());
-
         try {
             String username = response.getJSONObject("data").get("username").toString();
+            System.out.println(String.format("Successfully logged in: %s", username));
             Toast.makeText(this,
                 String.format("Successfully logged in: %s", username), Toast.LENGTH_LONG).show();
 

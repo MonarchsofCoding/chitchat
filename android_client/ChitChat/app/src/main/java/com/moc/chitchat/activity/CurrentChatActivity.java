@@ -96,12 +96,7 @@ public class CurrentChatActivity extends Activity
     //For Volley Error response
     @Override
     public void onErrorResponse(VolleyError error) {
-        try {
-            System.out.println(new JSONObject(new String(error.networkResponse.data)));
-            System.out.println("DEBUG");
-        } catch (JSONException jsonexception) {
-            jsonexception.printStackTrace();
-        }
+        System.out.println("Error sending a message");
     }
 
     //For Volley Success response

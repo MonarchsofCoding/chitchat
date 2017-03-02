@@ -76,7 +76,7 @@ public class SearchUserActivity extends Activity
     //For Volley Error response
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error registering");
+        System.out.println("Error searching a user");
         try {
             Toast.makeText(this,
                 String.format("The user you are trying to found is not connected or not existing"),
