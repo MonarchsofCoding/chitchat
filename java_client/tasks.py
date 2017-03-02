@@ -74,6 +74,7 @@ def test(ctx):
   git = vcs.Git()
   version = git.get_version()
 
+  cli.pull("postgres", "latest")
   postgres_container = lxc.Docker.run(
     cli,
     'postgres',
@@ -122,7 +123,7 @@ def test(ctx):
   ui_tests = "gradle test --tests com.moc.chitchat.view.*"
   vnc_rec_stop = "screen -X -S vnc2flv kill"
   avconv = "avconv -i ChitChatDesktop.flv -c:v libx264 -crf 19 -strict experimental ChitChatDesktop.mp4"
-  static_analysis = "gradle jacocoTestReport; gradle check"
+  static_analysis = "gradle jacocoTestReport; gradle check -x test"
 
   try:
     lxc.Docker.run(cli,
