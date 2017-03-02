@@ -25,31 +25,20 @@ defmodule ChitChat.MessageSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
+  @spec connect({}, {}) :: {}
+  def connect(params = %{"guardian_token" => jwt}, socket) do
+  end
+
   @spec connect({}, Socket) :: Socket
   def connect(params, socket) do
     # if we get here, we did not authenticate
-    IO.inspect(params)
     {:error}
   end
 
+  @spec connect({}, {}, ChitChat.User, {}) :: {}
   def connect(conn, params, user, _claims) do
-    IO.inspect(params)
-    IO.inspect(user)
-  end
-
-  def connect(%{"guardian_token" => jwt} = params, socket) do
-    IO.puts "YAY"
-    IO.inspect(jwt)
-
-    # case sign_in(socket, jwt) do
-    #   {:ok, authed_socket, guardian_params} ->
-    #     user = Guardian.Phoenix.Socket.current_resource(socket)
-    #     IO.inspect(user)
-    #     {:ok, authed_socket}
-    #   _ ->
-    #     #unauthenticated socket
-    #     {:ok, socket}
-    # end
+    # IO.inspect(params)
+    # IO.inspect(user)
   end
 
   # Socket id's are topics that allow you to identify all sockets
