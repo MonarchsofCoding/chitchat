@@ -15,8 +15,9 @@ public class UserValidator {
 
     /**
      * validate validates a given User.
+     *
      * @param user the User to be validated.
-     * @throws ValidationException
+     * @throws ValidationException when validation is not correct.
      */
     public void validate(UserModel user) throws ValidationException {
 

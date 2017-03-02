@@ -1,4 +1,7 @@
 defmodule ChitChat.ChangesetView do
+  @moduledoc """
+  provides the error json translations.
+  """
   use ChitChat.Web, :view
 
   alias Ecto.Changeset

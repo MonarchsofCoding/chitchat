@@ -7,19 +7,19 @@ import android.app.Application;
  */
 public class ChitChatApplication extends Application {
 
-    private ApplicationComponent mComponent;
+    private ApplicationComponent myComponent8;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        mComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build()
+        myComponent8 = DaggerApplicationComponent.builder()
+            .applicationModule(new ApplicationModule(this))
+            .build()
         ;
     }
 
     public ApplicationComponent getComponent() {
-        return this.mComponent;
+        return this.myComponent8;
     }
 }

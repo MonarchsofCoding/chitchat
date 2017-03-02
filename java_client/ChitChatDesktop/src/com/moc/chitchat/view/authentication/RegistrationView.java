@@ -5,7 +5,11 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,8 +49,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
     @Override
     public MigPane getContentPane() {
-        MigPane registerPane = new MigPane();
-
         MigPane registerForm = new MigPane();
 
         this.usernameField = new TextField();
@@ -79,29 +81,50 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.loginBtn.setOnAction(this);
         registerForm.add(this.loginBtn, "wrap, grow");
 
+        MigPane registerPane = new MigPane();
         registerPane.add(registerForm, "span, split 2, center");
 
         return registerPane;
     }
 
+    private void changeButtonsStatus(boolean enabled) {
+        if (enabled) {
+            // Make the fields enabled
+            this.usernameField.setDisable(false);
+            this.passwordField.setDisable(false);
+            this.passwordCheckField.setDisable(false);
+            this.registerBtn.setDisable(false);
+            this.loginBtn.setDisable(false);
+        } else {
+            this.usernameField.setDisable(true);
+            this.passwordField.setDisable(true);
+            this.passwordCheckField.setDisable(true);
+            this.registerBtn.setDisable(true);
+            this.loginBtn.setDisable(true);
+        }
+    }
+
     private void registerAction() {
-        this.usernameField.setDisable(true);
-        this.passwordField.setDisable(true);
-        this.passwordCheckField.setDisable(true);
-        this.registerBtn.setDisable(true);
-        this.loginBtn.setDisable(true);
+        changeButtonsStatus(false);
 
         try {
             UserModel user = this.registrationController.registerUser(
-                this.usernameField.getText(),
-                String.valueOf(this.passwordField.getText()),
-                String.valueOf(this.passwordCheckField.getText())
+                    this.usernameField.getText(),
+                    String.valueOf(this.passwordField.getText()),
+                    String.valueOf(this.passwordCheckField.getText())
             );
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("Success Registration");
             alert.setTitle("Information of Registration");
-            alert.setContentText("You have now registered as "+user.getUsername());
+            alert.setContentText("You have now registered as " + user.getUsername());
             alert.show();
+
+            // Clearing the fields
+            this.usernameField.clear();
+            this.passwordField.clear();
+            this.passwordCheckField.clear();
+
+            changeButtonsStatus(true);
 
             this.stage.showLogin();
 
@@ -116,24 +139,24 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
             alert.show();
 
             Errors errors = validationException.getErrors();
-            if(errors.hasErrors()){
-            if (errors.hasFieldErrors("username")) {
-                this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
-                alert.setContentText("Username "+errors.getFieldError("username").getDefaultMessage());
-                alert.show();
-            }
+            if (errors.hasErrors()) {
+                if (errors.hasFieldErrors("username")) {
+                    this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
+                    alert.setContentText("Username " + errors.getFieldError("username").getDefaultMessage());
+                    alert.show();
+                }
 
-            if (errors.hasFieldErrors("password")) {
-                this.passwordErrors.setText(errors.getFieldError("password").getDefaultMessage());
-                alert.setContentText("Password "+errors.getFieldError("password").getDefaultMessage());
-                alert.show();
-            }
+                if (errors.hasFieldErrors("password")) {
+                    this.passwordErrors.setText(errors.getFieldError("password").getDefaultMessage());
+                    alert.setContentText("Password " + errors.getFieldError("password").getDefaultMessage());
+                    alert.show();
+                }
 
-            if (errors.hasFieldErrors("passwordCheck")) {
-                this.passwordCheckErrors.setText(errors.getFieldError("passwordCheck").getDefaultMessage());
-                alert.setContentText("Password "+errors.getFieldError("passwordCheck").getDefaultMessage());
-                alert.show();
-            }
+                if (errors.hasFieldErrors("passwordCheck")) {
+                    this.passwordCheckErrors.setText(errors.getFieldError("passwordCheck").getDefaultMessage());
+                    alert.setContentText("Password " + errors.getFieldError("passwordCheck").getDefaultMessage());
+                    alert.show();
+                }
             }
 
         } catch (Exception defaultError) {
@@ -145,9 +168,15 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
     public void handle(ActionEvent actionEvent) {
         if (actionEvent.getSource() == this.registerBtn) {
             this.registerAction();
-            if(!this.usernameField.getText().equals("")) this.usernameErrors.setText("");
-            if(!this.passwordField.getText().equals("")) this.passwordErrors.setText("");
-            if(!this.passwordCheckField.getText().equals(""))this.passwordCheckErrors.setText("");
+            if (!this.usernameField.getText().equals("")) {
+                this.usernameErrors.setText("");
+            }
+            if (!this.passwordField.getText().equals("")) {
+                this.passwordErrors.setText("");
+            }
+            if (!this.passwordCheckField.getText().equals("")) {
+                this.passwordCheckErrors.setText("");
+            }
         } else if (actionEvent.getSource() == this.loginBtn) {
             this.stage.showLogin();
         }

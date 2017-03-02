@@ -1,7 +1,6 @@
 package com.moc.chitchat.resolver;
 
 import com.moc.chitchat.model.UserModel;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +12,9 @@ public class UserResolver {
 
     /**
      * createUser returns a new User with the given parameters applied.
-     * @param username String the username of the User.
-     * @param password String the password of the User.
+     *
+     * @param username      String the username of the User.
+     * @param password      String the password of the User.
      * @param passwordCheck String the password check of the User.
      * @return UserModel a new User with the given parameters.
      */
@@ -22,13 +22,30 @@ public class UserResolver {
         UserModel user = new UserModel(username);
 
         user
-            .setPassword(password)
-            .setPasswordCheck(passwordCheck)
+                .setPassword(password)
+                .setPasswordCheck(passwordCheck)
         ;
 
         return user;
     }
-    public UserModel createLoginUser(String username, String password){
+
+    /**
+     * createUser returns a new User with the given parameters applied.
+     *
+     * @param username String the username of the User.
+     * @return UserModel, a new User with the given parameter.
+     */
+    public UserModel createUser(String username) {
+        return new UserModel(username);
+    }
+
+    /**
+     * createLoginUser returns a new User with the given parameters applied.
+     * @param username - String the username of the User.
+     * @param password - String the password of the User.
+     * @return - UserModel a new User with the given parameter.
+     */
+    public UserModel createLoginUser(String username, String password) {
         UserModel user = new UserModel(username);
 
         user.setPassword(password);
@@ -36,15 +53,11 @@ public class UserResolver {
     }
 
     /**
-     * createUser returns a new User with the given parameters applied.
-     * @param username String the username of the User.
-     * @return UserModel a new User with the given parameter.
+     * getUserModelViaJSonObject creates a new User by JSONObject.
+     * @param jsonObject - object that has a key 'username'
+     * @return - returns a new user
      */
-    public UserModel createUser(String username) {
-        return new UserModel(username);
-    }
-
-    public UserModel getUserModelViaJSonObject(JSONObject jsonObject){
+    public UserModel getUserModelViaJSonObject(JSONObject jsonObject) {
         String username = jsonObject.getString("username");
         UserModel user = new UserModel(username);
 

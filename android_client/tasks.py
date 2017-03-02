@@ -93,7 +93,7 @@ def test(ctx):
 
     lxc.Docker.run(cli,
         tag="{0}-dev".format("chitchat-androidclient"),
-        command='/bin/bash -c "cd app && gradle test && gradle jacocoTestReport && gradle lint"',
+        command='/bin/bash -c "cd app && gradle test && gradle jacocoTestReport && gradle lint && gradle checkstyle"',
         volumes=[
             "{0}/ChitChat:/app".format(os.getcwd())
         ],
@@ -110,6 +110,7 @@ def publish_test_artifacts(ctx):
   local_coverage = "app/build/JacocoCoverageReport/jacocoTestProductionReleaseUnitTestReport/html/"
   local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/productionRelease/"
   local_lint = "app/build/outputs/lint-results-betaDebug.html"
+  local_checkstyle = "app/build/reports/checkstyle/checkstyle.html"
 
   try:
     lxc.Docker.run(cli,
@@ -149,6 +150,23 @@ def publish_test_artifacts(ctx):
     lxc.Docker.run(cli,
       tag="garland/aws-cli-docker:latest",
       command='aws s3 cp {0} {1}/lint/index.html'.format(local_lint, s3_artifacts),
+      volumes=[
+          "{0}/ChitChat:/app".format(os.getcwd())
+      ],
+      working_dir="/app",
+      environment={
+          "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+          "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+          "AWS_DEFAULT_REGION": "eu-west-1"
+      }
+    )
+  except Exception:
+    pass
+
+  try:
+    lxc.Docker.run(cli,
+      tag="garland/aws-cli-docker:latest",
+      command='aws s3 cp {0} {1}/checkstyle/checkstyle.html'.format(local_checkstyle, s3_artifacts),
       volumes=[
           "{0}/ChitChat:/app".format(os.getcwd())
       ],

@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -17,8 +18,8 @@ import static org.junit.Assert.assertEquals;
 public class ErrorResponsesResolverTest {
 
     @Test
-    public void testNoResponseBody() throws JSONException, UnsupportedEncodingException{
-        byte [] bytes = new byte[0];
+    public void testNoResponseBody() throws JSONException, UnsupportedEncodingException {
+        byte[] bytes = new byte[0];
         NetworkResponse networkResponse = new NetworkResponse(500, bytes, null, true, 500);
 
         VolleyError volleyError = new VolleyError(networkResponse);
@@ -41,7 +42,6 @@ public class ErrorResponsesResolverTest {
 
         assertEquals(jsonObject.getClass(), JSONObject.class);
     }
-
 
 
 }

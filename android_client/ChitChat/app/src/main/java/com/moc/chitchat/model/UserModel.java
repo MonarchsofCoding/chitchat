@@ -1,7 +1,9 @@
 package com.moc.chitchat.model;
 
-import org.json.JSONObject;
 import java.util.HashMap;
+
+import org.json.JSONObject;
+
 
 /**
  * UserModel provides the representation of a User entity.
@@ -23,13 +25,13 @@ public class UserModel {
      */
     private String passwordCheck;
 
-    /**
-     * authToken of the user to authenticate while doing requests to the server
+    /* authToken of the user to authenticate while doing requests to the server.
      */
     private String authToken;
 
     /**
      * UserModel constructor
+     *
      * @param username the username of the User.
      */
     public UserModel(String username) {
@@ -38,6 +40,7 @@ public class UserModel {
 
     /**
      * getUsername returns the username of the User.
+     *
      * @return the username.
      */
     public String getUsername() {
@@ -46,6 +49,7 @@ public class UserModel {
 
     /**
      * getPassword returns the password of the User.
+     *
      * @return the password.
      */
     public String getPassword() {
@@ -53,21 +57,8 @@ public class UserModel {
     }
 
     /**
-     * getPasswordCheck returns the check password of the User.
-     * @return the password check of the user
-     */
-    public String getPasswordCheck() {
-        return this.passwordCheck;
-    }
-
-    /**
-     * getAuthToken returns the authToken
-     * @return the token
-     */
-    public String getAuthToken() {return this.authToken;}
-
-    /**
      * setPassword sets the password for the User.
+     *
      * @param password the new password.
      * @return the user.
      */
@@ -78,7 +69,17 @@ public class UserModel {
     }
 
     /**
+     * getPasswordCheck returns the check password of the User.
+     *
+     * @return the password check of the user.
+     */
+    public String getPasswordCheck() {
+        return this.passwordCheck;
+    }
+
+    /**
      * setPasswordCheck sets the check password for the User.
+     *
      * @param passwordCheck the new check password.
      * @return the user.
      */
@@ -88,20 +89,28 @@ public class UserModel {
         return this;
     }
 
-    /**
-     * setAuthToken sets an auth token to the user
-     * @param aToken the token to be set
-     * @return the user
-     *
+    /* getAuthToken returns the authToken.
+     * @return the token.
      */
-    public UserModel setAuthToken(String aToken) {
-        this.authToken = aToken;
+    public String getAuthToken() {
+        return this.authToken;
+    }
+
+    /**
+     * setAuthToken sets an auth token to the user.
+     *
+     * @param aaToken the token to be set.
+     * @return the user.
+     */
+    public UserModel setAuthToken(String aaToken) {
+        this.authToken = aaToken;
 
         return this;
     }
 
     /**
      * ToJsonObject returns a JSONObject representation of the User.
+     *
      * @return JSONObject representation of the User.
      */
     public JSONObject toJsonObject() {

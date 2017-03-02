@@ -1,5 +1,10 @@
 defmodule ChitChat.ErrorView do
+  @moduledoc """
+  provides the error views.
+  """
   use ChitChat.Web, :view
+
+  alias Plug.Conn.Status
 
   @spec render(String, {}) :: String
   def render("404.html", _assigns) do
@@ -9,6 +14,13 @@ defmodule ChitChat.ErrorView do
   @spec render(String, {}) :: String
   def render("500.html", _assigns) do
     "Internal server error"
+  end
+
+  @spec render(String, {}) :: {}
+  def render("status.json", %{status: status}) do
+    %{
+      reason: Status.reason_phrase(Status.code(status))
+    }
   end
 
   # In case no render clause matches or no

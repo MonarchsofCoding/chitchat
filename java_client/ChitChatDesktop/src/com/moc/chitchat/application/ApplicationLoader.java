@@ -2,12 +2,10 @@ package com.moc.chitchat.application;
 
 import com.moc.chitchat.view.authentication.AuthenticationStage;
 import com.moc.chitchat.view.main.MainStage;
+import java.util.List;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * ApplicationLoader provides everything to do with loading the application.

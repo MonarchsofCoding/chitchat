@@ -3,6 +3,7 @@ package com.moc.chitchat.controller;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
@@ -69,7 +70,7 @@ public class UserSearchControllerTest {
 
         JsonNode thebody = mock(JsonNode.class);
         when(this.mockResponse.getBody()).thenReturn(thebody);
-      JsonNode bodyResponse = mock(JsonNode.class);
+        JsonNode bodyResponse = mock(JsonNode.class);
         when(this.mockResponse.getBody()).thenReturn(bodyResponse);
 
         bodyResponse = mock(JsonNode.class);
