@@ -82,8 +82,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.conversationPane.add(header, "dock north");
 
         this.messages = FXCollections.observableArrayList(c.getMessages());
-        ListView<Message> messages = new ListView<>(this.chitChatData.
-                getConversation(this.conversation.getOtherParticipant()).getMessages());
+        ListView<Message> messages = new ListView<>(this.chitChatData
+                .getConversation(this.conversation.getOtherParticipant()).getMessages());
         this.conversationPane.add(messages, "span");
         this.newMessageField = new TextField();
         newMessageField.setPromptText("Enter Message: ");

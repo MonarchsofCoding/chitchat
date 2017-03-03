@@ -64,11 +64,15 @@ public class WebSocketClient {
                 }
             });
             System.out.println("channel is on");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 
+    /**
+     *  Stop connection for web socket client.
+     * @return True or false if connection stopped.
+     */
     public boolean stopConnection() {
         if (socket.isConnected()) {
             System.out.println("Already disconnected");
@@ -79,8 +83,8 @@ public class WebSocketClient {
                 socket.disconnect();
                 System.out.println("Success");
                 return true;
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
                 return false;
             }
         }

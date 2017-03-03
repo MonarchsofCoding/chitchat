@@ -79,7 +79,8 @@ public class MessageController {
     public Message receive(String receivedMessage, String username) {
         UserModel from = new UserModel(username);
 
-        Message message = this.messageResolver.createMessage(from, this.configuration.getLoggedInUser(), receivedMessage);
+        Message message = this.messageResolver
+                .createMessage(from, this.configuration.getLoggedInUser(), receivedMessage);
 
         chitChatData.addMessageToConversation(from, message);
 
