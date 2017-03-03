@@ -5,6 +5,7 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.client.WebSocketClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -32,6 +33,7 @@ public class LoginControllerTest {
     @Mock private UserValidator mockUserValidator;
     @Mock private HttpClient mockHttpClient;
     @Mock private Configuration configuration;
+    @Mock private WebSocketClient webSocketClient;
 
     @InjectMocks
     private LoginController loginController;
