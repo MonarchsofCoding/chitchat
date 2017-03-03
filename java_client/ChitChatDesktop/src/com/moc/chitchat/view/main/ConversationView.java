@@ -1,6 +1,7 @@
 package com.moc.chitchat.view.main;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
@@ -17,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
@@ -30,15 +32,20 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
     private Conversation conversation;
     private ObservableList<Message> messages;
+    private ListView<Message> updateMessages;
 
     private MessageController messageController;
+    private ChitChatData chitChatData;
 
     private TextField newMessageField;
     private Label errormessage;
     private Button sendbtn;
 
-    public ConversationView(MessageController messageController) {
+    @Autowired
+    public ConversationView(MessageController messageController,
+                            ChitChatData chitChatData) {
         this.messageController = messageController;
+        this.chitChatData = chitChatData;
     }
 
     /**
@@ -52,6 +59,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
     protected MigPane getContentPane() {
         this.conversationPane = new MigPane();
 
+
         return this.conversationPane;
     }
 
@@ -64,6 +72,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.conversationPane.getChildren().clear(); // Clear the conversation view
 
         this.conversation = c;
+
         for (Node n : this.conversationPane.getChildren()) {
             this.conversationPane.remove(n);
         }
@@ -73,7 +82,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.conversationPane.add(header, "dock north");
 
         this.messages = FXCollections.observableArrayList(c.getMessages());
-        ListView<Message> messages = new ListView<>(this.messages);
+        ListView<Message> messages = new ListView<>(this.chitChatData.
+                getConversation(this.conversation.getOtherParticipant()).getMessages());
         this.conversationPane.add(messages, "span");
         this.newMessageField = new TextField();
         newMessageField.setPromptText("Enter Message: ");

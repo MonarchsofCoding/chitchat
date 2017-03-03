@@ -72,7 +72,6 @@ public class ChitChatData {
                 return c;
             }
         }
-
         return null;
     }
 

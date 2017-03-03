@@ -8,11 +8,11 @@ import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
+import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
 import com.moc.chitchat.validator.UserValidator;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,15 +70,19 @@ public class MessageController {
         return newMessage;
     }
 
-    public void receive(JsonNode payload) {
+    /**
+     * Deals with receiving messages from other users.
+     * @param receivedMessage - the message
+     * @param username - the sender of the message
+     * @return - a new message object
+     */
+    public Message receive(String receivedMessage, String username) {
+        UserModel from = new UserModel(username);
 
-        // Extract the message over here.
-        //payload.getObject().
+        Message message = this.messageResolver.createMessage(from, this.configuration.getLoggedInUser(), receivedMessage);
 
-        // this.chitChatData.addMessageToConversation(this.configuration.getLoggedInUser(), message);
+        chitChatData.addMessageToConversation(from, message);
 
-        //return newMessage;
-
-        //Message message =new Message();
+        return message;
     }
 }

@@ -24,18 +24,21 @@ public class LoginController {
     private HttpClient httpClient;
     private UserValidator userValidator;
     private Configuration configuration;
+    private WebSocketClient webSocketClient;
 
     @Autowired
     LoginController(
             UserResolver userResolver,
             HttpClient httpClient,
             UserValidator userValidator,
-            Configuration configuration
+            Configuration configuration,
+            WebSocketClient webSocketClient
     ) {
         this.userResolver = userResolver;
         this.httpClient = httpClient;
         this.userValidator = userValidator;
         this.configuration = configuration;
+        this.webSocketClient = webSocketClient;
     }
 
     /**
@@ -74,7 +77,6 @@ public class LoginController {
 
         this.configuration.setLoggedInUser(user);
 
-        WebSocketClient webSocketClient = new WebSocketClient(this.configuration);
         webSocketClient.startConnection();
         //open chatroom
         return user;

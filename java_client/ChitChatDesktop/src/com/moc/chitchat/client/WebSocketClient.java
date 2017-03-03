@@ -4,11 +4,8 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mashape.unirest.http.JsonNode;
-import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.controller.MessageController;
-import com.moc.chitchat.view.main.ConversationView;
 import org.phoenixframework.channels.*;
 import org.springframework.stereotype.Component;
 
@@ -21,18 +18,15 @@ public class WebSocketClient {
     private Configuration configuration;
     private Socket socket;
     private MessageController messageController;
-    private ChitChatData chitChatData;
 
     /**
      * WebSocketClient constructor.
      * @param configuration - passing the configuration so we know the current user
      */
     public WebSocketClient(Configuration configuration,
-                           MessageController messageController,
-                           ChitChatData chitChatData) {
+                           MessageController messageController) {
         this.configuration = configuration;
         this.messageController = messageController;
-        this.chitChatData = chitChatData;
     }
 
     /**
@@ -60,9 +54,9 @@ public class WebSocketClient {
                 @Override
                 public void onMessage(Envelope envelope) {
                     System.out.println("NEW MESSAGE: " + envelope.toString());
-                    // Calls MessageController - sends JSONode
-                    messageController.receive(envelope.getPayload().get("body").toString(),
-                            envelope.getPayload().get("from").toString(), chitChatData);
+                    // Calls MessageController
+                    messageController.receive(envelope.getPayload().get("body").asText(),
+                            envelope.getPayload().get("from").asText());
                 }
             });
             System.out.println("channel is on");
