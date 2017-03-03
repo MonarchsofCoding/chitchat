@@ -5,6 +5,7 @@ import com.moc.chitchat.activity.CurrentChatActivity;
 import com.moc.chitchat.activity.LoginActivity;
 import com.moc.chitchat.activity.RegistrationActivity;
 import com.moc.chitchat.activity.SearchUserActivity;
+import com.moc.chitchat.service.ReceiveMessageService;
 
 import dagger.Component;
 
@@ -28,5 +29,7 @@ public interface ApplicationComponent {
     void inject(CurrentChatActivity activity);
 
     void inject(ChatListActivity activity);
+
+    void inject(ReceiveMessageService service);
 
 }

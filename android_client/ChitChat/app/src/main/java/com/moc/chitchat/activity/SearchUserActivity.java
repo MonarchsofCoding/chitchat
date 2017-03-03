@@ -20,6 +20,7 @@ import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.SearchUserController;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
+import com.moc.chitchat.service.ReceiveMessageService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +81,7 @@ public class SearchUserActivity extends AppCompatActivity
     //For Volley Error response
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error search");
+        System.out.println("Error searching a user");
         try {
             Toast.makeText(this,
                 String.format("The user you are trying to found is not connected or not existing"),
@@ -208,7 +209,9 @@ public class SearchUserActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         //TODO: Dialog to ask exiting
+        stopService(new Intent(getBaseContext(), ReceiveMessageService.class));
         this.finish();
     }
 

@@ -16,6 +16,7 @@ import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.model.ConversationModel;
 import com.moc.chitchat.model.UserModel;
+import com.moc.chitchat.service.ReceiveMessageService;
 
 import java.util.ArrayList;
 
@@ -57,6 +58,13 @@ public class ChatListActivity extends AppCompatActivity
         menuTabs.addOnTabSelectedListener(this);
 
         getConversations();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopService(new Intent(getBaseContext(), ReceiveMessageService.class));
+        this.finish();
     }
 
     /**

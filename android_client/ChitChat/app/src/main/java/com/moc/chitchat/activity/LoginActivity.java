@@ -15,6 +15,7 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.LoginController;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
+import com.moc.chitchat.service.ReceiveMessageService;
 
 import javax.inject.Inject;
 
@@ -92,7 +93,7 @@ public class LoginActivity extends AppCompatActivity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error on login");
+        System.out.println("Error on login: Invalid credentials or you didn't registered yet");
         Toast.makeText(this,
             "Invalid credentials or you didn't registered yet",
             Toast.LENGTH_LONG
@@ -108,10 +109,9 @@ public class LoginActivity extends AppCompatActivity
      */
     @Override
     public void onResponse(JSONObject response) {
-        System.out.println(response.toString());
-
         try {
             String username = response.getJSONObject("data").get("username").toString();
+            System.out.println(String.format("Successfully logged in: %s", username));
             Toast.makeText(this,
                 String.format("Successfully logged in: %s", username), Toast.LENGTH_LONG).show();
 
@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity
         }
         Intent searchIntent = new Intent(this, SearchUserActivity.class);
         startActivity(searchIntent);
+        startService(new Intent(this, ReceiveMessageService.class));
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
         this.exitActivity();
     }

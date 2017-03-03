@@ -65,11 +65,6 @@ public class LoginController {
         Response.ErrorListener errorListener,
         String username, String password) {
 
-        System.out.println(
-            String.format("Username: %s, Password length: %s",
-                username, password.length())
-        );
-
         // Create a User object
         UserModel user = this.userResolver.createLoginUser(
             username,
