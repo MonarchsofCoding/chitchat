@@ -6,11 +6,23 @@ import com.moc.chitchat.model.UserModel;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 
 /**
  * ChitChatData provides the main application states.
  */
 public class ChitChatMessagesConfiguration {
+
+
+    /**
+     * To listen on new messages.
+     */
+    public interface MessageConfigurationListener {
+        void onNewMessageReceived();
+    }
+
+    private MessageConfigurationListener messageConfigurationListener;
 
     /**
      * ArrayList of Conversations. This allows the views to update automatically when this reference changes.
@@ -22,6 +34,15 @@ public class ChitChatMessagesConfiguration {
      */
     public ChitChatMessagesConfiguration() {
         this.conversations = new ArrayList<ConversationModel>();
+        this.messageConfigurationListener = null;
+    }
+
+    /**
+     * Sets the listener from the caller function, probably activities.
+     * @param listener the listener object to set
+     */
+    public void setMessageConfigurationListener(MessageConfigurationListener listener) {
+        this.messageConfigurationListener = listener;
     }
 
     /**
@@ -48,9 +69,12 @@ public class ChitChatMessagesConfiguration {
      * @param user    - reciever of the message
      * @param message - message object
      */
-    public void addMessageToConversation(UserModel user, MessageModel message) {
+    public void addMessageToConversation(UserModel user, MessageModel message, boolean isLocal) {
         ConversationModel conversation = getConversation(user);
         conversation.addMessage(message);
+        if(!isLocal && this.messageConfigurationListener != null) {
+            this.messageConfigurationListener.onNewMessageReceived();
+        }
     }
 
     /**

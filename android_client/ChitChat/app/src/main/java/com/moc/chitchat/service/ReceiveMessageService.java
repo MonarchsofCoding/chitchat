@@ -12,14 +12,12 @@ import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
 import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
+import com.moc.chitchat.model.MessageModel;
+import com.moc.chitchat.model.UserModel;
 
 import javax.inject.Inject;
 
-import org.json.JSONObject;
 import org.phoenixframework.channels.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class ReceiveMessageService extends Service {
@@ -60,16 +58,11 @@ public class ReceiveMessageService extends Service {
                  auth);
 
             channel.join()
-                .receive("ignore", new IMessageCallback() {
-                    @Override
-                    public void onMessage(Envelope envelope) {
-                        System.out.println("IGNORE");
-                    }
-                })
                 .receive("ok", new IMessageCallback() {
                     @Override
                     public void onMessage(Envelope envelope) {
                         System.out.println("JOINED with " + envelope.toString());
+
                     }
                 });
 
@@ -77,6 +70,19 @@ public class ReceiveMessageService extends Service {
                 @Override
                 public void onMessage(Envelope envelope) {
                     System.out.println("NEW MESSAGE: " + envelope.toString());
+                    String message = envelope.getPayload().get("body").asText();
+                    String from = envelope.getPayload().get("from").asText();
+                    UserModel fromUser = new UserModel(from);
+                    MessageModel toAdd = new MessageModel(
+                        fromUser,
+                        sessionConfiguration.getCurrentUser(),
+                        message
+                    );
+                    chitChatMessagesConfiguration.addMessageToConversation(
+                        fromUser,
+                        toAdd,
+                        false
+                    );
                 }
             });
 

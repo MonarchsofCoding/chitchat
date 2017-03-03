@@ -76,6 +76,4 @@ public class ApplicationModule {
     ChitChatMessagesConfiguration provideChitChatMessagesConfiguration() {
         return new ChitChatMessagesConfiguration();
     }
-
-
 }
