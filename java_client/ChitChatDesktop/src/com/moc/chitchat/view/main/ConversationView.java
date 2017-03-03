@@ -86,9 +86,9 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
                 .getConversation(this.conversation.getOtherParticipant()).getMessages());
         this.conversationPane.add(messages, "span");
         this.newMessageField = new TextField();
-        newMessageField.setPromptText("Enter Message: ");
+        this.newMessageField.setPromptText("Enter Message: ");
         this.newMessageField.setId("newmessageField");
-        newMessageField.setOnAction(this);
+        this.newMessageField.setOnAction(this);
         this.conversationPane.add(newMessageField, "span,grow");
 
         this.errormessage = new Label();
@@ -106,7 +106,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
     @Override
     public void handle(ActionEvent event) {
-        if (event.getSource() == this.sendbtn) {
+        if (event.getSource() == this.sendbtn || event.getSource() == this.newMessageField) {
             try {
                 Message message = this.messageController.send(
                         this.conversation.getOtherParticipant(),
