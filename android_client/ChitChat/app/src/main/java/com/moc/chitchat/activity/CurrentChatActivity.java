@@ -104,13 +104,11 @@ public class CurrentChatActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        sessionConfiguration.setCurrentChatActivity(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        sessionConfiguration.cleanCurrentChatActivity();
     }
 
     //For when a button is clicked

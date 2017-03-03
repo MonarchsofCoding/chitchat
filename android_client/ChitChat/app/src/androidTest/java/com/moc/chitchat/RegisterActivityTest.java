@@ -1,5 +1,12 @@
 package com.moc.chitchat;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.Assert.assertEquals;
+
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -15,13 +22,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertEquals;
-
 /**
  * Created by aakyo on 21/01/2017.
  */
@@ -31,13 +31,12 @@ import static junit.framework.Assert.assertEquals;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RegisterActivityTest {
 
-    private String usernameTyped;
-    private String passwordTyped;
-    private String passwordReTyped;
-
     @Rule
     public ActivityTestRule<RegistrationActivity> registerActivityRule = new ActivityTestRule<>(
         RegistrationActivity.class);
+    private String usernameTyped;
+    private String passwordTyped;
+    private String passwordReTyped;
 
     @Test
     public void true_Input() throws InterruptedException {

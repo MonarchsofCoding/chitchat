@@ -1,15 +1,15 @@
 package com.moc.chitchat.application;
 
-
 import com.moc.chitchat.model.ConversationModel;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 
-import org.junit.Test;
-
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+
+import org.junit.Test;
 
 public class ChitChatMessagesConfigurationTest {
 
@@ -36,7 +36,7 @@ public class ChitChatMessagesConfigurationTest {
         UserModel user = new UserModel("Frank");
         MessageModel message = new MessageModel(user, "This is the message");
 
-        chitChatData.addMessageToConversation(user, message);
+        chitChatData.addMessageToConversation(user, message, false);
 
         ConversationModel foundConversations = chitChatData.getConversation(user);
 
@@ -62,13 +62,19 @@ public class ChitChatMessagesConfigurationTest {
     public void testAddToConvo() {
         ChitChatMessagesConfiguration chitChatData = new ChitChatMessagesConfiguration();
 
+        ChitChatMessagesConfiguration.MessageConfigurationListener mockListener = mock(
+            ChitChatMessagesConfiguration.MessageConfigurationListener.class
+        );
+
+        chitChatData.setMessageConfigurationListener(mockListener);
+
         UserModel frank = new UserModel("Frank");
         MessageModel frankMessage = new MessageModel(frank, "This is the message");
 
         MessageModel frankMessage2 = new MessageModel(frank, "This is another message");
 
-        chitChatData.addMessageToConversation(frank, frankMessage);
-        chitChatData.addMessageToConversation(frank, frankMessage2);
+        chitChatData.addMessageToConversation(frank, frankMessage, false);
+        chitChatData.addMessageToConversation(frank, frankMessage2, false);
 
         assertEquals(2, chitChatData.getConversation(frank).getMessages().size());
         assertEquals(frankMessage.getMessage(), chitChatData.getConversation(frank).getMessages().get(0).getMessage());

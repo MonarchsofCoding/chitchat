@@ -17,8 +17,11 @@ import com.moc.chitchat.model.UserModel;
 
 import javax.inject.Inject;
 
-import org.phoenixframework.channels.*;
-
+import org.phoenixframework.channels.Channel;
+import org.phoenixframework.channels.ChannelEvent;
+import org.phoenixframework.channels.Envelope;
+import org.phoenixframework.channels.IMessageCallback;
+import org.phoenixframework.channels.Socket;
 
 public class ReceiveMessageService extends Service {
 
@@ -47,15 +50,15 @@ public class ReceiveMessageService extends Service {
         try {
             socket = new Socket((this.getResources().getString(R.string.server_url)
                 + "/api/v1/messages/websocket?guardian_token="
-                + sessionConfiguration.getCurrentUser().getAuthToken()).replace("https","ws"));
+                + sessionConfiguration.getCurrentUser().getAuthToken()).replace("https", "ws"));
             socket.connect();
 
             ObjectNode auth = JsonNodeFactory.instance.objectNode();
             auth.put("guardian_token", sessionConfiguration.getCurrentUser().getAuthToken());
 
-             channel = socket.chan("user:"
-                     + sessionConfiguration.getCurrentUser().getUsername(),
-                 auth);
+            channel = socket.chan("user:"
+                    + sessionConfiguration.getCurrentUser().getUsername(),
+                auth);
 
             channel.join()
                 .receive("ok", new IMessageCallback() {
