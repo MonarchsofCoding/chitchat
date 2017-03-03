@@ -1,12 +1,14 @@
 package com.moc.chitchat.client;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.controller.MessageController;
-import org.phoenixframework.channels.*;
+import java.io.IOException;
+import org.phoenixframework.channels.Channel;
+import org.phoenixframework.channels.Envelope;
+import org.phoenixframework.channels.IMessageCallback;
+import org.phoenixframework.channels.Socket;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +23,7 @@ public class WebSocketClient {
 
     /**
      * WebSocketClient constructor.
+     *
      * @param configuration - passing the configuration so we know the current user
      */
     public WebSocketClient(Configuration configuration,
@@ -37,19 +40,20 @@ public class WebSocketClient {
         String accessToken = this.configuration.getLoggedInUser().getAuthToken();
 
         try {
-            socket = new Socket(String.format("ws://localhost:4000/api/v1/messages/websocket?guardian_token=%s", accessToken));
+            socket = new Socket(String.format("ws://localhost:4000/api/v1/messages/websocket?guardian_token=%s",
+                    accessToken));
             socket.connect();
             System.out.println("connected");
             ObjectNode auth = JsonNodeFactory.instance.objectNode();
             auth.put("guardian_token", accessToken);
-            Channel channel = socket.chan("user:"+this.configuration.getLoggedInUser().getUsername(), auth);
+            Channel channel = socket.chan("user:" + this.configuration.getLoggedInUser().getUsername(), auth);
             channel.join()
                     .receive("ok", new IMessageCallback() {
-                @Override
-                public void onMessage(Envelope envelope) {
-                    System.out.println("JOINED with " + envelope.toString());
-                }
-            });
+                        @Override
+                        public void onMessage(Envelope envelope) {
+                            System.out.println("JOINED with " + envelope.toString());
+                        }
+                    });
             channel.on("new:message", new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
@@ -81,7 +85,6 @@ public class WebSocketClient {
             }
         }
     }
-
 
 
 }
