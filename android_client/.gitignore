@@ -27,3 +27,7 @@ ChitChat/local.properties
 .DS_Store
 /captures
 .externalNativeBuild
+
+screenlog.*
+ChitChatAndroid.flv
+ChitChatAndroid.mp4

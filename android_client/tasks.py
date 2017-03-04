@@ -18,6 +18,32 @@ def __check_branch():
     exit("Not master or develop, so not deploying.")
 
 @task
+def build_dev_image(ctx):
+  """
+  Builds development image to run tests on
+  """
+  git = vcs.Git()
+  version = git.get_version()
+
+  lxc.Docker.build(cli,
+      dockerfile='Dockerfile.dev',
+      tag="monarchsofcoding/chitchat:android-dev-{0}".format(version)
+  )
+
+  cli.tag(
+    "monarchsofcoding/chitchat:android-dev-{0}".format(version),
+    "monarchsofcoding/chitchat",
+    "android-dev"
+  )
+
+  lxc.Docker.login(cli)
+
+  lxc.Docker.push(cli, [
+    "monarchsofcoding/chitchat:android-dev-{0}".format(version),
+    "monarchsofcoding/chitchat:android-dev"
+  ])
+
+@task
 def build(ctx):
     """
     Build productionRelease APK
@@ -26,10 +52,7 @@ def build(ctx):
       "ChitChat/app/build",
     ])
 
-    lxc.Docker.build(cli,
-        dockerfile='Dockerfile.dev',
-        tag="{0}-dev".format("chitchat-androidclient")
-    )
+    cli.pull("monarchsofcoding/chitchat:android-dev")
 
     bin_version = __check_branch()
     build_dir = "build/outputs/apk"
@@ -86,13 +109,15 @@ def test(ctx):
     Tests the ChitChat Android client
     """
 
-    lxc.Docker.build(cli,
-        dockerfile='Dockerfile.dev',
-        tag="{0}-dev".format("chitchat-androidclient")
-    )
+    # lxc.Docker.build(cli,
+    #     dockerfile='Dockerfile.dev',
+    #     tag="{0}-dev".format("chitchat-androidclient")
+    # )
+
+    cli.pull("monarchsofcoding/chitchat:android-dev")
 
     lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-androidclient"),
+        tag="monarchsofcoding/chitchat:android-dev",
         command='/bin/bash -c "cd app && gradle test && gradle jacocoTestReport && gradle lint && gradle checkstyle"',
         volumes=[
             "{0}/ChitChat:/app".format(os.getcwd())
