@@ -37,7 +37,7 @@ def test(ctx):
   backend_container = lxc.Docker.run(
     cli,
     "monarchsofcoding/chitchat:release-{0}".format(version),
-    command='/bin/sh -c "export LOCAL_IP=`hostname -i` && /opt/app/bin/chit_chat foreground"',
+    command='foreground',
     environment={
       "SECRET_KEY_BASE": "G9XBaZMFhtWDxAaowHCBrrDVq8xVB3sfro8xiGnFXfidldnvf",
       "GUARDIAN_SECRET_KEY": "cQCWxKpcuixeB4ZAxCs04nrBGdKeJiHcmmCHbZPI6esGcLcfZVz1qw2796p3gWGA",
