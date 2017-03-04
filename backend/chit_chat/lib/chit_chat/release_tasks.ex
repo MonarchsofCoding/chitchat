@@ -53,7 +53,8 @@ defmodule ChitChat.ReleaseTasks do
 
   defp migrations_path, do: Path.join([priv_dir(), "repo", "migrations"])
 
-  def aws_ecs_dns() do
+  @spec aws_ecs_dns() :: {}
+  def aws_ecs_dns do
     IO.puts "Checking for services on AWS ECS using DNS service discovery..."
     if System.get_env("ECS_DNS_POSTGRES") do
       postgres_dns_address = to_charlist System.get_env("ECS_DNS_POSTGRES")
@@ -76,5 +77,5 @@ defmodule ChitChat.ReleaseTasks do
       end
     end
   end
-  
+
 end

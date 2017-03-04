@@ -17,6 +17,7 @@ defmodule ChitChat.MessageChannel do
         {:ok, %{message: "Joined"}, authed_socket}
       {:error, reason} ->
         # handle error
+        {}
     end
   end
 
