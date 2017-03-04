@@ -26,3 +26,5 @@ COPY chit_chat/rel/entrypoint.sh /opt/app/entrypoint.sh
 RUN chmod +x /opt/app/entrypoint.sh
 
 ENTRYPOINT ["/opt/app/entrypoint.sh"]
+
+CMD foreground
