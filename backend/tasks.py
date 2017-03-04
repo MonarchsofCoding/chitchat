@@ -79,6 +79,12 @@ def deploy(ctx):
   git = vcs.Git()
   version = git.get_version()
 
+  lxc.Docker.login(cli)
+  lxc.Docker.push([
+    "monarchsofcoding/chitchat:release-{0}".format(version),
+    "monarchsofcoding/chitchat:release"
+  ])
+
   terragrunt_container = lxc.Docker.run(cli,
     "articulate/terragrunt:0.8.6",
     command="apply",
