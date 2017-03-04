@@ -28,14 +28,14 @@ RUN echo y | android update sdk --no-ui --all --filter android-25 | grep 'packag
 RUN echo y | android update sdk --no-ui --all --filter android-24 | grep 'package installed'
 RUN echo y | android update sdk --no-ui --all --filter build-tools-25.0.2 | grep 'package installed'
 ENV PATH ${PATH}:${ANDROID_HOME}/build-tools/25.0.2
-RUN android list sdk --extended --all | grep sys-img-x86
-RUN echo y | android update sdk --no-ui --all --filter sys-img-x86-android-24 | grep 'package installed'
+RUN android list sdk --extended --all | grep sys-img-arm
+RUN echo y | android update sdk --no-ui --all --filter sys-img-armeabi-v7a-android-24 | grep 'package installed'
 
 RUN mkdir "$ANDROID_HOME/licenses"
 RUN echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 
 # Download and create AVD
-RUN echo no | android create avd -n nougat -t android-24 --abi "x86"
+RUN echo no | android create avd -n nougat -t android-24 --abi "armeabi-v7a"
 
 # Needed to be able to run VNC - bug of Android SDK
 RUN mkdir ${ANDROID_HOME}/tools/keymaps && touch ${ANDROID_HOME}/tools/keymaps/en-us
