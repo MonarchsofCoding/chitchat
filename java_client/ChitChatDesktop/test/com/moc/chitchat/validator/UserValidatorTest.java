@@ -26,7 +26,8 @@ public class UserValidatorTest {
     @Mock
     private HttpResponse<JsonNode> mockResponse;
 
-    @Before public void initMocks() {
+    @Before
+    public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -117,7 +118,6 @@ public class UserValidatorTest {
 
         when(thebody.getObject()).thenReturn(obj);
 
-
         UserValidator userValidator = new UserValidator();
         try {
             userValidator.throwErrorsFromResponse(this.mockResponse);
@@ -168,6 +168,30 @@ public class UserValidatorTest {
         assertFalse(userValidator.supports(UserResolver.class));
     }
 
+    @Test
+    public void testServerErrorMessage() {
+        JsonNode thebody = mock(JsonNode.class);
+        when(this.mockResponse.getBody()).thenReturn(thebody);
+
+        JSONArray serverErrors = new JSONArray();
+        serverErrors.put("message");
+
+        JSONObject servErrors = new JSONObject();
+        servErrors.put("message", serverErrors);
+
+        JSONObject obj = new JSONObject();
+        obj.put("errors", servErrors);
+
+        when(thebody.getObject()).thenReturn(obj);
+
+        try {
+            UserValidator userValidator = new UserValidator();
+            userValidator.throwErrorsFromResponse(mockResponse);
+        } catch (ValidationException validationException) {
+            Errors errors = validationException.getErrors();
+            assertEquals(1, errors.getFieldErrorCount());
+        }
+    }
 
 
 }
