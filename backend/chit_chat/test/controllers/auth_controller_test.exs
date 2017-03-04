@@ -34,4 +34,11 @@ defmodule ChitChat.AuthControllerTest do
     |> json_response(401)
   end
 
+  test "does not render auth token when username does not exist", %{conn: conn} do
+    conn
+    |> recycle()
+    |> post("/api/v1/auth", %{username: "bob", password: "password1234"})
+    |> json_response(401)
+  end
+
 end
