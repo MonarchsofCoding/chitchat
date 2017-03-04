@@ -19,7 +19,7 @@ def test(ctx):
   # )
   # os.chdir("{0}/e2e/".format(os.getcwd()))
 
-  cli.pull("monarchsofcoding/chitchat:android-dev")
+  cli.pull("monarchsofcoding/chitchat:desktop-dev")
 
   cli.pull("postgres", "latest")
   postgres_container = lxc.Docker.run(
@@ -67,7 +67,7 @@ def test(ctx):
 
   try:
     lxc.Docker.run(cli,
-      tag="monarchsofcoding/chitchat:android-dev",
+      tag="monarchsofcoding/chitchat:desktop-dev",
       command='/bin/bash -c "{0} && {1} && {4}; EXIT_CODE=$? && {2} && {3}; exit $EXIT_CODE"'.format(
       vnc, vnc_rec_start, vnc_rec_stop, avconv, ui_tests),
       volumes=[
