@@ -76,6 +76,8 @@ defmodule ChitChat.ReleaseTasks do
         IO.binwrite env_file, "export DATABASE_PORT=#{to_string(db_port)}\n"
       end
     end
+
+    :init.stop()
   end
 
 end
