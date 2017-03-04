@@ -18,6 +18,9 @@
         "awslogs-stream-prefix": "chit-chat"
       }
     },
+    "command": [
+      "foreground"
+    ],
     "environment": [
       {
         "Name": "ECS_DNS_POSTGRES",
