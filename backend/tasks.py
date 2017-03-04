@@ -80,7 +80,7 @@ def deploy(ctx):
   version = git.get_version()
 
   lxc.Docker.login(cli)
-  lxc.Docker.push([
+  lxc.Docker.push(cli, [
     "monarchsofcoding/chitchat:release-{0}".format(version),
     "monarchsofcoding/chitchat:release"
   ])
