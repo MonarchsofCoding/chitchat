@@ -111,9 +111,6 @@ def test(ctx):
     working_dir="/app",
     environment={
       "CHITCHAT_ENV": "test"
-    },
-    links={
-      backend_container.get('Id'): "chitchat"
     }
   )
 
