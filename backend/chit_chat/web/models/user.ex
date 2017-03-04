@@ -60,7 +60,9 @@ defmodule ChitChat.User do
   @spec find_and_check_password(Ecto.Changeset) :: User
   def find_and_check_password(changeset) do
 
-    with {:ok, user} <- UserRepository.find_by_username(changeset),
+    with {:ok, user} <- UserRepository.find_by_username(
+                          changeset.params["username"]
+                        ),
         {:ok, user} <- confirm_password(user, changeset)
     do
       {:ok, user}
