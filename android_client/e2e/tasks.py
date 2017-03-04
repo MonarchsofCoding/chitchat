@@ -74,7 +74,8 @@ def test(ctx):
 
     preload_classes = "gradle "
     start_emulator = "screen -d -L -m -S emulator emulator64-x86 -avd nougat -noaudio -no-window -gpu off -verbose -qemu -vnc :1"
-    vnc_rec_start = "android-wait-for-emulator && screen -d -L -m -S vnc2flv flvrec.py -o ChitChatAndroid.flv :1"
+    print_screen_log = "sleep 60; cat screenlog.0"
+    vnc_rec_start = "{0} && android-wait-for-emulator && screen -d -L -m -S vnc2flv flvrec.py -o ChitChatAndroid.flv :1".format(print_screen_log)
     instrumented_tests = "gradle connectedUiTestsDebugAndroidTest"
     vnc_rec_stop = "screen -X -S vnc2flv kill"
     stop_emulator = "screen -X -S emulator kill"
