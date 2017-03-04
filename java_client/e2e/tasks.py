@@ -34,9 +34,6 @@ def test(ctx):
     detach=True
   )
 
-  import time
-  time.sleep(5)
-
   backend_container = lxc.Docker.run(
     cli,
     "monarchsofcoding/chitchat:release-{0}".format(version),
