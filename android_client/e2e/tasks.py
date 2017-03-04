@@ -50,7 +50,7 @@ def test(ctx):
     backend_container = lxc.Docker.run(
       cli,
       "monarchsofcoding/chitchat:release-{0}".format(version),
-      command='/bin/sh -c "export LOCAL_IP=`hostname -i` && /opt/app/bin/chit_chat foreground"',
+      command='foreground',
       environment={
         "SECRET_KEY_BASE": "G9XBaZMFhtWDxAaowHCBrrDVq8xVB3sfro8xiGnFXfidldnvf",
         "GUARDIAN_SECRET_KEY": "cQCWxKpcuixeB4ZAxCs04nrBGdKeJiHcmmCHbZPI6esGcLcfZVz1qw2796p3gWGA",
@@ -69,7 +69,7 @@ def test(ctx):
       }
     )
 
-    preload_classes = "gradle "
+    preload_classes = "gradle compileUiTestReleaseSources"
     start_emulator = "screen -d -L -m -S emulator emulator64-arm -avd nougat -noaudio -no-window -gpu off -verbose -qemu -vnc :1"
     print_screen_log = "sleep 60; cat screenlog.0"
     vnc_rec_start = "{0} && android-wait-for-emulator && screen -d -L -m -S vnc2flv flvrec.py -o ChitChatAndroid.flv :1".format(print_screen_log)
@@ -89,7 +89,9 @@ def test(ctx):
         ],
         working_dir="/app",
         environment={},
-        privileged=True
+        links={
+          backend_container.get('Id'): "chitchat"
+        }
     )
 
 @task

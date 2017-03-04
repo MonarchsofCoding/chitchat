@@ -116,14 +116,19 @@ def test(ctx):
 
     cli.pull("monarchsofcoding/chitchat:android-dev")
 
+    tests = "gradle testProductionReleaseUnitTest"
+    coverage = "gradle jacocoTestProductionReleaseUnitTestReport"
+    lint = "gradle lintProductionRelease"
+    checkstyle = "gradle checkstyle"
+
     lxc.Docker.run(cli,
-        tag="monarchsofcoding/chitchat:android-dev",
-        command='/bin/bash -c "cd app && gradle test && gradle jacocoTestReport && gradle lint && gradle checkstyle"',
-        volumes=[
-            "{0}/ChitChat:/app".format(os.getcwd())
-        ],
-        working_dir="/app",
-        environment={}
+      tag="monarchsofcoding/chitchat:android-dev",
+      command='/bin/bash -c "cd app && {0} && {1} && {2} && {3}"'.format(tests, coverage, lint, checkstyle),
+      volumes=[
+          "{0}/ChitChat:/app".format(os.getcwd())
+      ],
+      working_dir="/app",
+      environment={}
     )
 
 @task
@@ -133,8 +138,8 @@ def publish_test_artifacts(ctx):
   s3_artifacts = "s3://kcl-chit-chat-artifacts/builds/{0}/android_client".format(os.getenv("TRAVIS_BUILD_NUMBER"))
 
   local_coverage = "app/build/JacocoCoverageReport/jacocoTestProductionReleaseUnitTestReport/html/"
-  local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/productionRelease/"
-  local_lint = "app/build/outputs/lint-results-betaDebug.html"
+  local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/"
+  local_lint = "app/build/outputs/lint-results-productionRelease.html"
   local_checkstyle = "app/build/reports/checkstyle/checkstyle.html"
 
   try:
