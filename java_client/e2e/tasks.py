@@ -12,12 +12,14 @@ def test(ctx):
   git = vcs.Git()
   version = git.get_version()
 
-  os.chdir("{0}/../".format(os.getcwd()))
-  lxc.Docker.build(cli,
-    dockerfile='Dockerfile.dev',
-    tag="{0}-dev".format("chitchat-javaclient")
-  )
-  os.chdir("{0}/e2e/".format(os.getcwd()))
+  # os.chdir("{0}/../".format(os.getcwd()))
+  # lxc.Docker.build(cli,
+  #   dockerfile='Dockerfile.dev',
+  #   tag="{0}-dev".format("chitchat-javaclient")
+  # )
+  # os.chdir("{0}/e2e/".format(os.getcwd()))
+
+  cli.pull("monarchsofcoding/chitchat:android-dev")
 
   cli.pull("postgres", "latest")
   postgres_container = lxc.Docker.run(
@@ -65,7 +67,7 @@ def test(ctx):
 
   try:
     lxc.Docker.run(cli,
-      tag="{0}-dev".format("chitchat-javaclient"),
+      tag="monarchsofcoding/chitchat:android-dev",
       command='/bin/bash -c "{0} && {1} && {4}; EXIT_CODE=$? && {2} && {3}; exit $EXIT_CODE"'.format(
       vnc, vnc_rec_start, vnc_rec_stop, avconv, ui_tests),
       volumes=[
