@@ -29,6 +29,7 @@ data "template_file" "ecs_chit-chat_def" {
   template = "${file("${path.module}/chit-chat-def.tpl.json")}"
 
   vars {
+    node_cookie        = "${var.secret_key_base}"
     secret_key_base    = "${var.secret_key_base}"
     guadian_secret_key = "${var.guardian_secret_key}"
     environment        = "${var.environment}"

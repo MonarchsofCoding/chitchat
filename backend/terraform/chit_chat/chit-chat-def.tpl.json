@@ -50,6 +50,10 @@
       {
         "Name": "MIX_ENV",
         "Value": "prod"
+      },
+      {
+        "Name": "NODE_COOKIE",
+        "Value": "${node_cookie}"
       }
     ],
     "dockerLabels": {
