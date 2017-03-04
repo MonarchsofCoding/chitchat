@@ -1,5 +1,0 @@
-set -e
-
-echo "# Setting LOCAL_IP"
-export LOCAL_IP=$(hostname -i)
-echo "# Set LOCAL_IP as ${LOCAL_IP}"

@@ -53,4 +53,28 @@ defmodule ChitChat.ReleaseTasks do
 
   defp migrations_path, do: Path.join([priv_dir(), "repo", "migrations"])
 
+  def aws_ecs_dns() do
+    IO.puts "Checking for services on AWS ECS using DNS service discovery..."
+    if System.get_env("ECS_DNS_POSTGRES") do
+      postgres_dns_address = to_charlist System.get_env("ECS_DNS_POSTGRES")
+      IO.puts "Looking for: #{postgres_dns_address}"
+
+      :timer.sleep(2000)
+
+      res = :inet_res.lookup(postgres_dns_address, :in, :srv)
+
+      if length(res) > 0 do
+        dns_data = List.first(res)
+        db_port = elem(dns_data, 2)
+        db_hostname = elem(dns_data, 3)
+
+        IO.puts "Found #{postgres_dns_address} at #{db_hostname}:#{db_port} "
+
+        {:ok, env_file} = File.open "db_env", [:write]
+        IO.binwrite env_file, "export DATABASE_HOSTNAME=#{to_string(db_hostname)}\n"
+        IO.binwrite env_file, "export DATABASE_PORT=#{to_string(db_port)}\n"
+      end
+    end
+  end
+  
 end

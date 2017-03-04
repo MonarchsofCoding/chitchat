@@ -17,6 +17,12 @@ ADD chit_chat.tar.gz ./
 
 # USER default
 
-# ENTRYPOINT ["/opt/app/bin/chit_chat"]
+# Add wait-for-it
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /bin/wait-for-it.sh
+RUN chmod +x /bin/wait-for-it.sh
 
-CMD /bin/sh -c "export LOCAL_IP=`hostname -i` && /opt/app/bin/chit_chat foreground"
+# Add entrypoint
+COPY chit_chat/rel/entrypoint.sh /opt/app/entrypoint.sh
+RUN chmod +x /opt/app/entrypoint.sh
+
+ENTRYPOINT ["/opt/app/entrypoint.sh"]
