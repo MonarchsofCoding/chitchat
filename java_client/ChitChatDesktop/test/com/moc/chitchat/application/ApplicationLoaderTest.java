@@ -1,19 +1,10 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.model.UserModel;
-import com.moc.chitchat.view.AuthenticationStage;
-import com.moc.chitchat.view.main.MainStage;
-import javafx.stage.Stage;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * ApplicationLoaderTest provides tests for ApplicationLoader
@@ -23,7 +14,7 @@ public class ApplicationLoaderTest {
 //    @Test
 //    public void testConstructor() {
 //        Configuration mockConfiguration = mock(Configuration.class);
-//        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+//        BaseStage mockAuthenticationStage = mock(BaseStage.class);
 //        MainStage mockMainStage = mock(MainStage.class);
 //        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
 //
@@ -41,7 +32,7 @@ public class ApplicationLoaderTest {
 //    @Test
 //    public void testLoadDefaultProdEnvironment() {
 //        Configuration mockConfiguration = mock(Configuration.class);
-//        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+//        BaseStage mockAuthenticationStage = mock(BaseStage.class);
 //        MainStage mockMainStage = mock(MainStage.class);
 //
 //
@@ -75,7 +66,7 @@ public class ApplicationLoaderTest {
 //    @Test
 //    public void testLoadTestEnvironment() {
 //        Configuration mockConfiguration = mock(Configuration.class);
-//        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+//        BaseStage mockAuthenticationStage = mock(BaseStage.class);
 //        MainStage mockMainStage = mock(MainStage.class);
 //
 //
@@ -117,7 +108,7 @@ public class ApplicationLoaderTest {
 //    @Test
 //    public void testLoadDevEnvironment() {
 //        Configuration mockConfiguration = mock(Configuration.class);
-//        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+//        BaseStage mockAuthenticationStage = mock(BaseStage.class);
 //        MainStage mockMainStage = mock(MainStage.class);
 //
 //
@@ -155,7 +146,7 @@ public class ApplicationLoaderTest {
 //    @Test
 //    public void testLoadProdByDefaultWithUnknownArg() {
 //        Configuration mockConfiguration = mock(Configuration.class);
-//        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+//        BaseStage mockAuthenticationStage = mock(BaseStage.class);
 //        MainStage mockMainStage = mock(MainStage.class);
 //
 //
@@ -192,7 +183,7 @@ public class ApplicationLoaderTest {
 //    @Test
 //    public void testLoadMainStageWhenLoggedIn() {
 //        Configuration mockConfiguration = mock(Configuration.class);
-//        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
+//        BaseStage mockAuthenticationStage = mock(BaseStage.class);
 //        MainStage mockMainStage = mock(MainStage.class);
 //
 //        UserModel mockUser = mock(UserModel.class);

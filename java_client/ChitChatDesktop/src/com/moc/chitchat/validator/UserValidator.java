@@ -64,10 +64,11 @@ public class UserValidator implements Validator {
     public void throwErrorsFromResponse(HttpResponse<JsonNode> response) throws ValidationException {
         JSONObject serverErrors = response.getBody().getObject().getJSONObject("errors");
 
-        MapBindingResult validationErrors =
-                new MapBindingResult(
-                        new HashMap<String, String>(),
-                        UserModel.class.getName());
+        MapBindingResult validationErrors = new MapBindingResult(
+            new HashMap<String, String>(),
+            UserModel.class.getName()
+        );
+
         if (!serverErrors.isNull("message")) {
             JSONArray messageErrors = serverErrors.getJSONArray("message");
 
@@ -79,7 +80,6 @@ public class UserValidator implements Validator {
 
         if (!serverErrors.isNull("username")) {
             JSONArray usernameErrors = serverErrors.getJSONArray("username");
-
 
             for (Object errorString : usernameErrors) {
                 validationErrors.rejectValue("username", "server.invalid", errorString.toString());
@@ -95,7 +95,5 @@ public class UserValidator implements Validator {
         }
 
         throw new ValidationException(validationErrors);
-
-
     }
 }

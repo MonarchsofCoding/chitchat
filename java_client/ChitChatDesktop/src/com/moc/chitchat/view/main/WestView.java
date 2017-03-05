@@ -11,7 +11,7 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 
 /**
- * WestView provides the west side of the Main application stage.
+ * WestView provides the west side of the MainView.
  */
 @Component
 public class WestView extends BaseView implements EventHandler<ActionEvent> {

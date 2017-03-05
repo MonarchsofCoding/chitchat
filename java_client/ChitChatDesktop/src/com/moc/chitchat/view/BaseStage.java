@@ -1,45 +1,58 @@
 package com.moc.chitchat.view;
 
-import com.moc.chitchat.view.main.MainStage;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import javafx.scene.Scene;
+
+import com.moc.chitchat.application.Configuration;
+import com.moc.chitchat.view.authentication.LoginView;
+import com.moc.chitchat.view.authentication.RegistrationView;
+import com.moc.chitchat.view.main.MainView;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Provides the application stage.
+ */
 @Component
-public class AuthenticationStage {
-
-    private Scene loginScene;
-    private Scene registrationScene;
+public class BaseStage {
 
     private LoginView loginView;
     private RegistrationView registrationView;
+    private MainView mainView;
 
     private Stage primaryStage;
-    private MainStage mainStage;
+    private Configuration configuration;
 
     /**
-     * Construction for the AuthenticationStage.
-     * @param mainStage - The main primaryStage
+     * Construction for the BaseStage.
+     * @param mainView - The main primaryStage
      * @param loginView - The login in view
      * @param registrationView - The registration view
      */
     @Autowired
-    public AuthenticationStage(
-            MainStage mainStage,
+    public BaseStage(
+            MainView mainView,
             LoginView loginView,
-            RegistrationView registrationView
+            RegistrationView registrationView,
+            Configuration configuration
     ) {
-        this.mainStage = mainStage;
+        this.mainView = mainView;
         this.loginView = loginView;
         this.registrationView = registrationView;
+        this.configuration = configuration;
     }
 
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
+    }
+
+    public void setWindowTitle(String title) {
+        this.primaryStage.setTitle(title);
+    }
+
+    public Configuration getConfiguration() {
+        return this.configuration;
     }
 
     /**
@@ -56,33 +69,32 @@ public class AuthenticationStage {
         this.primaryStage.setX((resX - width) / 2);
         this.primaryStage.setY((resY - height) / 2);
 
-        this.loginView.setAuthenticationStage(this);
+        this.loginView.setBaseStage(this);
         this.loginView.setWidth(width);
         loginView.setHeight(height);
 
-        this.loginScene = loginView.getScene();
-        registrationView.setAuthenticationStage(this);
+        registrationView.setBaseStage(this);
         registrationView.setWidth(width);
         registrationView.setHeight(height);
-        this.registrationScene = registrationView.getScene();
+
+        this.mainView.setBaseStage(this);
+        this.mainView.setWidth(width);
+        this.mainView.setHeight(height);
 
         this.showLogin();
         this.primaryStage.show();
     }
 
 
-    void showLogin() {
-        this.primaryStage.setScene(this.loginScene);
-        this.primaryStage.setTitle("Chit Chat - Login");
+    public void showLogin() {
+        this.primaryStage.setScene(this.loginView.getScene());
     }
 
-    void showRegister() {
-        this.primaryStage.setScene(this.registrationScene);
-        this.primaryStage.setTitle("Chit Chat - Registration");
+    public void showRegister() {
+        this.primaryStage.setScene(this.registrationView.getScene());
     }
 
-    void showMainStage() {
-        this.mainStage.setPrimaryStage(this.primaryStage);
-        this.mainStage.show();
+    public void showMainView() {
+        this.primaryStage.setScene(this.mainView.getScene());
     }
 }

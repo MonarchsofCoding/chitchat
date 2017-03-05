@@ -5,8 +5,12 @@ import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
-
+/**
+ * Provides the base for all primary views in the application.
+ */
 public abstract class BaseView {
+
+    protected BaseStage baseStage;
 
     private int width;
     private int height;
@@ -19,6 +23,10 @@ public abstract class BaseView {
         this.height = height;
     }
 
+    public void setBaseStage(BaseStage stage) {
+        this.baseStage = stage;
+    }
+
     protected abstract MigPane getContentPane();
 
     /**
@@ -28,12 +36,10 @@ public abstract class BaseView {
     public Scene getScene() {
 
         MigPane base = new MigPane();
-        base.setLayout("fill");
+        base.setLayout("fill, wrap 12, debug");
         base.add(this.buildHeader(), "dock north");
 
         MigPane contentPane = this.getContentPane();
-        contentPane.setLayout("fill");
-        contentPane.setStyle("-fx-background-color: #F0F7F4");
         base.add(contentPane, "grow");
 
         base.add(this.buildFooter(), "dock south");
@@ -60,6 +66,14 @@ public abstract class BaseView {
         Label credits = new Label("Created by: Monarchs of Coding");
         credits.setTextFill(Color.WHITE);
         footer.add(credits);
+
+        if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
+            String username = this.baseStage.getConfiguration().getLoggedInUser().getUsername();
+
+            Label loggedInAs = new Label(String.format("Logged in as: %s", username));
+            loggedInAs.setTextFill(Color.WHITE);
+            footer.add(loggedInAs, "right");
+        }
 
         return footer;
     }
