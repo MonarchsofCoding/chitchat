@@ -40,8 +40,6 @@ dependencies {
     compile 'org.springframework:spring-context:4.3.5.RELEASE'
     // https://mvnrepository.com/artifact/commons-logging/commons-logging
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
-    // https://mvnrepository.com/artifact/com.miglayout/miglayout-swing
-    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.0'
 
     //https://mvnrepository.com/artifact/com.miglayout/miglayout-javafx
     compile group: 'com.miglayout', name: 'miglayout-javafx', version: '5.0'
@@ -53,8 +51,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
     compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
-
-//    compile 'com.github.eoinsha:JavaPhoenixChannels:0.2'
 
     testCompile "junit:junit:4.12"
     testCompile 'org.mockito:mockito-core:2.+'
