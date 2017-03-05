@@ -45,7 +45,7 @@ public class WebSocketClient {
             socket.connect();
             System.out.println("connected");
             ObjectNode auth = JsonNodeFactory.instance.objectNode();
-            auth.put("guardian_token", accessToken);
+            auth.put("authToken", accessToken);
             Channel channel = socket.chan("user:" + this.configuration.getLoggedInUser().getUsername(), auth);
             channel.join()
                     .receive("ok", new IMessageCallback() {
