@@ -7,7 +7,7 @@ import org.testfx.matcher.base.NodeMatchers;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
- * Created by spiros on 03/03/2017.
+ * ConversationListViewTest provides tests for the list of conversations
  */
 public class ConversationListViewTest extends PrimaryStageTest {
 
@@ -25,16 +25,35 @@ public class ConversationListViewTest extends PrimaryStageTest {
     final static String newmessageField = "#newmessageField";
     final static String errormessage = "#errormessage";
     final static String sendBtn = "#sendBtnmsg";
-    String username = "spiros";
-    String password = "aaaaaaaa";
+
+    final static String registerBtn = "#registerBtn";
+    final static String registerBtnreg = "#registerBtnreg";
+    final static String usernamefieldReg = "#usernamefieldreg";
+    final static String passwordfieldReg = "#passwordFieldreg";
+    final static String passwordCheckField = "#passwordCheckField";
+
+    String username = "john";
+    String password = "bbbbbbbbb";
     String check = "spirokas";
     String check2 = "spirokousa";
     /**
      * Function access that helps us to login in ordet o access the next level.
      *
      */
-    public void access_search_view3(){
 
+    /**
+     * This is a precondition function, so we register users that we need for testing.
+     */
+    public void preCondition(String username) {
+        String password = "bbbbbbbbb";
+
+        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
+        clickOn(passwordfieldReg).write(password);
+        clickOn(passwordCheckField).write(password);
+        clickOn(registerBtnreg);
+    }
+
+    public void access_search_view3(){
         clickOn(usernamefield).write(username);
         clickOn(passwordfield).write(password);
         clickOn(loginButton);
@@ -50,7 +69,7 @@ public class ConversationListViewTest extends PrimaryStageTest {
      */
     @Test
     public void check_ConversationFields(){
-
+        preCondition(username);
         clickOn(usernamefield).write(username);
         clickOn(passwordfield).write(password);
         clickOn(loginButton);
@@ -68,6 +87,8 @@ public class ConversationListViewTest extends PrimaryStageTest {
 
     @Test
     public void TestConversationListViewFunctionality(){
+        preCondition(check);
+        preCondition(check2);
         access_search_view3();
         clickOn(newmessageField).write("hello").clickOn(sendBtn);
         verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
@@ -78,10 +99,10 @@ public class ConversationListViewTest extends PrimaryStageTest {
         verifyThat(togglebutton, NodeMatchers.hasText("Search Users"));
         clickOn(check);
         verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-        clickOn("spiros: hello");
+        clickOn(username+": hello");
         clickOn(check2);
         verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check2));
-        clickOn("spiros: hi");
+        clickOn(username+": hi");
 
     }
 

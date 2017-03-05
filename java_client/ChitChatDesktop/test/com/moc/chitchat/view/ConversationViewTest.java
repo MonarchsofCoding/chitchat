@@ -16,7 +16,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 /**
- * Created by spiros on 02/03/2017.
+ * ConversationViewTest provides tests for conversation views
  */
 public class ConversationViewTest extends PrimaryStageTest {
     final static String loginButton = "#loginBtn";
@@ -33,20 +33,39 @@ public class ConversationViewTest extends PrimaryStageTest {
     final static String errormessage = "#errormessage";
     final static String sendBtn = "#sendBtnmsg";
 
+    final static String registerBtn = "#registerBtn";
+    final static String registerBtnreg = "#registerBtnreg";
+    final static String usernamefieldReg = "#usernamefieldreg";
+    final static String passwordfieldReg = "#passwordFieldreg";
+    final static String passwordCheckField = "#passwordCheckField";
+
+
+    /**
+     * This is a precondition function, so we register users that we need for testing.
+     */
+    public void preCondition(String username) {
+        String password = "ccccccccc";
+
+        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
+        clickOn(passwordfieldReg).write(password);
+        clickOn(passwordCheckField).write(password);
+        clickOn(registerBtnreg);
+    }
+
     /**
      * Function access that helps us to login in ordet o access the next level.
      *
      */
     public void access_search_view2(){
-        String username = "spiros";
-        String password = "aaaaaaaa";
-        String check = "spirokas";
+        String username = "Phillip";
+        String password = "ccccccccc";
+        String check = "Leonardo";
 
         clickOn(usernamefield).write(username);
         clickOn(passwordfield).write(password);
         clickOn(loginButton);
         clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("spi");
+        clickOn(usernameFieldsearch).write("Leo");
         clickOn(searchBtn);
         clickOn(check);
         clickOn(startConversationBtn);
@@ -56,8 +75,10 @@ public class ConversationViewTest extends PrimaryStageTest {
      */
     @Test
     public void CheckFields(){
+        preCondition("Phillip");
+        preCondition("Leonardo");
         access_search_view2();
-        String check = "spirokas";
+        String check = "Leonardo";
         verifyThat(togglebutton,hasText("Search Users"));
         verifyThat(togglebutton, NodeMatchers.isVisible());
         verifyThat(newmessageField, NodeMatchers.isEnabled());
@@ -77,7 +98,7 @@ public class ConversationViewTest extends PrimaryStageTest {
     public void CheckSendingMessagesFunction(){
         access_search_view2();
         String messagetest = "hello";
-        String messagedisplay = "spiros: " +
+        String messagedisplay = "Phillip: " +
                 ""+messagetest;
         clickOn(newmessageField).write(messagetest).clickOn(sendBtn);
         clickOn(messagedisplay);

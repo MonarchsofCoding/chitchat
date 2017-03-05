@@ -131,11 +131,11 @@ public class SearchViewTest extends PrimaryStageTest {
      */
     @Test
     public void CheckSuccessConversationStart(){
-        String check = "spirokas";
+        String check = "Chief";
         preCondition(check);
         access_search_view();
         clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("spi");
+        clickOn(usernameFieldsearch).write("Chi");
         clickOn(searchBtn);
         clickOn(check);
         clickOn(startConversationBtn);
