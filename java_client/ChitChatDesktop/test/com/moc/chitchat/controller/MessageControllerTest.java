@@ -13,6 +13,7 @@ import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
 import com.moc.chitchat.validator.UserValidator;
+import javafx.collections.ObservableList;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,9 +22,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 
 /**
  * MessageControllerTest provides the tests for MessageController
@@ -121,5 +120,13 @@ public class MessageControllerTest {
         when(conversation.addMessage(message)).thenReturn(conversation);
 
         this.messageController.send(to, "message");
+    }
+
+    @Test
+    public void testSuccessfulReceive() {
+        String name = "John";
+        String myText = "What's up John!!!!!!!!!!";
+
+        this.messageController.receive(myText, name);
     }
 }
