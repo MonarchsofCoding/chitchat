@@ -1,6 +1,7 @@
-package com.moc.chitchat.view;
+package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.model.UserModel;
+import com.moc.chitchat.view.PrimaryStageTest;
 import com.moc.chitchat.view.main.WestView;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -16,7 +17,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 /**
- * SearchViewTest provides tests for the search view functionality
+ * SearchViewTest provides tests for the search view functionality.
  */
 public class SearchViewTest extends PrimaryStageTest {
 

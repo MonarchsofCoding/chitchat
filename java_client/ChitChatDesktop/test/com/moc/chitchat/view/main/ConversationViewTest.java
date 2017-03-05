@@ -1,5 +1,6 @@
-package com.moc.chitchat.view;
+package com.moc.chitchat.view.main;
 
+import com.moc.chitchat.view.PrimaryStageTest;
 import javafx.scene.input.KeyCode;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
@@ -16,7 +17,7 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 /**
- * ConversationViewTest provides tests for conversation views
+ * ConversationViewTest provides tests for conversation views,
  */
 public class ConversationViewTest extends PrimaryStageTest {
     final static String loginButton = "#loginBtn";

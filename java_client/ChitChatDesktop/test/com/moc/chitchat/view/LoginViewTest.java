@@ -14,7 +14,7 @@ import static org.testfx.matcher.base.NodeMatchers.hasText;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 
 /**
- * Created by spiros on 26/02/2017.
+ * LoginViewTest provides UI tests for the LoginView.
  */
 public class LoginViewTest extends PrimaryStageTest {
 

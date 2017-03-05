@@ -1,5 +1,6 @@
-package com.moc.chitchat.view;
+package com.moc.chitchat.view.main;
 
+import com.moc.chitchat.view.PrimaryStageTest;
 import javafx.scene.Node;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
@@ -7,7 +8,7 @@ import org.testfx.matcher.base.NodeMatchers;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
- * ConversationListViewTest provides tests for the list of conversations
+ * ConversationListViewTest provides tests for the list of conversations.
  */
 public class ConversationListViewTest extends PrimaryStageTest {
 

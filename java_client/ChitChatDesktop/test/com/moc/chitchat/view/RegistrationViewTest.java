@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
- * Created by AIGERIM on 28/02/2017.
+ * RegistrationViewTest provides UI tests for the Registration View.
  */
 public class RegistrationViewTest extends PrimaryStageTest {
 
