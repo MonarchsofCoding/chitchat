@@ -1,12 +1,11 @@
 package com.moc.chitchat.view;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.view.authentication.LoginView;
 import com.moc.chitchat.view.authentication.RegistrationView;
 import com.moc.chitchat.view.main.MainView;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

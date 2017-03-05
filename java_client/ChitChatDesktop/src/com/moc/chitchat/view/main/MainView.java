@@ -1,6 +1,5 @@
 package com.moc.chitchat.view.main;
 
-
 import com.moc.chitchat.view.BaseView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
