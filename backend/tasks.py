@@ -128,10 +128,8 @@ def test(ctx):
       detach=True
     )
 
-    import time
-    time.sleep(10)
-
     setup = "mix deps.get"
+    wait = "/bin/wait-for-it.sh -t 120 postgres:5432"
     tests = "mix test --color --trace"
     coverage = "mix coveralls.html --color"
     lint = "mix credo --strict"
@@ -140,7 +138,8 @@ def test(ctx):
     try:
       lxc.Docker.run(cli,
           tag="{0}-dev".format("chitchat-backend"),
-          command='/bin/sh -c "{0} && {1} && {2} && {3} && {4}"'.format(setup, tests, coverage, lint, dogma),
+          command='/bin/sh -c "{0} && {1} && {2} && {3} && {4} && {5}"'.format(
+            setup, wait, tests, coverage, lint, dogma),
           volumes=[
               "{0}/chit_chat:/app".format(os.getcwd())
           ],

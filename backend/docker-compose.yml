@@ -13,7 +13,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.dev
-    command: /bin/sh -c "mix deps.get && mix ecto.create && mix ecto.migrate && mix phoenix.server"
+    command: /bin/sh -c "mix deps.get && /bin/wait-for-it.sh -t 120 postgres:5432 && mix ecto.create && mix ecto.migrate && mix phoenix.server"
     environment:
       SECRET_KEY_BASE: G9XBaZMFhtWDxAaowHCBrrDVq8xVB3sfro8xiGnFXfidldnvf
       GUARDIAN_SECRET_KEY: cQCWxKpcuixeB4ZAxCs04nrBGdKeJiHcmmCHbZPI6esGcLcfZVz1qw2796p3gWGA
