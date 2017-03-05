@@ -8,28 +8,21 @@ defmodule ChitChat.MessageChannel do
 
   alias Guardian.Phoenix.Socket
 
-  @spec join({}, {}, {}) :: {}
-  def join(_room, %{"guardian_token" => token}, socket) do
+  @spec join({}, Map, Phoenix.Socket) :: {}
+  def join(_room, %{"authToken" => token}, socket) do
     case sign_in(socket, token) do
       {:ok, authed_socket, _guardian_params} ->
         user = Socket.current_resource(authed_socket)
-
-        {:ok, %{message: "Joined"}, authed_socket}
+        {:ok, %{message: "Joined user:#{user.username}"}, authed_socket}
       {:error, reason} ->
         # handle error
-        {}
+        {:error, reason}
     end
   end
 
-  @spec join({}, {}, {}) :: {}
-  def join(room, _, socket) do
+  @spec join({}, {}, Phoenix.Socket) :: {}
+  def join(_room, _, _socket) do
     {:error,  :authentication_required}
   end
 
-  @spec handle_in(String, {}, {}) :: {}
-  def handle_in("ping", _payload, socket) do
-    user = current_resource(socket)
-    broadcast(socket, "pong", %{message: "pong", from: user.username})
-    {:noreply, socket}
-  end
 end
