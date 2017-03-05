@@ -16,13 +16,19 @@ import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 /**
- * Created by spiros on 02/03/2017.
+ * SearchViewTest provides tests for the search view functionality
  */
 public class SearchViewTest extends PrimaryStageTest {
 
     final static String loginButton = "#loginBtn";
     final static String usernamefield= "#usernameField";
     final static String passwordfield= "#passwordField";
+
+    final static String registerBtn = "#registerBtn";
+    final static String registerBtnreg = "#registerBtnreg";
+    final static String usernamefieldReg = "#usernamefieldreg";
+    final static String passwordfieldReg = "#passwordFieldreg";
+    final static String passwordCheckField = "#passwordCheckField";
 
     final static String usernameFieldsearch = "#usernameFieldSearch";
     final static String searchBtn = "#searchBtn";
@@ -33,7 +39,18 @@ public class SearchViewTest extends PrimaryStageTest {
     final static String headerChat = "#headerChat";
 
     /**
-     * Function access that helps us to login in ordet o access the next level.
+     * This is a precondition function, so we register users that we need for testing.
+     */
+    public void preCondition(String username) {
+        String password = "aaaaaaaa";
+
+        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
+        clickOn(passwordfieldReg).write(password);
+        clickOn(passwordCheckField).write(password);
+        clickOn(registerBtnreg);
+    }
+    /**
+     * Function access that helps us to login in order o access the next level.
      *
      */
     public void access_search_view(){
@@ -47,10 +64,11 @@ public class SearchViewTest extends PrimaryStageTest {
 
     }
     /**
-     *Test The existance of main parts of the field
+     *Test The existence of main parts of the field
      */
     @Test
     public void CheckField(){
+        preCondition("spiros");
         access_search_view();
         verifyThat(togglebutton,hasText("Search Users"));
         verifyThat(togglebutton,NodeMatchers.isVisible());
@@ -113,8 +131,9 @@ public class SearchViewTest extends PrimaryStageTest {
      */
     @Test
     public void CheckSuccessConversationStart(){
-        access_search_view();
         String check = "spirokas";
+        preCondition(check);
+        access_search_view();
         clickOn(togglebutton);
         clickOn(usernameFieldsearch).write("spi");
         clickOn(searchBtn);
