@@ -14,6 +14,7 @@ public class ApplicationLoader {
 
     private Configuration configuration;
     private BaseStage baseStage;
+    private ApplicationCloser applicationCloser;
 
     /**
      * Constructor for the ApplicationLoader.
@@ -22,10 +23,12 @@ public class ApplicationLoader {
     @Autowired
     public ApplicationLoader(
         Configuration configuration,
-        BaseStage baseStage
+        BaseStage baseStage,
+        ApplicationCloser applicationCloser
     ) {
         this.configuration = configuration;
         this.baseStage = baseStage;
+        this.applicationCloser = applicationCloser;
     }
 
     /**
@@ -39,6 +42,8 @@ public class ApplicationLoader {
         } else if (args.size() > 0 && args.get(0).equals("beta")) {
             this.configuration.setBetaMode();
         }
+
+        stage.setOnCloseRequest(this.applicationCloser);
 
         // Show Authentication
         this.baseStage.setPrimaryStage(stage);

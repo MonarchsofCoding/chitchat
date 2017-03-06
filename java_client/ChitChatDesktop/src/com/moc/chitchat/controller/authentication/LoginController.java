@@ -14,6 +14,8 @@ import com.moc.chitchat.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 
 /**
  * LoginController is the controller for login feature.
@@ -51,7 +53,7 @@ public class LoginController {
      * @throws ValidationException - if incorrect username or password
      */
     public UserModel loginUser(String username, String password)
-            throws UnirestException, UnexpectedResponseException, ValidationException {
+            throws UnirestException, UnexpectedResponseException, ValidationException, IOException {
 
         // Create the User object from parameters.
         UserModel user = userResolver.createLoginUser(username, password);
@@ -77,7 +79,7 @@ public class LoginController {
 
         this.configuration.setLoggedInUser(user);
 
-        webSocketClient.startConnection();
+        webSocketClient.connectToUserMessage(user);
         //open chatroom
         return user;
     }

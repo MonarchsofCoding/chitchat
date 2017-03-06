@@ -23,7 +23,8 @@ public class ApplicationLoaderTest {
     public void testConstructor() {
         Configuration mockConfiguration = mock(Configuration.class);
         BaseStage mockBaseStage = mock(BaseStage.class);
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         assertNotNull(applicationLoader);
         assertEquals(applicationLoader.getClass(), ApplicationLoader.class);
@@ -33,7 +34,8 @@ public class ApplicationLoaderTest {
     public void testLoadDefaultProdEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
         BaseStage mockBaseStage = mock(BaseStage.class);
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
         List<String> args = new ArrayList<>();
@@ -48,7 +50,8 @@ public class ApplicationLoaderTest {
     public void testLoadTestEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
         BaseStage mockBaseStage = mock(BaseStage.class);
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
         List<String> args = new ArrayList<>();
@@ -66,7 +69,8 @@ public class ApplicationLoaderTest {
     public void testLoadDevelopmentEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
         BaseStage mockBaseStage = mock(BaseStage.class);
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
         List<String> args = new ArrayList<>();
@@ -84,7 +88,8 @@ public class ApplicationLoaderTest {
     public void testLoadBetaEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
         BaseStage mockBaseStage = mock(BaseStage.class);
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
         List<String> args = new ArrayList<>();
@@ -102,7 +107,8 @@ public class ApplicationLoaderTest {
     public void testLoadProdByDefaultWithUnknownArg() {
         Configuration mockConfiguration = mock(Configuration.class);
         BaseStage mockBaseStage = mock(BaseStage.class);
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
         List<String> args = new ArrayList<>();

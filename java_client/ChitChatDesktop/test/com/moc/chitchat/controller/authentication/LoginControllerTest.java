@@ -18,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -53,7 +55,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void testSuccessfulLoginUser() throws ValidationException, UnirestException, UnexpectedResponseException {
+    public void testSuccessfulLoginUser() throws ValidationException, UnirestException, UnexpectedResponseException, IOException {
         // Stub the UserResolver to return a UserModel
         UserModel mockUser = mock(UserModel.class);
         when(
@@ -136,6 +138,8 @@ public class LoginControllerTest {
             );
         } catch (ValidationException e) {
             assertEquals("Validation Exception", e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // Verify the UserValidator.throwErrorsFromResponse was called
@@ -170,6 +174,8 @@ public class LoginControllerTest {
             );
         } catch (UnexpectedResponseException e) {
             assertEquals("Unexpected Response code: 500", e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }

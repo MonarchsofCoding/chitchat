@@ -1,13 +1,13 @@
 package com.moc.chitchat.client;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.moc.chitchat.application.Configuration;
-import com.moc.chitchat.controller.MessageController;
+import com.moc.chitchat.channel.UserMessageChannel;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.moc.chitchat.model.UserModel;
 import org.phoenixframework.channels.Channel;
-import org.phoenixframework.channels.Envelope;
-import org.phoenixframework.channels.IMessageCallback;
 import org.phoenixframework.channels.Socket;
 import org.springframework.stereotype.Component;
 
@@ -18,77 +18,42 @@ import org.springframework.stereotype.Component;
 public class WebSocketClient {
 
     private Configuration configuration;
-    private Socket socket;
-    private MessageController messageController;
+    private Map<String, Channel> channels;
+    private UserMessageChannel userMessageChannel;
 
     /**
      * WebSocketClient constructor.
      *
      * @param configuration - passing the configuration so we know the current user
      */
-    public WebSocketClient(Configuration configuration,
-                           MessageController messageController) {
+    public WebSocketClient(
+        Configuration configuration,
+        UserMessageChannel userMessageChannel
+    ) {
         this.configuration = configuration;
-        this.messageController = messageController;
+        this.channels = new HashMap<>();
+        this.userMessageChannel = userMessageChannel;
     }
 
-    /**
-     * startConnection.
-     */
-    public void startConnection() {
+    public void connectToUserMessage(UserModel userModel) throws IOException {
+        String url = String.format("%s/api/v1/messages/websocket?authToken=%s",
+            this.configuration.getBackendAddress().replace("http", "ws"),
+            userModel.getAuthToken()
+        );
 
-        String accessToken = this.configuration.getLoggedInUser().getAuthToken();
+        Socket socket = new Socket(url);
+        socket.connect();
 
-        try {
-            socket = new Socket(String.format("ws://localhost:4000/api/v1/messages/websocket?guardian_token=%s",
-                    accessToken));
-            socket.connect();
-            System.out.println("connected");
-            ObjectNode auth = JsonNodeFactory.instance.objectNode();
-            auth.put("authToken", accessToken);
-            Channel channel = socket.chan("user:" + this.configuration.getLoggedInUser().getUsername(), auth);
-            channel.join()
-                    .receive("ok", new IMessageCallback() {
-                        @Override
-                        public void onMessage(Envelope envelope) {
-                            System.out.println("JOINED with " + envelope.toString());
-                        }
-                    });
-            channel.on("new:message", new IMessageCallback() {
-                @Override
-                public void onMessage(Envelope envelope) {
-                    System.out.println("NEW MESSAGE: " + envelope.toString());
-                    // Calls MessageController
-                    messageController.receive(envelope.getPayload().get("body").asText(),
-                            envelope.getPayload().get("from").asText());
-                }
-            });
-            System.out.println("channel is on");
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        Channel channel = this.userMessageChannel.join(socket, userModel);
+        this.channels.put(String.format("chitchat.%s", userModel.getUsername()), channel);
+    }
+
+    public void stopAll() throws IOException {
+        for(Channel c:this.channels.values()) {
+            c.off("aa");
+            c.leave();
+            c.getSocket().disconnect();
         }
     }
-
-    /**
-     *  Stop connection for web socket client.
-     * @return True or false if connection stopped.
-     */
-    public boolean stopConnection() {
-        if (socket.isConnected()) {
-            System.out.println("Already disconnected");
-            return true;
-        } else {
-            try {
-                System.out.println("Attempt to disconnect");
-                socket.disconnect();
-                System.out.println("Success");
-                return true;
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-                return false;
-            }
-        }
-    }
-
 
 }
