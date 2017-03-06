@@ -1,9 +1,11 @@
 package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.application.ChitChatData;
+import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.model.Conversation;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +41,12 @@ public class ConversationListView {
      * Returns content pane for this view.
      * @return the content pane
      */
+
     public MigPane getContentPane() {
-        MigPane chatListPane = new MigPane();
+
 
         this.conversationListView = new ListView<>(this.chitChatData.getConversations());
-
+        this.conversationListView.setPlaceholder(new Label("Add User for Conversation"));
         MultipleSelectionModel<Conversation> lvSelModel = this.conversationListView.getSelectionModel();
 
         lvSelModel.selectedItemProperty().addListener(new ChangeListener<Conversation>() {
@@ -53,7 +56,7 @@ public class ConversationListView {
             }
 
         });
-
+        MigPane chatListPane = new MigPane();
         chatListPane.setLayout("fill");
         chatListPane.add(this.conversationListView, "span");
 
