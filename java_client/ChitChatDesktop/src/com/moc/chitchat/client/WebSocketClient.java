@@ -1,13 +1,15 @@
 package com.moc.chitchat.client;
 
 import com.moc.chitchat.application.Configuration;
-import com.moc.chitchat.channel.UserMessageChannel;
 import com.moc.chitchat.model.UserModel;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.phoenixframework.channels.Channel;
-import org.phoenixframework.channels.Socket;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,8 +19,8 @@ import org.springframework.stereotype.Component;
 public class WebSocketClient {
 
     private Configuration configuration;
-    private Map<String, Channel> channels;
-    private UserMessageChannel userMessageChannel;
+    private Map<String, WebSocket> sockets;
+    private SocketListener socketListener;
 
     /**
      * WebSocketClient constructor.
@@ -27,15 +29,15 @@ public class WebSocketClient {
      */
     public WebSocketClient(
         Configuration configuration,
-        UserMessageChannel userMessageChannel
+        SocketListener socketListener
     ) {
         this.configuration = configuration;
-        this.channels = new HashMap<>();
-        this.userMessageChannel = userMessageChannel;
+        this.sockets = new HashMap<>();
+        this.socketListener = socketListener;
     }
 
     /**
-     *Connect to the user message.
+     * Connect to the user message.
      * @param userModel it is the parameter to understand.
      * @throws IOException the exception that throws.
      */
@@ -45,11 +47,17 @@ public class WebSocketClient {
             userModel.getAuthToken()
         );
 
-        Socket socket = new Socket(url);
-        socket.connect();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(0, TimeUnit.MILLISECONDS)
+                .pingInterval(500, TimeUnit.MILLISECONDS)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
 
-        Channel channel = this.userMessageChannel.join(socket, userModel);
-        this.channels.put(String.format("chitchat.%s", userModel.getUsername()), channel);
+        WebSocket webSocket = client.newWebSocket(request, this.socketListener);
+        this.sockets.put("chitchat.socket", webSocket);
+        client.dispatcher().executorService().shutdown();
     }
 
     /**
@@ -57,10 +65,8 @@ public class WebSocketClient {
      * @throws IOException the exception in a problem situation.
      */
     public void stopAll() throws IOException {
-        for(Channel c:this.channels.values()) {
-            c.off("aa");
-            c.leave();
-            c.getSocket().disconnect();
+        for(WebSocket s: this.sockets.values()) {
+            s.close(1000, "Bye!");
         }
     }
 

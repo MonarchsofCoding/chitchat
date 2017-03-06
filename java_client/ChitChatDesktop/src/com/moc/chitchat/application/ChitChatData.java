@@ -3,6 +3,7 @@ package com.moc.chitchat.application;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.springframework.stereotype.Component;
@@ -45,12 +46,14 @@ public class ChitChatData {
 
     /**
      * Adds the message to the conversation with the receiver.
-     * @param user - reciever of the message
+     * @param user - receiver of the message
      * @param message - message object
      */
     public void addMessageToConversation(UserModel user, Message message) {
-        Conversation conversation = getConversation(user);
-        conversation.addMessage(message);
+        Platform.runLater(() -> {
+            Conversation conversation = getConversation(user);
+            conversation.addMessage(message);
+        });
     }
 
     /**

@@ -25,17 +25,11 @@ apply plugin: 'javafx-gradle-plugin'
 
 repositories {
     mavenCentral()
-    maven {
-        url  "http://dl.bintray.com/javaphoenixchannels/java-phoenix-channels"
-    }
 }
 
 
 dependencies {
 
-    compile('com.github.eoinsha:JavaPhoenixChannels:0.2') {
-        exclude module: 'groovy-all'
-    }
     // Spring MVC Framework
     compile 'org.springframework:spring-context:4.3.5.RELEASE'
     // https://mvnrepository.com/artifact/commons-logging/commons-logging
