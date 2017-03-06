@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -38,7 +41,8 @@ import org.json.JSONObject;
 
 public class SearchUserActivity extends AppCompatActivity
     implements TabLayout.OnTabSelectedListener,
-    SearchView.OnQueryTextListener,
+    View.OnClickListener,
+    TextWatcher,
     ListView.OnItemClickListener,
     Response.Listener<JSONObject>,
     Response.ErrorListener {
@@ -53,8 +57,10 @@ public class SearchUserActivity extends AppCompatActivity
     CurrentChatConfiguration currentChatConfiguration;
 
     TabLayout menuTabs;
-    SearchView searchBar;
     ListView usersList;
+
+    EditText searchText;
+    Button searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,11 +77,63 @@ public class SearchUserActivity extends AppCompatActivity
         tab.select();
         menuTabs.addOnTabSelectedListener(this);
 
-        searchBar = (SearchView) findViewById(R.id.search_bar);
-        searchBar.setOnQueryTextListener(this);
+        searchText = (EditText) findViewById(R.id.search_layout_text);
+        searchText.addTextChangedListener(this);
+
+        searchButton = (Button) findViewById(R.id.search_layout_button);
+        searchButton.setOnClickListener(this);
 
         usersList = (ListView) findViewById(R.id.users_list);
         usersList.setOnItemClickListener(this);
+    }
+
+    //For when the search button clicked.
+    @Override
+    public void onClick(View v) {
+        String query = searchText.getText().toString();
+        if (query.length() >= 3) {
+
+            System.out.println("Query made with query text: " + query);
+            Map<String, String> requestHeaders = new HashMap<String, String>();
+            requestHeaders.put(
+                "authorization",
+                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
+
+            searchUserController.searchUser(
+                this,
+                this,
+                this,
+                query,
+                requestHeaders
+            );
+        } else {
+            Toast.makeText(this,
+                String.format("You can only do a search with an input longer than 3 characters"),
+                Toast.LENGTH_LONG).show();
+            System.out.println("You can only do a search with an input longer than 3 characters");
+        }
+    }
+
+    //Auto-gen method for TextWatcher.
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    //To check for spaces.
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s.toString().contains(" ")) {
+            String toPut = s.toString().replace(" ", "");
+            searchText.setText(toPut);
+            searchText.setSelection(toPut.length());
+        }
+    }
+
+    //Auto-gen method for TextWatcher.
+    @Override
+    public void afterTextChanged(Editable s) {
+
     }
 
     //For Volley Error response
@@ -156,38 +214,6 @@ public class SearchUserActivity extends AppCompatActivity
     public void onTabReselected(TabLayout.Tab tab) {
         System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
         //Basically do nothing.
-    }
-
-    //When a user submits a search
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (query.length() >= 3) {
-            Map<String, String> requestHeaders = new HashMap<String, String>();
-            requestHeaders.put(
-                "authorization",
-                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
-            searchUserController.searchUser(
-                this,
-                this,
-                this,
-                query,
-                requestHeaders
-            );
-        } else {
-            Toast.makeText(this,
-                String.format("You can only do a search with an input longer than 3 characters"),
-                Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
-    //When the search text is changed.
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.contains(" ")) {
-            searchBar.setQuery(newText.replace(" ", ""), false);
-        }
-        return false;
     }
 
     //When the user clicks on an user.

@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.RegistrationActivity" />
-        <activity android:name=".activity.SearchUserActivity" />
+        <activity android:name=".activity.SearchUserActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".activity.CurrentChatActivity" />
         <activity android:name=".activity.ChatListActivity" />
         <service android:name=".service.ReceiveMessageService"/>
