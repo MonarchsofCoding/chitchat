@@ -100,6 +100,7 @@ test {
         //include all tests from package
         includeTestsMatching "com.moc.chitchat.application.*"
         includeTestsMatching "com.moc.chitchat.controller.*"
+        includeTestsMatching "com.moc.chitchat.channel.*"
         includeTestsMatching "com.moc.chitchat.exception.*"
         includeTestsMatching "com.moc.chitchat.model.*"
         includeTestsMatching "com.moc.chitchat.resolver.*"

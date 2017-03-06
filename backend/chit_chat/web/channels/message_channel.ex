@@ -27,6 +27,7 @@ defmodule ChitChat.MessageChannel do
     {:error,  :authentication_required}
   end
 
+  @spec handle_info({}, Phoenix.Socket) :: {}
   def handle_info(:after_join, socket) do
     push socket, "presence_state", Presence.list(socket)
     user = Socket.current_resource(socket)

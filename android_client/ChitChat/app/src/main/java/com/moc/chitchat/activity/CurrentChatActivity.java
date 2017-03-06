@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -88,6 +89,7 @@ public class CurrentChatActivity extends AppCompatActivity
         messageText = (TextView) findViewById(R.id.message_text);
 
         messagePanel = (TextView) findViewById(R.id.message_panel);
+        messagePanel.setMovementMethod(new ScrollingMovementMethod());
         getMessagesToDisplay();
 
         sendButton = (Button) findViewById(R.id.send_button);

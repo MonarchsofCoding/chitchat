@@ -1,15 +1,21 @@
 
 package com.moc.chitchat.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.activity.SearchUserActivity;
 import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.model.MessageModel;
@@ -33,6 +39,8 @@ public class ReceiveMessageService extends Service {
     Socket socket;
     Channel channel;
 
+    Context serviceContext = this;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -49,12 +57,12 @@ public class ReceiveMessageService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             socket = new Socket((this.getResources().getString(R.string.server_url)
-                + "/api/v1/messages/websocket?guardian_token="
+                + "/api/v1/messages/websocket?authToken="
                 + sessionConfiguration.getCurrentUser().getAuthToken()).replace("https", "ws"));
             socket.connect();
 
             ObjectNode auth = JsonNodeFactory.instance.objectNode();
-            auth.put("guardian_token", sessionConfiguration.getCurrentUser().getAuthToken());
+            auth.put("authToken", sessionConfiguration.getCurrentUser().getAuthToken());
 
             channel = socket.chan("user:"
                     + sessionConfiguration.getCurrentUser().getUsername(),
