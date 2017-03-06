@@ -1,61 +1,47 @@
 package com.moc.chitchat;
 
-import android.support.test.espresso.core.deps.guava.util.concurrent.ThreadFactoryBuilder;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static junit.framework.Assert.assertEquals;
+
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.ActivityInstrumentationTestCase2;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.moc.chitchat.activity.LoginActivity;
 import com.moc.chitchat.activity.SearchUserActivity;
-import com.moc.chitchat.controller.SearchUserController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.pressImeActionButton;
-import static android.support.test.espresso.action.ViewActions.pressKey;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class SearchUserActivityTest{
-
-    private String usernameTyped;
-    private String passwordTyped;
+public class SearchUserActivityTest {
 
     @Rule
     public ActivityTestRule<SearchUserActivity> searchUserActivityActivityRule
         = new ActivityTestRule<>(SearchUserActivity.class);
-
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
         LoginActivity.class);
+    
+    private String usernameTyped;
+    private String passwordTyped;
 
+    /**
+     *Does login before tests to go through the login activity.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     @Before
     public void login() throws InterruptedException {
-        //loginActivityRule.getActivity();
 
         usernameTyped = "vjftw";
         passwordTyped = "Abc123!?";
@@ -88,8 +74,8 @@ public class SearchUserActivityTest{
         onView(withId(R.id.search_layout_button)).perform(click());
 
 
-        String expectedOutput  = "You can only do a search with an input longer than " +
-            "3 characters\n";
+        String expectedOutput = "You can only do a search with an input longer than "
+            + "3 characters\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 
@@ -107,8 +93,8 @@ public class SearchUserActivityTest{
         onView(withId(R.id.search_layout_button)).perform(click());
 
 
-        String expectedOutput  = "You can only do a search with an input longer than " +
-            "3 characters\n";
+        String expectedOutput = "You can only do a search with an input longer than "
+            + "3 characters\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 
@@ -125,7 +111,7 @@ public class SearchUserActivityTest{
 
         onView(withId(R.id.search_layout_button)).perform(click());
 
-        String expectedOutput  = "Query made with query text: " + usernameTyped + "\n";
+        String expectedOutput = "Query made with query text: " + usernameTyped + "\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 
@@ -142,7 +128,7 @@ public class SearchUserActivityTest{
 
         onView(withId(R.id.search_layout_button)).perform(click());
 
-        String expectedOutput  = "Query made with query text: " + usernameTyped + "\n";
+        String expectedOutput = "Query made with query text: " + usernameTyped + "\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 }

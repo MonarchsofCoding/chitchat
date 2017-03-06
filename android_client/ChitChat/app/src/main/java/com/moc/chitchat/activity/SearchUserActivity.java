@@ -89,7 +89,7 @@ public class SearchUserActivity extends AppCompatActivity
 
     //For when the search button clicked.
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         String query = searchText.getText().toString();
         if (query.length() >= 3) {
 
@@ -116,15 +116,15 @@ public class SearchUserActivity extends AppCompatActivity
 
     //Auto-gen method for TextWatcher.
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
 
     }
 
     //To check for spaces.
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (s.toString().contains(" ")) {
-            String toPut = s.toString().replace(" ", "");
+    public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+        if (sequence.toString().contains(" ")) {
+            String toPut = sequence.toString().replace(" ", "");
             searchText.setText(toPut);
             searchText.setSelection(toPut.length());
         }
@@ -132,7 +132,7 @@ public class SearchUserActivity extends AppCompatActivity
 
     //Auto-gen method for TextWatcher.
     @Override
-    public void afterTextChanged(Editable s) {
+    public void afterTextChanged(Editable sequenceEditable) {
 
     }
 
