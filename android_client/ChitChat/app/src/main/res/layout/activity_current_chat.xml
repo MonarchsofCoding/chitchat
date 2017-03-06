@@ -9,7 +9,8 @@
         android:layout_height="match_parent"
         android:id="@+id/message_panel"
         android:layout_weight="0.2"
-        android:gravity="bottom" />
+        android:gravity="bottom"
+        android:textSize="18dp"/>
 
     <LinearLayout
         android:orientation="horizontal"
