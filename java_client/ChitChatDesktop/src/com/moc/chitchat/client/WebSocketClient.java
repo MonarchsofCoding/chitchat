@@ -2,11 +2,10 @@ package com.moc.chitchat.client;
 
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.channel.UserMessageChannel;
+import com.moc.chitchat.model.UserModel;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.moc.chitchat.model.UserModel;
 import org.phoenixframework.channels.Channel;
 import org.phoenixframework.channels.Socket;
 import org.springframework.stereotype.Component;
@@ -35,6 +34,11 @@ public class WebSocketClient {
         this.userMessageChannel = userMessageChannel;
     }
 
+    /**
+     *Connect to the user message.
+     * @param userModel it is the parameter to understand.
+     * @throws IOException the exception that throws.
+     */
     public void connectToUserMessage(UserModel userModel) throws IOException {
         String url = String.format("%s/api/v1/messages/websocket?authToken=%s",
             this.configuration.getBackendAddress().replace("http", "ws"),
@@ -48,6 +52,10 @@ public class WebSocketClient {
         this.channels.put(String.format("chitchat.%s", userModel.getUsername()), channel);
     }
 
+    /**
+     * This function stops all if something goes wrong.
+     * @throws IOException the exception in a problem situation.
+     */
     public void stopAll() throws IOException {
         for(Channel c:this.channels.values()) {
             c.off("aa");

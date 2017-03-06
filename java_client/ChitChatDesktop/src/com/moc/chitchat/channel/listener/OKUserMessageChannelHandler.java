@@ -5,7 +5,7 @@ import org.phoenixframework.channels.IMessageCallback;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OKUserMessageChannelHandler implements IMessageCallback {
+public class OkUserMessageChannelHandler implements IMessageCallback {
 
     @Override
     public void onMessage(Envelope envelope) {

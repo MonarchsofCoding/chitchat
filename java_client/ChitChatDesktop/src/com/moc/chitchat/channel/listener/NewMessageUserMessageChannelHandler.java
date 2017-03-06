@@ -1,6 +1,5 @@
 package com.moc.chitchat.channel.listener;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.moc.chitchat.controller.MessageController;
 import org.phoenixframework.channels.Envelope;

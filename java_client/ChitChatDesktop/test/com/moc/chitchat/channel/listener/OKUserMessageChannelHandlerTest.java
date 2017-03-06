@@ -12,7 +12,7 @@ public class OKUserMessageChannelHandlerTest {
 
     @Test
     public void testOnMessage() {
-        OKUserMessageChannelHandler okUserMessageChannelHandler = new OKUserMessageChannelHandler();
+        OkUserMessageChannelHandler okUserMessageChannelHandler = new OkUserMessageChannelHandler();
         Envelope envelope = mock(Envelope.class);
         okUserMessageChannelHandler.onMessage(envelope);
     }
