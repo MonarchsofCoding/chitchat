@@ -48,7 +48,7 @@ env:
     - SERVICE=java_client
     - SERVICE="java_client/e2e"
     - SERVICE=android_client
-    - SERVICE="android_client/e2e"
+    # - SERVICE="android_client/e2e"
 script:
   - cd ${TRAVIS_BUILD_DIR}/${SERVICE} && invoke test
 after_success:
