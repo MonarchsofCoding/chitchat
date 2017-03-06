@@ -74,11 +74,11 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
     public MigPane getContentPane() {
         this.errorusermessage = new Label();
         this.errorusermessage.setTextFill(Color.RED);
-        this.errorusermessage.setId("errorusermsgsearch");
+        this.errorusermessage.setId("search-error-users-msg");
         this.errorusermessage.setVisible(false);
 
         this.usernameField = new TextField();
-        this.usernameField.setId("usernameFieldSearch");
+        this.usernameField.setId("search-username-fld");
         this.usernameField.setPromptText("Find User");
         this.usernameField.setOnAction(this);
         MigPane searchForm = new MigPane();
@@ -86,7 +86,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         searchForm.add(this.usernameField, "span, grow");
 
         this.searchBtn = new Button("Search");
-        this.searchBtn.setId("searchBtn");
+        this.searchBtn.setId("search-Btn");
         this.searchBtn.setOnAction(this);
         searchForm.add(this.searchBtn, "span, grow");
 
@@ -95,12 +95,12 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         searchForm.add(this.searchList, "span, grow");
 
         this.startConversationBtn = new Button("Start Chat");
-        this.startConversationBtn.setId("StartChatBtn");
+        this.startConversationBtn.setId("search-chat-Btn");
         this.startConversationBtn.setOnAction(this);
         searchForm.add(this.startConversationBtn, "span, wrap");
 
         this.errormessage = new Label();
-        this.errormessage.setId("errormessageSearch");
+        this.errormessage.setId("search-error-messages");
         this.errormessage.setVisible(false);
         this.errormessage.setTextFill(Color.RED);
         searchForm.add(this.errormessage,"span");

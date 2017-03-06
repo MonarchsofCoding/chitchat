@@ -2,8 +2,12 @@ package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.PrimaryStageTest;
+import com.moc.chitchat.view.authentication.LoginView;
+import com.moc.chitchat.view.authentication.LoginViewTest;
+import com.moc.chitchat.view.helper.UserHelper;
 import com.moc.chitchat.view.main.WestView;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -21,127 +25,85 @@ import static org.testfx.matcher.base.NodeMatchers.hasText;
  */
 public class SearchViewTest extends PrimaryStageTest {
 
-    final static String loginButton = "#loginBtn";
-    final static String usernamefield= "#usernameField";
-    final static String passwordfield= "#passwordField";
-
-    final static String registerBtn = "#registerBtn";
-    final static String registerBtnreg = "#registerBtnreg";
-    final static String usernamefieldReg = "#usernamefieldreg";
-    final static String passwordfieldReg = "#passwordFieldreg";
-    final static String passwordCheckField = "#passwordCheckField";
-
-    final static String usernameFieldsearch = "#usernameFieldSearch";
-    final static String searchBtn = "#searchBtn";
-    final static String startConversationBtn = "#StartChatBtn";
-    final static String errormessage = "#errormessageSearch";
-    final static String errorusermessage ="#errorusermsgsearch";
+    final static String usernameFld = "#search-username-fld";
+    final static String searchBtn = "#search-Btn";
+    final static String ChatBtn = "#search-chat-Btn";
+    final static String errormessage = "#search-error-messages";
+    final static String errorusermessage ="#search-error-users-msg";
     final static String togglebutton ="#ToggleBtn";
     final static String headerChat = "#headerChat";
+    final static String loggedInAs = "#loggedInAs";
+
 
     /**
-     * This is a precondition function, so we register users that we need for testing.
-     */
-    public void preCondition(String username) {
-        String password = "aaaaaaaa";
-
-        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
-        clickOn(passwordfieldReg).write(password);
-        clickOn(passwordCheckField).write(password);
-        clickOn(registerBtnreg);
-    }
-    /**
-     * Function access that helps us to login in order o access the next level.
+     * Function that access UserSearch view and checks the existance of the fields.
      *
-     */
-    public void access_search_view(){
-        String username = "spiros";
-        String password = "aaaaaaaa";
-
-        clickOn(usernamefield).write(username);
-        clickOn(passwordfield).write(password);
-        clickOn(loginButton);
-
-
-    }
-    /**
-     *Test The existence of main parts of the field
      */
     @Test
     public void CheckField(){
-        preCondition("spiros");
-        access_search_view();
+        UserHelper.createUser(this,"login_validUser","validPassword");
+        UserHelper.loginUser(this,"login_validUser","validPassword");
+
         verifyThat(togglebutton,hasText("Search Users"));
         verifyThat(togglebutton,NodeMatchers.isVisible());
         clickOn(togglebutton);
         verifyThat(searchBtn, hasText("Search"));
         verifyThat(searchBtn, NodeMatchers.isEnabled());
-        verifyThat(startConversationBtn, hasText("Start Chat"));
-        verifyThat(startConversationBtn, NodeMatchers.isEnabled());
-        verifyThat(usernameFieldsearch, NodeMatchers.isVisible());
+        verifyThat(ChatBtn, hasText("Start Chat"));
+        verifyThat(ChatBtn, NodeMatchers.isEnabled());
+        verifyThat(usernameFld, NodeMatchers.isVisible());
         verifyThat(errormessage, NodeMatchers.isInvisible());
         verifyThat(errorusermessage,NodeMatchers.isInvisible());
+        assertTrue(find(loggedInAs).isVisible());
+        verifyThat(loggedInAs, NodeMatchers.hasText("Logged in as: "+"login_validUser"));
+
     }
+
     /**
      * Test CheckError message for UserSearchField
      * 1 Case the usersearchField cannot be empty
      * 2 Case the usersearchField cannot be less than 3 characters
      */
     @Test
-    public void CheckUserNamefieldisEmpty(){
-        access_search_view();
+    public void CheckErrorMessages(){
+        UserHelper.loginUser(this,"login_validUser","validPassword");
         clickOn(togglebutton);
+        //check when we use empty string to  user_name_field to search
         clickOn(searchBtn);
         assertTrue(find(errorusermessage).isVisible());
         verifyThat(errorusermessage,NodeMatchers.hasText("can't be blank"));
-
-        clickOn(usernameFieldsearch).write("aa");
+        //check when we use two characters as user_name_field to search
+        clickOn(usernameFld).write("aa");
         clickOn(searchBtn);
         assertTrue(find(errorusermessage).isVisible());
         verifyThat(errorusermessage,NodeMatchers.hasText("should be at least 3 character(s)"));
-
-    }
-
-    /**
-     * Test CheckError message for UserList when user is not Available
-     */
-    @Test
-    public void CheckNoUserSearchFound(){
-        access_search_view();
-        clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("akama");
+        //check when we search for a name that does not actually exists
+        clickOn(usernameFld).write("akama");
         clickOn(searchBtn);
         assertTrue(find(errorusermessage).isVisible());
         verifyThat(errorusermessage,NodeMatchers.hasText("No User Available"));
-
-    }
-    /**
-     * Test CheckError message when you try to start a conversation with a user that does not exist
-     */
-    @Test
-    public void CheckWrongChatStart(){
-        access_search_view();
-        clickOn(togglebutton);
-        clickOn(startConversationBtn);
+        //check when we do not select user to start a conversation
+        clickOn(ChatBtn);
         assertTrue(find(errormessage).isVisible());
         verifyThat(errormessage,NodeMatchers.hasText("No user was selected"));
-
     }
+
     /**
      * Test Check Success Search and start new conversation
      */
     @Test
     public void CheckSuccessConversationStart(){
-        String check = "Chief";
-        preCondition(check);
-        access_search_view();
+        UserHelper.createUser(this,"login_validUser_two","validPassword_two");
+        UserHelper.loginUser(this,"login_validUser_two","validPassword_two");
         clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("Chi");
+        clickOn(usernameFld).write("login");
         clickOn(searchBtn);
-        clickOn(check);
-        clickOn(startConversationBtn);
+        clickOn("login_validUser");
+        clickOn(ChatBtn);
         assertTrue(find(headerChat).isVisible());
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
+        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser"));
+        assertTrue(find(loggedInAs).isVisible());
+        verifyThat(loggedInAs, NodeMatchers.hasText("Logged in as: "+"login_validUser_two"));
 
 
     }

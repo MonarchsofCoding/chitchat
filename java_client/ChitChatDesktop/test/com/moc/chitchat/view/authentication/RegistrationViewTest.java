@@ -23,7 +23,6 @@ public class RegistrationViewTest extends PrimaryStageTest {
     public static final String passwordCheckFld = "#register-passwordCheck-fld";
     public static final String passwordCheckErrs = "#register-passwordCheck-errs";
 
-    public static final String loginBtn = "#register-login-btn";
     public static final String registerBtn = "#register-register-btn";
 
     public static final String unexpectedErrors = "#register-errors-lbl";

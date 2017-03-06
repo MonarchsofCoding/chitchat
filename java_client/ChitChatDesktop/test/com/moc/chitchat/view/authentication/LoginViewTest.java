@@ -20,6 +20,7 @@ public class LoginViewTest extends PrimaryStageTest {
     public static final String loginBtn = "#login-login-btn";
     public static final String registerBtn = "#login-register-btn";
     public static final String unexpectedErrors = "#login-errors-lbl";
+    public static final String credits = "#credits";
 
     /**
      * Testing existence of our buttons and TextFields areas to the login view.
@@ -36,28 +37,19 @@ public class LoginViewTest extends PrimaryStageTest {
         verifyThat(registerBtn, NodeMatchers.isEnabled());
 
         verifyThat(unexpectedErrors, NodeMatchers.isInvisible());
+        verifyThat(credits,NodeMatchers.isVisible());
+        verifyThat(credits,NodeMatchers.hasText("Created by: Monarchs of Coding"));
     }
 
-    /**
-     * Check the writing behaviour of our fields.
-      */
-    @Test
-    public void test_login_fields_are_editable() {
-        String username = "antreas";
-        String password = "lalalala";
-        clickOn(usernameFld).write(username);
-        clickOn(passwordFld).write(password);
-    }
 
     /**
     * Testing the Login for wrong credentials.
     */
     @Test
     public void test_invalid_login_credentials() {
-        String username = "aaa";
-        String password = "lalala";
-        clickOn(usernameFld).write(username);
-        clickOn(passwordFld).write(password);
+
+        clickOn(usernameFld).write("login_validUse");
+        clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
 
         verifyThat(unexpectedErrors, NodeMatchers.isVisible());
@@ -68,10 +60,10 @@ public class LoginViewTest extends PrimaryStageTest {
      */
     @Test
     public void test_valid_login_credentials() {
-        // Create a User first
-        UserHelper userHelper = new UserHelper(this);
-        userHelper.createUser("login_validUser", "validPassword");
 
+        // Create a User first
+        UserHelper.createUser(this,"login_validUser", "validPassword");
+        clickOn(loginBtn);
         // Test login with created user
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");

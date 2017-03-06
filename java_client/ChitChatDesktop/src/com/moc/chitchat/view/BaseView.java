@@ -64,6 +64,7 @@ public abstract class BaseView {
         footer.setStyle("-fx-background-color: #705D56;");
 
         Label credits = new Label("Created by: Monarchs of Coding");
+        credits.setId("credits");
         credits.setTextFill(Color.WHITE);
         footer.add(credits);
 
@@ -72,6 +73,7 @@ public abstract class BaseView {
 
             Label loggedInAs = new Label(String.format("Logged in as: %s", username));
             loggedInAs.setTextFill(Color.WHITE);
+            loggedInAs.setId("loggedInAs");
             footer.add(loggedInAs, "right");
         }
 
