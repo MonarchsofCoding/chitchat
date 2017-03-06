@@ -13,6 +13,7 @@ defmodule ChitChat.User do
     field :password, :string, virtual: true
 
     field :hashed_password, :string
+    field :online, :boolean
 
     timestamps()
   end
@@ -86,6 +87,7 @@ defmodule ChitChat.User do
     |> unique_constraint(:username)
     |> put_change(:hashed_password, Bcrypt.hashpwsalt(
                           changeset.params["password"]))
+    |> put_change(:online, false)
     |> UserRepository.create()
   end
 
