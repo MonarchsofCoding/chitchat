@@ -75,8 +75,8 @@ public class UserSearchController {
         List<UserModel> foundUsers = new ArrayList<>();
 
         for (Object obj : jsonArray) {
-            JSONObject jObject = (JSONObject) obj;
-            foundUsers.add(userResolver.getUserModelViaJSonObject(jObject));
+            JSONObject jsonobject = (JSONObject) obj;
+            foundUsers.add(userResolver.getUserModelViaJSonObject(jsonobject));
         }
 
         return foundUsers;
