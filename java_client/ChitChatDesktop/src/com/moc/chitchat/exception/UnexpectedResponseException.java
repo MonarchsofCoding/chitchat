@@ -1,7 +1,5 @@
 package com.moc.chitchat.exception;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import okhttp3.Response;
 
 /**
