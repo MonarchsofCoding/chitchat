@@ -65,7 +65,9 @@ public class UserValidator implements Validator {
      */
     public void throwErrorsFromResponse(Response response) throws ValidationException, IOException {
         String jsonData = response.body().string();
-        JSONObject serverErrors = new JSONObject(jsonData);
+        JSONObject serverErrors = new JSONObject(jsonData).getJSONObject("errors");
+
+        System.out.println("serverErrors are " + serverErrors.toString());
 
         MapBindingResult validationErrors = new MapBindingResult(
             new HashMap<String, String>(),

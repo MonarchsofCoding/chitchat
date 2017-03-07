@@ -58,7 +58,6 @@ public class MessageController {
         Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(), to, message);
         Response response = httpClient.post("/api/v1/messages", newMessage);
 
-
         if (response.code() == 422) {
             this.userValidator.throwErrorsFromResponse(response);
         } else if (response.code() != 201) {
@@ -66,7 +65,6 @@ public class MessageController {
         }
 
         this.chitChatData.addMessageToConversation(to, newMessage);
-
 
         return newMessage;
 
