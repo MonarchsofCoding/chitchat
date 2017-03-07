@@ -114,7 +114,7 @@ public class ReceiveMessageService extends Service {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return super.onStartCommand(intent, flags, startId);
+        return START_NOT_STICKY;
     }
 
     @Override

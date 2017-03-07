@@ -86,7 +86,8 @@ public class LoginController {
             "/api/v1/auth",
             user.toJsonObject(),
             successListener,
-            errorListener
+            errorListener,
+            false
         );
     }
 }

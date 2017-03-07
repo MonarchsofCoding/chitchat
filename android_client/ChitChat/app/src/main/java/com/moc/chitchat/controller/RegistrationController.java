@@ -89,7 +89,8 @@ public class RegistrationController {
             "/api/v1/users",
             user.toJsonObject(),
             successListener,
-            errorListener
+            errorListener,
+            false
         );
 
     }

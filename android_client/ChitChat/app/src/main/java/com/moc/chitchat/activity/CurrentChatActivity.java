@@ -25,9 +25,6 @@ import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.json.JSONArray;
@@ -119,11 +116,6 @@ public class CurrentChatActivity extends AppCompatActivity
         if (!messageText.getText().toString().equals("")) {
             keyboardManager.hideSoftInputFromWindow(messageText.getWindowToken(), 0);
 
-            Map<String, String> requestHeaders = new HashMap<String, String>();
-            requestHeaders.put(
-                "authorization",
-                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
-
             try {
                 currentChatController.sendMessageToRecipient(
                     this,
@@ -132,8 +124,7 @@ public class CurrentChatActivity extends AppCompatActivity
                     new MessageModel(
                         currentReceiver,
                         messageText.getText().toString()
-                    ),
-                    requestHeaders
+                    )
                 );
             } catch (JSONException jsonexception) {
                 jsonexception.printStackTrace();
@@ -199,11 +190,10 @@ public class CurrentChatActivity extends AppCompatActivity
     public void onTabSelected(TabLayout.Tab tab) {
         String tabName = tab.getText().toString();
         if (tabName.equals("Chats")) {
-            launchActivityFromTab(ChatListActivity.class);
+            launchActivity(ChatListActivity.class);
         } else if (tabName.equals("Search Users")) {
-            launchActivityFromTab(SearchUserActivity.class);
+            launchActivity(SearchUserActivity.class);
         }
-        this.finish();
     }
 
     //For a unselected tab
@@ -237,14 +227,14 @@ public class CurrentChatActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        //TODO: Dialog to go back to chats
-        System.out.println("The back button is pressed.");
+        launchActivity(ChatListActivity.class);
     }
 
     /**
      * {LaunchActivity is starting }.
      */
-    public void launchActivityFromTab(Class activityToLaunch) {
+    public void launchActivity(Class activityToLaunch) {
+        this.finish();
         Intent toLaunchIntent = new Intent(getBaseContext(), activityToLaunch);
         startActivity(toLaunchIntent);
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);

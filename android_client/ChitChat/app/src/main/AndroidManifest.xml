@@ -9,17 +9,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".ChitChatApplication">
-        <activity android:name=".activity.LoginActivity">
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.RegistrationActivity" />
-        <activity android:name=".activity.SearchUserActivity"
+        <activity
+            android:name=".activity.RegistrationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchUserActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".activity.CurrentChatActivity" />
-        <activity android:name=".activity.ChatListActivity" />
+        <activity
+            android:name=".activity.CurrentChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ChatListActivity"
+            android:screenOrientation="portrait" />
         <service android:name=".service.ReceiveMessageService"/>
     </application>
 

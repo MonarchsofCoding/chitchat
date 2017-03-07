@@ -1,7 +1,9 @@
 package com.moc.chitchat.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -22,12 +24,12 @@ import javax.inject.Inject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
  * LoginActivity provides the View and Actions involved with logging a User in.
  */
 public class LoginActivity extends AppCompatActivity
     implements View.OnClickListener,
+    DialogInterface.OnClickListener,
     Response.Listener<JSONObject>,
     Response.ErrorListener {
 
@@ -67,6 +69,13 @@ public class LoginActivity extends AppCompatActivity
             loginButton();
         } else if (view.getId() == findViewById(R.id.register_button).getId()) {
             registerButton();
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if(which == DialogInterface.BUTTON_POSITIVE) {
+            this.finish();
         }
     }
 
@@ -126,12 +135,18 @@ public class LoginActivity extends AppCompatActivity
         startActivity(searchIntent);
         startService(new Intent(this, ReceiveMessageService.class));
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
-        this.exitActivity();
     }
 
     @Override
     public void onBackPressed() {
-        exitActivity();
+        AlertDialog.Builder exitAlertBuilder = new AlertDialog.Builder(this);
+        AlertDialog exitAlert = exitAlertBuilder.create();
+        exitAlert.setCancelable(false);
+        exitAlert.setTitle("Exiting ChitChat");
+        exitAlert.setMessage("Do you wish to exit ChitChat?");
+        exitAlert.setButton(DialogInterface.BUTTON_POSITIVE,"Yes",this);
+        exitAlert.setButton(DialogInterface.BUTTON_NEGATIVE,"No",this);
+        exitAlert.show();
     }
 
     public void exitActivity() {

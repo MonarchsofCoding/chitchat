@@ -24,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
  * RegistrationActivity provides the View and Actions involved with registering a User.
  */

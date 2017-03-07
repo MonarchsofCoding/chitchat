@@ -1,8 +1,10 @@
 package com.moc.chitchat.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +16,7 @@ import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
 import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.model.ConversationModel;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.service.ReceiveMessageService;
@@ -22,18 +25,17 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-/**
- * Created by aakyo on 27/02/2017.
- */
-
 public class ChatListActivity extends AppCompatActivity
     implements TabLayout.OnTabSelectedListener,
+    DialogInterface.OnClickListener,
     ListView.OnItemClickListener {
 
     @Inject
     ChitChatMessagesConfiguration chitChatMessagesConfiguration;
     @Inject
     CurrentChatConfiguration currentChatConfiguration;
+    @Inject
+    SessionConfiguration sessionConfiguration;
 
     ListView chatsList;
     TabLayout menuTabs;
@@ -58,13 +60,6 @@ public class ChatListActivity extends AppCompatActivity
         menuTabs.addOnTabSelectedListener(this);
 
         getConversations();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        stopService(new Intent(getBaseContext(), ReceiveMessageService.class));
-        this.finish();
     }
 
     /**
@@ -94,6 +89,8 @@ public class ChatListActivity extends AppCompatActivity
 
         currentChatConfiguration.setCurrentRecipient(new UserModel(newRecipientUsername));
 
+        this.finish();
+
         Intent currentChatIntent = new Intent(getBaseContext(), CurrentChatActivity.class);
         currentChatIntent.putExtra(
             "recipient_username",
@@ -101,7 +98,6 @@ public class ChatListActivity extends AppCompatActivity
 
         startActivity(currentChatIntent);
         overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
-        this.finish();
     }
 
     //For a selected tab
@@ -113,14 +109,15 @@ public class ChatListActivity extends AppCompatActivity
         tabToSelect.select();                             //stay in this activity
 
         if (tabName.equals("Search Users")) {
-            launchActivityFromTab(SearchUserActivity.class);
             this.finish();
+            launchActivityFromTab(SearchUserActivity.class);
 
         } else if (tabName.equals("Current Chat")) {
             if (currentChatConfiguration.getCurrentRecipient() != null) {
                 String currentReceiverUsername = currentChatConfiguration
                     .getCurrentRecipient().getUsername();
                 if (!currentReceiverUsername.equals("")) {
+                    this.finish();
 
                     Intent currentChatIntent = new Intent(getBaseContext(), CurrentChatActivity.class);
                     currentChatIntent.putExtra(
@@ -129,7 +126,6 @@ public class ChatListActivity extends AppCompatActivity
                     startActivity(currentChatIntent);
 
                     overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
-                    this.finish();
                 }
             } else {
                 Toast.makeText(this, String.format("There is no current chat"), Toast.LENGTH_LONG).show();
@@ -148,6 +144,29 @@ public class ChatListActivity extends AppCompatActivity
     public void onTabReselected(TabLayout.Tab tab) {
         System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
         //Basically do nothing.
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder exitAlertBuilder = new AlertDialog.Builder(this);
+        AlertDialog exitAlert = exitAlertBuilder.create();
+        exitAlert.setCancelable(false);
+        exitAlert.setTitle("Logging out");
+        exitAlert.setMessage("Do you wish to logout?");
+        exitAlert.setButton(DialogInterface.BUTTON_POSITIVE,"Yes",this);
+        exitAlert.setButton(DialogInterface.BUTTON_NEGATIVE,"No",this);
+        exitAlert.show();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if(which == DialogInterface.BUTTON_POSITIVE) {
+            sessionConfiguration.cleanCurrentUser();
+            currentChatConfiguration.cleanCurrentRecipient();
+            chitChatMessagesConfiguration.clearChitChatMessagesConfiguration();
+            stopService(new Intent(getBaseContext(), ReceiveMessageService.class));
+            this.finish();
+        }
     }
 
     /**

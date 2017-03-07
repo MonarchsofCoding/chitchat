@@ -102,4 +102,9 @@ public class ChitChatMessagesConfiguration {
         return null;
     }
 
+    public void clearChitChatMessagesConfiguration() {
+        this.conversations = new ArrayList<ConversationModel>();
+        this.messageConfigurationListener = null;
+    }
+
 }

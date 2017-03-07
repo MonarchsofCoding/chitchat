@@ -46,6 +46,13 @@ public class ChitChatMessagesConfigurationTest {
     }
 
     @Test
+    public void testClearChitChatMessagesConfiguration() {
+        ChitChatMessagesConfiguration chitChatData = new ChitChatMessagesConfiguration();
+
+        chitChatData.clearChitChatMessagesConfiguration();
+    }
+
+    @Test
     public void testGetListOfConversations() {
         ChitChatMessagesConfiguration chitChatData = new ChitChatMessagesConfiguration();
 
