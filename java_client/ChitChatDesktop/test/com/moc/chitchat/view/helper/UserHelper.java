@@ -9,7 +9,6 @@ import org.testfx.framework.junit.ApplicationTest;
  * UserHelper provides functions to manage User objects in tests.
  */
 public class UserHelper {
-
     /**
      * A helper for other ViewTests to create new users.
      * @param username The username of the new user.

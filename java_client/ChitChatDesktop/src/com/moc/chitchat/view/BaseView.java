@@ -1,6 +1,9 @@
 package com.moc.chitchat.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -8,12 +11,13 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 /**
  * Provides the base for all primary views in the application.
  */
-public abstract class BaseView {
+public abstract class BaseView implements EventHandler<ActionEvent> {
 
     protected BaseStage baseStage;
 
     private int width;
     private int height;
+    private Button Logout_Btn = new Button("Log Out");
 
     public void setWidth(int width) {
         this.width = width;
@@ -53,7 +57,10 @@ public abstract class BaseView {
 
         Label title = new Label("Chit Chat");
         title.setTextFill(Color.WHITE);
-        header.add(title, "span, split 2, center");
+        this.Logout_Btn.setId("log-out-btn");
+        this.Logout_Btn.setOnAction(this);
+        header.add(title,"center,wrap");
+        header.add(Logout_Btn,"align right");
 
         return header;
     }
@@ -78,5 +85,13 @@ public abstract class BaseView {
         }
 
         return footer;
+    }
+
+    @Override
+    public void handle(ActionEvent event) {
+        if (event.getSource() == this.Logout_Btn) {
+
+            Runtime.getRuntime().exit(0);
+        }
     }
 }

@@ -41,7 +41,6 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     @Override
     public MigPane getContentPane() {
         this.baseStage.setWindowTitle("Chit Chat - Login");
-
         this.usernameField = new TextField();
         this.usernameField.setId("login-username-fld");
         this.usernameField.setPromptText("Username");
