@@ -8,6 +8,7 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.view.BaseView;
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -128,6 +129,11 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
                 errormessage.setText("Unexpected error");
                 errormessage.setVisible(true);
                 unexpectedResponse.printStackTrace();
+            } catch (IOException ioException) {
+                // I think this has to be changed
+                errormessage.setText("Incorrect input");
+                errormessage.setVisible(true);
+                ioException.printStackTrace();
             }
 
             this.newMessageField.clear();

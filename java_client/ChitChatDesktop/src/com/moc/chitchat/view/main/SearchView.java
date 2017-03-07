@@ -8,6 +8,8 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.BaseView;
+
+import java.io.IOException;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -128,13 +130,18 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
             this.errorusermessage.setText(unirestException.getMessage());
             this.errorusermessage.setVisible(true);
         } catch (ValidationException validationException) {
-            String errormsg = validationException.getErrors().getFieldError("username").getDefaultMessage().toString();
+            String errormsg = validationException.getErrors()
+                    .getFieldError("username").getDefaultMessage().toString();
             this.errorusermessage.setText(errormsg);
             this.errorusermessage.setVisible(true);
         } catch (UnexpectedResponseException unexpectedResponseException) {
             this.errorusermessage.setText("Error from Server");
             this.errorusermessage.setVisible(true);
             unexpectedResponseException.printStackTrace();
+        } catch (IOException ioException) {
+            // I think this has to be changed
+            this.errorusermessage.setText("Incorrect input");
+            this.errorusermessage.setVisible(true);
         }
     }
 
