@@ -1,14 +1,17 @@
 package com.moc.chitchat.client;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
 import com.moc.chitchat.application.Configuration;
 
+import java.io.IOException;
 import java.util.Map;
 
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.json.JSONString;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Component;
 public class HttpClient {
 
     private Configuration configuration;
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 
     HttpClient(Configuration configuration) {
@@ -33,24 +37,31 @@ public class HttpClient {
      * @return response in Unirest
      * @throws UnirestException - If invalid post with the httpClient
      */
-    public HttpResponse<JsonNode> post(String uri, JSONString object) throws UnirestException {
+    public Response post(String uri, JSONString object) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(JSON, object.toJSONString());
         if (this.configuration.getLoggedInUser() != null) {
-            return Unirest
-                    .post(configuration.getBackendAddress() + uri)
+            Request request = new Request.Builder()
+                    .url(this.configuration.getBackendAddress() + uri)
                     .header("accept", "application/json")
                     .header("Content-Type", "application/json")
                     .header("Authorization", "bearer " + this.configuration.getLoggedInUser().getAuthToken())
-                    .body(object.toJSONString())
-                    .asJson()
-                    ;
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            return response;
         }
-        return Unirest
-                .post(configuration.getBackendAddress() + uri)
+        Request request = new Request.Builder()
+                .url(this.configuration.getBackendAddress() + uri)
                 .header("accept", "application/json")
                 .header("Content-Type", "application/json")
-                .body(object.toJSONString())
-                .asJson()
-                ;
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        return response;
+
     }
 
     /**
@@ -60,21 +71,40 @@ public class HttpClient {
      * @param query - query the server. Can have multiple quries
      * @return response in Unirest
      * @throws UnirestException - If invalid e.g. can't connect to server
+     * @throws IOException - If invalid
      */
-    public HttpResponse<JsonNode> get(String uri, Map<String, Object> query) throws UnirestException {
-        GetRequest req = Unirest
-                .get(configuration.getBackendAddress() + uri)
-                .header("accept", "application/json")
-                .header("Content-Type", "application/json");
+    public Response get(String uri, Map<String, Object> query) throws UnirestException, IOException {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(this.configuration.getBackendAddress()).newBuilder();
 
-        if (this.configuration.getLoggedInUser() != null) {
-            req.header("Authorization", "bearer " + this.configuration.getLoggedInUser().getAuthToken());
+        // Adding paths to the segment
+        if (uri.contains("/")) {
+            String[] pathsToAdd = uri.split("/");
+            for (int i = 0; i < pathsToAdd.length; i++) {
+                urlBuilder.addPathSegment(pathsToAdd[i]);
+            }
+        } else {
+            urlBuilder.addPathSegment(uri);
         }
 
         for (Map.Entry<String, Object> entry : query.entrySet()) {
-            req.queryString(entry.getKey(), entry.getValue());
+            urlBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
         }
 
-        return req.asJson();
+        Request request;
+        if (this.configuration.getLoggedInUser() != null) {
+            request = new Request.Builder()
+                    .url(urlBuilder.build().toString())
+                    .header("Accept", "application/json")
+                    .addHeader("Authorization", "bearer "
+                            + this.configuration.getLoggedInUser().getAuthToken()).build();
+        } else {
+            request = new Request.Builder()
+                    .url(urlBuilder.build().toString()).build();
+        }
+
+        OkHttpClient client = new OkHttpClient();
+        Response response = client.newCall(request).execute();
+
+        return response;
     }
 }
