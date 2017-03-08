@@ -79,14 +79,23 @@ public class LoginControllerTest {
 
 
         this.mockHttpClient.post("/api/v1/auth", mockUser);
+        MockResponse mockResponse = BaseResponse(200);
+        mockResponse.addHeader();
+        mockResponse.setBody();
+        server.enqueue(mockResponse);
+
         
+
+
+
+    }
+    private static MockResponse BaseResponse(int responCode){
         MockResponse response = new MockResponse()
+                .setResponseCode(401)
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .addHeader("Cache-Control", "no-cache")
                 .setBody("{}");
-
-
-
+        return response;
     }
 
 
