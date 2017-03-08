@@ -76,7 +76,7 @@ public class LoginController {
         String jsonData = response.body().string();
         JSONObject jsonObject = new JSONObject(jsonData);
         user.setAuthToken(jsonObject.getJSONObject("data").get("authToken").toString());
-
+        System.out.println(jsonData);
         this.configuration.setLoggedInUser(user);
 
         webSocketClient.connectToUserMessage(user);

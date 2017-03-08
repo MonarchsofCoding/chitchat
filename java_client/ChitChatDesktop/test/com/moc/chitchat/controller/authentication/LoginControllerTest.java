@@ -14,6 +14,7 @@ import com.moc.chitchat.validator.UserValidator;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -58,33 +60,80 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void testSuccessfulLoginUser() throws ValidationException, UnirestException, UnexpectedResponseException, IOException {
-        // Stub the UserResolver to return a UserModel
-        UserModel mockUser = mock(UserModel.class);
-        when(
-                this.mockUserResolver.createLoginUser(
-                        "spiros",
-                        "aaaaaaaaaaa"
-                )
-        ).thenReturn(mockUser);
+    public void testSuccessfulLoginUser() throws ValidationException, UnirestException, UnexpectedResponseException, IOException, InterruptedException {
+        String validUsername = "spiros";
+        String validPassword = "abcde1234";
 
+        // Set up mock server
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(401));
-        server.enqueue(new MockResponse().setBody("data"));
-        server.enqueue(new MockResponse().setBody("authToken"));
 
-        server.start();
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
 
-        HttpUrl loginUrl = server.url("/api/v1/auth");
+        // Not used, but for completeness
+        String jsonResponse = "{" +
+                "\"data\": {" +
+                "\"username\": \"spiros\"" +","+
+                "\"exp\":" +","+
+                "\"authToken\":" +
+                "}" +
+                "}";
 
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "bearer ")
+                .setBody(jsonResponse)
+                .setResponseCode(200)
+        ;
 
-        this.mockHttpClient.post("/api/v1/auth", mockUser);
-        MockResponse mockResponse = BaseResponse(200);
-        mockResponse.addHeader();
-        mockResponse.setBody();
         server.enqueue(mockResponse);
 
-        
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        WebSocketClient mockwebSocketClient = mock(WebSocketClient.class);
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+
+        LoginController loginController = new LoginController(
+                userResolver,
+                httpClient,
+                userValidator,
+                mockConfiguration,
+                mockwebSocketClient
+
+        );
+
+        try {
+            loginController.loginUser(
+                    validUsername,
+                    validPassword
+            );
+
+        } catch (ValidationException | UnexpectedResponseException e) {
+            fail();
+            e.printStackTrace();
+        }
+
+        // assert requests
+        RecordedRequest recordedRequest = null;
+        try {
+            recordedRequest = server.takeRequest();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals("//api/v1/auth", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
+       // assertEquals("data",recordedRequest.getBody());
+        //assertEquals(jsonResponsegetJSONObject("data").get("authToken").toString(),recordedRequest.getBody(jsonResponse.contains("authToken")));
+        server.shutdown();
+    }
+
+     /*
 
 
 
@@ -96,7 +145,7 @@ public class LoginControllerTest {
                 .addHeader("Cache-Control", "no-cache")
                 .setBody("{}");
         return response;
-    }
+    }*/
 
 
    /* @Test
