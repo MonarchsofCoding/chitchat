@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
  */
 public class MessageControllerTest {
 
-    @Mock
+   /* @Mock
     private HttpClient httpClient;
     @Mock
     private Configuration configuration;
@@ -129,4 +129,5 @@ public class MessageControllerTest {
 
         this.messageController.receive(myText, name);
     }
+    */
 }
