@@ -2,9 +2,15 @@ package com.moc.chitchat.controller.authentication;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
+import okhttp3.HttpUrl;
+import okhttp3.Response;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,6 +21,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -24,9 +32,10 @@ import static org.mockito.Mockito.*;
  */
 public class RegistrationControllerTest {
 
-   /* @Mock private UserResolver mockUserResolver;
+    @Mock private UserResolver mockUserResolver;
     @Mock private UserValidator mockUserValidator;
     @Mock private HttpClient mockHttpClient;
+    @Mock private Configuration configuration;
 
     @InjectMocks private RegistrationController registrationController;
 
@@ -44,36 +53,42 @@ public class RegistrationControllerTest {
     }
 
     @Test
-    public void testSuccessfulRegisterUser() throws ValidationException, UnirestException, UnexpectedResponseException {
+    public void testSuccessfulRegisterUser()
+            throws ValidationException, UnirestException, UnexpectedResponseException, IOException {
         // Stub the UserResolver to return a UserModel
-        UserModel mockUser = mock(UserModel.class);
-        when(
-            this.mockUserResolver.createUser(
-                    "spiros",
-                    "aaa",
-                    "aaa"
-            )
-        ).thenReturn(mockUser);
 
-        // Create and define the mocked response to return 201 (success)
-        HttpResponse<JsonNode> mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-        when(mockResponse.getStatus())
-                .thenReturn(201);
-        // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.post("/api/v1/users", mockUser))
-                .thenReturn(mockResponse);
+        MockWebServer server = new MockWebServer();
 
-        // Run the function to test
-        this.registrationController.registerUser(
-                "spiros",
-                "aaa",
-                "aaa"
-        );
+        MockResponse response = new MockResponse()
+                .setResponseCode(201)
+                .addHeader("accept", "application/json")
+                .addHeader("Content-Type", "application/json");
 
-        // Verify that UserValidator.validate was called
-        verify(mockUserValidator).validate(mockUser);
+        // Schedule some responses.
+        server.enqueue(response);
+
+        when(this.configuration.getBackendAddress()).thenReturn("http://localhost:4000");
+
+        when(this.mockUserResolver.createUser("John", "12341234", "12341234"))
+                .thenCallRealMethod();
+
+        //when(this.mockHttpClient.post())
+
+        // Start the server.
+        server.start();
+
+        //RecordedRequest
+
+        // Ask the server for its URL. You'll need this to make HTTP requests.
+        HttpUrl baseUrl = server.url("http://localhost:4000/api/v1/users");
+
+        UserModel userModel = this.registrationController.registerUser("John", "12341234", "12341234");
+
+        server.shutdown();
+
+
     }
-
+/**
     @Test
     public void testLocalUnsuccessfulRegisterUser() throws ValidationException, UnirestException, UnexpectedResponseException {
         // Stub the UserResolver to return a UserModel
