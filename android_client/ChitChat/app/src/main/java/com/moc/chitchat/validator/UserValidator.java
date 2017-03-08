@@ -36,6 +36,11 @@ public class UserValidator {
             errors.put("password", passwordErrors);
         }
 
+        if (user.getPassword().length() < 8) {
+            passwordErrors.add("should be at least 8 character(s)");
+            errors.put("password", passwordErrors);
+        }
+
         if (user.getPasswordCheck() == null || !user.getPasswordCheck().equals(user.getPassword())) {
             passwordCheckErrors.add("The passwords must match,");
             errors.put("passwordCheck", passwordCheckErrors);

@@ -119,6 +119,7 @@ public class SearchUserActivity extends AppCompatActivity
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if(which == DialogInterface.BUTTON_POSITIVE) {
+            //TODO: close the connection on the service, to let the backend know about the logout.
             sessionConfiguration.cleanCurrentUser();
             currentChatConfiguration.cleanCurrentRecipient();
             chitChatMessagesConfiguration.clearChitChatMessagesConfiguration();

@@ -11,11 +11,13 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.moc.chitchat.activity.LoginActivity;
 import com.moc.chitchat.activity.RegistrationActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,11 +34,17 @@ import org.junit.runners.MethodSorters;
 public class RegisterActivityTest {
 
     @Rule
-    public ActivityTestRule<RegistrationActivity> registerActivityRule = new ActivityTestRule<>(
-        RegistrationActivity.class);
+    public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
+        LoginActivity.class);
+
     private String usernameTyped;
     private String passwordTyped;
     private String passwordReTyped;
+
+    @Before
+    public void registrationInit() {
+        onView(withId(R.id.register_button)).perform(click());
+    }
 
     @Test
     public void true_Input() throws InterruptedException {
@@ -162,7 +170,7 @@ public class RegisterActivityTest {
 
         onView(withId(R.id.register_button)).perform(click());
 
-        String expectedOutput = "Username: [\"should be at least 8 character(s)\"]\n";
+        String expectedOutput = "Password: [should be at least 8 character(s)]\n";
         assertEquals(expectedOutput, outContent.toString());
 
     }

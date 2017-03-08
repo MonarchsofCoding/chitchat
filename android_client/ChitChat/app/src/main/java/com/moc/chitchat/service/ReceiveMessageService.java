@@ -68,19 +68,9 @@ public class ReceiveMessageService extends Service {
                     + sessionConfiguration.getCurrentUser().getUsername(),
                 auth);
 
-            channel.join()
-                .receive("ok", new IMessageCallback() {
-                    @Override
-                    public void onMessage(Envelope envelope) {
-                        System.out.println("JOINED with " + envelope.toString());
-
-                    }
-                });
-
             channel.on("new:message", new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
-                    System.out.println("NEW MESSAGE: " + envelope.toString());
                     String message = envelope.getPayload().get("body").asText();
                     String from = envelope.getPayload().get("from").asText();
                     UserModel fromUser = new UserModel(from);
@@ -94,6 +84,8 @@ public class ReceiveMessageService extends Service {
                         toAdd,
                         false
                     );
+                    System.out.println("Message from " + fromUser.getUsername() + " is received.");
+                    System.out.println("The received message: " + message);
                 }
             });
 

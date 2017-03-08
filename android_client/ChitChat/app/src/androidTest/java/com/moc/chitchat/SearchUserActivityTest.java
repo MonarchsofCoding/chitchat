@@ -27,9 +27,6 @@ import org.junit.runner.RunWith;
 public class SearchUserActivityTest {
 
     @Rule
-    public ActivityTestRule<SearchUserActivity> searchUserActivityActivityRule
-        = new ActivityTestRule<>(SearchUserActivity.class);
-    @Rule
     public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
         LoginActivity.class);
     
@@ -45,9 +42,6 @@ public class SearchUserActivityTest {
 
         usernameTyped = "vjftw";
         passwordTyped = "Abc123!?";
-
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
 
         onView(withId(R.id.username_input))
             .perform(typeText(usernameTyped), closeSoftKeyboard());

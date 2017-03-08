@@ -92,6 +92,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Username: %s", usernameErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Username: %s", usernameErrors.toString()));
             }
 
             if (errors.containsKey("password")) {
@@ -100,6 +101,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Password: %s", passwordErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Password: %s", passwordErrors.toString()));
             }
 
             if (errors.containsKey("passwordCheck")) {
@@ -108,6 +110,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Password Check: %s", passwordCheckErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Password Check: %s", passwordCheckErrors.toString()));
             }
         }
     }

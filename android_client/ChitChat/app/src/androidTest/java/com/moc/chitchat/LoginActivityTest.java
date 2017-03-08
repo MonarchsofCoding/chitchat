@@ -30,6 +30,7 @@ public class LoginActivityTest {
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
         LoginActivity.class);
+
     private String usernameTyped;
     private String passwordTyped;
 

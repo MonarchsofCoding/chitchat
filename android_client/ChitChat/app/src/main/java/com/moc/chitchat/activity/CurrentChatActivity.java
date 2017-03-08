@@ -178,6 +178,9 @@ public class CurrentChatActivity extends AppCompatActivity
                 true
             );
             addMessageToPanel(from, message, true);
+            System.out.println("Message from " + fromUser.getUsername() + " is sent to " +
+            toUser.getUsername());
+            System.out.println("The sent message: " + message);
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
             Toast.makeText(this,
