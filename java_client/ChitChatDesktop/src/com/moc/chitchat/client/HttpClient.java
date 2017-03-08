@@ -25,7 +25,7 @@ public class HttpClient {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
 
-    HttpClient(Configuration configuration) {
+    public HttpClient(Configuration configuration) {
         this.configuration = configuration;
     }
 

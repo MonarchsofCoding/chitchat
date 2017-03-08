@@ -1,93 +1,91 @@
 package com.moc.chitchat.controller.authentication;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
+import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
-import com.moc.chitchat.model.UserModel;
+import com.moc.chitchat.resolver.UserResolver;
+import com.moc.chitchat.validator.UserValidator;
 import okhttp3.HttpUrl;
-import okhttp3.Response;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.Before;
 import org.junit.Test;
-
-import com.moc.chitchat.client.HttpClient;
-import com.moc.chitchat.resolver.UserResolver;
-import com.moc.chitchat.validator.UserValidator;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * RegistrationControllerTest provides tests for the RegistrationController
  */
 public class RegistrationControllerTest {
 
-    @Mock private UserResolver mockUserResolver;
-    @Mock private UserValidator mockUserValidator;
-    @Mock private HttpClient mockHttpClient;
-    @Mock private Configuration configuration;
-
-    @InjectMocks private RegistrationController registrationController;
-
-    @Before public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
 
     @Test
-    public void testConstructor() {
-        assertNotNull(this.registrationController);
-        assertEquals(
-                this.registrationController.getClass(),
-                RegistrationController.class
-        );
-    }
+    public void testSuccessfulRegisterUser() throws IOException, InterruptedException, UnirestException {
+        String validUsername = "alice";
+        String validPassword = "abcde1234";
+        String validPasswordCheck = "abcde1234";
 
-    @Test
-    public void testSuccessfulRegisterUser()
-            throws ValidationException, UnirestException, UnexpectedResponseException, IOException {
-        // Stub the UserResolver to return a UserModel
-
+        // Set up mock server
         MockWebServer server = new MockWebServer();
 
-        MockResponse response = new MockResponse()
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        // Not used, but for completeness
+        String jsonResponse = "{" +
+                "\"data\": {" +
+                "\"username\": \"alice\"" +
+                "}" +
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
                 .setResponseCode(201)
-                .addHeader("accept", "application/json")
-                .addHeader("Content-Type", "application/json");
+        ;
 
-        // Schedule some responses.
-        server.enqueue(response);
+        server.enqueue(mockResponse);
 
-        when(this.configuration.getBackendAddress()).thenReturn("http://localhost:4000");
+        HttpUrl baseUrl = server.url("/");
 
-        when(this.mockUserResolver.createUser("John", "12341234", "12341234"))
-                .thenCallRealMethod();
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
 
-        //when(this.mockHttpClient.post())
+        RegistrationController registrationController = new RegistrationController(
+                userResolver,
+                userValidator,
+                httpClient
+        );
 
-        // Start the server.
-        server.start();
+        try {
+            registrationController.registerUser(
+                    validUsername,
+                    validPassword,
+                    validPasswordCheck
+            );
 
-        //RecordedRequest
+        } catch (ValidationException | UnexpectedResponseException e) {
+            fail();
+            e.printStackTrace();
+        }
 
-        // Ask the server for its URL. You'll need this to make HTTP requests.
-        HttpUrl baseUrl = server.url("http://localhost:4000/api/v1/users");
-
-        UserModel userModel = this.registrationController.registerUser("John", "12341234", "12341234");
-
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("//api/v1/users", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
         server.shutdown();
-
-
     }
+
 /**
     @Test
     public void testLocalUnsuccessfulRegisterUser() throws ValidationException, UnirestException, UnexpectedResponseException {
