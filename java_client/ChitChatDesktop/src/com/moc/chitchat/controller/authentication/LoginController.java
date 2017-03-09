@@ -56,7 +56,7 @@ public class LoginController {
             throws UnexpectedResponseException, ValidationException, IOException {
 
         // Create the User object from parameters.
-        UserModel user = userResolver.createLoginUser(username, password);
+        UserModel user = userResolver.createUser(username, password);
 
         // Register the User object on the backend via a HTTP request.
         Response response = this.httpClient.post("/api/v1/auth", user);
