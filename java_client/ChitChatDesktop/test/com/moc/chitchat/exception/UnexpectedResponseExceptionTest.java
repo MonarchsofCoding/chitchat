@@ -1,11 +1,20 @@
 package com.moc.chitchat.exception;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.Configuration;
+import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.controller.authentication.RegistrationController;
+import com.moc.chitchat.resolver.UserResolver;
+import com.moc.chitchat.validator.UserValidator;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.Test;
-import org.mockito.Mock;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,19 +22,57 @@ import static org.mockito.Mockito.when;
  * UnexpectedResponseExceptionTest provides Tests for the UnexpectedResponseException
  */
 public class UnexpectedResponseExceptionTest {
-/*
-    @Mock
-    private HttpResponse<JsonNode> mockResponse;
 
     @Test
-    public void testGetResponse()
-    {
-        // Getting the unexpected response for status code 500
-        mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-        when(mockResponse.getStatus()).thenReturn(500);
+    public void testUnexpectedResponse()
+            throws UnirestException, IOException, InterruptedException {
+        String validUsername = "alice";
+        String validPassword = "abcde1234";
+        String validPasswordCheck = "abcde1234";
 
-        UnexpectedResponseException unexpected = new UnexpectedResponseException(mockResponse);
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
 
-        assertEquals(mockResponse.getStatus(), unexpected.getResponse().getStatus());
-    }*/
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setResponseCode(500)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+
+        RegistrationController registrationController = new RegistrationController(
+                userResolver,
+                userValidator,
+                httpClient
+        );
+
+        try {
+            registrationController.registerUser(
+                    validUsername,
+                    validPassword,
+                    validPasswordCheck
+            );
+
+        } catch (ValidationException v) {
+            fail("Should not enter validation exception");
+        } catch (UnexpectedResponseException e) {
+            e.printStackTrace();
+            assertEquals(500, e.getResponse().code());
+            server.shutdown();
+        }
+
+        server.shutdown();
+    }
 }
