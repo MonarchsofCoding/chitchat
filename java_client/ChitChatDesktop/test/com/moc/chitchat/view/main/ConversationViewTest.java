@@ -71,50 +71,52 @@ public class ConversationViewTest extends PrimaryStageTest {
         clickOn(check);
         clickOn(startConversationBtn);
     }
-    /**
-     *Test The existance of main parts of the field
-     */
-    @Test
-    public void CheckFields(){
-        preCondition("Phillip");
-        preCondition("Leonardo");
-        access_search_view2();
-        String check = "Leonardo";
-        verifyThat(togglebutton,hasText("Search Users"));
-        verifyThat(togglebutton, NodeMatchers.isVisible());
-        verifyThat(newmessageField, NodeMatchers.isEnabled());
-        verifyThat(check, NodeMatchers.isVisible());
-        assertTrue(find(headerChat).isVisible());
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-        verifyThat(errormessage, NodeMatchers.isInvisible());
-        assertTrue(find(sendBtn).isVisible());
-        }
+
+//    /**
+//     *Test The existance of main parts of the field
+//     */
+//    @Test
+//    public void CheckFields(){
+//        preCondition("Phillip");
+//        preCondition("Leonardo");
+//        access_search_view2();
+//        String check = "Leonardo";
+//        verifyThat(togglebutton,hasText("Search Users"));
+//        verifyThat(togglebutton, NodeMatchers.isVisible());
+//        verifyThat(newmessageField, NodeMatchers.isEnabled());
+//        verifyThat(check, NodeMatchers.isVisible());
+//        assertTrue(find(headerChat).isVisible());
+//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
+//        verifyThat(errormessage, NodeMatchers.isInvisible());
+//        assertTrue(find(sendBtn).isVisible());
+//    }
 
 
 
-    /**
-     *Test the sending message function works
-     */
-    @Test
-    public void CheckSendingMessagesFunction(){
-        access_search_view2();
-        String messagetest = "hello";
-        String messagedisplay = "Phillip: " +
-                ""+messagetest;
-        clickOn(newmessageField).write(messagetest).clickOn(sendBtn);
-        clickOn(messagedisplay);
-        verifyThat(messagedisplay,NodeMatchers.isVisible());
+//    /**
+//     *Test the sending message function works
+//     */
+//    @Test
+//    public void CheckSendingMessagesFunction(){
+//        access_search_view2();
+//        String messagetest = "hello";
+//        String messagedisplay = "Phillip: " +
+//                ""+messagetest;
+//        clickOn(newmessageField).write(messagetest).clickOn(sendBtn);
+//        clickOn(messagedisplay);
+//        verifyThat(messagedisplay,NodeMatchers.isVisible());
+//
+//
+//    }
 
-
-    }
-    /**
-     *Test the sending message function works
-     */
-    @Test
-    public void CheckSendingEmptyMessagesFunction(){
-        access_search_view2();
-        clickOn(newmessageField).clickOn(sendBtn);
-        verifyThat(errormessage,NodeMatchers.isVisible());
-
-    }
+//    /**
+//     *Test the sending message function works
+//     */
+//    @Test
+//    public void CheckSendingEmptyMessagesFunction(){
+//        access_search_view2();
+//        clickOn(newmessageField).clickOn(sendBtn);
+//        verifyThat(errormessage,NodeMatchers.isVisible());
+//
+//    }
 }
