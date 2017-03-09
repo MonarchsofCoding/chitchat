@@ -70,7 +70,7 @@ def test(ctx):
     )
 
     preload_classes = "gradle compileUiTestReleaseSources"
-    start_emulator = "screen -d -L -m -S emulator emulator64-arm -avd nougat -noaudio -no-window -gpu off -verbose -qemu -vnc :1"
+    start_emulator = "screen -d -L -m -S emulator emulator64-x86 -avd nougat -noaudio -no-window -gpu off -verbose -qemu -vnc :1"
     print_screen_log = "sleep 60; cat screenlog.0"
     vnc_rec_start = "{0} && android-wait-for-emulator && screen -d -L -m -S vnc2flv flvrec.py -o ChitChatAndroid.flv :1".format(print_screen_log)
     instrumented_tests = "gradle connectedUiTestsDebugAndroidTest"
@@ -91,7 +91,8 @@ def test(ctx):
         environment={},
         links={
           backend_container.get('Id'): "chitchat"
-        }
+        },
+        privileged=True
     )
 
 @task
