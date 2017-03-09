@@ -24,8 +24,14 @@ public class RegistrationController {
 
     private HttpClient httpClient;
 
+    /**
+     * Registration controller provides the controller to register the use.
+     * @param userResolver - used to create a user.
+     * @param validator - create to validate if correct credentials is inserted
+     * @param httpClient - the httpclient where it is used to provide access to the http APIs.
+     */
     @Autowired
-    RegistrationController(
+    public RegistrationController(
         UserResolver userResolver,
         UserValidator validator,
         HttpClient httpClient
@@ -58,7 +64,7 @@ public class RegistrationController {
 
         // Register the User object on the backend via a HTTP request.
         Response response = this.httpClient.post("/api/v1/users", user);
-        System.out.println(response.body().string().toString());
+
         // Process HTTP response. Throw Exception if User invalid. Return void/true if Successful.
         if (response.code() == 422) {
             // Validation failed or username taken.
