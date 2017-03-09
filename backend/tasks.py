@@ -104,6 +104,56 @@ def deploy(ctx):
   pass
 
 @task
+def destroy(ctx, env):
+  env_dir = env
+
+  cli.pull("articulate/terragrunt", "0.8.6")
+
+  git = vcs.Git()
+  version = git.get_version()
+
+  # lxc.Docker.login(cli)
+  # lxc.Docker.push(cli, [
+  #   "monarchsofcoding/chitchat:release-{0}".format(version),
+  #   "monarchsofcoding/chitchat:release"
+  # ])
+
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="get",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
+      "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
+      "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env_dir)),
+      "TF_VAR_container_version": version
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env_dir)
+  )
+
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="destroy --force",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": "destroy",
+      "TF_VAR_secret_key_base": "destroy",
+      "TF_VAR_guardian_secret_key": "destroy",
+      "TF_VAR_container_version": "destroy"
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env_dir)
+  )
+  pass
+
+@task
 def test(ctx):
     """
     Tests the ChitChat Backend
