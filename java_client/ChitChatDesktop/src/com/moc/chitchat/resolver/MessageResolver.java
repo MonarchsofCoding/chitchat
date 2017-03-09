@@ -18,8 +18,7 @@ public class MessageResolver {
      * @return - The message object
      */
     public Message createMessage(UserModel from, UserModel to, String message) {
-        Message newMessage = new Message(from, to, message);
 
-        return newMessage;
+        return new Message(from, to, message);
     }
 }
