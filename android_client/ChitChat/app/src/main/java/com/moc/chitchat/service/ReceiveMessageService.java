@@ -68,6 +68,20 @@ public class ReceiveMessageService extends Service {
                     + sessionConfiguration.getCurrentUser().getUsername(),
                 auth);
 
+            channel.join()
+                .receive("ignore", new IMessageCallback() {
+                    @Override
+                    public void onMessage(Envelope envelope) {
+                        //IGNORE.
+                    }
+                })
+                .receive("ok", new IMessageCallback() {
+                    @Override
+                    public void onMessage(Envelope envelope) {
+                        //Receiving callback to accept the acceptance.
+                    }
+                });
+
             channel.on("new:message", new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
