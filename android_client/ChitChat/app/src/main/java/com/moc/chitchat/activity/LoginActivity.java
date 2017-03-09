@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity
     @Inject
     ErrorResponseResolver errorResponseResolver;
     @Inject
-    SessionConfiguration sessionConfiguration;
+    public SessionConfiguration sessionConfiguration;
 
     EditText usernameField;
     EditText passwordField;

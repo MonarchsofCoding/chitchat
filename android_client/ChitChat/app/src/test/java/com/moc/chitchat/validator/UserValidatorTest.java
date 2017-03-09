@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
  * UserValidatorTest provides tests for the UserValidator
  */
 
+
 public class UserValidatorTest {
 
     @Mock

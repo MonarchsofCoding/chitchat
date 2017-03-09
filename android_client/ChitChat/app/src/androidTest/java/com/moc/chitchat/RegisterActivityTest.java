@@ -170,7 +170,7 @@ public class RegisterActivityTest {
 
         onView(withId(R.id.register_button)).perform(click());
 
-        String expectedOutput = "Password: [should be at least 8 character(s)]\n";
+        String expectedOutput = "Password: [\"should be at least 8 character(s)\"]\n";
         assertEquals(expectedOutput, outContent.toString());
 
     }

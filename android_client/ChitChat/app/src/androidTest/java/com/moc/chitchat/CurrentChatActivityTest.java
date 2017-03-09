@@ -1,41 +1,5 @@
 package com.moc.chitchat;
 
-import android.support.test.espresso.core.deps.guava.base.Strings;
-import android.support.test.filters.LargeTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
-import android.widget.ListView;
-
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.moc.chitchat.activity.ChatListActivity;
-import com.moc.chitchat.activity.CurrentChatActivity;
-import com.moc.chitchat.activity.LoginActivity;
-import com.moc.chitchat.activity.SearchUserActivity;
-import com.moc.chitchat.application.SessionConfiguration;
-import com.moc.chitchat.client.HttpClient;
-import com.moc.chitchat.controller.CurrentChatController;
-import com.moc.chitchat.model.MessageModel;
-import com.moc.chitchat.model.UserModel;
-
-import org.json.JSONException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runner.notification.RunListener;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import dalvik.annotation.TestTargetClass;
-
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -45,13 +9,34 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.mockito.Mockito.mock;
+
+import android.support.test.filters.LargeTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.moc.chitchat.activity.LoginActivity;
+import com.moc.chitchat.model.MessageModel;
+import com.moc.chitchat.model.UserModel;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class CurrentChatActivityTest {
-
-    @Inject
-    HttpClient httpClient;
 
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
@@ -108,36 +93,65 @@ public class CurrentChatActivityTest {
 
         onView(withId(R.id.send_button)).perform(click());
 
-        String expectedOutput = "Message from " + usernameTyped + " is sent to " + usernameToSearch +
-            "\n" + "The sent message: " + message + "\n";
+        String expectedOutput = "Message from " + usernameTyped + " is sent to " + usernameToSearch
+            + "\n" + "The sent message: " + message + "\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 
     @Test
-    public void testReceiveMessage() throws JSONException {
-        String message = "Hi mate!";
-
-        MessageModel testMessage = new MessageModel(
-            new UserModel(usernameToSearch),
-            message
-        );
-
+    public void testReceiveMessage() throws JSONException, InterruptedException {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
-        httpClient.sendRequest(
-            loginActivityRule.getActivity(),
-            Request.Method.POST,
-            "/api/v1/messages",
-            testMessage.tojsonObject(),
-            null,
-            null,
-            true
+        Map<String, String> requestHeaders = null;
+
+        requestHeaders = new HashMap<String, String>();
+        requestHeaders.put(
+            "authorization",
+            "Bearer "
+                + loginActivityRule.getActivity().sessionConfiguration
+                    .getCurrentUser().getAuthToken());
+
+        final Map<String, String> finalRequestHeaders = requestHeaders;
+
+        String message = "Hi mate!";
+
+        MessageModel testMessage = new MessageModel(
+            new UserModel(usernameTyped),
+            message
         );
 
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+            Request.Method.POST,
+            String.format("%s%s",
+                loginActivityRule.getActivity().getResources().getString(R.string.server_url),
+                "/api/v1/messages"
+            ),
+            testMessage.tojsonObject(),
+            mock(Response.Listener.class),
+            mock(Response.ErrorListener.class)
+        ) {
+            /* getHeaders Overridden method for fetching the headers.
+             * @return the headers to the request.
+             */
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headerParams = new HashMap<String, String>();
+                if (finalRequestHeaders != null) {
+                    for (Map.Entry<String, String> header : finalRequestHeaders.entrySet()) {
+                        headerParams.put(header.getKey(), header.getValue());
+                    }
+                }
+                return headerParams;
+            }
+        };
+        Volley.newRequestQueue(loginActivityRule.getActivity().getBaseContext())
+            .add(jsonObjectRequest);
 
-        String expectedOutput = "Message from " + usernameTyped + " is received.\n" +
-            "The received message: " + message + "\n";
+        Thread.sleep(3000);
+
+        String expectedOutput = "Message from " + usernameTyped + " is received.\n"
+            + "The received message: " + message + "\n";
         assertEquals(expectedOutput, outContent.toString());
     }
 }

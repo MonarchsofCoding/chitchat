@@ -122,7 +122,6 @@ public class RegistrationActivity extends AppCompatActivity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error registering");
 
         try {
             JSONObject response = this.errorResponseResolver.getResponseBody(error);
@@ -134,6 +133,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Username: %s", usernameErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Username: %s", usernameErrors.toString()));
             }
 
             if (responseErrors.has("password")) {
@@ -141,6 +141,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Password: %s", passwordErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Password: %s", passwordErrors.toString()));
             }
         } catch (JSONException jsonexcep) {
             jsonexcep.printStackTrace();
