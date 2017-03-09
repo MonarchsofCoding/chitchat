@@ -3,13 +3,19 @@ package com.moc.chitchat.controller;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -18,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +32,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,136 +42,179 @@ import static org.mockito.Mockito.when;
  */
 public class UserSearchControllerTest {
 
-    @Mock private HttpClient mockHttpClient;
-    @Mock private UserResolver mockUserResolver;
-    @Mock private UserValidator mockUserValidator;
-
-    @Mock
-    private HttpResponse<JsonNode> mockResponse;
-
-    @InjectMocks
-    private UserSearchController userSearchController;
-
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
-    public void testConstructor() {
-        assertNotNull(this.userSearchController);
-        assertEquals(
-                this.userSearchController.getClass(),
-                UserSearchController.class
+    public void testSuccessfulSearch() throws IOException, InterruptedException, UnirestException {
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
+
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        // Not used, but for completeness
+        String user = "John";
+        String jsonResponse = "{" +
+                "\"data\": " +
+                "[{\"username\": \""+user+"\"}]" +
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(200)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+
+        UserSearchController userSearchController = new UserSearchController(
+                httpClient,
+                userResolver,
+                userValidator
         );
-    }
-
-    @Test
-    public void testSuccessfulSearchUser() throws UnirestException, UnexpectedResponseException, ValidationException {
-
-        Map<String, Object> mockmapper = new HashMap<>();
-        mockmapper.put("username", "john");
-
-
-        UserModel user;
-        user = new UserModel("john");
-
-        JsonNode thebody = mock(JsonNode.class);
-        when(this.mockResponse.getBody()).thenReturn(thebody);
-        JsonNode bodyResponse = mock(JsonNode.class);
-        when(this.mockResponse.getBody()).thenReturn(bodyResponse);
-
-        bodyResponse = mock(JsonNode.class);
-        when(this.mockResponse.getBody()).thenReturn(bodyResponse);
-
-
-        // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.get("/api/v1/users", mockmapper))
-                .thenReturn(this.mockResponse);
-
-        // Create and define the mocked response to return 200 (success)
-        when(mockResponse.getStatus())
-                .thenReturn(200);
-
-        JSONObject johnJson = new JSONObject();
-        johnJson.put("username", "john");
-
-        JSONArray usersJson = new JSONArray();
-        usersJson.put(johnJson);
-
-
-        JSONObject bodyJson = new JSONObject();
-        bodyJson.put("data", usersJson);
-
-        when(bodyResponse.getObject()).thenReturn(bodyJson);
-
-        // Mock the UserResolver
-        UserModel john = new UserModel("john");
-        when(this.mockUserResolver.getUserModelViaJSonObject(johnJson)).thenReturn(john);
-
-
-        List<UserModel> foundUsers = new ArrayList<>();
-        foundUsers.add(mockUserResolver.getUserModelViaJSonObject(johnJson.put("username","john")));
-        bodyJson = new JSONObject();
-        bodyJson.put("data", usersJson);
-
-        when(bodyResponse.getObject()).thenReturn(bodyJson);
-
-        // Mock the UserResolver
-        john = new UserModel("john");
-        when(this.mockUserResolver.getUserModelViaJSonObject(johnJson)).thenReturn(john);
-
-        // Run the function to test
-        foundUsers = this.userSearchController.searchUser("john");
-
-        assertEquals(1, foundUsers.size());
-        assertEquals("john", foundUsers.get(0).getUsername());
-    }
-
-    @Test
-    public void testValidationError() throws UnirestException, UnexpectedResponseException, ValidationException{
-        Map<String, Object> mockmapper = new HashMap<>();
-        mockmapper.put("username", "john");
-
-        // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.get("/api/v1/users", mockmapper))
-                .thenReturn(this.mockResponse);
-
-        // Create and define the mocked response to return not 200. i.e failure
-        when(mockResponse.getStatus())
-                .thenReturn(400);
-
-        ValidationException mockValidationException = mock(ValidationException.class);
-        when(mockValidationException.getMessage())
-                .thenReturn("Validation Exception");
-
-        doThrow(mockValidationException).when(this.mockUserValidator).throwErrorsFromResponse(mockResponse);
 
         try {
-            this.userSearchController.searchUser("john");
-        } catch (ValidationException e) {
-            assertEquals("Validation Exception", e.getMessage());
+            userSearchController.searchUser(
+                    user
+            );
+
+        } catch (ValidationException | UnexpectedResponseException e) {
+            fail();
+            e.printStackTrace();
         }
+
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("/api/v1/users?username="+user, recordedRequest.getPath());
+        assertEquals("GET", recordedRequest.getMethod());
+        server.shutdown();
     }
 
+    /**
+     *  Test that not enough characters has been inputted.
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws UnirestException
+     */
     @Test
-    public void testUnexpectedResponse() throws UnirestException, ValidationException {
-        Map<String, Object> mockmapper = new HashMap<>();
-        mockmapper.put("username", "john");
+    public void testValidator() throws IOException, InterruptedException, UnirestException {
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
 
-        // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.get("/api/v1/users", mockmapper))
-                .thenReturn(this.mockResponse);
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
 
-        // Create and define the mocked response to return not 200. i.e failure
-        when(mockResponse.getStatus())
-                .thenReturn(500);
+        // Not used, but for completeness
+        // {"username":["should be at least 3 character(s)"]}
+        String user = "Jo";
+        String jsonResponse = "{" +
+                "\"errors\": " +
+                "{\"username\": [\"should be at least 3 character(s)\"]" +
+                "}" +
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(400)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+
+        UserSearchController userSearchController = new UserSearchController(
+                httpClient,
+                userResolver,
+                userValidator
+        );
 
         try {
-            this.userSearchController.searchUser("john");
+            userSearchController.searchUser(
+                    user
+            );
+        } catch (ValidationException v) {
+            assertEquals("should be at least 3 character(s)", v.getErrors().getFieldError().getDefaultMessage());
         } catch (UnexpectedResponseException e) {
-            assertEquals("Unexpected Response code: 500", e.getMessage());
+            fail();
+            e.printStackTrace();
         }
 
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("/api/v1/users?username="+user, recordedRequest.getPath());
+        assertEquals("GET", recordedRequest.getMethod());
+        server.shutdown();
+    }
+
+    @Test
+    public void testUnexpectedResponse() throws IOException, InterruptedException, UnirestException {
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
+
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        // Not used, but for completeness
+        // {"username":["should be at least 3 character(s)"]}
+        String user = "John";
+        String jsonResponse = "{" +
+                "\"error\": \"Unauthorized"+
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(401)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+
+        UserSearchController userSearchController = new UserSearchController(
+                httpClient,
+                userResolver,
+                userValidator
+        );
+
+        try {
+            userSearchController.searchUser(
+                    user
+            );
+        } catch (ValidationException v) {
+            fail();
+            v.printStackTrace();
+        } catch (UnexpectedResponseException e) {
+            e.printStackTrace();
+            assertEquals(401, e.getResponse().code());
+        }
+
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("/api/v1/users?username="+user, recordedRequest.getPath());
+        assertEquals("GET", recordedRequest.getMethod());
+        server.shutdown();
     }
 }

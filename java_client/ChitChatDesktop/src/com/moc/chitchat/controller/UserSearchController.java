@@ -1,7 +1,5 @@
 package com.moc.chitchat.controller;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
@@ -10,11 +8,13 @@ import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,25 +56,29 @@ public class UserSearchController {
      * @throws ValidationException - If not enough characters inserted
      */
     public List<UserModel> searchUser(String username)
-            throws UnirestException, UnexpectedResponseException, ValidationException {
+            throws UnirestException, UnexpectedResponseException, ValidationException, IOException {
         Map<String, Object> mapper = new HashMap<>();
         mapper.put("username", username);
 
-        HttpResponse<JsonNode> response = this.httpClient.get("/api/v1/users", mapper);
+        Response response = this.httpClient.get("/api/v1/users", mapper);
 
-        if (response.getStatus() == 400) {
+        if (response.code() == 400) {
             this.userValidator.throwErrorsFromResponse(response);
-        } else if (response.getStatus() != 200) {
+        } else if (response.code() != 200) {
             throw new UnexpectedResponseException(response);
         }
 
-        JSONArray jsonArray = response.getBody().getObject().getJSONArray("data");
+        String jsonData = response.body().string();
+        JSONObject jsonObject = new JSONObject(jsonData);
+
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
         List<UserModel> foundUsers = new ArrayList<>();
 
         for (Object obj : jsonArray) {
-            JSONObject jsonObject = (JSONObject) obj;
-            foundUsers.add(userResolver.getUserModelViaJSonObject(jsonObject));
+            JSONObject jsonobject = (JSONObject) obj;
+            foundUsers.add(userResolver.getUserModelViaJSonObject(jsonobject));
         }
+
         return foundUsers;
     }
 

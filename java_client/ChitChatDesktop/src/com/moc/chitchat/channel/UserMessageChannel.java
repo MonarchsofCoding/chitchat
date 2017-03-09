@@ -1,49 +1,69 @@
 package com.moc.chitchat.channel;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.moc.chitchat.channel.listener.NewMessageUserMessageChannelHandler;
-import com.moc.chitchat.channel.listener.OkUserMessageChannelHandler;
+import com.moc.chitchat.application.Configuration;
+import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.model.UserModel;
-import java.io.IOException;
-import org.phoenixframework.channels.Channel;
-import org.phoenixframework.channels.Push;
-import org.phoenixframework.channels.Socket;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+/**
+ * UserMessageChannel provides a handler for the user messages channel.
+ */
 @Component
-public class UserMessageChannel {
+public class UserMessageChannel implements ChannelInterface {
 
-    private OkUserMessageChannelHandler okUserMessageChannelHandler;
-    private NewMessageUserMessageChannelHandler newMessageUserMessageChannelHandler;
+    private Configuration configuration;
+    private MessageController messageController;
 
-    @Autowired
+    /**
+     * UserMessageChannel constructor.
+     * @param configuration the configuration object.
+     * @param messageController the message controller.
+     */
     public UserMessageChannel(
-        OkUserMessageChannelHandler okUserMessageChannelHandler,
-        NewMessageUserMessageChannelHandler newMessageUserMessageChannelHandler
+        Configuration configuration,
+        MessageController messageController
     ) {
-        this.okUserMessageChannelHandler = okUserMessageChannelHandler;
-        this.newMessageUserMessageChannelHandler = newMessageUserMessageChannelHandler;
+        this.configuration = configuration;
+        this.messageController = messageController;
     }
 
     /**
-     *Channle join function.
-     * @param socket The socket that we open in order to connect    .
-     * @param userModel The userModel as a parameter to our function.
-     * @return the channel.
-     * @throws IOException that the socket may throws.
+     * getJoin returns the join JSONObject. The ref is handled by the Socket.
+     * @return The message to join a channel.
      */
-    public Channel join(Socket socket, UserModel userModel) throws IOException {
-        ObjectNode auth = JsonNodeFactory.instance.objectNode();
-        auth.put("authToken", userModel.getAuthToken());
-        Channel channel = socket.chan(String.format("user:%s", userModel.getUsername()), auth);
+    @Override
+    public JSONObject getJoin() {
+        UserModel loggedInUser = this.configuration.getLoggedInUser();
 
-        Push push = channel.join();
-        push.receive("ok", okUserMessageChannelHandler);
+        JSONObject payload = new JSONObject();
+        payload.put("authToken", loggedInUser.getAuthToken());
+        JSONObject joinChannel = new JSONObject();
+        joinChannel.put("event", "phx_join");
+        joinChannel.put("payload", payload);
+        joinChannel.put("topic", String.format("user:%s", loggedInUser.getUsername()));
 
-        channel.on("new:message", this.newMessageUserMessageChannelHandler);
+        return joinChannel;
+    }
 
-        return channel;
+    /**
+     * handleMessage handles a new message on this channel.
+     * @param payload the payload sent to the channel.
+     */
+    @Override
+    public void handleMessage(JSONObject payload) {
+        this.messageController.receive(
+            payload.getString("body"),
+            payload.getString("from")
+        );
+    }
+
+    /**
+     * getEvent returns the event this handler is for.
+     * @return the event string this handler is for.
+     */
+    @Override
+    public String getEvent() {
+        return "new:message";
     }
 }
