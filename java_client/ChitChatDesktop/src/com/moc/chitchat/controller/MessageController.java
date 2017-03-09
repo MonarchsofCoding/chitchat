@@ -1,6 +1,5 @@
 package com.moc.chitchat.controller;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
@@ -48,12 +47,11 @@ public class MessageController {
      * @param to      - The user that would receive a message
      * @param message - The actual message
      * @return - a new message object
-     * @throws UnirestException            - if invalid post with http client
      * @throws ValidationException         - if invalid recipient or message (e.g. empty) entered
      * @throws UnexpectedResponseException - unexpected response
      */
     public Message send(UserModel to, String message)
-            throws UnirestException, ValidationException, UnexpectedResponseException, IOException {
+            throws ValidationException, UnexpectedResponseException, IOException {
 
         Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(), to, message);
         Response response = httpClient.post("/api/v1/messages", newMessage);

@@ -1,6 +1,5 @@
 package com.moc.chitchat.view.main;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
@@ -116,12 +115,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
                 this.errormessage.setVisible(false);
 
                 this.messages.add(message);
-            } catch (UnirestException unirestException) {
-
-                errormessage.setText(unirestException.getMessage());
-                errormessage.setVisible(true);
             } catch (ValidationException validationException) {
-                String mesg = validationException.getErrors().getFieldError("message").getDefaultMessage().toString();
+                String mesg = validationException.getErrors().getFieldError("message").getDefaultMessage();
                 errormessage.setText(mesg);
                 errormessage.setVisible(true);
 

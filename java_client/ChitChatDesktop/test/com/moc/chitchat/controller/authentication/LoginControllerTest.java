@@ -1,14 +1,9 @@
 package com.moc.chitchat.controller.authentication;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
-import com.moc.chitchat.channel.UserMessageChannel;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.client.SocketListener;
 import com.moc.chitchat.client.WebSocketClient;
-import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -18,17 +13,10 @@ import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import javax.xml.ws.Response;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -39,7 +27,7 @@ public class LoginControllerTest {
 
 
     @Test
-    public void testSuccessfulLogin() throws IOException, InterruptedException, UnirestException {
+    public void testSuccessfulLogin() throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "abcde1234";
 
@@ -97,7 +85,7 @@ public class LoginControllerTest {
 
         // assert requests
         assertEquals(authToken, userModel.getAuthToken());
-        assertEquals("alice", userModel.getUsername().toString());
+        assertEquals("alice", userModel.getUsername());
         RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("//api/v1/auth", recordedRequest.getPath());
         assertEquals("POST", recordedRequest.getMethod());
@@ -105,7 +93,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void testIncorrectCredientials() throws IOException, InterruptedException, UnirestException {
+    public void testIncorrectCredientials() throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "";
 
@@ -157,7 +145,7 @@ public class LoginControllerTest {
 
         } catch (ValidationException e) {
             assertEquals("is incorrect", e.getErrors().getFieldError().getDefaultMessage());
-            assertEquals("testName", userModel.getUsername().toString());
+            assertEquals("testName", userModel.getUsername());
         } catch (UnexpectedResponseException e) {
             fail();
             e.printStackTrace();
@@ -171,7 +159,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void testUnexpectedErrorsLogin() throws IOException, InterruptedException, UnirestException {
+    public void testUnexpectedErrorsLogin() throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "";
 
@@ -217,7 +205,7 @@ public class LoginControllerTest {
             fail();
             e.printStackTrace();
         } catch (UnexpectedResponseException e) {
-            assertEquals("testName", userModel.getUsername().toString());
+            assertEquals("testName", userModel.getUsername());
         }
 
         // assert requests

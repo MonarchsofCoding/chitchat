@@ -1,6 +1,5 @@
 package com.moc.chitchat.controller.authentication;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.client.WebSocketClient;
@@ -50,12 +49,11 @@ public class LoginController {
      * @param username - name of the user
      * @param password - password for the user
      * @return - returns a new UserModel
-     * @throws UnirestException - if invalid http request
      * @throws UnexpectedResponseException - unexpected response
      * @throws ValidationException - if incorrect username or password
      */
     public UserModel loginUser(String username, String password)
-            throws UnirestException, UnexpectedResponseException, ValidationException, IOException {
+            throws UnexpectedResponseException, ValidationException, IOException {
 
         // Create the User object from parameters.
         UserModel user = userResolver.createLoginUser(username, password);

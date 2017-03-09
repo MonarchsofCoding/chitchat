@@ -1,6 +1,5 @@
 package com.moc.chitchat.exception;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.controller.authentication.RegistrationController;
@@ -25,7 +24,7 @@ public class UnexpectedResponseExceptionTest {
 
     @Test
     public void testUnexpectedResponse()
-            throws UnirestException, IOException, InterruptedException {
+            throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "abcde1234";
         String validPasswordCheck = "abcde1234";

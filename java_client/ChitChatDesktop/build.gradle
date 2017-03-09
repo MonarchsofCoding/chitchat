@@ -40,13 +40,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.json/json
     compile group: 'org.json', name: 'json', version: '20160810'
-    // UniRest HTTP client
-    compile 'com.mashape.unirest:unirest-java:1.4.9'
 
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
-
-    // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
-    compile group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
 
     testCompile "junit:junit:4.12"
     testCompile 'org.mockito:mockito-core:2.+'

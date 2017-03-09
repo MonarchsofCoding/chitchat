@@ -1,6 +1,5 @@
 package com.moc.chitchat.client;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
 
 import java.io.IOException;
@@ -70,10 +69,9 @@ public class HttpClient {
      * @param uri   adds the location of the url
      * @param query - query the server. Can have multiple quries
      * @return response in Unirest
-     * @throws UnirestException - If invalid e.g. can't connect to server
      * @throws IOException - If invalid
      */
-    public Response get(String uri, Map<String, Object> query) throws UnirestException, IOException {
+    public Response get(String uri, Map<String, Object> query) throws IOException {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(this.configuration.getBackendAddress()).newBuilder();
 
         // Adding paths to the segment

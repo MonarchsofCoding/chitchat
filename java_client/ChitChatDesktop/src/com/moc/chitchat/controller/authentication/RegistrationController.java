@@ -1,6 +1,5 @@
 package com.moc.chitchat.controller.authentication;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
@@ -47,11 +46,10 @@ public class RegistrationController {
      * @param password - this provides the input field password
      * @param passwordCheck - this provides the input field passwordCheck
      * @throws ValidationException - If invalid username,password or passwordcheck
-     * @throws UnirestException - If invalid post with the httpClient
      * @throws UnexpectedResponseException - Unexpected response
      */
     public UserModel registerUser(String username, String password, String passwordCheck)
-            throws ValidationException, UnirestException, UnexpectedResponseException, IOException {
+            throws ValidationException, UnexpectedResponseException, IOException {
 
         System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n",
                 username, password.length(), passwordCheck.length());

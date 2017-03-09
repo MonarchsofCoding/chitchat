@@ -1,6 +1,5 @@
 package com.moc.chitchat.view.main;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
@@ -126,12 +125,9 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
                 this.errorusermessage.setText("No User Available");
                 this.errorusermessage.setVisible(true);
             }
-        } catch (UnirestException unirestException) {
-            this.errorusermessage.setText(unirestException.getMessage());
-            this.errorusermessage.setVisible(true);
         } catch (ValidationException validationException) {
             String errormsg = validationException.getErrors()
-                    .getFieldError("username").getDefaultMessage().toString();
+                    .getFieldError("username").getDefaultMessage();
             this.errorusermessage.setText(errormsg);
             this.errorusermessage.setVisible(true);
         } catch (UnexpectedResponseException unexpectedResponseException) {

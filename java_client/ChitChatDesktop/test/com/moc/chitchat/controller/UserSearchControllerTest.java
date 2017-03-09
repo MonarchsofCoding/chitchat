@@ -1,39 +1,21 @@
 package com.moc.chitchat.controller;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
-import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.client.HttpClient;
-import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
-import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +25,7 @@ import static org.mockito.Mockito.when;
 public class UserSearchControllerTest {
 
     @Test
-    public void testSuccessfulSearch() throws IOException, InterruptedException, UnirestException {
+    public void testSuccessfulSearch() throws IOException, InterruptedException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
@@ -101,10 +83,9 @@ public class UserSearchControllerTest {
      *  Test that not enough characters has been inputted.
      * @throws IOException
      * @throws InterruptedException
-     * @throws UnirestException
      */
     @Test
-    public void testValidator() throws IOException, InterruptedException, UnirestException {
+    public void testValidator() throws IOException, InterruptedException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
@@ -162,7 +143,7 @@ public class UserSearchControllerTest {
     }
 
     @Test
-    public void testUnexpectedResponse() throws IOException, InterruptedException, UnirestException {
+    public void testUnexpectedResponse() throws IOException, InterruptedException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 

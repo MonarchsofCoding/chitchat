@@ -1,7 +1,5 @@
 package com.moc.chitchat.validator;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 

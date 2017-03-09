@@ -1,6 +1,5 @@
 package com.moc.chitchat.controller.authentication;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
@@ -28,7 +27,7 @@ public class RegistrationControllerTest {
 
 
     @Test
-    public void testSuccessfulRegisterUser() throws IOException, InterruptedException, UnirestException {
+    public void testSuccessfulRegisterUser() throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "abcde1234";
         String validPasswordCheck = "abcde1234";
@@ -91,7 +90,7 @@ public class RegistrationControllerTest {
 
     @Test
     public void testUnexpectedResponse()
-            throws UnirestException, IOException, InterruptedException {
+            throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "abcde1234";
         String validPasswordCheck = "abcde1234";
@@ -142,7 +141,7 @@ public class RegistrationControllerTest {
         } catch (ValidationException v) {
             server.shutdown();
         } catch (UnexpectedResponseException e) {
-            assertEquals("testName", userModel.getUsername().toString());
+            assertEquals("testName", userModel.getUsername());
             server.shutdown();
         }
 
@@ -156,13 +155,12 @@ public class RegistrationControllerTest {
     /**
      * This test that if the server responds with 'should be at least 8 character(s)'
      *
-     * @throws UnirestException
      * @throws IOException
      * @throws InterruptedException
      */
     @Test
     public void testValidationExceptionPassword()
-            throws UnirestException, IOException, InterruptedException {
+            throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "12345";
         String validPasswordCheck = "12345";
@@ -228,13 +226,12 @@ public class RegistrationControllerTest {
     /**
      * This tests the server error for a duplicated username
      *
-     * @throws UnirestException
      * @throws IOException
      * @throws InterruptedException
      */
     @Test
     public void testValidationExceptionUsername()
-            throws UnirestException, IOException, InterruptedException {
+            throws IOException, InterruptedException {
         String validUsername = "alice";
         String validPassword = "12345678";
         String validPasswordCheck = "12345678";
@@ -290,7 +287,7 @@ public class RegistrationControllerTest {
         RecordedRequest recordedRequest = server.takeRequest();
         assertEquals("//api/v1/users", recordedRequest.getPath());
         assertEquals("POST", recordedRequest.getMethod());
-        assertEquals("testName", userModel.getUsername().toString());
+        assertEquals("testName", userModel.getUsername());
         server.shutdown();
     }
 }

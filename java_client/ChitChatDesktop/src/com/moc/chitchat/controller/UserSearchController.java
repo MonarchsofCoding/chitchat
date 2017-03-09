@@ -1,6 +1,5 @@
 package com.moc.chitchat.controller;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
@@ -51,12 +50,11 @@ public class UserSearchController {
      * searchUser function looks for the users using the parameter below.
      * @param username - the name of te user
      * @return - a list of the users that matches the string
-     * @throws UnirestException - if invalid get function that was passed
      * @throws UnexpectedResponseException - unexpected response
      * @throws ValidationException - If not enough characters inserted
      */
     public List<UserModel> searchUser(String username)
-            throws UnirestException, UnexpectedResponseException, ValidationException, IOException {
+            throws UnexpectedResponseException, ValidationException, IOException {
         Map<String, Object> mapper = new HashMap<>();
         mapper.put("username", username);
 

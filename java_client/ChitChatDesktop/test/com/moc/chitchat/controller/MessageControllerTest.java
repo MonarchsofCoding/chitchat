@@ -1,21 +1,14 @@
 package com.moc.chitchat.controller;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
-import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
-import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
-import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
-import javafx.collections.ObservableList;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -57,7 +50,7 @@ public class MessageControllerTest {
 
 
     @Test
-    public void testSuccessfulMessageSent() throws IOException, InterruptedException, UnirestException {
+    public void testSuccessfulMessageSent() throws IOException, InterruptedException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
@@ -127,7 +120,7 @@ public class MessageControllerTest {
     }
 
     @Test
-    public void testErrorMessage() throws IOException, InterruptedException, UnirestException {
+    public void testErrorMessage() throws IOException, InterruptedException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
@@ -197,7 +190,7 @@ public class MessageControllerTest {
     }
 
     @Test
-    public void testUnexpectedResponseMessage() throws IOException, InterruptedException, UnirestException {
+    public void testUnexpectedResponseMessage() throws IOException, InterruptedException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
