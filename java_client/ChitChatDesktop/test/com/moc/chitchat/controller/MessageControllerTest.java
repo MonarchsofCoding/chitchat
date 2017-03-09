@@ -6,28 +6,266 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
+import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 import javafx.collections.ObservableList;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 /**
  * MessageControllerTest provides the tests for MessageController
  */
 public class MessageControllerTest {
+
+    @InjectMocks
+    MessageController mockMessageController;
+
+    @Mock
+    private Configuration configuration;
+
+    @Mock
+    private MessageResolver mockmessageResolver;
+
+    @Mock
+    private ChitChatData mockChitChatData;
+
+    @Before
+    public void initMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+
+    @Test
+    public void testSuccessfulMessageSent() throws IOException, InterruptedException, UnirestException {
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
+
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        // {"data":{"sender":"bob","recipient":"john","message":"hey"}}
+        // Not used, but for completeness
+        String jsonResponse = "{" +
+                "\"data\": {" +
+                "\"sender\": \"Chief\"," +
+                "\"recipient\": \"Fred\"," +
+                "\"message\": \"this is the message you should see\"," +
+                "}" +
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(201)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        MessageResolver messageResolver = new MessageResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+        ChitChatData chitChatData = mock(ChitChatData.class);
+
+        UserModel from = new UserModel("Chief");
+        when(mockConfiguration.getLoggedInUser()).thenReturn(from);
+        UserModel to = new UserModel("Fred");
+        String testMessage = "you should not see this message";
+        String expectedMessage = "this is the message you should see";
+        Message message = new Message(from, to, testMessage);
+
+        MessageController messageController = new MessageController(
+                httpClient,
+                mockConfiguration,
+                userValidator,
+                messageResolver,
+                chitChatData
+        );
+
+        try {
+            message = messageController.send(
+                    to,
+                    expectedMessage
+            );
+
+        } catch (ValidationException | UnexpectedResponseException e) {
+            fail();
+            e.printStackTrace();
+        }
+
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("//api/v1/messages", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(expectedMessage, message.getMessage());
+        server.shutdown();
+    }
+
+    @Test
+    public void testErrorMessage() throws IOException, InterruptedException, UnirestException {
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
+
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        // Not used, but for completeness
+        String jsonResponse = "{" +
+                "\"errors\": {" +
+                "\"recipient\": [\"can't be blank\"]," +
+                "\"message\": [\"can't be blank\"]" +
+                "}" +
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(422)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        MessageResolver messageResolver = new MessageResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+        ChitChatData chitChatData = mock(ChitChatData.class);
+
+        UserModel from = new UserModel("Chief");
+        when(mockConfiguration.getLoggedInUser()).thenReturn(from);
+        UserModel to = new UserModel("Fred");
+        String expectedMessage = "";
+        String testMessage = "this is the message you should NOT see";
+        Message message = new Message(from, to, expectedMessage);
+
+        MessageController messageController = new MessageController(
+                httpClient,
+                mockConfiguration,
+                userValidator,
+                messageResolver,
+                chitChatData
+        );
+
+        try {
+            message = messageController.send(
+                    to,
+                    testMessage
+            );
+
+        } catch (ValidationException v) {
+            assertEquals("can't be blank", v.getErrors().getFieldError().getDefaultMessage());
+        } catch(UnexpectedResponseException e) {
+            fail();
+            e.printStackTrace();
+        }
+
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("//api/v1/messages", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(expectedMessage, message.getMessage());
+        server.shutdown();
+    }
+
+    @Test
+    public void testUnexpectedResponseMessage() throws IOException, InterruptedException, UnirestException {
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
+
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setResponseCode(500)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        MessageResolver messageResolver = new MessageResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+        ChitChatData chitChatData = mock(ChitChatData.class);
+
+        UserModel from = new UserModel("Chief");
+        when(mockConfiguration.getLoggedInUser()).thenReturn(from);
+        UserModel to = new UserModel("Fred");
+        String expectedMessage = "";
+        String testMessage = "this is the message you should NOT see";
+        Message message = new Message(from, to, expectedMessage);
+
+        MessageController messageController = new MessageController(
+                httpClient,
+                mockConfiguration,
+                userValidator,
+                messageResolver,
+                chitChatData
+        );
+
+        try {
+            message = messageController.send(
+                    to,
+                    testMessage
+            );
+
+        } catch (ValidationException v) {
+            fail();
+            v.printStackTrace();
+        } catch(UnexpectedResponseException e) {
+            assertEquals(500, e.getResponse().code());
+            e.printStackTrace();
+        }
+
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("//api/v1/messages", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
+        assertEquals(expectedMessage, message.getMessage());
+        server.shutdown();
+    }
+
+    @Test
+    public void testSuccessfulReceive() {
+        String name = "John";
+        String myText = "What's up John!!!!!!!!!!";
+
+        mockMessageController.receive(myText, name);
+    }
 
    /* @Mock
     private HttpClient httpClient;
@@ -120,14 +358,6 @@ public class MessageControllerTest {
         when(conversation.addMessage(message)).thenReturn(conversation);
 
         this.messageController.send(to, "message");
-    }
-
-    @Test
-    public void testSuccessfulReceive() {
-        String name = "John";
-        String myText = "What's up John!!!!!!!!!!";
-
-        this.messageController.receive(myText, name);
     }
     */
 }
