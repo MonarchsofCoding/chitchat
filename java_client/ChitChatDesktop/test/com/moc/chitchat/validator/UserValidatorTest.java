@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
  */
 public class UserValidatorTest {
 
-  /*  @Mock
+    @Mock
     private HttpResponse<JsonNode> mockResponse;
 
     @Before
@@ -101,62 +101,6 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void testDuplicateUser() {
-        this.mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-
-        JsonNode thebody = mock(JsonNode.class);
-        when(this.mockResponse.getBody()).thenReturn(thebody);
-
-        JSONArray usernameErrors = new JSONArray();
-        usernameErrors.put("duplicate username");
-
-        JSONObject userErrors = new JSONObject();
-        userErrors.put("username", usernameErrors);
-
-        JSONObject obj = new JSONObject();
-        obj.put("errors", userErrors);
-
-        when(thebody.getObject()).thenReturn(obj);
-
-        UserValidator userValidator = new UserValidator();
-        try {
-            userValidator.throwErrorsFromResponse(this.mockResponse);
-        } catch (ValidationException e) {
-            Errors errors = e.getErrors();
-            assertEquals(1, errors.getErrorCount());
-            assertEquals("duplicate username", errors.getFieldError().getDefaultMessage());
-        }
-    }
-
-    @Test
-    public void testInvalidPassword() {
-        this.mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-
-        JsonNode thebody = mock(JsonNode.class);
-        when(this.mockResponse.getBody()).thenReturn(thebody);
-
-        JSONArray passwordsErrors = new JSONArray();
-        passwordsErrors.put("1234");
-
-        JSONObject pwdErrors = new JSONObject();
-        pwdErrors.put("password", passwordsErrors);
-
-        JSONObject obj = new JSONObject();
-        obj.put("errors", pwdErrors);
-
-        when(thebody.getObject()).thenReturn(obj);
-
-        UserValidator userValidator = new UserValidator();
-        try {
-            userValidator.throwErrorsFromResponse(this.mockResponse);
-        } catch (ValidationException e) {
-            Errors errors = e.getErrors();
-            assertEquals(1, errors.getErrorCount());
-            assertEquals("1234", errors.getFieldError().getDefaultMessage());
-        }
-    }
-
-    @Test
     public void testSupportsValid() {
         UserValidator userValidator = new UserValidator();
         assertEquals(true, userValidator.supports(UserModel.class));
@@ -167,31 +111,4 @@ public class UserValidatorTest {
         UserValidator userValidator = new UserValidator();
         assertFalse(userValidator.supports(UserResolver.class));
     }
-
-    @Test
-    public void testServerErrorMessage() {
-        JsonNode thebody = mock(JsonNode.class);
-        when(this.mockResponse.getBody()).thenReturn(thebody);
-
-        JSONArray serverErrors = new JSONArray();
-        serverErrors.put("message");
-
-        JSONObject servErrors = new JSONObject();
-        servErrors.put("message", serverErrors);
-
-        JSONObject obj = new JSONObject();
-        obj.put("errors", servErrors);
-
-        when(thebody.getObject()).thenReturn(obj);
-
-        try {
-            UserValidator userValidator = new UserValidator();
-            userValidator.throwErrorsFromResponse(mockResponse);
-        } catch (ValidationException validationException) {
-            Errors errors = validationException.getErrors();
-            assertEquals(1, errors.getFieldErrorCount());
-        }
-    }
-*/
-
 }
