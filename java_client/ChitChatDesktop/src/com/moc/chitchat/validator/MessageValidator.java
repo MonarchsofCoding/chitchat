@@ -7,12 +7,14 @@ import java.util.HashMap;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.MapBindingResult;
 
 
 /**
  * MessageValidator provides validation and server error handling of message objects.
  */
+@Component
 public class MessageValidator {
 
     /**
