@@ -11,13 +11,12 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 /**
  * Provides the base for all primary views in the application.
  */
-public abstract class BaseView implements EventHandler<ActionEvent> {
+public abstract class BaseView {
 
     protected BaseStage baseStage;
 
     private int width;
     private int height;
-    private Button Logout_Btn = new Button("Log Out");
 
     public void setWidth(int width) {
         this.width = width;
@@ -57,10 +56,6 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
 
         Label title = new Label("Chit Chat");
         title.setTextFill(Color.WHITE);
-        this.Logout_Btn.setId("log-out-btn");
-        this.Logout_Btn.setOnAction(this);
-        header.add(title,"center,wrap");
-        header.add(Logout_Btn,"align right");
 
         return header;
     }
@@ -87,11 +82,4 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
         return footer;
     }
 
-    @Override
-    public void handle(ActionEvent event) {
-        if (event.getSource() == this.Logout_Btn) {
-
-            Runtime.getRuntime().exit(0);
-        }
-    }
 }

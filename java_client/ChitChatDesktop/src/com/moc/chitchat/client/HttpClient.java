@@ -34,7 +34,6 @@ public class HttpClient {
      * @param uri    adds the location of the url
      * @param object adds the object to JSONString to the body
      * @return response in Unirest
-     * @throws UnirestException - If invalid post with the httpClient
      */
     public Response post(String uri, JSONString object) throws IOException {
         OkHttpClient client = new OkHttpClient();
@@ -48,8 +47,7 @@ public class HttpClient {
                     .post(body)
                     .build();
 
-            Response response = client.newCall(request).execute();
-            return response;
+            return client.newCall(request).execute();
         }
         Request request = new Request.Builder()
                 .url(this.configuration.getBackendAddress() + uri)
@@ -58,8 +56,7 @@ public class HttpClient {
                 .post(body)
                 .build();
 
-        Response response = client.newCall(request).execute();
-        return response;
+        return client.newCall(request).execute();
 
     }
 
