@@ -1,7 +1,9 @@
 package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.view.PrimaryStageTest;
+import com.moc.chitchat.view.helper.UserHelper;
 import javafx.scene.Node;
+import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
@@ -13,100 +15,63 @@ import static org.testfx.api.FxAssert.verifyThat;
 public class ConversationListViewTest extends PrimaryStageTest {
 
 
-    final static String loginButton = "#loginBtn";
-    final static String usernamefield= "#usernameField";
-    final static String passwordfield= "#passwordField";
-
-    final static String usernameFieldsearch = "#usernameFieldSearch";
-    final static String searchBtn = "#searchBtn";
-    final static String startConversationBtn = "#StartChatBtn";
+    final static String usernameFld = "#search-username-fld";
+    final static String searchBtn = "#search-Btn";
+    final static String ChatBtn = "#search-chat-Btn";
     final static String togglebutton ="#ToggleBtn";
-
     final static String headerChat = "#headerChat";
-    final static String newmessageField = "#newmessageField";
-    final static String errormessage = "#errormessage";
-    final static String sendBtn = "#sendBtnmsg";
 
-    final static String registerBtn = "#registerBtn";
-    final static String registerBtnreg = "#registerBtnreg";
-    final static String usernamefieldReg = "#usernamefieldreg";
-    final static String passwordfieldReg = "#passwordFieldreg";
-    final static String passwordCheckField = "#passwordCheckField";
 
-    String username = "john";
-    String password = "bbbbbbbbb";
-    String check = "spirokas";
-    String check2 = "spirokousa";
+
+    @Before
+    public void enterRegistrationView() {
+        System.out.println("Entering ConversationListView");
+
+    }
+
     /**
-     * Function access that helps us to login in ordet o access the next level.
+     * Test to start Conversation with one user and check the fields of chat recognistion (header)
      *
      */
+   @Test
+    public void addConversationWithOneUser(){
+       UserHelper.createUser(this,"login_validUser","validPassword");
+       UserHelper.createUser(this,"login_validUser_two","validPassword_two");
+       UserHelper.loginUser(this,"login_validUser","validPassword");
+       clickOn(togglebutton);
+       verifyThat(togglebutton,NodeMatchers.hasText("Conversations"));
+       clickOn(usernameFld).write("login_validUser");
+       clickOn(searchBtn);
+       clickOn("login_validUser_two");
+       clickOn(ChatBtn);
+       verifyThat(togglebutton,NodeMatchers.hasText("Search Users"));
+       verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
+
+    }
 
     /**
-     * This is a precondition function, so we register users that we need for testing.
+     * Test the creation of conversation with two different users and change conversations chats
      */
-    public void preCondition(String username) {
-        String password = "bbbbbbbbb";
-
-        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
-        clickOn(passwordfieldReg).write(password);
-        clickOn(passwordCheckField).write(password);
-        clickOn(registerBtnreg);
-    }
-
-    public void access_search_view3(){
-        clickOn(usernamefield).write(username);
-        clickOn(passwordfield).write(password);
-        clickOn(loginButton);
+    @Test
+    public void addConversationWithTwoUsers(){
+        UserHelper.createUser(this,"login_validUser_three","validPassword_three");
+        UserHelper.loginUser(this,"login_validUser","validPassword");
         clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("spir");
+        clickOn(usernameFld).write("login_validUser");
         clickOn(searchBtn);
-        clickOn(check);
-        clickOn(startConversationBtn);
+        clickOn("login_validUser_two");
+        clickOn(ChatBtn);
+        clickOn(togglebutton);
+        verifyThat(togglebutton,NodeMatchers.hasText("Conversations"));
+        clickOn(usernameFld).write("login_validUser");
+        clickOn(searchBtn);
+        clickOn("login_validUser_three");
+        clickOn(ChatBtn);
+        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_three"));
+        clickOn("login_validUser_two");
+        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
+
     }
-
-//    /**
-//     * Check that the Listview Button Exists
-//     */
-//    @Test
-//    public void check_ConversationFields(){
-//        preCondition(username);
-//        clickOn(usernamefield).write(username);
-//        clickOn(passwordfield).write(password);
-//        clickOn(loginButton);
-//        clickOn(togglebutton);
-//        verifyThat(togglebutton, NodeMatchers.hasText("Conversations"));
-//        clickOn(togglebutton);
-//
-//    }
-
-//    /**
-//     * Test the ConversationListViewItems
-//     * Case start conversation with username spirokas and send the message hello
-//     * Case start conversation with username spirokousa and send the message hi
-//     * Check the different headers and the different messages between conversations
-//     */
-//
-//    @Test
-//    public void TestConversationListViewFunctionality(){
-//        preCondition(check);
-//        preCondition(check2);
-//        access_search_view3();
-//        clickOn(newmessageField).write("hello").clickOn(sendBtn);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-//        verifyThat(togglebutton,NodeMatchers.hasText("Search Users"));
-//        clickOn(togglebutton);
-//        clickOn(check2).clickOn(startConversationBtn).clickOn(newmessageField).write("hi").clickOn(sendBtn);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check2));
-//        verifyThat(togglebutton, NodeMatchers.hasText("Search Users"));
-//        clickOn(check);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-//        clickOn(username+": hello");
-//        clickOn(check2);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check2));
-//        clickOn(username+": hi");
-//
-//    }
 
 
 }

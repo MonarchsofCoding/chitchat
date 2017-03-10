@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
@@ -34,30 +35,35 @@ public class SearchViewTest extends PrimaryStageTest {
     final static String headerChat = "#headerChat";
     final static String loggedInAs = "#loggedInAs";
 
+    @Before
+    public void enterRegistrationView() {
+        System.out.println("Entering RegistrationView");
 
-//    /**
-//     * Function that access UserSearch view and checks the existance of the fields.
-//     *
-//     */
-//    @Test
-//    public void CheckField(){
-//        UserHelper.createUser(this,"login_validUser","validPassword");
-//        UserHelper.loginUser(this,"login_validUser","validPassword");
-//
-//        verifyThat(togglebutton,hasText("Search Users"));
-//        verifyThat(togglebutton,NodeMatchers.isVisible());
-//        clickOn(togglebutton);
-//        verifyThat(searchBtn, hasText("Search"));
-//        verifyThat(searchBtn, NodeMatchers.isEnabled());
-//        verifyThat(ChatBtn, hasText("Start Chat"));
-//        verifyThat(ChatBtn, NodeMatchers.isEnabled());
-//        verifyThat(usernameFld, NodeMatchers.isVisible());
-//        verifyThat(errormessage, NodeMatchers.isInvisible());
-//        verifyThat(errorusermessage,NodeMatchers.isInvisible());
-//        assertTrue(find(loggedInAs).isVisible());
-//        verifyThat(loggedInAs, NodeMatchers.hasText("Logged in as: "+"login_validUser"));
-//
-//    }
+    }
+
+
+    /**
+     * Function that access UserSearch view and checks the existance of the fields.
+     *
+     */
+    @Test
+    public void CheckField(){
+        UserHelper.createUser(this,"login_validUser","validPassword");
+        UserHelper.loginUser(this,"login_validUser","validPassword");
+        verifyThat(togglebutton,hasText("Search Users"));
+        verifyThat(togglebutton,NodeMatchers.isVisible());
+        clickOn(togglebutton);
+        verifyThat(searchBtn, hasText("Search"));
+        verifyThat(searchBtn, NodeMatchers.isEnabled());
+        verifyThat(ChatBtn, hasText("Start Chat"));
+        verifyThat(ChatBtn, NodeMatchers.isEnabled());
+        verifyThat(usernameFld, NodeMatchers.isVisible());
+        verifyThat(errormessage, NodeMatchers.isInvisible());
+        verifyThat(errorusermessage,NodeMatchers.isInvisible());
+        assertTrue(find(loggedInAs).isVisible());
+        verifyThat(loggedInAs, NodeMatchers.hasText("Logged in as: "+"login_validUser"));
+
+    }
 
     /**
      * Test CheckError message for UserSearchField

@@ -163,6 +163,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         if (event.getSource() == this.searchBtn) {
+
             this.errorusermessage.setVisible(false);
             this.errormessage.setVisible(false);
             this.searchAction();
@@ -170,6 +171,8 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
             this.errorusermessage.setVisible(false);
             this.errormessage.setVisible(false);
             this.startConversation();
+            this.usernameField.clear();
+            this.searchList.getItems().clear();
         }
     }
 }

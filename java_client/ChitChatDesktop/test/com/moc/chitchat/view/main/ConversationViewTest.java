@@ -1,7 +1,9 @@
 package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.view.PrimaryStageTest;
+import com.moc.chitchat.view.helper.UserHelper;
 import javafx.scene.input.KeyCode;
+import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
@@ -20,103 +22,80 @@ import static org.testfx.matcher.base.NodeMatchers.hasText;
  * ConversationViewTest provides tests for conversation views,
  */
 public class ConversationViewTest extends PrimaryStageTest {
-    final static String loginButton = "#loginBtn";
-    final static String usernamefield= "#usernameField";
-    final static String passwordfield= "#passwordField";
 
-    final static String usernameFieldsearch = "#usernameFieldSearch";
-    final static String searchBtn = "#searchBtn";
-    final static String startConversationBtn = "#StartChatBtn";
+    final static String usernameFld = "#search-username-fld";
+    final static String searchBtn = "#search-Btn";
+    final static String ChatBtn = "#search-chat-Btn";
     final static String togglebutton ="#ToggleBtn";
-
     final static String headerChat = "#headerChat";
-    final static String newmessageField = "#newmessageField";
-    final static String errormessage = "#errormessage";
-    final static String sendBtn = "#sendBtnmsg";
+    final static String newmessage = "#conversation-message-fld";
+    final static String errormessage = "#conversation-error-message";
+    final static String sendbtn = "#conversation-send-Btn";
 
-    final static String registerBtn = "#registerBtn";
-    final static String registerBtnreg = "#registerBtnreg";
-    final static String usernamefieldReg = "#usernamefieldreg";
-    final static String passwordfieldReg = "#passwordFieldreg";
-    final static String passwordCheckField = "#passwordCheckField";
+    @Before
+    public void enterRegistrationView() {
+        System.out.println("Entering ConversationView");
 
-
-    /**
-     * This is a precondition function, so we register users that we need for testing.
-     */
-    public void preCondition(String username) {
-        String password = "ccccccccc";
-
-        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
-        clickOn(passwordfieldReg).write(password);
-        clickOn(passwordCheckField).write(password);
-        clickOn(registerBtnreg);
     }
-
     /**
-     * Function access that helps us to login in ordet o access the next level.
+     * Verify the existance of the conversation fields
+     */
+    @Test
+    public void testFields(){
+        UserHelper.createUser(this,"login_validUser","validPassword");
+        UserHelper.createUser(this,"login_validUser_two","validPassword_two");
+        UserHelper.loginUser(this,"login_validUser","validPassword");
+        clickOn(togglebutton);
+        clickOn(usernameFld).write("login_validUser");
+        clickOn(searchBtn);
+        clickOn("login_validUser_two");
+        clickOn(ChatBtn);
+        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
+        verifyThat(newmessage,NodeMatchers.isVisible());
+        verifyThat(errormessage,NodeMatchers.isInvisible());
+        verifyThat(sendbtn,NodeMatchers.isVisible());
+        verifyThat(sendbtn,NodeMatchers.hasText("Send"));
+        clickOn(sendbtn);
+        verifyThat(errormessage,NodeMatchers.isVisible());
+        verifyThat(errormessage,NodeMatchers.hasText("can't be blank"));
+    }
+    /**
+     * Test conversation different texts with two different users
      *
      */
-    public void access_search_view2(){
-        String username = "Phillip";
-        String password = "ccccccccc";
-        String check = "Leonardo";
+    @Test
+    public void testDifferentConversationViewsWithTwoUsers(){
+        String message_to_user_2 = "Hello User 2";
+        String message_to_user_3 = "GoodMorning User 3";
 
-        clickOn(usernamefield).write(username);
-        clickOn(passwordfield).write(password);
-        clickOn(loginButton);
+        UserHelper.createUser(this,"login_validUser_three","validPassword_three");
+        UserHelper.loginUser(this,"login_validUser","validPassword");
         clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("Leo");
+        clickOn(usernameFld).write("login_validUser");
         clickOn(searchBtn);
-        clickOn(check);
-        clickOn(startConversationBtn);
+        clickOn("login_validUser_two");
+        clickOn(ChatBtn);
+        clickOn(newmessage).write(message_to_user_2);
+        clickOn(sendbtn);
+        clickOn("login_validUser: "+message_to_user_2);
+        //start second conversation
+        verifyThat(togglebutton,NodeMatchers.hasText("Search Users"));
+        clickOn(togglebutton);
+        clickOn(usernameFld).write("login_valid");
+        clickOn(searchBtn);
+        clickOn("login_validUser_three");
+        clickOn(ChatBtn);
+        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_three"));
+        clickOn(newmessage).write(message_to_user_3);
+        clickOn(sendbtn);
+        clickOn("login_validUser: "+message_to_user_3);
+        //verify the saved messages for user 2
+        clickOn("login_validUser_two");
+        clickOn("login_validUser: "+message_to_user_2);
+        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
+        //verify the saved messages for user 3
+        clickOn("login_validUser_three");
+        clickOn("login_validUser: "+message_to_user_3);
+        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_three"));
     }
-
-//    /**
-//     *Test The existance of main parts of the field
-//     */
-//    @Test
-//    public void CheckFields(){
-//        preCondition("Phillip");
-//        preCondition("Leonardo");
-//        access_search_view2();
-//        String check = "Leonardo";
-//        verifyThat(togglebutton,hasText("Search Users"));
-//        verifyThat(togglebutton, NodeMatchers.isVisible());
-//        verifyThat(newmessageField, NodeMatchers.isEnabled());
-//        verifyThat(check, NodeMatchers.isVisible());
-//        assertTrue(find(headerChat).isVisible());
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-//        verifyThat(errormessage, NodeMatchers.isInvisible());
-//        assertTrue(find(sendBtn).isVisible());
-//    }
-
-
-
-//    /**
-//     *Test the sending message function works
-//     */
-//    @Test
-//    public void CheckSendingMessagesFunction(){
-//        access_search_view2();
-//        String messagetest = "hello";
-//        String messagedisplay = "Phillip: " +
-//                ""+messagetest;
-//        clickOn(newmessageField).write(messagetest).clickOn(sendBtn);
-//        clickOn(messagedisplay);
-//        verifyThat(messagedisplay,NodeMatchers.isVisible());
-//
-//
-//    }
-
-//    /**
-//     *Test the sending message function works
-//     */
-//    @Test
-//    public void CheckSendingEmptyMessagesFunction(){
-//        access_search_view2();
-//        clickOn(newmessageField).clickOn(sendBtn);
-//        verifyThat(errormessage,NodeMatchers.isVisible());
-//
-//    }
 }

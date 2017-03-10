@@ -87,18 +87,18 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.conversationPane.add(messages, "span");
         this.newMessageField = new TextField();
         this.newMessageField.setPromptText("Enter Message: ");
-        this.newMessageField.setId("newmessageField");
+        this.newMessageField.setId("conversation-message-fld");
         this.newMessageField.setOnAction(this);
         this.conversationPane.add(newMessageField, "span,grow");
 
         this.errormessage = new Label();
         this.errormessage.setTextFill(Color.RED);
-        this.errormessage.setId("errormessage");
+        this.errormessage.setId("conversation-error-message");
         this.errormessage.setVisible(false);
         this.conversationPane.add(errormessage, "span,grow,wrap");
 
         this.sendbtn = new Button("Send");
-        this.sendbtn.setId("sendBtnmsg");
+        this.sendbtn.setId("conversation-send-Btn");
         this.sendbtn.setOnAction(this);
         this.conversationPane.add(sendbtn, "span, align right");
 
