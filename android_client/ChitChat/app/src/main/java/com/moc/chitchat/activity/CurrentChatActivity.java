@@ -20,6 +20,7 @@ import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.CurrentChatController;
+import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.ConversationModel;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
@@ -63,6 +64,8 @@ public class CurrentChatActivity extends AppCompatActivity
     ChitChatMessagesConfiguration chitChatMessagesConfiguration;
     @Inject
     ErrorResponseResolver errorResponseResolver;
+    @Inject
+    CryptoBox cryptoBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +76,11 @@ public class CurrentChatActivity extends AppCompatActivity
 
         keyboardManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        currentReceiverUsername = getIntent().getStringExtra("recipient_username");
+        currentReceiver = currentChatConfiguration.getCurrentRecipient();
 
-        currentReceiver = new UserModel(currentReceiverUsername);
+        currentReceiverUsername = currentReceiver.getUsername();
 
-        currentConversation = chitChatMessagesConfiguration
-            .getConversation(new UserModel(currentReceiverUsername));
+        currentConversation = chitChatMessagesConfiguration.getConversation(currentReceiver);
 
         this.setContentView(R.layout.activity_current_chat);
         getSupportActionBar().setTitle(currentReceiverUsername);
@@ -115,7 +117,6 @@ public class CurrentChatActivity extends AppCompatActivity
     public void onClick(View view) {
         if (!messageText.getText().toString().equals("")) {
             keyboardManager.hideSoftInputFromWindow(messageText.getWindowToken(), 0);
-
             try {
                 currentChatController.sendMessageToRecipient(
                     this,
@@ -123,13 +124,20 @@ public class CurrentChatActivity extends AppCompatActivity
                     this,
                     new MessageModel(
                         currentReceiver,
-                        messageText.getText().toString()
+                        cryptoBox.encrypt(
+                            messageText.getText().toString(),
+                            currentReceiver.getPublicKey())
                     )
                 );
             } catch (JSONException jsonexception) {
                 jsonexception.printStackTrace();
                 Toast.makeText(this,
                     "Error caused by JSONObject: " + jsonexception.getMessage(),
+                    Toast.LENGTH_LONG);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Toast.makeText(this,
+                    "Error caused by Encryption System: " + ex.getMessage(),
                     Toast.LENGTH_LONG);
             }
         }

@@ -43,7 +43,6 @@
             android:id="@+id/username_input"
             android:layout_weight="1" />
 
-
     </LinearLayout>
 
     <LinearLayout

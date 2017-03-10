@@ -1,8 +1,18 @@
 package com.moc.chitchat.model;
 
+import android.util.Base64;
+
+import com.moc.chitchat.activity.SearchUserActivity;
+import com.moc.chitchat.application.SessionConfiguration;
+import com.moc.chitchat.crypto.CryptoBox;
+
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.HashMap;
 
 import org.json.JSONObject;
+
+import javax.inject.Inject;
 
 
 /**
@@ -30,13 +40,26 @@ public class UserModel {
     private String authToken;
 
     /**
+     * Private KEy of the user.
+     */
+    private PrivateKey privateKey;
+
+    /**
+     * Public key of the user.
+     */
+    private PublicKey publicKey;
+
+    /** CryptoBox.
+     * TODO: returns null from @Inject.
+     */
+    //@Inject CryptoBox cryptoBox;
+
+    /**
      * UserModel constructor
      *
      * @param username the username of the User.
      */
-    public UserModel(String username) {
-        this.username = username;
-    }
+    public UserModel(String username) { this.username = username; }
 
     /**
      * getUsername returns the username of the User.
@@ -109,15 +132,74 @@ public class UserModel {
     }
 
     /**
-     * ToJsonObject returns a JSONObject representation of the User.
+     * Return the private key of the user.
+     * @return the private key.
+     */
+    public PrivateKey getPrivateKey() { return this.privateKey; }
+
+    /**
+     * Sets the new private key to user model.
+     * @param key the new private key.
+     */
+    public UserModel setPrivateKey(PrivateKey key) {
+        this.privateKey = key;
+
+        return this;
+    }
+
+
+    /**
+     * Return the public key of the user.
+     * @return the public key.
+     */
+    public PublicKey getPublicKey() { return this.publicKey; }
+
+    /**
+     * Sets the new public key to user model.
+     * @param key the enw public key.
+     */
+    public UserModel setPublicKey(PublicKey key) {
+        this.publicKey = key;
+
+        return this;
+    }
+
+    /**
+     * To return the names on ListView while providing the whole data inside.
+     * @return
+     */
+    @Override
+    public String toString() {
+        return this.getUsername();
+    }
+
+    /**
+     * ToJsonObject returns a JSONObject representation of the User for registration process.
      *
      * @return JSONObject representation of the User.
      */
-    public JSONObject toJsonObject() {
+    public JSONObject toJsonObjectForRegister() {
         HashMap<String, String> userMap = new HashMap<>();
 
         userMap.put("username", this.getUsername());
         userMap.put("password", this.getPassword());
+
+        return new JSONObject(userMap);
+    }
+
+    /**
+     * ToJsonObject returns a JSONObject representation of the User for login process.
+     * @return JSONObject representation of the User.
+     */
+    public JSONObject toJsonObjectForLogin() {
+        HashMap<String, String> userMap = new HashMap<>();
+
+        userMap.put("username", this.getUsername());
+        userMap.put("password", this.getPassword());
+        userMap.put(
+            "publicKey",
+            Base64.encodeToString(this.getPublicKey().getEncoded(),Base64.DEFAULT)
+        );
 
         return new JSONObject(userMap);
     }

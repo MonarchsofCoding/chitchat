@@ -18,6 +18,7 @@ import com.moc.chitchat.R;
 import com.moc.chitchat.activity.SearchUserActivity;
 import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
+import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 
@@ -35,6 +36,8 @@ public class ReceiveMessageService extends Service {
     ChitChatMessagesConfiguration chitChatMessagesConfiguration;
     @Inject
     SessionConfiguration sessionConfiguration;
+    @Inject
+    CryptoBox cryptoBox;
 
     Socket socket;
     Channel channel;
@@ -85,7 +88,17 @@ public class ReceiveMessageService extends Service {
             channel.on("new:message", new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
-                    String message = envelope.getPayload().get("body").asText();
+                    String cipherMessage = envelope.getPayload().get("body").asText();
+                    String message = null;
+                    try {
+                        message = cryptoBox.decrypt(
+                            cipherMessage,
+                            sessionConfiguration.getCurrentUser().getPrivateKey()
+                        );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        message = "\"ChitChat: Message couldn't decrypted.\"";
+                    }
                     String from = envelope.getPayload().get("from").asText();
                     UserModel fromUser = new UserModel(from);
                     MessageModel toAdd = new MessageModel(

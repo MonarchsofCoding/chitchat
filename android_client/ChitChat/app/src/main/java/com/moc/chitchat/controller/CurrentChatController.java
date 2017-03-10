@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.MessageModel;
 
 import java.util.Map;
