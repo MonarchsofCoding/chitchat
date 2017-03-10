@@ -2,17 +2,11 @@ package com.moc.chitchat.model;
 
 import android.util.Base64;
 
-import com.moc.chitchat.activity.SearchUserActivity;
-import com.moc.chitchat.application.SessionConfiguration;
-import com.moc.chitchat.crypto.CryptoBox;
-
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.HashMap;
 
 import org.json.JSONObject;
-
-import javax.inject.Inject;
 
 
 /**
@@ -59,7 +53,9 @@ public class UserModel {
      *
      * @param username the username of the User.
      */
-    public UserModel(String username) { this.username = username; }
+    public UserModel(String username) {
+        this.username = username;
+    }
 
     /**
      * getUsername returns the username of the User.
@@ -135,7 +131,9 @@ public class UserModel {
      * Return the private key of the user.
      * @return the private key.
      */
-    public PrivateKey getPrivateKey() { return this.privateKey; }
+    public PrivateKey getPrivateKey() {
+        return this.privateKey;
+    }
 
     /**
      * Sets the new private key to user model.
@@ -152,7 +150,9 @@ public class UserModel {
      * Return the public key of the user.
      * @return the public key.
      */
-    public PublicKey getPublicKey() { return this.publicKey; }
+    public PublicKey getPublicKey() {
+        return this.publicKey;
+    }
 
     /**
      * Sets the new public key to user model.
@@ -166,7 +166,7 @@ public class UserModel {
 
     /**
      * To return the names on ListView while providing the whole data inside.
-     * @return
+     * @return The username of the user to display on the ListView.
      */
     @Override
     public String toString() {

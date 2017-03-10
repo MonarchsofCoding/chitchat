@@ -82,9 +82,9 @@ public class LoginActivity extends AppCompatActivity
                 public void run() {
                     try {
                         loginButton();
-                    } catch (Exception e) {
+                    } catch (Exception ex) {
                         circleDialog.dismiss();
-                        e.printStackTrace();
+                        ex.printStackTrace();
                     }
                 }
             });

@@ -95,8 +95,8 @@ public class ReceiveMessageService extends Service {
                             cipherMessage,
                             sessionConfiguration.getCurrentUser().getPrivateKey()
                         );
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                         message = "\"ChitChat: Message couldn't decrypted.\"";
                     }
                     String from = envelope.getPayload().get("from").asText();

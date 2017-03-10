@@ -5,13 +5,10 @@ import android.app.Application;
 import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
-import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
-
-import java.security.NoSuchAlgorithmException;
 
 import dagger.Module;
 import dagger.Provides;
@@ -76,5 +73,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    CryptoBox provideCryptoBox() { return new CryptoBox().initialize(); }
+    CryptoBox provideCryptoBox() {
+        return new CryptoBox().initialize();
+    }
 }

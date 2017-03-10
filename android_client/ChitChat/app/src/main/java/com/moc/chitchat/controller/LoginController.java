@@ -10,11 +10,10 @@ import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 
+import java.security.KeyPair;
 import javax.inject.Inject;
 
 import org.json.JSONObject;
-
-import java.security.KeyPair;
 
 /**
  * Created by aakyo on 14/02/2017.
@@ -68,7 +67,7 @@ public class LoginController {
      * @param username        The username of the User.
      * @param password        The password of the User.
      */
-    public void loginUser (
+    public void loginUser(
         Context context,
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,
