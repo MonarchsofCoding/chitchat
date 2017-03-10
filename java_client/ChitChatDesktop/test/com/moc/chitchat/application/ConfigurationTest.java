@@ -33,6 +33,15 @@ public class ConfigurationTest {
 
         configuration.setTestingMode();
 
+        assertEquals(configuration.getBackendAddress(), "http://chitchat:4000");
+    }
+
+    @Test
+    public void testSetBetaMode() {
+        Configuration configuration = new Configuration();
+
+        configuration.setBetaMode();
+
         assertEquals(configuration.getBackendAddress(), "https://beta.chitchat.monarchsofcoding.com");
     }
 

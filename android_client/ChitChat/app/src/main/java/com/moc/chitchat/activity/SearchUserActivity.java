@@ -1,30 +1,38 @@
 package com.moc.chitchat.activity;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.SearchUserController;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
+import com.moc.chitchat.service.ReceiveMessageService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -37,7 +45,9 @@ import org.json.JSONObject;
 
 public class SearchUserActivity extends AppCompatActivity
     implements TabLayout.OnTabSelectedListener,
-    SearchView.OnQueryTextListener,
+    View.OnClickListener,
+    TextWatcher,
+    DialogInterface.OnClickListener,
     ListView.OnItemClickListener,
     Response.Listener<JSONObject>,
     Response.ErrorListener {
@@ -50,10 +60,14 @@ public class SearchUserActivity extends AppCompatActivity
     SessionConfiguration sessionConfiguration;
     @Inject
     CurrentChatConfiguration currentChatConfiguration;
+    @Inject
+    ChitChatMessagesConfiguration chitChatMessagesConfiguration;
 
     TabLayout menuTabs;
-    SearchView searchBar;
     ListView usersList;
+
+    EditText searchText;
+    Button searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +84,76 @@ public class SearchUserActivity extends AppCompatActivity
         tab.select();
         menuTabs.addOnTabSelectedListener(this);
 
-        searchBar = (SearchView) findViewById(R.id.search_bar);
-        searchBar.setOnQueryTextListener(this);
+        searchText = (EditText) findViewById(R.id.search_layout_text);
+        searchText.addTextChangedListener(this);
+
+        searchButton = (Button) findViewById(R.id.search_layout_button);
+        searchButton.setOnClickListener(this);
 
         usersList = (ListView) findViewById(R.id.users_list);
         usersList.setOnItemClickListener(this);
     }
 
+    //For when the search button clicked.
+    @Override
+    public void onClick(View view) {
+        String query = searchText.getText().toString();
+        if (query.length() >= 3) {
+
+            System.out.println("Query made with query text: " + query);
+
+            searchUserController.searchUser(
+                this,
+                this,
+                this,
+                query
+            );
+        } else {
+            Toast.makeText(this,
+                String.format("You can only do a search with an input longer than 3 characters"),
+                Toast.LENGTH_LONG).show();
+            System.out.println("You can only do a search with an input longer than 3 characters");
+        }
+    }
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if(which == DialogInterface.BUTTON_POSITIVE) {
+            //TODO: close the connection on the service, to let the backend know about the logout.
+            sessionConfiguration.cleanCurrentUser();
+            currentChatConfiguration.cleanCurrentRecipient();
+            chitChatMessagesConfiguration.clearChitChatMessagesConfiguration();
+            stopService(new Intent(getBaseContext(), ReceiveMessageService.class));
+            this.finish();
+        }
+    }
+
+    //Auto-gen method for TextWatcher.
+    @Override
+    public void beforeTextChanged(CharSequence sequence, int start, int count, int after) {
+
+    }
+
+    //To check for spaces.
+    @Override
+    public void onTextChanged(CharSequence sequence, int start, int before, int count) {
+        if (sequence.toString().contains(" ")) {
+            String toPut = sequence.toString().replace(" ", "");
+            searchText.setText(toPut);
+            searchText.setSelection(toPut.length());
+        }
+    }
+
+    //Auto-gen method for TextWatcher.
+    @Override
+    public void afterTextChanged(Editable sequenceEditable) {
+
+    }
+
     //For Volley Error response
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error search");
+        System.out.println("Error searching a user");
         try {
             Toast.makeText(this,
                 String.format("The user you are trying to found is not connected or not existing"),
@@ -121,14 +194,14 @@ public class SearchUserActivity extends AppCompatActivity
         tabToSelect.select();                             //stay in this activity
 
         if (tabName.equals("Chats")) {
-            launchActivityFromTab(ChatListActivity.class);
             this.finish();
+            launchActivityFromTab(ChatListActivity.class);
         } else if (tabName.equals("Current Chat")) {
             if (currentChatConfiguration.getCurrentRecipient() != null) {
                 String currentReceiverUsername = currentChatConfiguration
                     .getCurrentRecipient().getUsername();
                 if (!currentReceiverUsername.equals("")) {
-
+                    this.finish();
                     Intent currentChatIntent = new Intent(getBaseContext(), CurrentChatActivity.class);
                     currentChatIntent.putExtra(
                         "recipient_username",
@@ -136,7 +209,6 @@ public class SearchUserActivity extends AppCompatActivity
                     startActivity(currentChatIntent);
 
                     overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
-                    this.finish();
                 }
             } else {
                 Toast.makeText(this, String.format("There is no current chat"), Toast.LENGTH_LONG).show();
@@ -155,38 +227,6 @@ public class SearchUserActivity extends AppCompatActivity
     public void onTabReselected(TabLayout.Tab tab) {
         System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
         //Basically do nothing.
-    }
-
-    //When a user submits a search
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        if (query.length() >= 3) {
-            Map<String, String> requestHeaders = new HashMap<String, String>();
-            requestHeaders.put(
-                "authorization",
-                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
-            searchUserController.searchUser(
-                this,
-                this,
-                this,
-                query,
-                requestHeaders
-            );
-        } else {
-            Toast.makeText(this,
-                String.format("You can only do a search with an input longer than 3 characters"),
-                Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
-    //When the search text is changed.
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.contains(" ")) {
-            searchBar.setQuery(newText.replace(" ", ""), false);
-        }
-        return false;
     }
 
     //When the user clicks on an user.
@@ -208,16 +248,25 @@ public class SearchUserActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        //TODO: Dialog to ask exiting
-        this.finish();
+        AlertDialog.Builder exitAlertBuilder = new AlertDialog.Builder(this);
+        AlertDialog exitAlert = exitAlertBuilder.create();
+        exitAlert.setCancelable(false);
+        exitAlert.setTitle("Logging out");
+        exitAlert.setMessage("Do you wish to logout?");
+        exitAlert.setButton(DialogInterface.BUTTON_POSITIVE,"Yes",this);
+        exitAlert.setButton(DialogInterface.BUTTON_NEGATIVE,"No",this);
+        exitAlert.show();
     }
 
     /**
      * {LaunchActivity is starting }.
      */
     public void launchActivityFromTab(Class activityToLaunch) {
+        this.finish();
         Intent toLaunchIntent = new Intent(getBaseContext(), activityToLaunch);
         startActivity(toLaunchIntent);
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
     }
+
+
 }

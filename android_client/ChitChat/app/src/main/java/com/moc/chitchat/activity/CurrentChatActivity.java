@@ -1,10 +1,13 @@
 package com.moc.chitchat.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,9 +25,6 @@ import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import org.json.JSONArray;
@@ -37,6 +37,8 @@ import org.json.JSONObject;
 
 public class CurrentChatActivity extends AppCompatActivity
     implements View.OnClickListener,
+    ChitChatMessagesConfiguration.MessageConfigurationListener,
+    Runnable,
     TabLayout.OnTabSelectedListener,
     Response.Listener<JSONObject>,
     Response.ErrorListener {
@@ -49,6 +51,7 @@ public class CurrentChatActivity extends AppCompatActivity
     UserModel currentReceiver;
     String currentReceiverUsername;
     ConversationModel currentConversation;
+    InputMethodManager keyboardManager;
 
     @Inject
     CurrentChatController currentChatController;
@@ -68,6 +71,8 @@ public class CurrentChatActivity extends AppCompatActivity
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
+        keyboardManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
         currentReceiverUsername = getIntent().getStringExtra("recipient_username");
 
         currentReceiver = new UserModel(currentReceiverUsername);
@@ -81,9 +86,8 @@ public class CurrentChatActivity extends AppCompatActivity
         messageText = (TextView) findViewById(R.id.message_text);
 
         messagePanel = (TextView) findViewById(R.id.message_panel);
-        for (MessageModel message : currentConversation.getMessages()) {
-            addMessageToPanel(message.getFrom().getUsername(), message.getMessage());
-        }
+        messagePanel.setMovementMethod(new ScrollingMovementMethod());
+        getMessagesToDisplay();
 
         sendButton = (Button) findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
@@ -92,16 +96,25 @@ public class CurrentChatActivity extends AppCompatActivity
         TabLayout.Tab tab = menuTabs.getTabAt(2);
         tab.select();
         menuTabs.addOnTabSelectedListener(this);
+
+        chitChatMessagesConfiguration.setMessageConfigurationListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     //For when a button is clicked
     @Override
     public void onClick(View view) {
         if (!messageText.getText().toString().equals("")) {
-            Map<String, String> requestHeaders = new HashMap<String, String>();
-            requestHeaders.put(
-                "authorization",
-                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
+            keyboardManager.hideSoftInputFromWindow(messageText.getWindowToken(), 0);
 
             try {
                 currentChatController.sendMessageToRecipient(
@@ -111,8 +124,7 @@ public class CurrentChatActivity extends AppCompatActivity
                     new MessageModel(
                         currentReceiver,
                         messageText.getText().toString()
-                    ),
-                    requestHeaders
+                    )
                 );
             } catch (JSONException jsonexception) {
                 jsonexception.printStackTrace();
@@ -162,10 +174,13 @@ public class CurrentChatActivity extends AppCompatActivity
 
             chitChatMessagesConfiguration.addMessageToConversation(
                 toUser,
-                new MessageModel(fromUser, toUser, message)
+                new MessageModel(fromUser, toUser, message),
+                true
             );
-
-            addMessageToPanel(from, message);
+            addMessageToPanel(from, message, true);
+            System.out.println("Message from " + fromUser.getUsername() + " is sent to "
+                + toUser.getUsername());
+            System.out.println("The sent message: " + message);
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
             Toast.makeText(this,
@@ -178,11 +193,10 @@ public class CurrentChatActivity extends AppCompatActivity
     public void onTabSelected(TabLayout.Tab tab) {
         String tabName = tab.getText().toString();
         if (tabName.equals("Chats")) {
-            launchActivityFromTab(ChatListActivity.class);
+            launchActivity(ChatListActivity.class);
         } else if (tabName.equals("Search Users")) {
-            launchActivityFromTab(SearchUserActivity.class);
+            launchActivity(SearchUserActivity.class);
         }
-        this.finish();
     }
 
     //For a unselected tab
@@ -203,27 +217,57 @@ public class CurrentChatActivity extends AppCompatActivity
      * @param username the user that sent the message
      * @param message  the message that desired to be added
      */
-    public void addMessageToPanel(String username, String message) {
+    public void addMessageToPanel(String username, String message, boolean isLocal) {
         messagePanel.setText(messagePanel.getText().toString()
             + "\n"
             + username
             + ": "
             + message);
-        messageText.setText("");
+        if(isLocal) {
+            messageText.setText("");
+        }
     }
 
     @Override
     public void onBackPressed() {
-        //TODO: Dialog to go back to chats
-        System.out.println("The back button is pressed.");
+        launchActivity(ChatListActivity.class);
     }
 
     /**
      * {LaunchActivity is starting }.
      */
-    public void launchActivityFromTab(Class activityToLaunch) {
+    public void launchActivity(Class activityToLaunch) {
+        this.finish();
         Intent toLaunchIntent = new Intent(getBaseContext(), activityToLaunch);
         startActivity(toLaunchIntent);
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
+    }
+
+    /**
+     * To fetch messages and display them on screen.
+     */
+    public void getMessagesToDisplay() {
+        messagePanel.setText("");
+        for (MessageModel message : currentConversation.getMessages()) {
+            addMessageToPanel(message.getFrom().getUsername(), message.getMessage(), false);
+        }
+    }
+
+    /**
+     * Listener for new messages.
+     */
+    @Override
+    public void onNewMessageReceived() {
+        runOnUiThread(this);
+    }
+
+    /**
+     * Invokes the display refresher function.
+     * Needs to be in this UIThread function because android does not
+     *      allow changes on UI from other threads.
+     */
+    @Override
+    public void run() {
+        getMessagesToDisplay();
     }
 }

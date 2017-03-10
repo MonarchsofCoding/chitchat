@@ -82,7 +82,8 @@ public class RegistrationControllerTest {
             "/api/v1/users",
             mockUser.toJsonObject(),
             mockResponselistener,
-            mockErrorListener);
+            mockErrorListener,
+            true);
 
         verify(mockUserValidator).validate(mockUser);
 

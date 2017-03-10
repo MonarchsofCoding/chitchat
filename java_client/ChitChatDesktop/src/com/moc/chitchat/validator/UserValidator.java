@@ -1,12 +1,12 @@
 package com.moc.chitchat.validator;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 
+import java.io.IOException;
 import java.util.HashMap;
 
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ public class UserValidator implements Validator {
             errors.rejectValue("password", "field.required", "cannot be empty");
         }
 
-        if (user.getPasswordCheck() == null || !user.getPasswordCheck().equals(user.getPassword())) {
+        if (user.getPasswordCheck() == null ||!user.getPasswordCheck().equals(user.getPassword())) {
             errors.rejectValue("passwordCheck", "password.mismatch", "should match password");
         }
     }
@@ -61,18 +61,19 @@ public class UserValidator implements Validator {
      * @param response - using the response to see results from server
      * @throws ValidationException - any errors from server throws ValidationException
      */
-    public void throwErrorsFromResponse(HttpResponse<JsonNode> response) throws ValidationException {
-        JSONObject serverErrors = response.getBody().getObject().getJSONObject("errors");
+    public void throwErrorsFromResponse(Response response) throws ValidationException, IOException {
+        String jsonData = response.body().string();
+        JSONObject serverErrors = new JSONObject(jsonData).getJSONObject("errors");
 
-        MapBindingResult validationErrors =
-                new MapBindingResult(
-                        new HashMap<String, String>(),
-                        UserModel.class.getName());
+        System.out.println("serverErrors are " + serverErrors.toString());
 
+        MapBindingResult validationErrors = new MapBindingResult(
+            new HashMap<String, String>(),
+            UserModel.class.getName()
+        );
 
         if (!serverErrors.isNull("username")) {
             JSONArray usernameErrors = serverErrors.getJSONArray("username");
-
 
             for (Object errorString : usernameErrors) {
                 validationErrors.rejectValue("username", "server.invalid", errorString.toString());
@@ -88,7 +89,5 @@ public class UserValidator implements Validator {
         }
 
         throw new ValidationException(validationErrors);
-
-
     }
 }

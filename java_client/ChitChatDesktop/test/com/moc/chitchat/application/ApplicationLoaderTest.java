@@ -1,9 +1,7 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.model.UserModel;
-import com.moc.chitchat.view.authentication.AuthenticationStage;
-import com.moc.chitchat.view.authentication.LoginView;
-import com.moc.chitchat.view.main.MainStage;
+
+import com.moc.chitchat.view.BaseStage;
 import javafx.stage.Stage;
 import org.junit.Test;
 
@@ -24,16 +22,9 @@ public class ApplicationLoaderTest {
     @Test
     public void testConstructor() {
         Configuration mockConfiguration = mock(Configuration.class);
-        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
-        MainStage mockMainStage = mock(MainStage.class);
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
-
-        applicationLoader = new ApplicationLoader(
-
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
+        BaseStage mockBaseStage = mock(BaseStage.class);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         assertNotNull(applicationLoader);
         assertEquals(applicationLoader.getClass(), ApplicationLoader.class);
@@ -42,69 +33,27 @@ public class ApplicationLoaderTest {
     @Test
     public void testLoadDefaultProdEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
-        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
-        MainStage mockMainStage = mock(MainStage.class);
-
-
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
-
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
+        BaseStage mockBaseStage = mock(BaseStage.class);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
         List<String> args = new ArrayList<>();
 
         applicationLoader.load(mockStage, args);
 
-        verify(mockAuthenticationStage).showAndWait();
+        verify(mockBaseStage).setPrimaryStage(mockStage);
+        verify(mockBaseStage).show();
     }
 
     @Test
     public void testLoadTestEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
-        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
-        MainStage mockMainStage = mock(MainStage.class);
-
-
-
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
-
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
-
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
+        BaseStage mockBaseStage = mock(BaseStage.class);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
-
         List<String> args = new ArrayList<>();
         args.add("test");
 
@@ -112,108 +61,63 @@ public class ApplicationLoaderTest {
 
         verify(mockConfiguration).setTestingMode();
 
-        verify(mockAuthenticationStage).showAndWait();
+        verify(mockBaseStage).setPrimaryStage(mockStage);
+        verify(mockBaseStage).show();
     }
 
     @Test
-    public void testLoadDevEnvironment() {
+    public void testLoadDevelopmentEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
-        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
-        MainStage mockMainStage = mock(MainStage.class);
-
-
-
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
-
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
+        BaseStage mockBaseStage = mock(BaseStage.class);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
-
         List<String> args = new ArrayList<>();
         args.add("dev");
+
         applicationLoader.load(mockStage, args);
 
         verify(mockConfiguration).setDevelopmentMode();
 
-        verify(mockAuthenticationStage).showAndWait();
+        verify(mockBaseStage).setPrimaryStage(mockStage);
+        verify(mockBaseStage).show();
+    }
+
+    @Test
+    public void testLoadBetaEnvironment() {
+        Configuration mockConfiguration = mock(Configuration.class);
+        BaseStage mockBaseStage = mock(BaseStage.class);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
+
+        Stage mockStage = mock(Stage.class);
+        List<String> args = new ArrayList<>();
+        args.add("beta");
+
+        applicationLoader.load(mockStage, args);
+
+        verify(mockConfiguration).setBetaMode();
+
+        verify(mockBaseStage).setPrimaryStage(mockStage);
+        verify(mockBaseStage).show();
     }
 
     @Test
     public void testLoadProdByDefaultWithUnknownArg() {
         Configuration mockConfiguration = mock(Configuration.class);
-        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
-        MainStage mockMainStage = mock(MainStage.class);
-
-
-
-        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockAuthenticationStage,mockMainStage);
-
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
-        when(mockConfiguration.getLoggedInUser()).thenReturn(null);
-
-        applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
+        BaseStage mockBaseStage = mock(BaseStage.class);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
 
         Stage mockStage = mock(Stage.class);
-
         List<String> args = new ArrayList<>();
-        args.add("aaa");
+        args.add("a");
 
         applicationLoader.load(mockStage, args);
 
-        verify(mockAuthenticationStage).showAndWait();
+
+        verify(mockBaseStage).setPrimaryStage(mockStage);
+        verify(mockBaseStage).show();
     }
-
-    @Test
-    public void testLoadMainStageWhenLoggedIn() {
-        Configuration mockConfiguration = mock(Configuration.class);
-        AuthenticationStage mockAuthenticationStage = mock(AuthenticationStage.class);
-        MainStage mockMainStage = mock(MainStage.class);
-
-        UserModel mockUser = mock(UserModel.class);
-        when(mockConfiguration.getLoggedInUser()).thenReturn(mockUser);
-
-        ApplicationLoader applicationLoader = new ApplicationLoader(
-                mockConfiguration,
-                mockAuthenticationStage,
-                mockMainStage
-        );
-
-        Stage mockStage = mock(Stage.class);
-
-        List<String> args = new ArrayList<>();
-
-        applicationLoader.load(mockStage, args);
-
-        verify(mockAuthenticationStage).showAndWait();
-        verify(mockMainStage).showAndWait();
-
-    }
-
 }

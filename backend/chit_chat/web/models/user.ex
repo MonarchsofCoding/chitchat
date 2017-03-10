@@ -13,6 +13,7 @@ defmodule ChitChat.User do
     field :password, :string, virtual: true
 
     field :hashed_password, :string
+    field :online, :boolean
 
     timestamps()
   end
@@ -61,12 +62,13 @@ defmodule ChitChat.User do
   def find_and_check_password(changeset) do
 
     with {:ok, user} <- UserRepository.find_by_username(
-                        changeset.params["username"]),
+                          changeset.params["username"]
+                        ),
         {:ok, user} <- confirm_password(user, changeset)
     do
       {:ok, user}
     else
-      {:error, changeset} ->
+      _ ->
         changeset = changeset
         |> change
         |> add_error(:username, "invalid credentials")
@@ -85,6 +87,7 @@ defmodule ChitChat.User do
     |> unique_constraint(:username)
     |> put_change(:hashed_password, Bcrypt.hashpwsalt(
                           changeset.params["password"]))
+    |> put_change(:online, false)
     |> UserRepository.create()
   end
 

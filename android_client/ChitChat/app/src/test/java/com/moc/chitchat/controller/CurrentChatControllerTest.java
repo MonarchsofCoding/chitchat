@@ -58,18 +58,18 @@ public class CurrentChatControllerTest {
             mockContext,
             mockResponselistener,
             mockErrorListener,
-            mockMessage,
-            null);
+            mockMessage
+            );
 
 
-        this.mockHttpClient.sendRequestWithHeader(
+        this.mockHttpClient.sendRequest(
             mockContext,
             Request.Method.POST,
             "/api/v1/messages",
             null,
             mockResponselistener,
             mockErrorListener,
-            null
+            true
         );
 
 

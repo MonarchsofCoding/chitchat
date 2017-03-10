@@ -57,18 +57,17 @@ public class CurrentChatController {
         Context context,
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,
-        MessageModel message,
-        Map<String, String> requestHeaders
+        MessageModel message
     ) throws JSONException {
         // Make a POST request to send the message.
-        this.httpClient.sendRequestWithHeader(
+        this.httpClient.sendRequest(
             context,
             Request.Method.POST,
             "/api/v1/messages",
             message.tojsonObject(),
             successListener,
             errorListener,
-            requestHeaders
+            true
         );
     }
 }

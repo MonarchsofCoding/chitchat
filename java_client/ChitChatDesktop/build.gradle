@@ -3,10 +3,14 @@ buildscript {
         mavenLocal()
         mavenCentral()
 
+
+
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
         classpath(group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2')
+
+
     }
 }
 
@@ -25,23 +29,26 @@ repositories {
 
 
 dependencies {
+
     // Spring MVC Framework
     compile 'org.springframework:spring-context:4.3.5.RELEASE'
     // https://mvnrepository.com/artifact/commons-logging/commons-logging
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
-    // https://mvnrepository.com/artifact/com.miglayout/miglayout-swing
-    compile group: 'com.miglayout', name: 'miglayout-swing', version: '5.0'
 
     //https://mvnrepository.com/artifact/com.miglayout/miglayout-javafx
     compile group: 'com.miglayout', name: 'miglayout-javafx', version: '5.0'
 
     // https://mvnrepository.com/artifact/org.json/json
     compile group: 'org.json', name: 'json', version: '20160810'
-    // UniRest HTTP client
-    compile 'com.mashape.unirest:unirest-java:1.4.9'
+
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
 
     testCompile "junit:junit:4.12"
     testCompile 'org.mockito:mockito-core:2.+'
+    testCompile "junit:junit:4.10"
+    testCompile "org.testfx:testfx-core:4.0.+"
+    testCompile "org.testfx:testfx-junit:4.0.+"
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.6.0'
 }
 
 mainClassName = 'com.moc.chitchat.Application'
@@ -77,6 +84,18 @@ jfx {
 test {
     afterTest { desc, result ->
         println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+
+    filter {
+
+        //include all tests from package
+        includeTestsMatching "com.moc.chitchat.application.*"
+        includeTestsMatching "com.moc.chitchat.controller.*"
+        includeTestsMatching "com.moc.chitchat.channel.*"
+        includeTestsMatching "com.moc.chitchat.exception.*"
+        includeTestsMatching "com.moc.chitchat.model.*"
+        includeTestsMatching "com.moc.chitchat.resolver.*"
+        includeTestsMatching "com.moc.chitchat.validator.*"
     }
 }
 

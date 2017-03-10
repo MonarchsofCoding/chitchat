@@ -1,9 +1,9 @@
 [
   {
     "name": "chit-chat_${environment}",
-    "image": "monarchsofcoding/chitchat:${backend_version}",
-    "cpu": 50,
-    "memory": 512,
+    "image": "monarchsofcoding/chitchat:release-${backend_version}",
+    "cpu": 20,
+    "memory": 256,
     "essential": true,
     "portMappings": [
       {
@@ -18,6 +18,9 @@
         "awslogs-stream-prefix": "chit-chat"
       }
     },
+    "command": [
+      "foreground"
+    ],
     "environment": [
       {
         "Name": "ECS_DNS_POSTGRES",
@@ -50,6 +53,10 @@
       {
         "Name": "MIX_ENV",
         "Value": "prod"
+      },
+      {
+        "Name": "NODE_COOKIE",
+        "Value": "${node_cookie}"
       }
     ],
     "dockerLabels": {

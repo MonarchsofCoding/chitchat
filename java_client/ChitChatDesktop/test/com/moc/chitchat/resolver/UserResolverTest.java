@@ -43,7 +43,7 @@ public class UserResolverTest {
         String expectedUsename = "Vjftw";
         String expectedPasswordlgn = "aaaaaaaa";
         UserResolver userResolver = new UserResolver();
-        UserModel user = userResolver.createLoginUser(expectedUsename,expectedPasswordlgn);
+        UserModel user = userResolver.createUser(expectedUsename,expectedPasswordlgn);
 
         assertEquals(expectedUsename,user.getUsername());
         assertEquals(expectedPasswordlgn,user.getPassword());

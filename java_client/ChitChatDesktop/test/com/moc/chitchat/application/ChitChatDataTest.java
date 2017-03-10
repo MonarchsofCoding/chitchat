@@ -3,10 +3,15 @@ package com.moc.chitchat.application;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
+import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.JFXPanel;
 import org.junit.Test;
 
+
+import java.util.concurrent.Semaphore;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,6 +19,17 @@ import static org.junit.Assert.assertEquals;
  * ChitChatDataTest provides tests for the ChitChatData
  */
 public class ChitChatDataTest {
+
+    /**
+     * Credit: http://stackoverflow.com/a/22846799
+     * @throws InterruptedException
+     */
+    public static void waitForRunLater() throws InterruptedException {
+        Semaphore semaphore = new Semaphore(0);
+        Platform.runLater(semaphore::release);
+        semaphore.acquire();
+
+    }
 
     @Test
     public void testAddingNewConversation() {
@@ -27,13 +43,18 @@ public class ChitChatDataTest {
     }
 
     @Test
-    public void testGetOnGoingConversation() {
+    public void testGetOnGoingConversation() throws InterruptedException {
         ChitChatData chitChatData = new ChitChatData();
 
         UserModel user = new UserModel("Frank");
         Message message = new Message(user, "This is the message");
 
+        // Credit: https://rterp.wordpress.com/2015/04/04/javafx-toolkit-not-initialized-solved/
+        new JFXPanel();
+
         chitChatData.addMessageToConversation(user, message);
+
+        ChitChatDataTest.waitForRunLater();
 
         Conversation foundConversations = chitChatData.getConversation(user);
 
@@ -56,7 +77,7 @@ public class ChitChatDataTest {
     }
 
     @Test
-    public void testAddToConvo() {
+    public void testAddToConvo() throws InterruptedException {
         ChitChatData chitChatData = new ChitChatData();
 
         UserModel frank = new UserModel("Frank");
@@ -64,8 +85,13 @@ public class ChitChatDataTest {
 
         Message frankMessage2 = new Message(frank, "This is another message");
 
+        // Credit: https://rterp.wordpress.com/2015/04/04/javafx-toolkit-not-initialized-solved/
+        new JFXPanel();
+
         chitChatData.addMessageToConversation(frank, frankMessage);
         chitChatData.addMessageToConversation(frank, frankMessage2);
+
+        ChitChatDataTest.waitForRunLater();
 
         assertEquals(2, chitChatData.getConversation(frank).getMessages().size());
         assertEquals(frankMessage.getMessage(), chitChatData.getConversation(frank).getMessages().get(0).getMessage());

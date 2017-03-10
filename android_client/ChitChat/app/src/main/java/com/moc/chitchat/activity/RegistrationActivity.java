@@ -24,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 /**
  * RegistrationActivity provides the View and Actions involved with registering a User.
  */
@@ -93,6 +92,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Username: %s", usernameErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Username: %s", usernameErrors.toString()));
             }
 
             if (errors.containsKey("password")) {
@@ -101,6 +101,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Password: %s", passwordErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Password: %s", passwordErrors.toString()));
             }
 
             if (errors.containsKey("passwordCheck")) {
@@ -109,6 +110,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Password Check: %s", passwordCheckErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Password Check: %s", passwordCheckErrors.toString()));
             }
         }
     }
@@ -120,7 +122,6 @@ public class RegistrationActivity extends AppCompatActivity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-        System.out.println("Error registering");
 
         try {
             JSONObject response = this.errorResponseResolver.getResponseBody(error);
@@ -132,6 +133,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Username: %s", usernameErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Username: %s", usernameErrors.toString()));
             }
 
             if (responseErrors.has("password")) {
@@ -139,6 +141,7 @@ public class RegistrationActivity extends AppCompatActivity
                 Toast.makeText(this,
                     String.format("Password: %s", passwordErrors.toString()),
                     Toast.LENGTH_LONG).show();
+                System.out.println(String.format("Password: %s", passwordErrors.toString()));
             }
         } catch (JSONException jsonexcep) {
             jsonexcep.printStackTrace();
