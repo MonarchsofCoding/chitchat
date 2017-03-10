@@ -1,5 +1,10 @@
 package com.moc.chitchat.model;
 
+import android.util.Base64;
+
+import com.moc.chitchat.crypto.CryptoBox;
+
+import java.security.KeyPair;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,13 +53,13 @@ public class UserModelTest {
     }
 
     @Test
-    public void testToJSONObject() {
+    public void testToJSONObjectForRegister() {
         String expectedUserName = "Ozhan";
         UserModel userModel = new UserModel(expectedUserName);
         String expectedPassword = "Security123";
         userModel.setPassword(expectedPassword);
 
-        JSONObject userJson = userModel.toJsonObject();
+        JSONObject userJson = userModel.toJsonObjectForRegister();
         try {
             assertEquals(expectedUserName, userJson.getString("username"));
             assertEquals(expectedPassword, userJson.getString("password"));
@@ -63,4 +68,33 @@ public class UserModelTest {
         }
 
     }
+
+    /* TODO: Base64 must me mocked as Android says
+    @Test
+    public void testToJSONObjectForLogin() throws Exception {
+        String expectedUserName = "Ozhan";
+        UserModel userModel = new UserModel(expectedUserName);
+        String expectedPassword = "Security123";
+        userModel.setPassword(expectedPassword);
+
+        CryptoBox testCryptoBox = new CryptoBox();
+        testCryptoBox.initialize();
+        KeyPair keyPair = testCryptoBox.generateKeyPair();
+        userModel.setPublicKey(keyPair.getPublic());
+        userModel.setPrivateKey(keyPair.getPrivate());
+        String expectedPublicKey = Base64.encodeToString(
+            userModel.getPublicKey().getEncoded(),Base64.DEFAULT
+        );
+
+        JSONObject userJson = userModel.toJsonObjectForLogin();
+        try {
+            assertEquals(expectedUserName, userJson.getString("username"));
+            assertEquals(expectedPassword, userJson.getString("password"));
+            assertEquals(expectedPublicKey, userJson.getString("publicKey"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+    */
 }
