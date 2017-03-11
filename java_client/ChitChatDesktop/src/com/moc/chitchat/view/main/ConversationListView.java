@@ -1,5 +1,6 @@
 package com.moc.chitchat.view.main;
 
+import com.jfoenix.controls.JFXListView;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.model.Conversation;
@@ -44,18 +45,14 @@ public class ConversationListView {
 
     public MigPane getContentPane() {
 
-        this.conversationListView = new ListView<>(this.chitChatData.getConversations());
+        this.conversationListView = new JFXListView<>();
+        this.conversationListView.getItems().addAll(this.chitChatData.getConversations());
+
         this.conversationListView.setId("conversation-user-list");
         this.conversationListView.setPlaceholder(new Label("Add User for Conversation"));
 
         MultipleSelectionModel<Conversation> lvSelModel = this.conversationListView.getSelectionModel();
-        lvSelModel.selectedItemProperty().addListener(new ChangeListener<Conversation>() {
-            public void changed(ObservableValue<? extends Conversation> changed,
-                                Conversation oldConvo, Conversation newConvo) {
-                setSelectedConversation(newConvo);
-            }
-
-        });
+        lvSelModel.selectedItemProperty().addListener((changed, oldConvo, newConvo) -> setSelectedConversation(newConvo));
 
         MigPane chatListPane = new MigPane();
         chatListPane.setLayout("fill");

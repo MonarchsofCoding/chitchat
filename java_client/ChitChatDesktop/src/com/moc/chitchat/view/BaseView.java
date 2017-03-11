@@ -1,9 +1,7 @@
 package com.moc.chitchat.view;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import com.jfoenix.controls.JFXSpinner;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -46,6 +44,7 @@ public abstract class BaseView {
         base.add(contentPane, "grow");
 
         base.add(this.buildFooter(), "dock south");
+
         return new Scene(base, this.width, this.height);
     }
 
@@ -56,6 +55,7 @@ public abstract class BaseView {
 
         Label title = new Label("Chit Chat");
         title.setTextFill(Color.WHITE);
+        header.add(title);
 
         return header;
     }

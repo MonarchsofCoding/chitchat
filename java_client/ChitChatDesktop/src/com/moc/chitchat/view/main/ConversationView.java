@@ -1,11 +1,15 @@
 package com.moc.chitchat.view.main;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXTextField;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
+import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.BaseView;
 import java.io.IOException;
 import javafx.collections.FXCollections;
@@ -32,7 +36,6 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
     private Conversation conversation;
     private ObservableList<Message> messages;
-    private ListView<Message> viewMessages;
 
     private MessageController messageController;
     private ChitChatData chitChatData;
@@ -83,13 +86,13 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
         this.messages = FXCollections.observableArrayList(c.getMessages());
 
-        this.viewMessages = new ListView<>(this.chitChatData.getConversation(
-            this.conversation.getOtherParticipant()
-        ).getMessages());
-        this.viewMessages.setId("conversation-messages-list");
+//        UserModel otherParticipant = this.conversation.getOtherParticipant();
+        ListView<Message> viewMessages = new JFXListView<>();
+        viewMessages.setItems(c.getMessages());
+        viewMessages.setId("conversation-messages-list");
 
-        this.conversationPane.add(this.viewMessages, "span");
-        this.newMessageField = new TextField();
+        this.conversationPane.add(viewMessages, "span");
+        this.newMessageField = new JFXTextField();
         this.newMessageField.setPromptText("Enter Message: ");
         this.newMessageField.setId("conversation-message-fld");
         this.newMessageField.setOnAction(this);
@@ -101,7 +104,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.errormessage.setVisible(false);
         this.conversationPane.add(errormessage, "span,grow,wrap");
 
-        this.sendbtn = new Button("Send");
+        this.sendbtn = new JFXButton("Send");
         this.sendbtn.setId("conversation-send-btn");
         this.sendbtn.setOnAction(this);
         this.conversationPane.add(sendbtn, "span, align right");

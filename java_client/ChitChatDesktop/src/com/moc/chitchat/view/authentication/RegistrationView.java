@@ -1,5 +1,8 @@
 package com.moc.chitchat.view.authentication;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -49,7 +52,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
     public MigPane getContentPane() {
         this.baseStage.setWindowTitle("Chit Chat - Registration");
 
-        this.usernameField = new TextField();
+        this.usernameField = new JFXTextField();
         this.usernameField.setPromptText("Username");
         this.usernameField.setId("register-username-fld");
         MigPane registerForm = new MigPane();
@@ -62,7 +65,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.usernameErrors.setVisible(false);
         registerForm.add(this.usernameErrors, "span");
 
-        this.passwordField = new PasswordField();
+        this.passwordField = new JFXPasswordField();
         this.passwordField.setPromptText("Password");
         this.passwordField.setId("register-password-fld");
         this.passwordField.setOnAction(this);
@@ -74,7 +77,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.passwordErrors.setVisible(false);
         registerForm.add(this.passwordErrors, "span");
 
-        this.passwordCheckField = new PasswordField();
+        this.passwordCheckField = new JFXPasswordField();
         this.passwordCheckField.setPromptText("Re-Password");
         this.passwordCheckField.setId("register-passwordCheck-fld");
         this.passwordCheckField.setOnAction(this);
@@ -86,7 +89,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.passwordCheckErrors.setVisible(false);
         registerForm.add(this.passwordCheckErrors, "span");
 
-        this.registerBtn = new Button("Register");
+        this.registerBtn = new JFXButton("Register");
         this.registerBtn.setOnAction(this);
         this.registerBtn.setId("register-register-btn");
         registerForm.add(this.registerBtn, "span");
@@ -97,7 +100,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.unexpectedErrors.setVisible(false);
         registerForm.add(this.unexpectedErrors, "span");
 
-        this.loginBtn = new Button("Login");
+        this.loginBtn = new JFXButton("Login");
         this.loginBtn.setOnAction(this);
         this.loginBtn.setId("register-login-btn");
         registerForm.add(this.loginBtn);

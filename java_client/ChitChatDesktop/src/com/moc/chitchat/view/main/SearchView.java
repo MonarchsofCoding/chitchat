@@ -1,5 +1,8 @@
 package com.moc.chitchat.view.main;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXTextField;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.UserSearchController;
 import com.moc.chitchat.exception.UnexpectedResponseException;
@@ -78,7 +81,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.errorUserMessage.setId("search-error-users-msg");
         this.errorUserMessage.setVisible(false);
 
-        this.usernameField = new TextField();
+        this.usernameField = new JFXTextField();
         this.usernameField.setId("search-username-fld");
         this.usernameField.setPromptText("Find User");
         this.usernameField.setOnAction(this);
@@ -86,17 +89,18 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         searchForm.add(this.errorUserMessage,"span,wrap");
         searchForm.add(this.usernameField, "span, grow");
 
-        this.searchBtn = new Button("Search");
+        this.searchBtn = new JFXButton("Search");
         this.searchBtn.setId("search-btn");
         this.searchBtn.setOnAction(this);
         searchForm.add(this.searchBtn, "span, grow");
 
         this.observableUserList = FXCollections.observableArrayList();
-        this.searchList = new ListView<>(this.observableUserList);
+        this.searchList = new JFXListView<>();
+        this.searchList.setItems(this.observableUserList);
         this.searchList.setId("search-user-list");
         searchForm.add(this.searchList, "span, grow");
 
-        this.startConversationBtn = new Button("Start Chat");
+        this.startConversationBtn = new JFXButton("Start Chat");
         this.startConversationBtn.setId("search-chat-btn");
         this.startConversationBtn.setOnAction(this);
         searchForm.add(this.startConversationBtn, "span, wrap");

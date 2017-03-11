@@ -1,5 +1,6 @@
 package com.moc.chitchat.view.main;
 
+import com.jfoenix.controls.JFXButton;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
@@ -50,7 +51,7 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
         this.westPane = new MigPane();
         westPane.setLayout("fill");
 
-        this.togglePaneButton = new Button();
+        this.togglePaneButton = new JFXButton();
         this.togglePaneButton.setOnAction(this);
         this.togglePaneButton.setId("west-toggle-btn");
         this.westPane.add(this.togglePaneButton, "dock north");

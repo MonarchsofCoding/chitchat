@@ -1,5 +1,8 @@
 package com.moc.chitchat.view.authentication;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.moc.chitchat.controller.authentication.LoginController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -41,24 +44,24 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     @Override
     public MigPane getContentPane() {
         this.baseStage.setWindowTitle("Chit Chat - Login");
-        this.usernameField = new TextField();
+        this.usernameField = new JFXTextField();
         this.usernameField.setId("login-username-fld");
         this.usernameField.setPromptText("Username");
         MigPane loginForm = new MigPane();
         loginForm.add(this.usernameField,"grow,wrap");
 
-        this.passwordField = new PasswordField();
+        this.passwordField = new JFXPasswordField();
         this.passwordField.setPromptText("Password");
         this.passwordField.setId("login-password-fld");
         this.passwordField.setOnAction(this);
         loginForm.add(this.passwordField,"grow,wrap");
 
-        this.loginBtn = new Button("Login");
+        this.loginBtn = new JFXButton("Login");
         this.loginBtn.setOnAction(this);
         this.loginBtn.setId("login-login-btn");
         loginForm.add(this.loginBtn, "wrap, grow");
 
-        this.registerBtn = new Button("Register");
+        this.registerBtn = new JFXButton("Register");
         this.registerBtn.setId("login-register-btn");
         this.registerBtn.setOnAction(this);
         loginForm.add(this.registerBtn, "wrap,grow");
