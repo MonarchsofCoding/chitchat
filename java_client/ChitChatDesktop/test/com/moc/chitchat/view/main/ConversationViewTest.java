@@ -2,100 +2,68 @@ package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.view.PrimaryStageTest;
 import com.moc.chitchat.view.helper.UserHelper;
-import javafx.scene.input.KeyCode;
-import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
-import javax.swing.*;
-
-import java.awt.event.KeyEvent;
-
-import static java.awt.event.KeyEvent.VK_ENTER;
-import static javafx.scene.input.KeyCode.ENTER;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 /**
  * ConversationViewTest provides tests for conversation views,
  */
 public class ConversationViewTest extends PrimaryStageTest {
 
-    final static String usernameFld = "#search-username-fld";
-    final static String searchBtn = "#search-Btn";
-    final static String ChatBtn = "#search-chat-Btn";
-    final static String togglebutton ="#ToggleBtn";
-    final static String headerChat = "#headerChat";
-    final static String newmessage = "#conversation-message-fld";
-    final static String errormessage = "#conversation-error-message";
-    final static String sendbtn = "#conversation-send-Btn";
+    public final static String chatHeaderLbl = "#conversation-chatHeader-lbl";
+    public final static String messagesList = "#conversation-messages-list";
+    public final static String newMessageFld = "#conversation-message-fld";
+    public final static String errorMessageLbl = "#conversation-error-lbl";
+    public final static String sendBtn = "#conversation-send-btn";
 
-    @Before
-    public void enterRegistrationView() {
-        System.out.println("Entering ConversationView");
-
-    }
     /**
-     * Verify the existance of the conversation fields
+     * Verify the existence of the conversation fields
      */
     @Test
-    public void testFields(){
-        UserHelper.createUser(this,"login_validUser","validPassword");
-        UserHelper.createUser(this,"login_validUser_two","validPassword_two");
-        UserHelper.loginUser(this,"login_validUser","validPassword");
-        clickOn(togglebutton);
-        clickOn(usernameFld).write("login_validUser");
-        clickOn(searchBtn);
-        clickOn("login_validUser_two");
-        clickOn(ChatBtn);
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
-        verifyThat(newmessage,NodeMatchers.isVisible());
-        verifyThat(errormessage,NodeMatchers.isInvisible());
-        verifyThat(sendbtn,NodeMatchers.isVisible());
-        verifyThat(sendbtn,NodeMatchers.hasText("Send"));
-        clickOn(sendbtn);
-        verifyThat(errormessage,NodeMatchers.isVisible());
-        verifyThat(errormessage,NodeMatchers.hasText("can't be blank"));
-    }
-    /**
-     * Test conversation different texts with two different users
-     *
-     */
-    @Test
-    public void testDifferentConversationViewsWithTwoUsers(){
-        String message_to_user_2 = "Hello User 2";
-        String message_to_user_3 = "GoodMorning User 3";
+    public void test_conversation_fields_exist() {
+        UserHelper.createUser(this, "conversationView_user1", "user1234");
+        UserHelper.createUser(this, "conversationView_user2", "user1234");
+        UserHelper.loginUser(this, "conversationView_user1", "user1234");
 
-        UserHelper.createUser(this,"login_validUser_three","validPassword_three");
-        UserHelper.loginUser(this,"login_validUser","validPassword");
-        clickOn(togglebutton);
-        clickOn(usernameFld).write("login_validUser");
-        clickOn(searchBtn);
-        clickOn("login_validUser_two");
-        clickOn(ChatBtn);
-        clickOn(newmessage).write(message_to_user_2);
-        clickOn(sendbtn);
-        clickOn("login_validUser: "+message_to_user_2);
-        //start second conversation
-        verifyThat(togglebutton,NodeMatchers.hasText("Search Users"));
-        clickOn(togglebutton);
-        clickOn(usernameFld).write("login_valid");
-        clickOn(searchBtn);
-        clickOn("login_validUser_three");
-        clickOn(ChatBtn);
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_three"));
-        clickOn(newmessage).write(message_to_user_3);
-        clickOn(sendbtn);
-        clickOn("login_validUser: "+message_to_user_3);
-        //verify the saved messages for user 2
-        clickOn("login_validUser_two");
-        clickOn("login_validUser: "+message_to_user_2);
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
-        //verify the saved messages for user 3
-        clickOn("login_validUser_three");
-        clickOn("login_validUser: "+message_to_user_3);
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_three"));
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationView_user2");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationView_user2");
+        clickOn(SearchViewTest.chatBtn);
+        verifyThat(chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationView_user2"));
+
+        verifyThat(newMessageFld, NodeMatchers.isVisible());
+        verifyThat(errorMessageLbl, NodeMatchers.isInvisible());
+        verifyThat(sendBtn, NodeMatchers.isVisible());
+        verifyThat(sendBtn, NodeMatchers.hasText("Send"));
+    }
+
+    @Test
+    public void test_sending_message() throws InterruptedException {
+        UserHelper.createUser(this, "conversationView_user3", "user1234");
+        UserHelper.createUser(this, "conversationView_user4", "user1234");
+        UserHelper.loginUser(this, "conversationView_user3", "user1234");
+
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationView_user4");
+        clickOn(SearchViewTest.searchBtn);
+        Thread.sleep(500);
+        clickOn("conversationView_user4");
+        clickOn(SearchViewTest.chatBtn);
+        Thread.sleep(500);
+        verifyThat(chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationView_user4"));
+
+        clickOn(newMessageFld).write("Hello!");
+        clickOn(sendBtn);
+        Thread.sleep(500);
+        verifyThat(messagesList, NodeMatchers.isVisible());
+        verifyThat("conversationView_user3: Hello!", NodeMatchers.isVisible());
+    }
+
+    @Test
+    public void test_receiving_message() {
+
     }
 }

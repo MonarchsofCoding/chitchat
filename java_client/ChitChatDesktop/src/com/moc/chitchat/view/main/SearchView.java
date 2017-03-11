@@ -125,11 +125,14 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
             if(this.observableUserList.isEmpty()){
                 this.errorUserMessage.setText("No User Available");
                 this.errorUserMessage.setVisible(true);
+            } else {
+                this.searchList.requestFocus();
+                this.usernameField.clear();
             }
         } catch (ValidationException validationException) {
-            String errormsg = validationException.getErrors()
+            String errorMsg = validationException.getErrors()
                     .getFieldError("username").getDefaultMessage();
-            this.errorUserMessage.setText(errormsg);
+            this.errorUserMessage.setText(errorMsg);
             this.errorUserMessage.setVisible(true);
         } catch (UnexpectedResponseException unexpectedResponseException) {
             this.errorUserMessage.setText("Error from Server");

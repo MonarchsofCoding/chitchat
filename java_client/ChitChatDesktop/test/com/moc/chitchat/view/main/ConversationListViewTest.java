@@ -2,8 +2,6 @@ package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.view.PrimaryStageTest;
 import com.moc.chitchat.view.helper.UserHelper;
-import javafx.scene.Node;
-import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
@@ -14,64 +12,69 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class ConversationListViewTest extends PrimaryStageTest {
 
-
-    final static String usernameFld = "#search-username-fld";
-    final static String searchBtn = "#search-Btn";
-    final static String ChatBtn = "#search-chat-Btn";
-    final static String togglebutton ="#ToggleBtn";
-    final static String headerChat = "#headerChat";
-
-
-
-    @Before
-    public void enterRegistrationView() {
-        System.out.println("Entering ConversationListView");
-
-    }
+    public static final String conversationUserList = "#conversation-user-list";
 
     /**
      * Test to start Conversation with one user and check the fields of chat recognistion (header)
-     *
      */
-   @Test
-    public void addConversationWithOneUser(){
-       UserHelper.createUser(this,"login_validUser","validPassword");
-       UserHelper.createUser(this,"login_validUser_two","validPassword_two");
-       UserHelper.loginUser(this,"login_validUser","validPassword");
-       clickOn(togglebutton);
-       verifyThat(togglebutton,NodeMatchers.hasText("Conversations"));
-       clickOn(usernameFld).write("login_validUser");
-       clickOn(searchBtn);
-       clickOn("login_validUser_two");
-       clickOn(ChatBtn);
-       verifyThat(togglebutton,NodeMatchers.hasText("Search Users"));
-       verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
+    @Test
+    public void test_conversation_with_user_list() throws InterruptedException {
+        UserHelper.createUser(this, "conversationList_user", "user1234");
+        UserHelper.createUser(this, "conversationList_user2", "user1234");
 
+        UserHelper.loginUser(this, "conversationList_user", "user1234");
+
+        clickOn(WestViewTest.togglePaneBtn);
+
+        clickOn(SearchViewTest.usernameFld).write("conversationList_user2");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationList_user2");
+        clickOn(SearchViewTest.chatBtn);
+
+        Thread.sleep(500);
+        verifyThat(conversationUserList, NodeMatchers.isVisible());
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user2"));
     }
 
     /**
      * Test the creation of conversation with two different users and change conversations chats
      */
     @Test
-    public void addConversationWithTwoUsers(){
-        UserHelper.createUser(this,"login_validUser_three","validPassword_three");
-        UserHelper.loginUser(this,"login_validUser","validPassword");
-        clickOn(togglebutton);
-        clickOn(usernameFld).write("login_validUser");
-        clickOn(searchBtn);
-        clickOn("login_validUser_two");
-        clickOn(ChatBtn);
-        clickOn(togglebutton);
-        verifyThat(togglebutton,NodeMatchers.hasText("Conversations"));
-        clickOn(usernameFld).write("login_validUser");
-        clickOn(searchBtn);
-        clickOn("login_validUser_three");
-        clickOn(ChatBtn);
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_three"));
-        clickOn("login_validUser_two");
-        verifyThat(headerChat,NodeMatchers.hasText("Chat with: " +"login_validUser_two"));
+    public void test_change_conversation_with_user_list() {
+        UserHelper.createUser(this, "conversationList_user3", "user1234");
+        UserHelper.createUser(this, "conversationList_user4", "user1234");
+        UserHelper.createUser(this, "conversationList_user5", "user1234");
 
+        UserHelper.loginUser(this, "conversationList_user3", "user1234");
+
+        clickOn(WestViewTest.togglePaneBtn);
+
+        clickOn(SearchViewTest.usernameFld).write("conversationList_user4");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationList_user4");
+        clickOn(SearchViewTest.chatBtn);
+        verifyThat(conversationUserList, NodeMatchers.isVisible());
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
+
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationList_user5");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationList_user5");
+        clickOn(SearchViewTest.chatBtn);
+        verifyThat(conversationUserList, NodeMatchers.isVisible());
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
+
+        clickOn("conversationList_user4");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
+
+        clickOn("conversationList_user5");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
+
+        clickOn("conversationList_user4");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
+
+        clickOn("conversationList_user5");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
     }
-
 
 }

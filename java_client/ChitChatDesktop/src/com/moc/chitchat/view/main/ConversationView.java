@@ -32,7 +32,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
     private Conversation conversation;
     private ObservableList<Message> messages;
-    private ListView<Message> updateMessages;
+    private ListView<Message> viewMessages;
 
     private MessageController messageController;
     private ChitChatData chitChatData;
@@ -78,13 +78,17 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         }
 
         Label header = new Label(String.format("Chat with: %s", c.getOtherParticipant().getUsername()));
-        header.setId("headerChat");
+        header.setId("conversation-chatHeader-lbl");
         this.conversationPane.add(header, "dock north");
 
         this.messages = FXCollections.observableArrayList(c.getMessages());
-        ListView<Message> messages = new ListView<>(this.chitChatData
-                .getConversation(this.conversation.getOtherParticipant()).getMessages());
-        this.conversationPane.add(messages, "span");
+
+        this.viewMessages = new ListView<>(this.chitChatData.getConversation(
+            this.conversation.getOtherParticipant()
+        ).getMessages());
+        this.viewMessages.setId("conversation-messages-list");
+
+        this.conversationPane.add(this.viewMessages, "span");
         this.newMessageField = new TextField();
         this.newMessageField.setPromptText("Enter Message: ");
         this.newMessageField.setId("conversation-message-fld");
@@ -93,12 +97,12 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
         this.errormessage = new Label();
         this.errormessage.setTextFill(Color.RED);
-        this.errormessage.setId("conversation-error-message");
+        this.errormessage.setId("conversation-error-lbl");
         this.errormessage.setVisible(false);
         this.conversationPane.add(errormessage, "span,grow,wrap");
 
         this.sendbtn = new Button("Send");
-        this.sendbtn.setId("conversation-send-Btn");
+        this.sendbtn.setId("conversation-send-btn");
         this.sendbtn.setOnAction(this);
         this.conversationPane.add(sendbtn, "span, align right");
 
