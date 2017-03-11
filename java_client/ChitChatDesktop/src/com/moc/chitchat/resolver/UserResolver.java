@@ -4,6 +4,9 @@ import com.moc.chitchat.model.UserModel;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 /**
  * UserResolver provides the methods involved with converting parameters into a User object.
  */
@@ -45,10 +48,13 @@ public class UserResolver {
      * @param password - String the password of the User.
      * @return - UserModel a new User with the given parameter.
      */
-    public UserModel createUser(String username, String password) {
+    public UserModel createUser(String username, String password,PublicKey publickey,PrivateKey privatekey) {
         UserModel user = new UserModel(username);
 
         user.setPassword(password);
+        user.setPrivatekey(privatekey);
+        user.setPublicKey(publickey);
+
         return user;
     }
 
