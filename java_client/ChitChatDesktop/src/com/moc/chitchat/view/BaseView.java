@@ -39,7 +39,7 @@ public abstract class BaseView {
     public Scene getScene() {
 
         MigPane base = new MigPane();
-        base.setLayout("fill, wrap 12, debug");
+        base.setLayout("fill, wrap 12");
         base.add(this.buildHeader(), "dock north");
 
         MigPane contentPane = this.getContentPane();

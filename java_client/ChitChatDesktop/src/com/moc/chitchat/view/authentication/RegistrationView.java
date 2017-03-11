@@ -103,7 +103,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         registerForm.add(this.loginBtn);
 
         MigPane registerPane = new MigPane();
-        registerPane.setLayout("debug, fill");
+        registerPane.setLayout("fill");
         registerPane.add(registerForm, "span, split 2, center");
 
         return registerPane;

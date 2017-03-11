@@ -72,15 +72,6 @@ public class UserValidator implements Validator {
             UserModel.class.getName()
         );
 
-        if (!serverErrors.isNull("message")) {
-            JSONArray messageErrors = serverErrors.getJSONArray("message");
-
-
-            for (Object errorString : messageErrors) {
-                validationErrors.rejectValue("message", "server.invalid", errorString.toString());
-            }
-        }
-
         if (!serverErrors.isNull("username")) {
             JSONArray usernameErrors = serverErrors.getJSONArray("username");
 
