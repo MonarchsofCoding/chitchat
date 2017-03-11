@@ -47,7 +47,7 @@ public class SearchViewTest extends PrimaryStageTest {
     }
 
     /**
-     *
+     * Tests for username validation.
      */
     @Test
     public void test_errors_username_validation() {
@@ -72,7 +72,7 @@ public class SearchViewTest extends PrimaryStageTest {
     }
 
     /**
-     *
+     * Tests that users are returned in the search view list.
      */
     @Test
     public void test_search_users_found_list() {

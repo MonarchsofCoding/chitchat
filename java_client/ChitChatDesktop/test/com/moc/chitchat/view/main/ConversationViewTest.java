@@ -1,9 +1,12 @@
 package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.view.PrimaryStageTest;
+import com.moc.chitchat.view.helper.MessageHelper;
 import com.moc.chitchat.view.helper.UserHelper;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
+
+import java.io.IOException;
 
 import static org.testfx.api.FxAssert.verifyThat;
 
@@ -40,6 +43,10 @@ public class ConversationViewTest extends PrimaryStageTest {
         verifyThat(sendBtn, NodeMatchers.hasText("Send"));
     }
 
+    /**
+     * Tests sending a message updates the message list view.
+     * @throws InterruptedException
+     */
     @Test
     public void test_sending_message() throws InterruptedException {
         UserHelper.createUser(this, "conversationView_user3", "user1234");
@@ -62,8 +69,36 @@ public class ConversationViewTest extends PrimaryStageTest {
         verifyThat("conversationView_user3: Hello!", NodeMatchers.isVisible());
     }
 
+    /**
+     * Tests that receiving a message updates the message list view.
+     * @throws InterruptedException
+     * @throws IOException
+     */
     @Test
-    public void test_receiving_message() {
+    public void test_receiving_message() throws InterruptedException, IOException {
+        UserHelper.createUser(this, "conversationView_user5", "user1234");
+        UserHelper.createUser(this, "conversationView_user6", "user1234");
+        UserHelper.loginUser(this, "conversationView_user5", "user1234");
 
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationView_user6");
+        clickOn(SearchViewTest.searchBtn);
+        Thread.sleep(500);
+        clickOn("conversationView_user6");
+        clickOn(SearchViewTest.chatBtn);
+        Thread.sleep(500);
+        verifyThat(chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationView_user6"));
+
+        // Send message as conversationView_user6
+        MessageHelper.sendMessage(
+            "conversationView_user6",
+            "user1234",
+            "conversationView_user5",
+            "Hello!"
+        );
+
+        Thread.sleep(3000);
+
+        verifyThat("conversationView_user6: Hello!", NodeMatchers.isVisible());
     }
 }
