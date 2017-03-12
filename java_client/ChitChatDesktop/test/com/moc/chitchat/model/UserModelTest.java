@@ -1,6 +1,11 @@
 package com.moc.chitchat.model;
 
 import org.junit.Test;
+
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -60,5 +65,7 @@ public class UserModelTest {
 
         assertEquals(authToken, userModel.getAuthToken());
     }
+
+
 
 }

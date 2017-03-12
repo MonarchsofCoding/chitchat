@@ -137,6 +137,7 @@ public class UserModel implements JSONString {
     @Override
     public String toJSONString() {
         JSONObject jsonObject = new JSONObject();
+        System.out.println("key:"+Base64.getEncoder().encodeToString(this.getPublicKey().getEncoded()));
         if (this.getPublicKey()!=null){
           jsonObject
                 .put("username", this.username)
