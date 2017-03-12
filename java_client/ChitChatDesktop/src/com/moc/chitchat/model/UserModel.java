@@ -1,13 +1,12 @@
 package com.moc.chitchat.model;
 
-import com.moc.chitchat.crypto.CryptoFunctions;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
-import org.json.JSONObject;
-import org.json.JSONString;
-
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Base64;
+
+import org.json.JSONObject;
+import org.json.JSONString;
+
 
 /**
  * UserModel provides the representation of a User entity.
@@ -41,6 +40,7 @@ public class UserModel implements JSONString {
 
     /**
      * Returns the private key.
+     *
      * @return the private key.
      */
     public PrivateKey getPrivatekey() {
@@ -49,6 +49,7 @@ public class UserModel implements JSONString {
 
     /**
      * Sets the private key of the user.
+     *
      * @param privatekey the private key.
      */
     public void setPrivatekey(PrivateKey privatekey) {
@@ -57,6 +58,7 @@ public class UserModel implements JSONString {
 
     /**
      * Returns the public key of the user.
+     *
      * @return the public key.
      */
     public PublicKey getPublicKey() {
@@ -65,6 +67,7 @@ public class UserModel implements JSONString {
 
     /**
      * Sets the public key of the user.
+     *
      * @param publicKey the public key.
      */
     public void setPublicKey(PublicKey publicKey) {
@@ -72,12 +75,13 @@ public class UserModel implements JSONString {
     }
 
     /**
-     * The publicKey of the user
-
+     * The publicKey of the user.
      */
     private PublicKey publicKey;
+
     /**
      * UserModel Constructor.
+     *
      * @param username String The username of the User.
      */
     public UserModel(String username) {
@@ -86,6 +90,7 @@ public class UserModel implements JSONString {
 
     /**
      * getUsername returns the username of the User.
+     *
      * @return String the username.
      */
     public String getUsername() {
@@ -94,6 +99,7 @@ public class UserModel implements JSONString {
 
     /**
      * getPassword returns the password of the User.
+     *
      * @return String the password.
      */
     public String getPassword() {
@@ -102,6 +108,7 @@ public class UserModel implements JSONString {
 
     /**
      * setPassword sets the password of the User.
+     *
      * @param password String the new password.
      * @return UserModel the User that was mutated.
      */
@@ -113,6 +120,7 @@ public class UserModel implements JSONString {
 
     /**
      * getPasswordCheck returns the passwordCheck of the User.
+     *
      * @return String the password check.
      */
     public String getPasswordCheck() {
@@ -121,6 +129,7 @@ public class UserModel implements JSONString {
 
     /**
      * setPasswordCheck sets the check password of the User.
+     *
      * @param passwordCheck String the new check password.
      * @return UserModel the User that was mutated.
      */
@@ -132,18 +141,20 @@ public class UserModel implements JSONString {
 
     /**
      * toJSONString returns the JSON representation of this UserModel.
+     *
      * @return String JSON representation of the UserModel.
      */
     @Override
     public String toJSONString() {
         JSONObject jsonObject = new JSONObject();
-        if (this.getPublicKey()!=null){
-          jsonObject
-                .put("username", this.username)
-                .put("password", this.password)
-                .put("publickey",Base64.getEncoder().encodeToString(this.getPublicKey().getEncoded()));
-        ;}
-        else{
+
+        if (this.getPublicKey() != null) {
+
+            jsonObject
+                    .put("username", this.username)
+                    .put("password", this.password)
+                    .put("publickey", Base64.getEncoder().encodeToString(this.getPublicKey().getEncoded()));
+        } else {
             jsonObject
                     .put("username", this.username)
                     .put("password", this.password)
@@ -154,8 +165,7 @@ public class UserModel implements JSONString {
     }
 
 
-
-    public void setAuthToken(String authToken){
+    public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
 

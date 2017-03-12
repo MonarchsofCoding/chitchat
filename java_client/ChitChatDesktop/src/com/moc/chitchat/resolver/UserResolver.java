@@ -1,11 +1,10 @@
 package com.moc.chitchat.resolver;
 
 import com.moc.chitchat.model.UserModel;
-import org.json.JSONObject;
-import org.springframework.stereotype.Component;
-
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 /**
  * UserResolver provides the methods involved with converting parameters into a User object.

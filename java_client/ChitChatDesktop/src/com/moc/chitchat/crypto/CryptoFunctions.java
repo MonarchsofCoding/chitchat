@@ -1,14 +1,19 @@
 package com.moc.chitchat.crypto;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.crypto.Cipher;
-import java.security.*;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import javax.crypto.Cipher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by spiros on 10/03/2017.
@@ -19,6 +24,10 @@ public class CryptoFunctions  {
     private KeyPairGenerator generator;
     private KeyFactory keyFactory;
 
+    /**
+     * CryptoFunctions constructor.
+     * @throws NoSuchAlgorithmException No such Algorithm Security Exception if RSA doesn't exist.
+     */
     @Autowired
     public CryptoFunctions() throws NoSuchAlgorithmException {
 
@@ -47,7 +56,7 @@ public class CryptoFunctions  {
     /**
      * In this function we generate the pair of keys using RSA and 4096 key lenght.
      * @return the pair of the keys
-     * @throws Exception
+     * @throws Exception the exception if doesnt exist the RSA.
      */
     public  KeyPair generateKeyPair() throws Exception {
         this.generator.initialize(4096, new SecureRandom());
@@ -60,7 +69,7 @@ public class CryptoFunctions  {
      * This function converts the string into a public key.
      * @param pubKey the public key string as a parameter.
      * @return the publickey.
-     * @throws InvalidKeySpecException
+     * @throws InvalidKeySpecException exception to invadlidkey.
      */
     public PublicKey pubKeyStringToKey(String pubKey) throws InvalidKeySpecException {
         X509EncodedKeySpec converterSpec = new X509EncodedKeySpec(Base64.getDecoder().decode(pubKey));
@@ -71,7 +80,7 @@ public class CryptoFunctions  {
      * This function converts the string into a private key.
      * @param privKey the private key string as a parameter.
      * @return the private key
-     * @throws InvalidKeySpecException
+     * @throws InvalidKeySpecException exception to invadlidkey.
      */
     public PrivateKey privKeyStringToKey(String privKey) throws InvalidKeySpecException {
         PKCS8EncodedKeySpec converterSpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privKey));
@@ -83,7 +92,7 @@ public class CryptoFunctions  {
      * @param plainText the message that we want to encrypt.
      * @param publicKey the key we are going to use to encrypt.
      * @return the ciphertext
-     * @throws Exception
+     * @throws Exception exception.
      */
     public String encrypt(String plainText, PublicKey publicKey) throws Exception {
         Cipher encryptCipher = Cipher.getInstance("RSA");
@@ -99,7 +108,7 @@ public class CryptoFunctions  {
      * @param cipherText THe encrypted message that we want to decrypt.
      * @param privateKey The private key that we will use to decrypt.
      * @return The plaintext.
-     * @throws Exception
+     * @throws Exception throws Exception.
      */
     public String decrypt(String cipherText, PrivateKey privateKey) throws Exception {
         byte[] bytes = Base64.getDecoder().decode(cipherText);
