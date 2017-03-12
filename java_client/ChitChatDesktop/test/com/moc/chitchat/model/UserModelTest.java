@@ -1,12 +1,17 @@
 package com.moc.chitchat.model;
 
+import com.moc.chitchat.crypto.CryptoFunctions;
 import org.junit.Test;
 
 import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Base64;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockingDetails;
 
 /**
  *  UserModelTest provides tests for the UserModel
@@ -45,17 +50,31 @@ public class UserModelTest {
     }
 
     @Test
-    public void testToJSONString()
-    {
+    public void testToJSONStringwithPublicKey() throws Exception {
+        String expectedUserName = "Ozhan";
+        UserModel userModel = new UserModel(expectedUserName);
+        String expectedPassword = "Security123";
+        userModel.setPassword(expectedPassword);
+        CryptoFunctions cryptoFunctions = new CryptoFunctions();
+        cryptoFunctions.initialize();
+        KeyPair pair = cryptoFunctions.generateKeyPair();
+        PublicKey publicKey = pair.getPublic();
+        userModel.setPublicKey(publicKey);
+
+
+        String expectedString = String.format("{\"password\":\"%s\",\"publickey\":\"%s\",\"username\":\"%s\"}", expectedPassword,Base64.getEncoder().encodeToString(publicKey.getEncoded()),expectedUserName);
+        assertEquals(expectedString, userModel.toJSONString());
+    }
+    @Test
+    public void testToJSONString() throws Exception {
         String expectedUserName = "Ozhan";
         UserModel userModel = new UserModel(expectedUserName);
         String expectedPassword = "Security123";
         userModel.setPassword(expectedPassword);
 
-        String expectedString = String.format("{\"password\":\"%s\",\"username\":\"%s\"}", expectedPassword, expectedUserName);
+        String expectedString = String.format("{\"password\":\"%s\",\"username\":\"%s\"}", expectedPassword,expectedUserName);
         assertEquals(expectedString, userModel.toJSONString());
     }
-
     @Test
     public void setAuthToken() {
         String authToken = "some_String";
