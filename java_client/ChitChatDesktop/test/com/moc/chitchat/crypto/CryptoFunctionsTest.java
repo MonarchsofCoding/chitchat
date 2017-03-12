@@ -16,9 +16,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static sun.management.jmxremote.ConnectorBootstrap.initialize;
 
 /**
@@ -36,10 +36,14 @@ public class CryptoFunctionsTest {
 
     @Before
     public void setUp() throws NoSuchAlgorithmException {
-        mockCryptofunctions = Mockito.mock(CryptoFunctions.class);
+        mockCryptofunctions = mock(CryptoFunctions.class);
+        mockgenerator = mock(KeyPairGenerator.class);
         mockgenerator = KeyPairGenerator.getInstance("RSA");
         mockgenerator.initialize(4096,new SecureRandom());
+        mockkeyFactory = mock(KeyFactory.class);
         mockkeyFactory = KeyFactory.getInstance("RSA");
+        publicKey = mock(PublicKey.class);
+        privateKey = mock(PrivateKey.class);
 
     }
 
@@ -50,14 +54,14 @@ public class CryptoFunctionsTest {
      */
     @Test
     public void testConstructor() throws NoSuchAlgorithmException {
-        mockgenerator = KeyPairGenerator.getInstance("RSA");
-        mockkeyFactory = KeyFactory.getInstance("RSA");
 
         KeyPairGenerator keyPairGenerator = mockgenerator;
         KeyFactory keyFactory = mockkeyFactory;
 
         assertEquals(mockgenerator, keyPairGenerator);
+        assertNotNull(mockgenerator);
         assertEquals(mockkeyFactory, keyFactory);
+        assertNotNull(mockkeyFactory);
     }
 
     /**
@@ -85,7 +89,7 @@ public class CryptoFunctionsTest {
         publicKey = mockKeypair.getPublic();
         String pkey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
         X509EncodedKeySpec converterSpec = new X509EncodedKeySpec(Base64.getDecoder().decode(pkey));
-        assertEquals(publicKey,mockkeyFactory.generatePublic(converterSpec));
+        assertThat(mockkeyFactory.generatePublic(converterSpec),instanceOf(PublicKey.class));
     }
 
 
@@ -98,7 +102,7 @@ public class CryptoFunctionsTest {
         mockKeypair = this.mockgenerator.generateKeyPair();
         publicKey = mockKeypair.getPublic();
         String pkey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-        assertNotNull(pkey);
+        assertThat(pkey,instanceOf(String.class));
 
     }
     /**
@@ -111,7 +115,7 @@ public class CryptoFunctionsTest {
         privateKey = mockKeypair.getPrivate();
         String prkey = Base64.getEncoder().encodeToString(privateKey.getEncoded());
         PKCS8EncodedKeySpec converterSpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(prkey));
-        assertEquals(privateKey,mockkeyFactory.generatePrivate(converterSpec));
+        assertThat(mockkeyFactory.generatePrivate(converterSpec),instanceOf(PrivateKey.class));
     }
 
 
@@ -124,7 +128,7 @@ public class CryptoFunctionsTest {
         mockKeypair = this.mockgenerator.generateKeyPair();
         privateKey = mockKeypair.getPrivate();
         String prkey = Base64.getEncoder().encodeToString(privateKey.getEncoded());
-        assertNotNull(prkey);
+        assertThat(prkey,instanceOf(String.class));
 
     }
 
@@ -147,7 +151,7 @@ public class CryptoFunctionsTest {
        mockcipher.init(Cipher.ENCRYPT_MODE,publicKey);
        byte[] cipherText = mockcipher.doFinal(plaintext.getBytes("UTF-8"));
        String cipherTextToString = Base64.getEncoder().encodeToString(cipherText);
-       assertNotNull(cipherTextToString);
+       assertThat(cipherTextToString,instanceOf(String.class));
 
        Cipher decriptCipher = Cipher.getInstance("RSA");
        byte[] plaintxt = Base64.getDecoder().decode(cipherTextToString);
