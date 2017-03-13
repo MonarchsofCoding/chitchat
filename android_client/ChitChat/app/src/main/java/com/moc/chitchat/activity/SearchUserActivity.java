@@ -177,7 +177,7 @@ public class SearchUserActivity extends AppCompatActivity
                 UserModel toAdd = new UserModel(usernameArray.getJSONObject(i).get("username")
                     .toString());
                 toAdd.setPublicKey(cryptoBox.pubKeyStringToKey(
-                    usernameArray.getJSONObject(i).get("publicKey").toString())
+                    usernameArray.getJSONObject(i).get("public_key").toString())
                 );
 
                 userList.add(toAdd);
