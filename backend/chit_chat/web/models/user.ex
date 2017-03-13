@@ -13,6 +13,7 @@ defmodule ChitChat.User do
     field :password, :string, virtual: true
 
     field :hashed_password, :string
+    field :public_key, :string, default: ""
     field :online, :boolean
 
     timestamps()
@@ -21,11 +22,11 @@ defmodule ChitChat.User do
   @spec changeset(struct, {}) :: Ecto.Changeset
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:username, :password])
+    |> cast(params, [:username, :password, :public_key])
   end
 
-  @spec validate_login_or_register(Ecto.Changeset) :: {}
-  def validate_login_or_register(changeset) do
+  @spec validate_register(Ecto.Changeset) :: {}
+  def validate_register(changeset) do
     changeset = changeset
     |> validate_required([:username, :password])
     |> validate_length(:password, min: 8)
@@ -36,7 +37,18 @@ defmodule ChitChat.User do
     else
       {:error, changeset}
     end
+  end
 
+  @spec validate_login(Ecto.Changeset) :: {}
+  def validate_login(changeset) do
+    changeset = changeset
+    |> validate_required([:username, :password, :public_key])
+
+    if changeset.valid? do
+      {:ok, changeset}
+    else
+      {:error, changeset}
+    end
   end
 
   @spec validate_search(Ecto.Changeset) :: {}

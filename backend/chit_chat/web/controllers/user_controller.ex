@@ -43,7 +43,7 @@ defmodule ChitChat.UserController do
   def create(conn, user_params, _user, _claims) do
 
     with changeset <- User.changeset(%User{}, user_params),
-        {:ok, changeset} <- User.validate_login_or_register(changeset),
+        {:ok, changeset} <- User.validate_register(changeset),
         {:ok, user} <- User.register(changeset)
     do
       conn
