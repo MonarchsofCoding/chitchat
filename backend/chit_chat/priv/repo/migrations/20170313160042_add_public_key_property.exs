@@ -3,7 +3,7 @@ defmodule ChitChat.Repo.Migrations.AddPublicKeyProperty do
 
   def change do
     alter table(:users) do
-      add :public_key, :string, default: ""
+      add :public_key, :string, default: "", size: 1024
     end
   end
 end
