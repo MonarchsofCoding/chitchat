@@ -32,6 +32,7 @@ import com.moc.chitchat.model.UserModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class CurrentChatActivityTest implements Response.Listener<JSONObject> {
+public class CurrentChatActivityReceiveMessageTest implements Response.Listener<JSONObject> {
 
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
@@ -90,23 +91,6 @@ public class CurrentChatActivityTest implements Response.Listener<JSONObject> {
             .perform(click());
 
         Thread.sleep(1000);
-    }
-
-    @Test
-    public void testSendMessage() {
-        String message = "Hi mate!";
-
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        onView(withId(R.id.message_text))
-            .perform(typeText(message), closeSoftKeyboard());
-
-        onView(withId(R.id.send_button)).perform(click());
-
-        String expectedOutput = "Message from " + usernameTyped + " is sent to " + usernameToSearch
-            + "\n" + "The sent message: " + message + "\n";
-        assertEquals(expectedOutput, outContent.toString());
     }
 
     @Test
@@ -194,7 +178,7 @@ public class CurrentChatActivityTest implements Response.Listener<JSONObject> {
                 }
             };
 
-            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry
+            Collection<Activity> activities = ActivityLifecycleMonitorRegistry
                 .getInstance().getActivitiesInStage(Stage.RESUMED);
             Activity currentActivity = Iterables.getOnlyElement(activities);
 

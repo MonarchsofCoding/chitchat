@@ -47,9 +47,36 @@ public class RegisterActivityTest {
     }
 
     @Test
-    public void true_Input() throws InterruptedException {
+    public void true_InputOne() throws InterruptedException {
 
         usernameTyped = "aydinakyol";
+        passwordTyped = "Abc123!?";
+        passwordReTyped = "Abc123!?";
+
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        onView(withId(R.id.username_input))
+            .perform(typeText(usernameTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.password_input))
+            .perform(typeText(passwordTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.reinput_password_input))
+            .perform(typeText(passwordReTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.register_button)).perform(click());
+
+        Thread.sleep(1000);
+
+        String expectedOutput = "{\"data\":{\"username\":\"" + usernameTyped + "\"}}\n";
+        assertEquals(expectedOutput, outContent.toString());
+    }
+
+    @Test
+    public void true_InputTwo() throws InterruptedException {
+
+        usernameTyped = "vjftw";
         passwordTyped = "Abc123!?";
         passwordReTyped = "Abc123!?";
 
@@ -169,6 +196,8 @@ public class RegisterActivityTest {
             .perform(typeText(passwordReTyped), closeSoftKeyboard());
 
         onView(withId(R.id.register_button)).perform(click());
+
+        Thread.sleep(2000);
 
         String expectedOutput = "Password: [\"should be at least 8 character(s)\"]\n";
         assertEquals(expectedOutput, outContent.toString());
