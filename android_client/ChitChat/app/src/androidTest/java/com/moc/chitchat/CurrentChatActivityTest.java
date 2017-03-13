@@ -1,5 +1,6 @@
 package com.moc.chitchat;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -11,9 +12,15 @@ import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Mockito.mock;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
+import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.runner.lifecycle.Stage;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -29,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,7 +44,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class CurrentChatActivityTest {
+public class CurrentChatActivityTest implements Response.Listener<JSONObject> {
 
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
@@ -45,6 +53,7 @@ public class CurrentChatActivityTest {
     private String usernameTyped;
     private String passwordTyped;
     private String usernameToSearch;
+    private String url;
 
     /**
      * Does login before tests to go through the login and search activity.
@@ -57,6 +66,8 @@ public class CurrentChatActivityTest {
         usernameTyped = "vjftw";
         passwordTyped = "Abc123!?";
         usernameToSearch = "aydinakyol";
+
+        url = loginActivityRule.getActivity().getResources().getString(R.string.server_url);
 
         onView(withId(R.id.username_input))
             .perform(typeText(usernameTyped), closeSoftKeyboard());
@@ -100,58 +111,104 @@ public class CurrentChatActivityTest {
 
     @Test
     public void testReceiveMessage() throws JSONException, InterruptedException {
+        UserModel user = new UserModel(usernameToSearch);
+        user.setPassword(passwordTyped);
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+            Request.Method.POST,
+            String.format("%s%s",
+                url,
+
+                "/api/v1/auth"
+            ),
+            user.toJsonObject(),
+            this,
+            mock(Response.ErrorListener.class)
+        );
+        Volley.newRequestQueue(loginActivityRule.getActivity().getBaseContext())
+            .add(jsonObjectRequest);
+
+        Thread.sleep(3000);
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
 
         Map<String, String> requestHeaders = null;
 
         requestHeaders = new HashMap<String, String>();
-        requestHeaders.put(
-            "authorization",
-            "Bearer "
-                + loginActivityRule.getActivity().sessionConfiguration
-                    .getCurrentUser().getAuthToken());
+        try {
+            requestHeaders.put(
+                "authorization",
+                "Bearer "
+                    + response.getJSONObject("data").get("authToken").toString());
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
 
         final Map<String, String> finalRequestHeaders = requestHeaders;
 
         String message = "Hi mate!";
 
         MessageModel testMessage = new MessageModel(
+            new UserModel(usernameToSearch),
             new UserModel(usernameTyped),
             message
         );
 
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-            Request.Method.POST,
-            String.format("%s%s",
-                loginActivityRule.getActivity().getResources().getString(R.string.server_url),
-                "/api/v1/messages"
-            ),
-            testMessage.tojsonObject(),
-            mock(Response.Listener.class),
-            mock(Response.ErrorListener.class)
-        ) {
-            /* getHeaders Overridden method for fetching the headers.
-             * @return the headers to the request.
-             */
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> headerParams = new HashMap<String, String>();
-                if (finalRequestHeaders != null) {
-                    for (Map.Entry<String, String> header : finalRequestHeaders.entrySet()) {
-                        headerParams.put(header.getKey(), header.getValue());
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject
+                .put("recipient", testMessage.getTo().getUsername())
+                .put("message", testMessage.getMessage());
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST,
+                String.format("%s%s",
+                    url,
+                    "/api/v1/messages"
+                ),
+                jsonObject,
+                mock(Response.Listener.class),
+                mock(Response.ErrorListener.class)
+            ) {
+                /* getHeaders Overridden method for fetching the headers.
+                 * @return the headers to the request.
+                 */
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> headerParams = new HashMap<String, String>();
+                    if (finalRequestHeaders != null) {
+                        for (Map.Entry<String, String> header : finalRequestHeaders.entrySet()) {
+                            headerParams.put(header.getKey(), header.getValue());
+                        }
                     }
+                    return headerParams;
                 }
-                return headerParams;
-            }
-        };
-        Volley.newRequestQueue(loginActivityRule.getActivity().getBaseContext())
-            .add(jsonObjectRequest);
+            };
 
-        Thread.sleep(3000);
+            java.util.Collection<Activity> activities = ActivityLifecycleMonitorRegistry
+                .getInstance().getActivitiesInStage(Stage.RESUMED);
+            Activity currentActivity = Iterables.getOnlyElement(activities);
 
-        String expectedOutput = "Message from " + usernameTyped + " is received.\n"
+            Volley.newRequestQueue(currentActivity).add(jsonObjectRequest);
+
+            Thread.sleep(5000);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        String expectedOutput = "Message from " + usernameToSearch + " is received.\n"
             + "The received message: " + message + "\n";
         assertEquals(expectedOutput, outContent.toString());
+
     }
 }
