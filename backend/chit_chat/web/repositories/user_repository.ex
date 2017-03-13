@@ -32,4 +32,8 @@ defmodule ChitChat.UserRepository do
     Repo.insert(changeset)
   end
 
+  def save(changeset) do
+    Repo.update(changeset)
+  end
+
 end
