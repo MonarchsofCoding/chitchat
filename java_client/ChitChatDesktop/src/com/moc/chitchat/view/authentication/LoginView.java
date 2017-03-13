@@ -10,6 +10,7 @@ import com.moc.chitchat.view.BaseStage;
 import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -47,6 +48,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.usernameField = new JFXTextField();
         this.usernameField.setId("login-username-fld");
         this.usernameField.setPromptText("Username");
+        this.usernameField.setMinWidth(295.0); // 295.0 is the magic width
         MigPane loginForm = new MigPane();
         loginForm.add(this.usernameField,"grow,wrap");
 
@@ -54,16 +56,19 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.passwordField.setPromptText("Password");
         this.passwordField.setId("login-password-fld");
         this.passwordField.setOnAction(this);
+        this.passwordField.setMinWidth(295.0); // 295.0 is the magic width
         loginForm.add(this.passwordField,"grow,wrap");
 
         this.loginBtn = new JFXButton("Login");
         this.loginBtn.setOnAction(this);
         this.loginBtn.setId("login-login-btn");
+        this.loginBtn.setMinWidth(295.0); // 295.0 is the magic width
         loginForm.add(this.loginBtn, "wrap, grow");
 
         this.registerBtn = new JFXButton("Register");
         this.registerBtn.setId("login-register-btn");
         this.registerBtn.setOnAction(this);
+        this.registerBtn.setMinWidth(295.0); // 295.0 is the magic width
         loginForm.add(this.registerBtn, "wrap,grow");
 
         this.unexpectedErrors = new Label();
@@ -71,7 +76,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.unexpectedErrors.setTextFill(Color.RED);
         this.unexpectedErrors.setVisible(false);
 
-        loginForm.add(this.unexpectedErrors,"grow");
+        loginForm.add(this.unexpectedErrors,"wrap");
 
         MigPane loginPane = new MigPane();
         loginPane.setLayout("fill");
@@ -99,7 +104,6 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
             if (errors.hasErrors()) {
                 this.unexpectedErrors.setText("Wrong credentials or you have not registered yet !");
                 this.unexpectedErrors.setVisible(true);
-
             }
 
         } catch (Exception exception) {

@@ -55,6 +55,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.usernameField = new JFXTextField();
         this.usernameField.setPromptText("Username");
         this.usernameField.setId("register-username-fld");
+        this.usernameField.setMinWidth(295.0); // 295.0 is the magic width
         MigPane registerForm = new MigPane();
         registerForm.setLayout("fill");
         registerForm.add(this.usernameField, "span");
@@ -69,6 +70,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.passwordField.setPromptText("Password");
         this.passwordField.setId("register-password-fld");
         this.passwordField.setOnAction(this);
+        this.passwordField.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.passwordField, "span");
 
         this.passwordErrors = new Label();
@@ -81,6 +83,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.passwordCheckField.setPromptText("Re-Password");
         this.passwordCheckField.setId("register-passwordCheck-fld");
         this.passwordCheckField.setOnAction(this);
+        this.passwordCheckField.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.passwordCheckField, "span");
 
         this.passwordCheckErrors = new Label();
@@ -92,6 +95,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.registerBtn = new JFXButton("Register");
         this.registerBtn.setOnAction(this);
         this.registerBtn.setId("register-register-btn");
+        this.registerBtn.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.registerBtn, "span");
 
         this.unexpectedErrors = new Label();
@@ -103,6 +107,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.loginBtn = new JFXButton("Login");
         this.loginBtn.setOnAction(this);
         this.loginBtn.setId("register-login-btn");
+        this.loginBtn.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.loginBtn);
 
         MigPane registerPane = new MigPane();
