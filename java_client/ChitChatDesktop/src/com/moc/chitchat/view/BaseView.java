@@ -41,6 +41,8 @@ public abstract class BaseView {
         base.add(this.buildHeader(), "dock north");
 
         MigPane contentPane = this.getContentPane();
+        contentPane.getStylesheets().add("https://fonts.googleapis.com/css?family=Open+Sans");
+        contentPane.setStyle("-fx-font-family: 'Open Sans', sans-serif;");
         base.add(contentPane, "grow");
 
         base.add(this.buildFooter(), "dock south");
@@ -51,10 +53,11 @@ public abstract class BaseView {
     private MigPane buildHeader() {
         MigPane header = new MigPane();
         header.setLayout("fill");
-        header.setStyle("-fx-background-color: #32292F");
+        header.setStyle("-fx-background-color: #A8DADC");
 
         Label title = new Label("Chit Chat");
-        title.setTextFill(Color.WHITE);
+        title.getStylesheets().add("https://fonts.googleapis.com/css?family=Delius+Unicase");
+        title.setStyle("-fx-font-family: 'Delius Unicase', cursive");
         header.add(title);
 
         return header;
@@ -63,11 +66,14 @@ public abstract class BaseView {
     private MigPane buildFooter() {
         MigPane footer = new MigPane();
         footer.setLayout("fill");
-        footer.setStyle("-fx-background-color: #705D56;");
+        footer.setStyle("-fx-background-color: #A8DADC;");
 
-        Label credits = new Label("Created by: Monarchs of Coding");
+        Label credits = new Label("Monarchs of Coding");
+        credits.getStylesheets().add("https://fonts.googleapis.com/css?family=Cinzel+Decorative");
+        credits.setStyle("-fx-font-family: 'Cinzel Decorative', cursive; -fx-font-weight: bold");
         credits.setId("credits");
-        credits.setTextFill(Color.WHITE);
+        credits.setTextFill(new Color(230/255, 57/255, 70/255, 1));
+
         footer.add(credits);
 
         if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
