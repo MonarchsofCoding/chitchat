@@ -3,11 +3,13 @@ package com.moc.chitchat.application;
 import com.moc.chitchat.model.UserModel;
 import org.springframework.stereotype.Component;
 
+import java.util.Observable;
+
 /**
  * Configuration provides global configuration variables for the application.
  */
 @Component
-public class Configuration {
+public class Configuration extends Observable {
 
     private static final String PROD_BACKEND_ADDRESS = "https://chitchat.monarchsofcoding.com";
     private static final String BETA_BACKEND_ADDRESS = "https://beta.chitchat.monarchsofcoding.com";
@@ -19,6 +21,7 @@ public class Configuration {
     private UserModel currentLoggedInUser;
 
     Configuration() {
+        super();
         this.backendAddress = PROD_BACKEND_ADDRESS;
     }
 
@@ -63,5 +66,11 @@ public class Configuration {
 
     public UserModel getLoggedInUser() {
         return this.currentLoggedInUser;
+    }
+
+    public void logout() {
+        this.setChanged();
+        this.notifyObservers();
+        this.currentLoggedInUser = null;
     }
 }

@@ -6,6 +6,9 @@ import com.moc.chitchat.view.authentication.RegistrationView;
 import com.moc.chitchat.view.main.MainView;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.util.Observable;
+import java.util.Observer;
+
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Provides the application stage.
  */
 @Component
-public class BaseStage {
+public class BaseStage implements Observer {
 
     private LoginView loginView;
     private RegistrationView registrationView;
@@ -82,6 +85,7 @@ public class BaseStage {
 
         this.showLogin();
         this.primaryStage.show();
+        this.configuration.addObserver(this);
     }
 
 
@@ -95,5 +99,10 @@ public class BaseStage {
 
     public void showMainView() {
         this.primaryStage.setScene(this.mainView.getScene());
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        this.showLogin();
     }
 }
