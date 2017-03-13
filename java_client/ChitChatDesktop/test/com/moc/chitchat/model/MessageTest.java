@@ -8,18 +8,20 @@ import static org.junit.Assert.assertEquals;
  * MessageTest provides the tests for the Message
  */
 public class MessageTest {
-/*
+
     @Test
     public void testConstrutor() {
         UserModel from = new UserModel("Shana");
         UserModel to = new UserModel("Vinny");
         String messageText = "I want to send you a message";
+        String encryptedMessage = "Encrypted Message";
 
-        Message message = new Message(from, to, messageText);
+        Message message = new Message(from, to, messageText,encryptedMessage);
 
         assertEquals(from.getUsername(), message.getFrom().getUsername());
         assertEquals(to.getUsername(), message.getTo().getUsername());
         assertEquals(messageText, message.getMessage());
+        assertEquals(encryptedMessage,message.getEncrypted_message());
     }
 
     @Test
@@ -50,7 +52,8 @@ public class MessageTest {
         UserModel from = new UserModel("Marine");
         UserModel to = new UserModel("Soldier");
         String messageText = "Run!!!";
-        Message message = new Message(from, to, messageText);
+        String encryptedMessage = "Encrypted Message";
+        Message message = new Message(from, to, messageText,encryptedMessage);
 
         UserModel sender = new UserModel("Captain");
 
@@ -75,7 +78,10 @@ public class MessageTest {
     {
         UserModel to = new UserModel("Gus");
         String messageText = "Sending a message!";
-        Message message = new Message(to, messageText);
+        String encrypted_text = "Sending an encrypted message";
+        //you have to change this
+        
+        Message message = new Message(to,encrypted_text);
 
         String expectedString = String.format("{\"recipient\":\"%s\",\"message\":\"%s\"}",
                 to.getUsername(), messageText);
@@ -87,10 +93,21 @@ public class MessageTest {
         UserModel from = new UserModel("Marine");
         UserModel to = new UserModel("Soldier");
         String messageText = "Run!!!";
-        Message message = new Message(from, to, messageText);
+        String encryptedMessage = "Encrypted Message";
+        Message message = new Message(from, to, messageText,encryptedMessage);
 
         String expectedString = String.format("%s: %s", from.getUsername(), messageText);
 
         assertEquals(expectedString, message.toString());
-    }*/
+    }
+    @Test
+    public void testSetEncryptedMessage() {
+        UserModel to = new UserModel("Gus");
+        String encryptedmessageText = "Sending a message!";
+        Message message = new Message(to, encryptedmessageText);
+
+        message.setEncrypted_message("Halo, the master chief collection!");
+
+        assertEquals("Halo, the master chief collection!", message.getEncrypted_message());
+    }
 }

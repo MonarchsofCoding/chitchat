@@ -36,12 +36,10 @@ public class CryptoFunctionsTest {
 
     @Before
     public void setUp() throws NoSuchAlgorithmException {
-        mockCryptofunctions = mock(CryptoFunctions.class);
-        mockgenerator = mock(KeyPairGenerator.class);
-        mockgenerator = KeyPairGenerator.getInstance("RSA");
-        mockgenerator.initialize(4096,new SecureRandom());
-        mockkeyFactory = mock(KeyFactory.class);
-        mockkeyFactory = KeyFactory.getInstance("RSA");
+        mockCryptofunctions = new CryptoFunctions();
+        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        generator.initialize(4096,new SecureRandom());
         publicKey = mock(PublicKey.class);
         privateKey = mock(PrivateKey.class);
 
