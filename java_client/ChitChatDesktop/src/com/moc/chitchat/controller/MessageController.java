@@ -3,6 +3,7 @@ package com.moc.chitchat.controller;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.crypto.CryptoFunctions;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Message;
@@ -27,6 +28,7 @@ public class MessageController {
     private MessageResolver messageResolver;
     private ChitChatData chitChatData;
     private UserResolver userResolver;
+    private CryptoFunctions cryptoFunctions;
 
     @Autowired
     MessageController(
@@ -35,7 +37,8 @@ public class MessageController {
             MessageValidator messageValidator,
             MessageResolver messageResolver,
             ChitChatData chitChatData,
-            UserResolver userResolver
+            UserResolver userResolver,
+            CryptoFunctions cryptoFunctions
     ) {
         this.httpClient = httpClient;
         this.configuration = configuration;
@@ -43,6 +46,7 @@ public class MessageController {
         this.messageResolver = messageResolver;
         this.chitChatData = chitChatData;
         this.userResolver = userResolver;
+        this.cryptoFunctions = cryptoFunctions;
     }
 
     /**
@@ -55,9 +59,10 @@ public class MessageController {
      * @throws UnexpectedResponseException - unexpected response
      */
     public Message send(UserModel to, String message)
-            throws ValidationException, UnexpectedResponseException, IOException {
+            throws Exception {
 
-        Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(), to, message);
+        String message_encrypt = cryptoFunctions.encrypt(message, to.getPublicKey());
+        Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(), to,message, message_encrypt);
         Response response = httpClient.post("/api/v1/messages", newMessage);
 
         if (response.code() == 422) {
@@ -78,13 +83,16 @@ public class MessageController {
      * @param username - the sender of the message
      * @return - a new message object
      */
-    public Message receive(String receivedMessage, String username) {
+    public Message receive(String receivedMessage, String username) throws Exception {
         UserModel from = this.userResolver.createUser(username);
+        System.out.println(receivedMessage);
 
+        String message_decrypt = cryptoFunctions.decrypt(receivedMessage,this.configuration.getLoggedInUser().getPrivatekey());
         Message message = this.messageResolver.createMessage(
             from,
             this.configuration.getLoggedInUser(),
-            receivedMessage
+            message_decrypt,
+                receivedMessage
         );
 
         chitChatData.addMessageToConversation(from, message);

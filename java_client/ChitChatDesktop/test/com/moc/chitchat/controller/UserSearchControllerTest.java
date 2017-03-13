@@ -13,6 +13,8 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -25,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class UserSearchControllerTest {
 
     @Test
-    public void testSuccessfulSearch() throws IOException, InterruptedException {
+    public void testSuccessfulSearch() throws IOException, InterruptedException, InvalidKeySpecException, NoSuchAlgorithmException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
@@ -85,7 +87,7 @@ public class UserSearchControllerTest {
      * @throws InterruptedException
      */
     @Test
-    public void testValidator() throws IOException, InterruptedException {
+    public void testValidator() throws IOException, InterruptedException, InvalidKeySpecException, NoSuchAlgorithmException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
@@ -143,7 +145,7 @@ public class UserSearchControllerTest {
     }
 
     @Test
-    public void testUnexpectedResponse() throws IOException, InterruptedException {
+    public void testUnexpectedResponse() throws IOException, InterruptedException, InvalidKeySpecException, NoSuchAlgorithmException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 

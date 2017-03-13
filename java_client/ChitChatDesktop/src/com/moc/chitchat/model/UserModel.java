@@ -153,7 +153,7 @@ public class UserModel implements JSONString {
             jsonObject
                     .put("username", this.username)
                     .put("password", this.password)
-                    .put("publickey", Base64.getEncoder().encodeToString(this.getPublicKey().getEncoded()));
+                    .put("public_key", Base64.getEncoder().encodeToString(this.getPublicKey().getEncoded()));
         } else {
             jsonObject
                     .put("username", this.username)

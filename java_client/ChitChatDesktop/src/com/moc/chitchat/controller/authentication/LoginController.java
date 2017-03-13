@@ -66,6 +66,8 @@ public class LoginController {
         // Create the User object from parameters.
         UserModel user = userResolver.createUser(username, password,userKeyPair.getPublic(),userKeyPair.getPrivate());
 
+        System.out.println(user.toJSONString());
+
         // Register the User object on the backend via a HTTP request.
         Response response = this.httpClient.post("/api/v1/auth", user);
 

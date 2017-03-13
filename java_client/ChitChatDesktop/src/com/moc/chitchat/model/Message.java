@@ -11,6 +11,7 @@ public class Message implements JSONString {
     private UserModel from;
     private UserModel to;
     private String message;
+    private String encrypted_message;
 
     /**
      * Message Constructor.
@@ -18,14 +19,24 @@ public class Message implements JSONString {
      * @param to - is the receiver of a message
      * @param message - the actual message
      */
-    public Message(UserModel from, UserModel to, String message) {
+    public Message(UserModel from, UserModel to, String message, String encrypted_message) {
         this.from = from;
         this.to = to;
         this.message = message;
+        this.encrypted_message = encrypted_message;
+    }
+
+    public String getEncrypted_message() {
+        return encrypted_message;
+    }
+
+    public void setEncrypted_message(String encrypted_message) {
+        this.encrypted_message = encrypted_message;
     }
 
     public Message(UserModel to, String message) {
         this.to = to;
+
         this.message = message;
     }
 
@@ -68,7 +79,7 @@ public class Message implements JSONString {
 
         jsonObject
                 .put("recipient", this.to.getUsername())
-                .put("message", this.message)
+                .put("message", this.encrypted_message)
         ;
 
         return jsonObject.toString();

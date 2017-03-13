@@ -4,8 +4,10 @@ import com.moc.chitchat.model.UserModel;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -55,7 +57,7 @@ public class UserResolverTest {
     }
 */
     @Test
-    public void testGetUserModelViaJSonObject() {
+    public void testGetUserModelViaJSonObject() throws InvalidKeySpecException, NoSuchAlgorithmException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", "bob_dillion");
 

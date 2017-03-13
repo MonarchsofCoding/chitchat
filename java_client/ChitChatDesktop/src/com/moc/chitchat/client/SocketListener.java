@@ -67,7 +67,11 @@ public class SocketListener extends WebSocketListener {
         // Send payload to relevant channel
         for (ChannelInterface channel: this.channels.values()) {
             if (channel.getEvent().equals(event)) {
-                channel.handleMessage(jsonMsg.getJSONObject("payload"));
+                try {
+                    channel.handleMessage(jsonMsg.getJSONObject("payload"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             }
         }

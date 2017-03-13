@@ -9,6 +9,8 @@ import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.BaseView;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -115,7 +117,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
     /**
      * Searches for users using the parameters set.
      */
-    private void searchAction() {
+    private void searchAction() throws InvalidKeySpecException, NoSuchAlgorithmException {
         try {
             this.observableUserList.clear();
             this.errorusermessage.setVisible(false);
@@ -165,7 +167,13 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         if (event.getSource() == this.searchBtn) {
             this.errorusermessage.setVisible(false);
             this.errormessage.setVisible(false);
-            this.searchAction();
+            try {
+                this.searchAction();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
         } else if (event.getSource() == this.startConversationBtn) {
             this.errorusermessage.setVisible(false);
             this.errormessage.setVisible(false);

@@ -54,7 +54,7 @@ public class UserMessageChannelTest {
     }
 
     @Test
-    public void testHandleMessage() {
+    public void testHandleMessage() throws Exception {
 
         UserMessageChannel userMessageChannel = new UserMessageChannel(configuration, messageController);
         JSONObject payload = mock(JSONObject.class);

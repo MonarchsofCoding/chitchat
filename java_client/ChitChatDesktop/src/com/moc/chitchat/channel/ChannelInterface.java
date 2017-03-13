@@ -17,7 +17,7 @@ public interface ChannelInterface {
      * handleMessage handles a new message on this channel.
      * @param payload the payload sent to the channel.
      */
-    void handleMessage(JSONObject payload);
+    void handleMessage(JSONObject payload) throws Exception;
 
     /**
      * getEvent returns the event this handler is for.

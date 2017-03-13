@@ -51,7 +51,7 @@ public class UserMessageChannel implements ChannelInterface {
      * @param payload the payload sent to the channel.
      */
     @Override
-    public void handleMessage(JSONObject payload) {
+    public void handleMessage(JSONObject payload) throws Exception {
         this.messageController.receive(
             payload.getString("body"),
             payload.getString("from")
