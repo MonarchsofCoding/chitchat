@@ -86,7 +86,6 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
         this.messages = FXCollections.observableArrayList(c.getMessages());
 
-//        UserModel otherParticipant = this.conversation.getOtherParticipant();
         ListView<Message> viewMessages = new JFXListView<>();
         viewMessages.setItems(c.getMessages());
         viewMessages.setId("conversation-messages-list");

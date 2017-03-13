@@ -52,7 +52,8 @@ public class ConversationListView {
         this.conversationListView.setPlaceholder(new Label("Add User for Conversation"));
 
         MultipleSelectionModel<Conversation> lvSelModel = this.conversationListView.getSelectionModel();
-        lvSelModel.selectedItemProperty().addListener((changed, oldConvo, newConvo) -> setSelectedConversation(newConvo));
+        lvSelModel.selectedItemProperty()
+                .addListener((changed, oldConvo, newConvo) -> setSelectedConversation(newConvo));
 
         MigPane chatListPane = new MigPane();
         chatListPane.setLayout("fill");
