@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by spiros on 10/03/2017.
+ * CryptoFunctions provides the encryption and decryption methods for sending messages
  */
 @Component
 public class CryptoFunctions  {
