@@ -54,6 +54,8 @@ public class CurrentChatActivity extends AppCompatActivity
     ConversationModel currentConversation;
     InputMethodManager keyboardManager;
 
+    private MessageModel currentMessage;
+
     @Inject
     CurrentChatController currentChatController;
     @Inject
@@ -87,6 +89,12 @@ public class CurrentChatActivity extends AppCompatActivity
 
         messageText = (TextView) findViewById(R.id.message_text);
 
+        currentMessage = new MessageModel(
+            sessionConfiguration.getCurrentUser(),
+            null,
+            ""
+        );
+
         messagePanel = (TextView) findViewById(R.id.message_panel);
         messagePanel.setMovementMethod(new ScrollingMovementMethod());
         getMessagesToDisplay();
@@ -118,6 +126,8 @@ public class CurrentChatActivity extends AppCompatActivity
         if (!messageText.getText().toString().equals("")) {
             keyboardManager.hideSoftInputFromWindow(messageText.getWindowToken(), 0);
             try {
+                currentMessage.setTo(currentReceiver);
+                currentMessage.setMessage(messageText.getText().toString());
                 currentChatController.sendMessageToRecipient(
                     this,
                     this,
@@ -174,21 +184,19 @@ public class CurrentChatActivity extends AppCompatActivity
     public void onResponse(JSONObject response) {
         try {
             String from = response.getJSONObject("data").get("sender").toString();
-            String to = response.getJSONObject("data").get("recipient").toString();
-            String message = response.getJSONObject("data").get("message").toString();
 
             UserModel fromUser = new UserModel(from);
-            UserModel toUser = new UserModel(to);
+            UserModel toUser = currentMessage.getTo();
 
             chitChatMessagesConfiguration.addMessageToConversation(
                 toUser,
-                new MessageModel(fromUser, toUser, message),
+                new MessageModel(fromUser, toUser, currentMessage.getMessage()),
                 true
             );
-            addMessageToPanel(from, message, true);
+            addMessageToPanel(from, currentMessage.getMessage(), true);
             System.out.println("Message from " + fromUser.getUsername() + " is sent to "
                 + toUser.getUsername());
-            System.out.println("The sent message: " + message);
+            System.out.println("The sent message: " + currentMessage.getMessage());
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
             Toast.makeText(this,

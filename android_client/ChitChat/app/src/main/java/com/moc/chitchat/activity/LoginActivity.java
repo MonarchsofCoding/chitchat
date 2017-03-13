@@ -75,8 +75,8 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        circleDialog.show();
         if (view.getId() == findViewById(R.id.login_button).getId()) {
+            circleDialog.show();
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {

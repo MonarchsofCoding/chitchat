@@ -197,7 +197,7 @@ public class UserModel {
         userMap.put("username", this.getUsername());
         userMap.put("password", this.getPassword());
         userMap.put(
-            "publicKey",
+            "public_key",
             Base64.encodeToString(this.getPublicKey().getEncoded(),Base64.DEFAULT)
         );
 
