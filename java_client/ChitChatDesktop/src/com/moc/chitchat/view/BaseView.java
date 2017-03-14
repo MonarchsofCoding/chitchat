@@ -48,7 +48,7 @@ public abstract class BaseView {
         scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Lato");
         scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Fredericka+the+Great");
         scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Playfair+Display:700");
-        scene.getStylesheets().add(this.getClass().getResource("/com/moc/chitchat/view/skin/chitchat.css").toExternalForm());
+        scene.getStylesheets().add(this.getClass().getResource("/com/moc/chitchat/resources/chitchat.css").toExternalForm());
 
         return scene;
     }
