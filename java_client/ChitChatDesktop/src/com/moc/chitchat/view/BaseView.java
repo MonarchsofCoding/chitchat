@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXSpinner;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 /**
@@ -51,7 +52,7 @@ public abstract class BaseView {
     private MigPane buildHeader() {
         MigPane header = new MigPane();
         header.setLayout("fill");
-        header.setStyle("-fx-background-color: #32292F");
+        header.setStyle("-fx-background-color:  #0D4F8B");
 
         Label title = new Label("Chit Chat");
         title.setTextFill(Color.WHITE);
@@ -63,11 +64,11 @@ public abstract class BaseView {
     private MigPane buildFooter() {
         MigPane footer = new MigPane();
         footer.setLayout("fill");
-        footer.setStyle("-fx-background-color: #705D56;");
+        footer.setStyle("-fx-background-color: #FF3232");
 
         Label credits = new Label("Created by: Monarchs of Coding");
+        credits.setTextFill(Color.BLACK);
         credits.setId("credits");
-        credits.setTextFill(Color.WHITE);
         footer.add(credits);
 
         if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
