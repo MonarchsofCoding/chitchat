@@ -80,9 +80,34 @@ The whole developing process was made using Agile development methodology, we ha
 
 \section{Backend}
 
-The backend for this application has been created with the Elixir programming language. Elixir is a functional language that uses the Erlang VM(Virtual Machine) to run its code. \cite{website:elixir_homepage}
+The backend for this application has been created with the Elixir programming language. Elixir is a functional language that uses the Erlang VM(Virtual Machine) to run its code \cite{website:elixir_homepage}. The primary reason choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. Without this functionality, we could have created a Redis cluster to handle the publish-subscribe channels, however this would have made the backend more complex.
 
 \subsection{Libraries}
+
+\begin{tabular}{ | l | p{11cm} |}
+  \hline Package name & Usage \\ \hline
+  phoenix & todo \\
+  phoenix\_pubsub & todo \\
+  phoenix\_ecto & todo \\ \hline
+  postgrex & todo \\
+  comeonin & todo \\
+  guardian & todo \\
+  jose & todo \\ \hline
+  excoveralls & Coverage reporting \\
+  credo & Static analysis \\
+  dogma & Static analysis \\
+  \hline
+\end{tabular}
+
+\subsubsection{Phoenix Framework}
+
+
+\subsubsection{Static Analysis}
+
+Credo and Dogma
+
+\subsection{Amazon Web Services with Hashicorp's Terraform}
+
 
 \chapter{Team Work}
 
