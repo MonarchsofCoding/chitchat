@@ -180,7 +180,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == this.registerBtn) {
+        if (actionEvent.getSource() == this.registerBtn || actionEvent.getSource() == this.passwordCheckField) {
             this.registerAction();
         } else if (actionEvent.getSource() == this.loginBtn) {
             this.baseStage.showLogin();

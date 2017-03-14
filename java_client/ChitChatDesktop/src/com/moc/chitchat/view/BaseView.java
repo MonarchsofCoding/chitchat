@@ -1,9 +1,7 @@
 package com.moc.chitchat.view;
 
-import com.jfoenix.controls.JFXSpinner;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 /**
@@ -41,49 +39,48 @@ public abstract class BaseView {
         base.add(this.buildHeader(), "dock north");
 
         MigPane contentPane = this.getContentPane();
-        contentPane.getStylesheets().add("https://fonts.googleapis.com/css?family=Open+Sans");
-        contentPane.setStyle("-fx-font-family: 'Open Sans', sans-serif;");
+        contentPane.setId("base-content-pane");
         base.add(contentPane, "grow");
 
         base.add(this.buildFooter(), "dock south");
 
-        return new Scene(base, this.width, this.height);
+        Scene scene = new Scene(base, this.width, this.height);
+        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Lato");
+        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Fredericka+the+Great");
+        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Playfair+Display:700");
+        scene.getStylesheets().add(this.getClass().getResource("/com/moc/chitchat/view/skin/chitchat.css").toExternalForm());
+
+        return scene;
     }
 
     private MigPane buildHeader() {
         MigPane header = new MigPane();
         header.setLayout("fill");
-        header.setStyle("-fx-background-color: #A8DADC");
+        header.setId("base-header");
 
         Label title = new Label("Chit Chat");
-        title.getStylesheets().add("https://fonts.googleapis.com/css?family=Delius+Unicase");
-        title.setStyle("-fx-font-family: 'Delius Unicase', cursive");
-        header.add(title);
+        title.setId("base-header-title");
+        header.add(title, "center");
 
         return header;
     }
 
     private MigPane buildFooter() {
         MigPane footer = new MigPane();
+        footer.setId("base-footer");
         footer.setLayout("fill");
-        footer.setStyle("-fx-background-color: #A8DADC;");
-
-        Label credits = new Label("Monarchs of Coding");
-        credits.getStylesheets().add("https://fonts.googleapis.com/css?family=Cinzel+Decorative");
-        credits.setStyle("-fx-font-family: 'Cinzel Decorative', cursive; -fx-font-weight: bold");
-        credits.setId("credits");
-        credits.setTextFill(new Color(230/255, 57/255, 70/255, 1));
-
-        footer.add(credits);
 
         if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
             String username = this.baseStage.getConfiguration().getLoggedInUser().getUsername();
 
-            Label loggedInAs = new Label(String.format("Logged in as: %s", username));
-            loggedInAs.setTextFill(Color.WHITE);
-            loggedInAs.setId("loggedInAs");
-            footer.add(loggedInAs, "right");
+            Label loggedInAs = new Label(String.format("You are: %s", username));
+            loggedInAs.setId("base-footer-username");
+            footer.add(loggedInAs, "left");
         }
+
+        Label credits = new Label("Monarchs of Coding");
+        credits.setId("base-footer-credits");
+        footer.add(credits, "right");
 
         return footer;
     }

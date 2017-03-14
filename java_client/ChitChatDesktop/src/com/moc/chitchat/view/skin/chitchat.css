@@ -1,0 +1,39 @@
+.root {
+    -fx-font-family: 'Lato', sans-serif;
+}
+
+.button {
+    -fx-text-fill: #457B9D;
+    /*-fx-background-color: #F1FAEE;*/
+    -fx-background-color: #FFF;
+}
+
+.text-field {
+    -fx-text-fill: #F1FAEE;
+}
+
+#base-header, #base-footer {
+    -fx-background-color: #457B9D;
+    -fx-text-fill: #F1FAEE;
+}
+
+#base-header-title {
+    -fx-font-family: 'Fredericka the Great', cursive;
+    -fx-font-size: 18pt;
+    -fx-text-fill: #F1FAEE;
+}
+
+#base-content-pane {
+    -fx-background-color: #1D3557;
+}
+
+#base-footer-credits {
+    -fx-font-family: 'Playfair Display', serif;
+    -fx-font-weight: 700;
+    -fx-font-size: 12pt;
+    -fx-text-fill: #F1FAEE;
+}
+
+#base-footer-username {
+    -fx-text-fill: #F1FAEE;
+}
