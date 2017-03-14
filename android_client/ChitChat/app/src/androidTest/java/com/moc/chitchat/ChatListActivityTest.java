@@ -16,6 +16,8 @@ import com.moc.chitchat.model.UserModel;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,7 +53,6 @@ public class ChatListActivityTest {
     private String usernameTyped;
     private String passwordTyped;
     private String usernameToSearch;
-    private String url;
 
     /**
      * Does login before tests to go through the register the login and search activities.
@@ -60,8 +61,8 @@ public class ChatListActivityTest {
      */
     @Before
     public void initialization() throws InterruptedException {
-        register("aydinakyol");
-        register("vjftw");
+        register("test5");
+        register("test6");
         login();
         search();
     }
@@ -87,8 +88,8 @@ public class ChatListActivityTest {
     }
 
     public void login() throws InterruptedException {
-        usernameTyped = "vjftw";
-        passwordTyped = "Abc123!?";
+        usernameTyped = "test5";
+        String passwordTyped = "Abc123!?";
 
         onView(withId(R.id.username_input))
             .perform(typeText(usernameTyped), closeSoftKeyboard());
@@ -102,7 +103,7 @@ public class ChatListActivityTest {
     }
 
     public void search() throws InterruptedException {
-        usernameToSearch = "aydinakyol";
+        usernameToSearch = "test6";
 
         onView(withId(R.id.search_layout_text)).perform(click());
 

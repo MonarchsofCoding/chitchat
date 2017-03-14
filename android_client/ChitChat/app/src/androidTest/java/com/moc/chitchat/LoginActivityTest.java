@@ -142,7 +142,7 @@ public class LoginActivityTest {
 
         onView(withId(R.id.login_button)).perform(click());
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         String expectedOutput = String.format("Successfully logged in: %s", usernameTyped) + "\n";
         assertEquals(expectedOutput, outContent.toString());

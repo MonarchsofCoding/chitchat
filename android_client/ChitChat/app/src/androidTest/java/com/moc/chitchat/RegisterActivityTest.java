@@ -44,7 +44,7 @@ public class RegisterActivityTest {
     @Test
     public void true_Input() throws InterruptedException {
 
-        usernameTyped = "vjftw";
+        usernameTyped = "test0";
         passwordTyped = "Abc123!?";
         passwordReTyped = "Abc123!?";
 
@@ -96,7 +96,7 @@ public class RegisterActivityTest {
     @Test
     public void empty_passInput() throws InterruptedException {
 
-        usernameTyped = "aydinakyol";
+        usernameTyped = "test0";
         passwordTyped = "Abc123!?";
         passwordReTyped = "";
 
@@ -121,7 +121,7 @@ public class RegisterActivityTest {
     @Test
     public void false_passMatch() throws InterruptedException {
 
-        usernameTyped = "aydinakyol";
+        usernameTyped = "test0";
         passwordTyped = "Abc123!?";
         passwordReTyped = "Def123!?";
 
@@ -147,7 +147,7 @@ public class RegisterActivityTest {
     @Test
     public void false_passInput() throws InterruptedException {
 
-        usernameTyped = "aydinakyol";
+        usernameTyped = "test0";
         passwordTyped = "Abc123";
         passwordReTyped = "Abc123";
 

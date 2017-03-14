@@ -14,12 +14,15 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.moc.chitchat.activity.CurrentChatActivity;
 import com.moc.chitchat.activity.LoginActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,11 +32,10 @@ import org.junit.runner.RunWith;
 public class CurrentChatActivitySendMessageTest{
 
     @Rule
-    public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
+    public ActivityTestRule<LoginActivity> loginClassActivityRule = new ActivityTestRule<>(
         LoginActivity.class);
 
     private String usernameTyped;
-    private String passwordTyped;
     private String usernameToSearch;
 
     /**
@@ -43,14 +45,14 @@ public class CurrentChatActivitySendMessageTest{
      */
     @Before
     public void initialization() throws InterruptedException {
-        register("aydinakyol");
-        register("vjftw");
+        register("test1");
+        register("test2");
         login();
         search();
     }
 
     public void register(String usernameTyped) throws InterruptedException {
-        passwordTyped = "Abc123!?";
+        String passwordTyped = "Abc123!?";
         String passwordReTyped = "Abc123!?";
 
         onView(withId(R.id.register_button)).perform(click());
@@ -70,8 +72,8 @@ public class CurrentChatActivitySendMessageTest{
     }
 
     public void login() throws InterruptedException {
-        usernameTyped = "vjftw";
-        passwordTyped = "Abc123!?";
+        usernameTyped = "test1";
+        String passwordTyped = "Abc123!?";
 
         onView(withId(R.id.username_input))
             .perform(typeText(usernameTyped), closeSoftKeyboard());
@@ -85,7 +87,7 @@ public class CurrentChatActivitySendMessageTest{
     }
 
     public void search() throws InterruptedException {
-        usernameToSearch = "aydinakyol";
+        usernameToSearch = "test2";
 
         onView(withId(R.id.search_layout_text)).perform(click());
 

@@ -1,6 +1,5 @@
 package com.moc.chitchat;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -39,6 +38,8 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,10 +53,8 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         LoginActivity.class);
 
     private String usernameTyped;
-    private String passwordTyped;
     private String usernameToSearch;
-    private String url;
-
+    private String passwordTyped;
     /**
      * Does login before tests to go through the register the login and search activities.
      *
@@ -63,8 +62,8 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
      */
     @Before
     public void initialization() throws InterruptedException {
-        register("aydinakyol");
-        register("vjftw");
+        register("test3");
+        register("test4");
         login();
         search();
     }
@@ -90,8 +89,8 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
     }
 
     public void login() throws InterruptedException {
-        usernameTyped = "vjftw";
-        passwordTyped = "Abc123!?";
+        usernameTyped = "test3";
+        String passwordTyped = "Abc123!?";
 
         onView(withId(R.id.username_input))
             .perform(typeText(usernameTyped), closeSoftKeyboard());
@@ -105,7 +104,7 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
     }
 
     public void search() throws InterruptedException {
-        usernameToSearch = "aydinakyol";
+        usernameToSearch = "test4";
 
         onView(withId(R.id.search_layout_text)).perform(click());
 
@@ -128,8 +127,7 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
             Request.Method.POST,
             String.format("%s%s",
-                url,
-
+                loginActivityRule.getActivity().getResources().getString(R.string.server_url),
                 "/api/v1/auth"
             ),
             user.toJsonObject(),
@@ -180,10 +178,14 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         }
 
         try {
+            Collection<Activity> activities = ActivityLifecycleMonitorRegistry
+                .getInstance().getActivitiesInStage(Stage.RESUMED);
+            Activity currentActivity = Iterables.getOnlyElement(activities);
+
             final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
                 String.format("%s%s",
-                    url,
+                    currentActivity.getResources().getString(R.string.server_url),
                     "/api/v1/messages"
                 ),
                 jsonObject,
@@ -204,10 +206,6 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
                     return headerParams;
                 }
             };
-
-            Collection<Activity> activities = ActivityLifecycleMonitorRegistry
-                .getInstance().getActivitiesInStage(Stage.RESUMED);
-            Activity currentActivity = Iterables.getOnlyElement(activities);
 
             Volley.newRequestQueue(currentActivity).add(jsonObjectRequest);
 
