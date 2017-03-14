@@ -40,6 +40,10 @@ public class LoginActivityTest {
     private String usernameTyped;
     private String passwordTyped;
 
+    /**
+     * Registration.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     @BeforeClass
     public static void register() throws InterruptedException {
         String usernameTyped = "aydinakyol";

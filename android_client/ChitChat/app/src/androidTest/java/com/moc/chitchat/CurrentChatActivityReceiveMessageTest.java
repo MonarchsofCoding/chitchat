@@ -12,8 +12,6 @@ import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Mockito.mock;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.res.Resources;
 import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -38,8 +36,6 @@ import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +51,7 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
     private String usernameTyped;
     private String usernameToSearch;
     private String passwordTyped;
+
     /**
      * Does login before tests to go through the register the login and search activities.
      *
@@ -68,6 +65,11 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         search();
     }
 
+    /**
+     * Registration.
+     * @param usernameTyped username to register.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void register(String usernameTyped) throws InterruptedException {
         passwordTyped = "Abc123!?";
         String passwordReTyped = "Abc123!?";
@@ -88,6 +90,10 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         Thread.sleep(1000);
     }
 
+    /**
+     * Login.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void login() throws InterruptedException {
         usernameTyped = "test3";
         String passwordTyped = "Abc123!?";
@@ -103,6 +109,10 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         Thread.sleep(2000);
     }
 
+    /**
+     * Searching a user.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void search() throws InterruptedException {
         usernameToSearch = "test4";
 

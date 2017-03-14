@@ -17,7 +17,6 @@ import com.moc.chitchat.activity.SearchUserActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -49,6 +48,11 @@ public class SearchUserActivityTest {
         login();
     }
 
+    /**
+     * Registration.
+     * @param usernameTyped username to register.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public static void register(String usernameTyped) throws InterruptedException {
         String passwordTyped = "Abc123!?";
         String passwordReTyped = "Abc123!?";
@@ -69,6 +73,10 @@ public class SearchUserActivityTest {
         Thread.sleep(1000);
     }
 
+    /**
+     * Login.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public static void login() throws InterruptedException {
         String usernameTyped = "ozzy";
         String passwordTyped = "Abc123!?";

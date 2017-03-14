@@ -14,15 +14,12 @@ import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.moc.chitchat.activity.CurrentChatActivity;
 import com.moc.chitchat.activity.LoginActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +48,11 @@ public class CurrentChatActivitySendMessageTest{
         search();
     }
 
+    /**
+     * Registration.
+     * @param usernameTyped username to register.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void register(String usernameTyped) throws InterruptedException {
         String passwordTyped = "Abc123!?";
         String passwordReTyped = "Abc123!?";
@@ -71,6 +73,10 @@ public class CurrentChatActivitySendMessageTest{
         Thread.sleep(1000);
     }
 
+    /**
+     * Login.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void login() throws InterruptedException {
         usernameTyped = "test1";
         String passwordTyped = "Abc123!?";
@@ -86,6 +92,10 @@ public class CurrentChatActivitySendMessageTest{
         Thread.sleep(2000);
     }
 
+    /**
+     * Searching a user.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void search() throws InterruptedException {
         usernameToSearch = "test2";
 

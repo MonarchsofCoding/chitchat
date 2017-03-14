@@ -1,31 +1,5 @@
 package com.moc.chitchat;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.support.test.espresso.core.deps.guava.collect.Iterables;
-import android.support.test.filters.LargeTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
-import android.view.View;
-
-import com.moc.chitchat.activity.CurrentChatActivity;
-import com.moc.chitchat.activity.LoginActivity;
-import com.moc.chitchat.model.UserModel;
-
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.util.Collection;
-
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -35,12 +9,30 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+
+import android.app.Activity;
+import android.support.test.filters.LargeTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.runner.lifecycle.Stage;
+import android.view.View;
+
+import com.moc.chitchat.activity.CurrentChatActivity;
+import com.moc.chitchat.activity.LoginActivity;
+
+import java.util.Collection;
+
+import org.hamcrest.Matcher;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -67,6 +59,11 @@ public class ChatListActivityTest {
         search();
     }
 
+    /**
+     * Registration.
+     * @param usernameTyped username to register.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void register(String usernameTyped) throws InterruptedException {
         passwordTyped = "Abc123!?";
         String passwordReTyped = "Abc123!?";
@@ -87,6 +84,10 @@ public class ChatListActivityTest {
         Thread.sleep(1000);
     }
 
+    /**
+     * Login.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void login() throws InterruptedException {
         usernameTyped = "test5";
         String passwordTyped = "Abc123!?";
@@ -102,6 +103,10 @@ public class ChatListActivityTest {
         Thread.sleep(2000);
     }
 
+    /**
+     * Searching a user.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void search() throws InterruptedException {
         usernameToSearch = "test6";
 
@@ -139,6 +144,10 @@ public class ChatListActivityTest {
 
     }
 
+    /**
+     * Get current running activity.
+     * @return Current activity object.
+     */
     public Activity getCurrentActivity(){
         final Activity[] currentActivity = new Activity[1];
         getInstrumentation().runOnMainSync(new Runnable() {
