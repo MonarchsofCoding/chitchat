@@ -1,7 +1,10 @@
 package com.moc.chitchat.model;
 
-import org.json.JSONObject;
+import com.moc.chitchat.crypto.CryptoFunctions;
 import org.junit.Test;
+
+import java.security.KeyPair;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -74,17 +77,23 @@ public class MessageTest {
     }
 
     @Test
-    public void testToJSONString()
-    {
+    public void testToJSONString() throws Exception {
         UserModel to = new UserModel("Gus");
         String messageText = "Sending a message!";
-        String encrypted_text = "Sending an encrypted message";
-        //you have to change this
-        
-        Message message = new Message(to,encrypted_text);
 
-        String expectedString = String.format("{\"recipient\":\"%s\",\"message\":\"%s\"}",
-                to.getUsername(), messageText);
+        CryptoFunctions cryptoFunctions = new CryptoFunctions();
+        KeyPair pair = cryptoFunctions.generateKeyPair();
+        String encrypted_text = cryptoFunctions.encrypt(messageText, pair.getPublic());
+        
+        Message message = new Message(to,messageText);
+        message.setEncrypted_message(encrypted_text);
+
+        String expectedString = String
+                .format(
+                        "{\"recipient\":\"%s\",\"message\":\"%s\"}",
+                        to.getUsername(),
+                        encrypted_text)
+                ;
         assertEquals(expectedString, message.toJSONString());
     }
 
