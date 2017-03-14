@@ -8,7 +8,7 @@ defmodule ChitChat.AuthController do
   alias Guardian.Plug
   alias ChitChat.ChangesetView
   alias ChitChat.Endpoint
-  
+
   @spec authenticate(ChitChat.User) :: {}
   def authenticate(user) do
     if user != nil do
