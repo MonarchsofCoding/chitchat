@@ -57,18 +57,41 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
     private String url;
 
     /**
-     * Does login before tests to go through the login and search activity.
+     * Does login before tests to go through the register the login and search activities.
      *
      * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
     @Before
-    public void loginAndSearch() throws InterruptedException {
+    public void initialization() throws InterruptedException {
+        register("aydinakyol");
+        register("vjftw");
+        login();
+        search();
+    }
 
+    public void register(String usernameTyped) throws InterruptedException {
+        passwordTyped = "Abc123!?";
+        String passwordReTyped = "Abc123!?";
+
+        onView(withId(R.id.register_button)).perform(click());
+
+        onView(withId(R.id.username_input))
+            .perform(typeText(usernameTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.password_input))
+            .perform(typeText(passwordTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.reinput_password_input))
+            .perform(typeText(passwordReTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.register_button)).perform(click());
+
+        Thread.sleep(1000);
+    }
+
+    public void login() throws InterruptedException {
         usernameTyped = "vjftw";
         passwordTyped = "Abc123!?";
-        usernameToSearch = "aydinakyol";
-
-        url = loginActivityRule.getActivity().getResources().getString(R.string.server_url);
 
         onView(withId(R.id.username_input))
             .perform(typeText(usernameTyped), closeSoftKeyboard());
@@ -79,6 +102,10 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         onView(withId(R.id.login_button)).perform(click());
 
         Thread.sleep(2000);
+    }
+
+    public void search() throws InterruptedException {
+        usernameToSearch = "aydinakyol";
 
         onView(withId(R.id.search_layout_text)).perform(click());
 

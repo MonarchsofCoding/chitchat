@@ -12,7 +12,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.moc.chitchat.activity.LoginActivity;
-import com.moc.chitchat.activity.RegistrationActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -23,10 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
-/**
- * Created by aakyo on 21/01/2017.
- */
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -47,34 +42,7 @@ public class RegisterActivityTest {
     }
 
     @Test
-    public void true_InputOne() throws InterruptedException {
-
-        usernameTyped = "aydinakyol";
-        passwordTyped = "Abc123!?";
-        passwordReTyped = "Abc123!?";
-
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outContent));
-
-        onView(withId(R.id.username_input))
-            .perform(typeText(usernameTyped), closeSoftKeyboard());
-
-        onView(withId(R.id.password_input))
-            .perform(typeText(passwordTyped), closeSoftKeyboard());
-
-        onView(withId(R.id.reinput_password_input))
-            .perform(typeText(passwordReTyped), closeSoftKeyboard());
-
-        onView(withId(R.id.register_button)).perform(click());
-
-        Thread.sleep(1000);
-
-        String expectedOutput = "{\"data\":{\"username\":\"" + usernameTyped + "\"}}\n";
-        assertEquals(expectedOutput, outContent.toString());
-    }
-
-    @Test
-    public void true_InputTwo() throws InterruptedException {
+    public void true_Input() throws InterruptedException {
 
         usernameTyped = "vjftw";
         passwordTyped = "Abc123!?";
@@ -96,7 +64,7 @@ public class RegisterActivityTest {
 
         Thread.sleep(1000);
 
-        String expectedOutput = "{\"data\":{\"username\":\"" + usernameTyped + "\"}}\n";
+        String expectedOutput = String.format("Successfully registered: %s\n", usernameTyped);
         assertEquals(expectedOutput, outContent.toString());
     }
 

@@ -155,12 +155,11 @@ public class RegistrationActivity extends AppCompatActivity
      */
     @Override
     public void onResponse(JSONObject response) {
-        System.out.println(response.toString());
-
         try {
             String username = response.getJSONObject("data").get("username").toString();
             Toast.makeText(this,
                 String.format("Successfully registered: %s", username), Toast.LENGTH_LONG).show();
+            System.out.println(String.format("Successfully registered: %s", username));
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
         }
