@@ -46,7 +46,7 @@ env:
   matrix:
     - SERVICE=backend
     - SERVICE=java_client
-    - SERVICE="java_client/e2e"
+    # - SERVICE="java_client/e2e"
     - SERVICE=android_client
     # - SERVICE="android_client/e2e"
 script:
