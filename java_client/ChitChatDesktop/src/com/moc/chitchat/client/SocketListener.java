@@ -71,8 +71,8 @@ public class SocketListener extends WebSocketListener {
             if (event.equals(channel.getTopic())) {
                 try {
                     channel.handleMessage(jsonMsg.getString("event"), jsonMsg.getJSONObject("payload"));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception expt) {
+                    expt.printStackTrace();
                 }
                 break;
             }

@@ -67,17 +67,17 @@ public class WebSocketClient implements Observer {
      * @throws IOException the exception in a problem situation.
      */
     public void stopAll() throws IOException {
-        for(WebSocket s: this.sockets.values()) {
-            s.close(1000, "Bye!");
+        for(WebSocket sock: this.sockets.values()) {
+            sock.close(1000, "Bye!");
         }
     }
 
     @Override
-    public void update(Observable observable, Object o) {
+    public void update(Observable observable, Object obj) {
         try {
             this.stopAll();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException expt) {
+            expt.printStackTrace();
         }
     }
 }

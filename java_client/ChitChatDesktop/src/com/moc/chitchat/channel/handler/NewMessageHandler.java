@@ -25,8 +25,8 @@ public class NewMessageHandler implements HandlerInterface {
     }
 
     /**
-     *
-     * @return
+     *This function gets the new message.
+     * @return string of the new message.
      */
     @Override
     public String getEvent() {
@@ -34,7 +34,7 @@ public class NewMessageHandler implements HandlerInterface {
     }
 
     /**
-     *
+     *This function extracts the sender and the message form the json object.
      * @param payload The payload attached to the event.
      */
     @Override
@@ -44,9 +44,9 @@ public class NewMessageHandler implements HandlerInterface {
                     payload.getString("body"),
                     payload.getString("from")
             );
-        } catch (Exception e) {
+        } catch (Exception exp) {
             // TODO: don't use global Exception!!!
-            e.printStackTrace();
+            exp.printStackTrace();
         }
     }
 }

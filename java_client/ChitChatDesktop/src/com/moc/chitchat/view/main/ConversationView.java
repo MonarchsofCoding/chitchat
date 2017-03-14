@@ -129,8 +129,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
                 errormessage.setText("Incorrect input");
                 errormessage.setVisible(true);
                 ioException.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception expt) {
+                expt.printStackTrace();
             }
 
             this.newMessageField.clear();

@@ -67,7 +67,8 @@ public class UserResolver {
      * @param jsonObject - object that has a key 'username'
      * @return - returns a new user
      */
-    public UserModel getUserModelViaJSonObject(JSONObject jsonObject) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public UserModel getUserModelViaJSonObject(JSONObject jsonObject) throws NoSuchAlgorithmException,
+            InvalidKeySpecException {
         String username = jsonObject.getString("username");
         String publickeystring = jsonObject.getString("public_key");
         CryptoFunctions cryptoFunctions = new CryptoFunctions();

@@ -56,7 +56,8 @@ public class UserSearchController {
      * @throws ValidationException - If not enough characters inserted
      */
     public List<UserModel> searchUser(String username)
-            throws UnexpectedResponseException, ValidationException, IOException, InvalidKeySpecException, NoSuchAlgorithmException {
+            throws UnexpectedResponseException, ValidationException, IOException,
+            InvalidKeySpecException, NoSuchAlgorithmException {
         Map<String, Object> mapper = new HashMap<>();
         mapper.put("username", username);
 

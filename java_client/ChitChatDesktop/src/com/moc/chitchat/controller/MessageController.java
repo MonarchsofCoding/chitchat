@@ -60,8 +60,9 @@ public class MessageController {
     public Message send(UserModel to, String message)
             throws Exception {
 
-        String message_encrypt = cryptoFunctions.encrypt(message, to.getPublicKey());
-        Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(), to,message, message_encrypt);
+        String messageencrypt = cryptoFunctions.encrypt(message, to.getPublicKey());
+        Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(),
+                to,message,messageencrypt);
         Response response = httpClient.post("/api/v1/messages", newMessage);
 
         if (response.code() == 422) {
@@ -86,11 +87,12 @@ public class MessageController {
         UserModel from = this.userResolver.createUser(username);
         System.out.println(receivedMessage);
 
-        String message_decrypt = cryptoFunctions.decrypt(receivedMessage,this.configuration.getLoggedInUser().getPrivatekey());
+        String messagedecrypt = cryptoFunctions.decrypt(receivedMessage,
+                this.configuration.getLoggedInUser().getPrivatekey());
         Message message = this.messageResolver.createMessage(
             from,
             this.configuration.getLoggedInUser(),
-            message_decrypt,
+            messagedecrypt,
                 receivedMessage
         );
 

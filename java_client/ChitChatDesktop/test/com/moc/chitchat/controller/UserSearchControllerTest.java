@@ -33,12 +33,12 @@ public class UserSearchControllerTest {
 
         // Schedule the valid response
         MockResponse mockResponse = new MockResponse();
-
+        String pubkey= "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAhWx9x7ThkaLaCom5HZ3EyzXMZNg87AhDrxm2Z14FEGaiCgslMbxuxd5uYRwR2WToGHm1BcR8UeweKd/nYzOYRxA4kBU7zPuTRVBsik6xDevDBInd6Pf2eTwsVvkqQ1jY0zBbmbxuR60Xu4eQmudXOfqnG1kUBz6nqjcSHEd/GKtUKwxTQ2S/Ow1YTnkag4BANsheb7HyI3VfronQjhqwspzVbuyVi97Vu2pBO7wdsJVBzjIc7sxWOhPRr9V09f3erWJUiQxjY2Er8x48tvgQRmsar23ZqHIbt5T6tKGQU3dSLjHA+1HNjfd2JX7NPNabczQymg6DX9BfwcoJKVYJdnq4TvbHQckVPWZVu2IBM/VusePjRw9PCnaQ2C1MH/WBC7act6earIJne2cPHpCo+GaNuPLytzMFU6J4+npmU2NaXOAb5wjzJErg/c6HZIkfWHTWCp7RQpkfMC9XqsijOx9DDNs3CK0PCUo/7Gav8LiTPXDPPZp/D8+048PSAiYqt7kKTz3grN1rT4BiE/4ZsjReseEzpIXWskB37V+aTRfFJ1NX0qJGYhPYqJQiWTcBX5LsB60k+nrpSzkP6EAM2JoIEM2JlOFZ8GOJ96wUTTnH8SsnWQdfyMPox0mCxxM7RkaPM/OhpZv0FjWACWOZaq4qLywh+K2Zy7ytfW6L2m0CAwEAAQ==";
         // Not used, but for completeness
         String user = "John";
         String jsonResponse = "{" +
                 "\"data\": " +
-                "[{\"username\": \""+user+"\"}]" +
+                "[{\"username\": \""+user+"\", \"public_key\": \""+pubkey+"\"}]" +
                 "}";
 
         mockResponse

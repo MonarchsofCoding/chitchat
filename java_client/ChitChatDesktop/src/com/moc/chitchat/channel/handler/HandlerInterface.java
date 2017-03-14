@@ -1,6 +1,5 @@
 package com.moc.chitchat.channel.handler;
 
-
 import org.json.JSONObject;
 
 /**

@@ -17,8 +17,8 @@ public class MessageResolver {
      * @param message - This is actual message
      * @return - The message object
      */
-    public Message createMessage(UserModel from, UserModel to, String message,String encrypted_message) {
+    public Message createMessage(UserModel from, UserModel to, String message,String encryptedmessage) {
 
-        return new Message(from, to, message,encrypted_message);
+        return new Message(from, to, message,encryptedmessage);
     }
 }

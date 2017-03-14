@@ -1,17 +1,15 @@
 package com.moc.chitchat.channel;
 
-
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.channel.handler.HandlerInterface;
 import com.moc.chitchat.channel.handler.NewMessageHandler;
 import com.moc.chitchat.channel.handler.UserLogoutHandler;
 import com.moc.chitchat.model.UserModel;
+import java.util.HashSet;
+import java.util.Set;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * UserChannel provides the methods for channels on the user:* websocket topic.

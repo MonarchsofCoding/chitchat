@@ -169,10 +169,10 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
             this.errormessage.setVisible(false);
             try {
                 this.searchAction();
-            } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+            } catch (InvalidKeySpecException expt) {
+                expt.printStackTrace();
+            } catch (NoSuchAlgorithmException exp) {
+                exp.printStackTrace();
             }
         } else if (event.getSource() == this.startConversationBtn) {
             this.errorusermessage.setVisible(false);

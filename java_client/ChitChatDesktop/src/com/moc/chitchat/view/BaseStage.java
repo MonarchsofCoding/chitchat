@@ -102,7 +102,7 @@ public class BaseStage implements Observer {
     }
 
     @Override
-    public void update(Observable observable, Object o) {
+    public void update(Observable observable, Object obj) {
         this.showLogin();
     }
 }
