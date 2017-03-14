@@ -3,23 +3,29 @@
 }
 
 .button {
-    -fx-text-fill: #457B9D;
-    /*-fx-background-color: #F1FAEE;*/
-    -fx-background-color: #FFF;
+    -fx-background-color:
+            #c3c4c4,
+            linear-gradient(#d6d6d6 50%, white 100%),
+            radial-gradient(center 50% -40%, radius 200%, #e6e6e6 45%, rgba(230,230,230,0) 50%);
+    -fx-background-radius: 30;
+    -fx-background-insets: 0,1,1;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
 }
+
 
 .text-field {
     -fx-text-fill: #F1FAEE;
 }
 
 #base-header, #base-footer {
-    -fx-background-color: #457B9D;
+    -fx-background-color: #1C3144;
     -fx-text-fill: #F1FAEE;
 }
 
 #base-header-title {
-    -fx-font-family: 'Fredericka the Great', cursive;
-    -fx-font-size: 18pt;
+    -fx-font-family: 'Pacifico', cursive;
+    -fx-font-size: 22pt;
     -fx-text-fill: #F1FAEE;
 }
 
@@ -37,3 +43,4 @@
 #base-footer-username {
     -fx-text-fill: #F1FAEE;
 }
+
