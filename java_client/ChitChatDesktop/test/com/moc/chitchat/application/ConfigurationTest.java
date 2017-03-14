@@ -62,4 +62,18 @@ public class ConfigurationTest {
 
         assertEquals(mockUser, configuration.getLoggedInUser());
     }
+
+    @Test
+    public void testLogout() {
+        Configuration configuration = new Configuration();
+
+        UserModel userModel = new UserModel("Madara");
+        configuration.setLoggedInUser(userModel);
+        // Showing that the user was logged in
+        assertEquals("Madara", configuration.getLoggedInUser().getUsername());
+
+        // Test
+        configuration.logout();
+        assertEquals(null, configuration.getLoggedInUser());
+    }
 }
