@@ -1,6 +1,5 @@
 package com.moc.chitchat.view;
 
-import com.jfoenix.controls.JFXSpinner;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
@@ -42,43 +41,53 @@ public abstract class BaseView {
         base.add(this.buildHeader(), "dock north");
 
         MigPane contentPane = this.getContentPane();
+        contentPane.setId("base-content-pane");
         base.add(contentPane, "grow");
 
         base.add(this.buildFooter(), "dock south");
 
-        return new Scene(base, this.width, this.height);
+        Scene scene = new Scene(base, this.width, this.height);
+        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Lato");
+        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Fredericka+the+Great");
+        scene.getStylesheets().add("https://fonts.googleapis.com/css?family=Playfair+Display:700");
+        scene.getStylesheets().add(this.getClass().getResource("/com/moc/chitchat/resources/chitchat.css").toExternalForm());
+
+        return scene;
     }
 
     private MigPane buildHeader() {
         MigPane header = new MigPane();
         header.setLayout("fill");
-        header.setStyle("-fx-background-color:  #0D4F8B");
-
+        header.setStyle("-fx-background-color:  #0D4F8B;");
+        header.setId("base-header");
         Label title = new Label("Chit Chat");
-        title.setTextFill(Color.WHITE);
-        header.add(title);
-
+        title.setId("base-header-title");
+        header.add(title, "center");
         return header;
     }
 
     private MigPane buildFooter() {
         MigPane footer = new MigPane();
+        footer.setId("base-footer");
         footer.setLayout("fill");
-        footer.setStyle("-fx-background-color: #FF3232");
+
+        footer.setStyle("-fx-background-color: #ff4c4c");
 
         Label credits = new Label("Created by: Monarchs of Coding");
         credits.setTextFill(Color.BLACK);
         credits.setId("credits");
         footer.add(credits);
-
         if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
             String username = this.baseStage.getConfiguration().getLoggedInUser().getUsername();
 
-            Label loggedInAs = new Label(String.format("Logged in as: %s", username));
-            loggedInAs.setTextFill(Color.WHITE);
-            loggedInAs.setId("loggedInAs");
-            footer.add(loggedInAs, "right");
+            Label loggedInAs = new Label(String.format("You are: %s", username));
+            loggedInAs.setId("base-footer-username");
+            footer.add(loggedInAs, "left");
         }
+
+        credits = new Label("Monarchs of Coding");
+        credits.setId("base-footer-credits");
+        footer.add(credits, "right");
 
         return footer;
     }

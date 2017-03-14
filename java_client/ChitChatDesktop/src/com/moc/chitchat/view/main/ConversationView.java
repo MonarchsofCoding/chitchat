@@ -9,7 +9,6 @@ import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
-import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.BaseView;
 import java.io.IOException;
 import javafx.collections.FXCollections;
@@ -61,7 +60,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
     @Override
     protected MigPane getContentPane() {
         this.conversationPane = new MigPane();
-
+        this.conversationPane.setLayout("fill");
 
         return this.conversationPane;
     }
@@ -86,28 +85,27 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
         this.messages = FXCollections.observableArrayList(c.getMessages());
 
-        ListView<Message> viewMessages = new JFXListView<>();
+        JFXListView<Message> viewMessages = new JFXListView<>();
         viewMessages.setItems(c.getMessages());
         viewMessages.setId("conversation-messages-list");
+        this.conversationPane.add(viewMessages, "span, growx");
 
-        this.conversationPane.add(viewMessages, "span");
         this.newMessageField = new JFXTextField();
         this.newMessageField.setPromptText("Enter Message: ");
         this.newMessageField.setId("conversation-message-fld");
         this.newMessageField.setOnAction(this);
-        this.conversationPane.add(newMessageField, "span,grow");
+        this.conversationPane.add(newMessageField, "span, growx");
 
         this.errormessage = new Label();
         this.errormessage.setTextFill(Color.RED);
         this.errormessage.setId("conversation-error-lbl");
         this.errormessage.setVisible(false);
-        this.conversationPane.add(errormessage, "span,grow,wrap");
+        this.conversationPane.add(errormessage, "span, growx");
 
         this.sendbtn = new JFXButton("Send");
         this.sendbtn.setId("conversation-send-btn");
         this.sendbtn.setOnAction(this);
         this.conversationPane.add(sendbtn, "span, align right");
-
     }
 
     @Override
