@@ -1,16 +1,6 @@
 package com.moc.chitchat.channel.handler;
 
 import com.moc.chitchat.application.Configuration;
-import com.moc.chitchat.channel.handler.HandlerInterface;
-import com.moc.chitchat.channel.handler.NewMessageHandler;
-import com.moc.chitchat.channel.handler.UserLogoutHandler;
-import com.moc.chitchat.model.Conversation;
-import com.moc.chitchat.model.Message;
-import com.moc.chitchat.model.UserModel;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import org.json.JSONObject;
 import org.junit.Before;
