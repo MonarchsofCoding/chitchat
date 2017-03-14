@@ -14,13 +14,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockingDetails;
 
 /**
- *  UserModelTest provides tests for the UserModel
+ * UserModelTest provides tests for the UserModel
  */
 public class UserModelTest {
 
     @Test
-    public void testConstructor()
-    {
+    public void testConstructor() {
         String expectedUsername = "Jacob";
         UserModel userModel = new UserModel(expectedUsername);
 
@@ -28,8 +27,7 @@ public class UserModelTest {
     }
 
     @Test
-    public void testSetPassword()
-    {
+    public void testSetPassword() {
         String userName = "John";
         UserModel userModel = new UserModel(userName);
         String expectedPassword = "Cyber_Security";
@@ -39,8 +37,7 @@ public class UserModelTest {
     }
 
     @Test
-    public void testSetPasswordCheck()
-    {
+    public void testSetPasswordCheck() {
         String userName = "George";
         UserModel userModel = new UserModel(userName);
         String expectedPassword = "Cyber_Security";
@@ -56,15 +53,19 @@ public class UserModelTest {
         String expectedPassword = "Security123";
         userModel.setPassword(expectedPassword);
         CryptoFunctions cryptoFunctions = new CryptoFunctions();
-        cryptoFunctions.initialize();
         KeyPair pair = cryptoFunctions.generateKeyPair();
         PublicKey publicKey = pair.getPublic();
         userModel.setPublicKey(publicKey);
 
 
-        String expectedString = String.format("{\"password\":\"%s\",\"publickey\":\"%s\",\"username\":\"%s\"}", expectedPassword,Base64.getEncoder().encodeToString(publicKey.getEncoded()),expectedUserName);
+        String expectedString = String
+                .format(
+                        "{\"public_key\":\"%s\",\"password\":\"%s\",\"username\":\"%s\"}",
+                        Base64.getEncoder().encodeToString(publicKey.getEncoded()),
+                        expectedPassword, expectedUserName);
         assertEquals(expectedString, userModel.toJSONString());
     }
+
     @Test
     public void testToJSONString() throws Exception {
         String expectedUserName = "Ozhan";
@@ -72,9 +73,15 @@ public class UserModelTest {
         String expectedPassword = "Security123";
         userModel.setPassword(expectedPassword);
 
-        String expectedString = String.format("{\"password\":\"%s\",\"username\":\"%s\"}", expectedPassword,expectedUserName);
+        String expectedString = String
+                .format(
+                        "{\"password\":\"%s\",\"username\":\"%s\"}",
+                        expectedPassword,
+                        expectedUserName)
+                ;
         assertEquals(expectedString, userModel.toJSONString());
     }
+
     @Test
     public void setAuthToken() {
         String authToken = "some_String";
@@ -84,7 +91,6 @@ public class UserModelTest {
 
         assertEquals(authToken, userModel.getAuthToken());
     }
-
 
 
 }
