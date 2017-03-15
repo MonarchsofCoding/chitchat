@@ -12,7 +12,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.moc.chitchat.activity.LoginActivity;
-import com.moc.chitchat.activity.RegistrationActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -23,10 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
-/**
- * Created by aakyo on 21/01/2017.
- */
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -49,7 +44,7 @@ public class RegisterActivityTest {
     @Test
     public void true_Input() throws InterruptedException {
 
-        usernameTyped = "aydinakyol";
+        usernameTyped = "test0";
         passwordTyped = "Abc123!?";
         passwordReTyped = "Abc123!?";
 
@@ -69,7 +64,7 @@ public class RegisterActivityTest {
 
         Thread.sleep(1000);
 
-        String expectedOutput = "{\"data\":{\"username\":\"" + usernameTyped + "\"}}\n";
+        String expectedOutput = String.format("Successfully registered: %s\n", usernameTyped);
         assertEquals(expectedOutput, outContent.toString());
     }
 
@@ -101,7 +96,7 @@ public class RegisterActivityTest {
     @Test
     public void empty_passInput() throws InterruptedException {
 
-        usernameTyped = "aydinakyol";
+        usernameTyped = "test0";
         passwordTyped = "Abc123!?";
         passwordReTyped = "";
 
@@ -126,7 +121,7 @@ public class RegisterActivityTest {
     @Test
     public void false_passMatch() throws InterruptedException {
 
-        usernameTyped = "aydinakyol";
+        usernameTyped = "test0";
         passwordTyped = "Abc123!?";
         passwordReTyped = "Def123!?";
 
@@ -152,7 +147,7 @@ public class RegisterActivityTest {
     @Test
     public void false_passInput() throws InterruptedException {
 
-        usernameTyped = "aydinakyol";
+        usernameTyped = "test0";
         passwordTyped = "Abc123";
         passwordReTyped = "Abc123";
 
@@ -169,6 +164,8 @@ public class RegisterActivityTest {
             .perform(typeText(passwordReTyped), closeSoftKeyboard());
 
         onView(withId(R.id.register_button)).perform(click());
+
+        Thread.sleep(2000);
 
         String expectedOutput = "Password: [\"should be at least 8 character(s)\"]\n";
         assertEquals(expectedOutput, outContent.toString());

@@ -5,12 +5,31 @@ from invoke_tools import lxc, system, vcs
 
 cli = Client(base_url='unix://var/run/docker.sock', timeout=600)
 
-@task
-def test(ctx):
-  print("Building Backend")
-  ctx.run("cd ../../backend && invoke build")
+def find_image(repository, tag):
+  print("# Looking for {0}:{1}...".format(repository, tag))
+  imgs = cli.images(name=repository)
   git = vcs.Git()
   version = git.get_version()
+
+  for img in imgs:
+    if img['RepoTags']:
+      for t in img['RepoTags']:
+        if t == "{0}:{1}".format(repository, tag):
+          print("# Found {0}:{1}".format(repository, tag))
+          return True
+
+  print("# Could not find {0}:{1}".format(repository, tag))
+  return False
+
+@task
+def test(ctx):
+  git = vcs.Git()
+  version = git.get_version()
+
+  if not find_image("monarchsofcoding/chitchat", "release-{0}".format(version)):
+    print("Building Backend")
+    ctx.run("cd ../../backend && invoke build")
+
 
   # os.chdir("{0}/../".format(os.getcwd()))
   # lxc.Docker.build(cli,
@@ -19,9 +38,9 @@ def test(ctx):
   # )
   # os.chdir("{0}/e2e/".format(os.getcwd()))
 
-  cli.pull("monarchsofcoding/chitchat:desktop-dev")
+  lxc.Docker.pull(cli, "monarchsofcoding/chitchat:desktop-dev")
 
-  cli.pull("postgres", "latest")
+  lxc.Docker.pull(cli, "postgres:latest")
   postgres_container = lxc.Docker.run(
     cli,
     'postgres',

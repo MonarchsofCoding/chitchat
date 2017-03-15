@@ -8,7 +8,7 @@ addons:
     - python3-pip
 before_install:
 - sudo pip3 install --upgrade pip
-- sudo pip3 install --upgrade 'invoke-tools>=0.1.8'
+- sudo pip3 install --upgrade 'invoke-tools>=0.1.9'
 env:
   global:
     # AWS_ACCESS_KEY_ID
@@ -48,6 +48,7 @@ env:
     - SERVICE=java_client
     - SERVICE="java_client/e2e"
     - SERVICE=android_client
+    # We cannot run the x86 android emulator on Travis and the ARM emulator times out. We will run the UI tests locally.
     # - SERVICE="android_client/e2e"
 script:
   - cd ${TRAVIS_BUILD_DIR}/${SERVICE} && invoke test

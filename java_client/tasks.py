@@ -48,7 +48,7 @@ def build(ctx):
   """
   Build release JAR
   """
-  cli.pull("monarchsofcoding/chitchat:desktop-dev")
+  lxc.Docker.pull(cli, "monarchsofcoding/chitchat:desktop-dev")
 
   lxc.Docker.run(cli,
       tag="monarchsofcoding/chitchat:desktop-dev",
@@ -95,7 +95,7 @@ def test(ctx):
   #     tag="{0}-dev".format("chitchat-javaclient")
   # )
 
-  cli.pull("monarchsofcoding/chitchat:desktop-dev")
+  lxc.Docker.pull(cli, "monarchsofcoding/chitchat:desktop-dev")
 
   vnc = "vnc4server -geometry 1920x1080 && export DISPLAY=:1"
   tests = "gradle test"
@@ -116,7 +116,7 @@ def test(ctx):
 
 @task
 def publish_test_artifacts(ctx):
-  cli.pull("garland/aws-cli-docker", "latest")
+  lxc.Docker.pull(cli, "garland/aws-cli-docker:latest")
 
   s3_artifacts = "s3://kcl-chit-chat-artifacts/builds/{0}/java_client".format(os.getenv("TRAVIS_BUILD_NUMBER"))
 

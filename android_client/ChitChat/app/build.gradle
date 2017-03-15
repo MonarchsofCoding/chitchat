@@ -32,7 +32,7 @@ android {
     }
     productFlavors {
         uiTests {
-            resValue "string", "server_url", "http://chitchat:4000"
+            resValue "string", "server_url", "http://10.0.2.2:4000"
         }
         development {
             resValue "string", "server_url", "http://10.0.2.2:4000"

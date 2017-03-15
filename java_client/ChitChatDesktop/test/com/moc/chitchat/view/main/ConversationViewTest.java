@@ -1,122 +1,104 @@
 package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.view.PrimaryStageTest;
-import javafx.scene.input.KeyCode;
+import com.moc.chitchat.view.helper.MessageHelper;
+import com.moc.chitchat.view.helper.UserHelper;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
-import javax.swing.*;
+import java.io.IOException;
 
-import java.awt.event.KeyEvent;
-
-import static java.awt.event.KeyEvent.VK_ENTER;
-import static javafx.scene.input.KeyCode.ENTER;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.testfx.api.FxAssert.verifyThat;
-import static org.testfx.matcher.base.NodeMatchers.hasText;
 
 /**
  * ConversationViewTest provides tests for conversation views,
  */
 public class ConversationViewTest extends PrimaryStageTest {
-    final static String loginButton = "#loginBtn";
-    final static String usernamefield= "#usernameField";
-    final static String passwordfield= "#passwordField";
 
-    final static String usernameFieldsearch = "#usernameFieldSearch";
-    final static String searchBtn = "#searchBtn";
-    final static String startConversationBtn = "#StartChatBtn";
-    final static String togglebutton ="#ToggleBtn";
-
-    final static String headerChat = "#headerChat";
-    final static String newmessageField = "#newmessageField";
-    final static String errormessage = "#errormessage";
-    final static String sendBtn = "#sendBtnmsg";
-
-    final static String registerBtn = "#registerBtn";
-    final static String registerBtnreg = "#registerBtnreg";
-    final static String usernamefieldReg = "#usernamefieldreg";
-    final static String passwordfieldReg = "#passwordFieldreg";
-    final static String passwordCheckField = "#passwordCheckField";
-
+    public final static String chatHeaderLbl = "#conversation-chatHeader-lbl";
+    public final static String messagesList = "#conversation-messages-list";
+    public final static String newMessageFld = "#conversation-message-fld";
+    public final static String errorMessageLbl = "#conversation-error-lbl";
+    public final static String sendBtn = "#conversation-send-btn";
 
     /**
-     * This is a precondition function, so we register users that we need for testing.
+     * Verify the existence of the conversation fields
      */
-    public void preCondition(String username) {
-        String password = "ccccccccc";
+    @Test
+    public void test_conversation_fields_exist() {
+        UserHelper.createUser(this, "conversationView_user1", "user1234");
+        UserHelper.createUser(this, "conversationView_user2", "user1234");
+        UserHelper.loginUser(this, "conversationView_user1", "user1234");
 
-        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
-        clickOn(passwordfieldReg).write(password);
-        clickOn(passwordCheckField).write(password);
-        clickOn(registerBtnreg);
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationView_user2");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationView_user2");
+        clickOn(SearchViewTest.chatBtn);
+        verifyThat(chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationView_user2"));
+
+        verifyThat(newMessageFld, NodeMatchers.isVisible());
+        verifyThat(errorMessageLbl, NodeMatchers.isInvisible());
+        verifyThat(sendBtn, NodeMatchers.isVisible());
+        verifyThat(sendBtn, NodeMatchers.hasText("Send"));
     }
 
     /**
-     * Function access that helps us to login in ordet o access the next level.
-     *
+     * Tests sending a message updates the message list view.
+     * @throws InterruptedException
      */
-    public void access_search_view2(){
-        String username = "Phillip";
-        String password = "ccccccccc";
-        String check = "Leonardo";
+    @Test
+    public void test_sending_message() throws InterruptedException {
+        UserHelper.createUser(this, "conversationView_user3", "user1234");
+        UserHelper.createUser(this, "conversationView_user4", "user1234");
+        UserHelper.loginUser(this, "conversationView_user3", "user1234");
 
-        clickOn(usernamefield).write(username);
-        clickOn(passwordfield).write(password);
-        clickOn(loginButton);
-        clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("Leo");
-        clickOn(searchBtn);
-        clickOn(check);
-        clickOn(startConversationBtn);
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationView_user4");
+        clickOn(SearchViewTest.searchBtn);
+        Thread.sleep(500);
+        clickOn("conversationView_user4");
+        clickOn(SearchViewTest.chatBtn);
+        Thread.sleep(500);
+        verifyThat(chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationView_user4"));
+
+        clickOn(newMessageFld).write("Hello!");
+        clickOn(sendBtn);
+        Thread.sleep(500);
+        verifyThat(messagesList, NodeMatchers.isVisible());
+        verifyThat("conversationView_user3: Hello!", NodeMatchers.isVisible());
     }
 
-//    /**
-//     *Test The existance of main parts of the field
-//     */
-//    @Test
-//    public void CheckFields(){
-//        preCondition("Phillip");
-//        preCondition("Leonardo");
-//        access_search_view2();
-//        String check = "Leonardo";
-//        verifyThat(togglebutton,hasText("Search Users"));
-//        verifyThat(togglebutton, NodeMatchers.isVisible());
-//        verifyThat(newmessageField, NodeMatchers.isEnabled());
-//        verifyThat(check, NodeMatchers.isVisible());
-//        assertTrue(find(headerChat).isVisible());
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-//        verifyThat(errormessage, NodeMatchers.isInvisible());
-//        assertTrue(find(sendBtn).isVisible());
-//    }
+    /**
+     * Tests that receiving a message updates the message list view.
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    @Test
+    public void test_receiving_message() throws InterruptedException, IOException {
+        UserHelper.createUser(this, "conversationView_user5", "user1234");
+        UserHelper.createUser(this, "conversationView_user6", "user1234");
+        UserHelper.loginUser(this, "conversationView_user5", "user1234");
 
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationView_user6");
+        clickOn(SearchViewTest.searchBtn);
+        Thread.sleep(500);
+        clickOn("conversationView_user6");
+        clickOn(SearchViewTest.chatBtn);
+        Thread.sleep(500);
+        verifyThat(chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationView_user6"));
 
+        // Send message as conversationView_user6
+        MessageHelper.sendMessage(
+            "conversationView_user6",
+            "user1234",
+            "conversationView_user5",
+            "Hello!"
+        );
 
-//    /**
-//     *Test the sending message function works
-//     */
-//    @Test
-//    public void CheckSendingMessagesFunction(){
-//        access_search_view2();
-//        String messagetest = "hello";
-//        String messagedisplay = "Phillip: " +
-//                ""+messagetest;
-//        clickOn(newmessageField).write(messagetest).clickOn(sendBtn);
-//        clickOn(messagedisplay);
-//        verifyThat(messagedisplay,NodeMatchers.isVisible());
-//
-//
-//    }
+        Thread.sleep(3000);
 
-//    /**
-//     *Test the sending message function works
-//     */
-//    @Test
-//    public void CheckSendingEmptyMessagesFunction(){
-//        access_search_view2();
-//        clickOn(newmessageField).clickOn(sendBtn);
-//        verifyThat(errormessage,NodeMatchers.isVisible());
-//
-//    }
+        verifyThat("conversationView_user6: Hello!", NodeMatchers.isVisible());
+    }
 }
