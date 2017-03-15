@@ -8,7 +8,7 @@ addons:
     - python3-pip
 before_install:
 - sudo pip3 install --upgrade pip
-- sudo pip3 install --upgrade 'invoke-tools>=0.1.8'
+- sudo pip3 install --upgrade 'invoke-tools>=0.1.9'
 env:
   global:
     # AWS_ACCESS_KEY_ID

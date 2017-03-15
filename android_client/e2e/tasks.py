@@ -14,16 +14,33 @@ def build(ctx):
 def deploy(ctx):
   pass
 
+def find_image(repository, tag):
+  print("# Looking for {0}:{1}...".format(repository, tag))
+  imgs = cli.images(name=repository)
+  git = vcs.Git()
+  version = git.get_version()
+
+  for img in imgs:
+    if img['RepoTags']:
+      for t in img['RepoTags']:
+        if t == "{0}:{1}".format(repository, tag):
+          print("# Found {0}:{1}".format(repository, tag))
+          return True
+
+  print("# Could not find {0}:{1}".format(repository, tag))
+  return False
+
 @task
 def test(ctx):
     """
     Tests the ChitChat Android client
     """
-
-    print("Building Backend")
-    ctx.run("cd ../../backend && invoke build")
     git = vcs.Git()
     version = git.get_version()
+
+    if not find_image("monarchsofcoding/chitchat", "release-{0}".format(version)):
+      print("Building Backend")
+      ctx.run("cd ../../backend && invoke build")
 
     # os.chdir("{0}/../".format(os.getcwd()))
     # lxc.Docker.build(cli,
@@ -32,9 +49,9 @@ def test(ctx):
     # )
     # os.chdir("{0}/e2e/".format(os.getcwd()))
 
-    cli.pull("monarchsofcoding/chitchat:android-dev")
+    lxc.Docker.pull(cli, "monarchsofcoding/chitchat:android-dev")
 
-    cli.pull("postgres", "latest")
+    lxc.Docker.pull(cli, "postgres:latest")
     postgres_container = lxc.Docker.run(
       cli,
       'postgres',
@@ -111,7 +128,7 @@ def test(ctx):
 
 @task
 def publish_test_artifacts(ctx):
-  cli.pull("garland/aws-cli-docker", "latest")
+  lxc.Docker.pull(cli, "garland/aws-cli-docker:latest")
 
   s3_artifacts = "s3://kcl-chit-chat-artifacts/builds/{0}/android_client".format(os.getenv("TRAVIS_BUILD_NUMBER"))
 
