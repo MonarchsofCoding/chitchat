@@ -4,6 +4,7 @@ import com.moc.chitchat.model.UserModel;
 import java.util.Observable;
 import org.springframework.stereotype.Component;
 
+
 /**
  * Configuration provides global configuration variables for the application.
  */
@@ -19,7 +20,7 @@ public class Configuration extends Observable {
 
     private UserModel currentLoggedInUser;
 
-    Configuration() {
+    public Configuration() {
         super();
         this.backendAddress = PROD_BACKEND_ADDRESS;
     }
@@ -35,7 +36,7 @@ public class Configuration extends Observable {
     /**
      * setDevelopmentMode applies changes to the configuration for use when developing.
      */
-    void setDevelopmentMode() {
+    public void setDevelopmentMode() {
         System.out.println("\nEntering Development Mode!\n"); // TODO: Use Apache Commons logger!
 
         this.backendAddress = DEV_BACKEND_ADDRESS;
@@ -44,7 +45,7 @@ public class Configuration extends Observable {
     /**
      * setBetaMode applies changes to the configuration for use when testing.
      */
-    void setBetaMode() {
+    public void setBetaMode() {
         System.out.println("\nEntering Beta Mode!\n"); // TODO: Use Apache Commons logger!
 
         this.backendAddress = BETA_BACKEND_ADDRESS;
@@ -53,8 +54,9 @@ public class Configuration extends Observable {
     /**
      * setTestingMode applies changes to the configuration for use when testing.
      */
-    void setTestingMode() {
+    public void setTestingMode() {
         System.out.println("\nEntering Test Mode!\n"); // TODO: Use Apache Commons logger!
+
         this.backendAddress = TEST_BACKEND_ADDRESS;
     }
 

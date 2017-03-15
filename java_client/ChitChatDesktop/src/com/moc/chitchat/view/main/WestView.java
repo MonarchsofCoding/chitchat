@@ -52,7 +52,7 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
 
         this.togglePaneButton = new Button();
         this.togglePaneButton.setOnAction(this);
-        this.togglePaneButton.setId("ToggleBtn");
+        this.togglePaneButton.setId("west-toggle-btn");
         this.westPane.add(this.togglePaneButton, "dock north");
         this.showConversationListView();
 

@@ -16,6 +16,8 @@ import com.moc.chitchat.activity.LoginActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,9 +25,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@LargeTest
 public class LoginActivityTest {
+
+    @ClassRule
+    public static ActivityTestRule<LoginActivity> loginClassActivityRule = new ActivityTestRule<>(
+        LoginActivity.class);
 
     @Rule
     public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
@@ -33,6 +39,32 @@ public class LoginActivityTest {
 
     private String usernameTyped;
     private String passwordTyped;
+
+    /**
+     * Registration.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
+    @BeforeClass
+    public static void register() throws InterruptedException {
+        String usernameTyped = "aydinakyol";
+        String passwordTyped = "Abc123!?";
+        String passwordReTyped = "Abc123!?";
+
+        onView(withId(R.id.register_button)).perform(click());
+
+        onView(withId(R.id.username_input))
+            .perform(typeText(usernameTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.password_input))
+            .perform(typeText(passwordTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.reinput_password_input))
+            .perform(typeText(passwordReTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.register_button)).perform(click());
+
+        Thread.sleep(1000);
+    }
 
     @Test
     public void empty_userInput() {
@@ -114,7 +146,7 @@ public class LoginActivityTest {
 
         onView(withId(R.id.login_button)).perform(click());
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         String expectedOutput = String.format("Successfully logged in: %s", usernameTyped) + "\n";
         assertEquals(expectedOutput, outContent.toString());
