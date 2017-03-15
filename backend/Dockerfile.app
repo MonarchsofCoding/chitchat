@@ -1,37 +1,33 @@
-FROM alpine:latest
+FROM erlang:slim
 
-RUN apk --update add \
-  elixir \
-  postgresql-client \
-  erlang-crypto \
-  erlang-parsetools \
-  erlang-syntax-tools \
-  build-base
+# HTTP
+EXPOSE 80
+# EPMD
+EXPOSE 4369
+#
+EXPOSE 9100-9155
 
-ENV APP_NAME chit_chat
+ENV PORT=80
+ENV MIX_ENV=prod
+ENV REPLACE_OS_VARS=true
+ENV SHELL=/bin/bash
+ENV LC_ALL=en_US.UTF-8
 
-RUN mkdir -p /${APP_NAME}
+WORKDIR /opt/app
 
-COPY ${APP_NAME}/config /${APP_NAME}/config
-COPY ${APP_NAME}/lib /${APP_NAME}/lib
-COPY ${APP_NAME}/priv /${APP_NAME}/priv
-COPY ${APP_NAME}/web /${APP_NAME}/web
-COPY ${APP_NAME}/mix.exs /${APP_NAME}
-COPY ${APP_NAME}/mix.lock /${APP_NAME}
+ADD chit_chat.tar.gz ./
+# RUN chown -R default ./releases
 
-WORKDIR /${APP_NAME}
+# USER default
 
-ENV MIX_ENV prod
-ENV PORT 4001
+# Add wait-for-it
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /bin/wait-for-it.sh
+RUN chmod +x /bin/wait-for-it.sh
 
-RUN mix local.hex --force
-RUN mix local.rebar --force
+# Add entrypoint
+COPY chit_chat/rel/entrypoint.sh /opt/app/entrypoint.sh
+RUN chmod +x /opt/app/entrypoint.sh
 
-RUN mix deps.get
+ENTRYPOINT ["/opt/app/entrypoint.sh"]
 
-RUN mix compile
-
-RUN apk del build-base
-RUN rm -rf /var/cache/apk/*
-
-CMD /bin/sh -c "mix aws.ecs_dns && source config/env && mix ecto.create && mix ecto.migrate && mix phoenix.server"
+CMD foreground

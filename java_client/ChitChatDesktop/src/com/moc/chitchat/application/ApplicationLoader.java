@@ -1,7 +1,6 @@
 package com.moc.chitchat.application;
 
-import com.moc.chitchat.view.authentication.AuthenticationStage;
-import com.moc.chitchat.view.main.MainStage;
+import com.moc.chitchat.view.BaseStage;
 import java.util.List;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class ApplicationLoader {
 
     private Configuration configuration;
-    private AuthenticationStage authenticationStage;
-    private MainStage mainStage;
+    private BaseStage baseStage;
+    private ApplicationCloser applicationCloser;
 
     /**
      * Constructor for the ApplicationLoader.
@@ -24,12 +23,12 @@ public class ApplicationLoader {
     @Autowired
     public ApplicationLoader(
         Configuration configuration,
-        AuthenticationStage authenticationStage,
-        MainStage mainStage
+        BaseStage baseStage,
+        ApplicationCloser applicationCloser
     ) {
         this.configuration = configuration;
-        this.authenticationStage = authenticationStage;
-        this.mainStage = mainStage;
+        this.baseStage = baseStage;
+        this.applicationCloser = applicationCloser;
     }
 
     /**
@@ -40,14 +39,14 @@ public class ApplicationLoader {
             this.configuration.setDevelopmentMode();
         } else if (args.size() > 0 && args.get(0).equals("test")) {
             this.configuration.setTestingMode();
+        } else if (args.size() > 0 && args.get(0).equals("beta")) {
+            this.configuration.setBetaMode();
         }
 
-        // AuthenticationStage
-        this.authenticationStage.showAndWait();
+        stage.setOnCloseRequest(this.applicationCloser);
 
-        if(this.configuration.getLoggedInUser()!=null){
-            this.mainStage.showAndWait();
-        }
-
+        // Show Authentication
+        this.baseStage.setPrimaryStage(stage);
+        this.baseStage.show();
     }
 }

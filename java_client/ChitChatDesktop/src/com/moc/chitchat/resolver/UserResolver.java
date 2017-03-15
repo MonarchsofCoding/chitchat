@@ -40,12 +40,12 @@ public class UserResolver {
     }
 
     /**
-     * createLoginUser returns a new User with the given parameters applied.
+     * createUser returns a new User with the given parameters applied.
      * @param username - String the username of the User.
      * @param password - String the password of the User.
      * @return - UserModel a new User with the given parameter.
      */
-    public UserModel createLoginUser(String username, String password) {
+    public UserModel createUser(String username, String password) {
         UserModel user = new UserModel(username);
 
         user.setPassword(password);

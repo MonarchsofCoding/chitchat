@@ -49,12 +49,6 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    HttpClient provideHttpClient() {
-        return new HttpClient();
-    }
-
-    @Provides
-    @Singleton
     ErrorResponseResolver provideErrorResponseResolver() {
         return new ErrorResponseResolver();
     }
@@ -76,6 +70,4 @@ public class ApplicationModule {
     ChitChatMessagesConfiguration provideChitChatMessagesConfiguration() {
         return new ChitChatMessagesConfiguration();
     }
-
-
 }

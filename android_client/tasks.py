@@ -18,6 +18,32 @@ def __check_branch():
     exit("Not master or develop, so not deploying.")
 
 @task
+def build_dev_image(ctx):
+  """
+  Builds development image to run tests on
+  """
+  git = vcs.Git()
+  version = git.get_version()
+
+  lxc.Docker.build(cli,
+      dockerfile='Dockerfile.dev',
+      tag="monarchsofcoding/chitchat:android-dev-{0}".format(version)
+  )
+
+  cli.tag(
+    "monarchsofcoding/chitchat:android-dev-{0}".format(version),
+    "monarchsofcoding/chitchat",
+    "android-dev"
+  )
+
+  lxc.Docker.login(cli)
+
+  lxc.Docker.push(cli, [
+    "monarchsofcoding/chitchat:android-dev-{0}".format(version),
+    "monarchsofcoding/chitchat:android-dev"
+  ])
+
+@task
 def build(ctx):
     """
     Build productionRelease APK
@@ -26,10 +52,7 @@ def build(ctx):
       "ChitChat/app/build",
     ])
 
-    lxc.Docker.build(cli,
-        dockerfile='Dockerfile.dev',
-        tag="{0}-dev".format("chitchat-androidclient")
-    )
+    cli.pull("monarchsofcoding/chitchat:android-dev")
 
     bin_version = __check_branch()
     build_dir = "build/outputs/apk"
@@ -86,19 +109,26 @@ def test(ctx):
     Tests the ChitChat Android client
     """
 
-    lxc.Docker.build(cli,
-        dockerfile='Dockerfile.dev',
-        tag="{0}-dev".format("chitchat-androidclient")
-    )
+    # lxc.Docker.build(cli,
+    #     dockerfile='Dockerfile.dev',
+    #     tag="{0}-dev".format("chitchat-androidclient")
+    # )
+
+    cli.pull("monarchsofcoding/chitchat:android-dev")
+
+    tests = "gradle testProductionReleaseUnitTest"
+    coverage = "gradle jacocoTestProductionReleaseUnitTestReport"
+    lint = "gradle lintProductionRelease"
+    checkstyle = "gradle checkstyle"
 
     lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-androidclient"),
-        command='/bin/bash -c "cd app && gradle test && gradle jacocoTestReport && gradle lint && gradle checkstyle"',
-        volumes=[
-            "{0}/ChitChat:/app".format(os.getcwd())
-        ],
-        working_dir="/app",
-        environment={}
+      tag="monarchsofcoding/chitchat:android-dev",
+      command='/bin/bash -c "cd app && {0} && {1} && {2} && {3}"'.format(tests, coverage, lint, checkstyle),
+      volumes=[
+          "{0}/ChitChat:/app".format(os.getcwd())
+      ],
+      working_dir="/app",
+      environment={}
     )
 
 @task
@@ -108,8 +138,8 @@ def publish_test_artifacts(ctx):
   s3_artifacts = "s3://kcl-chit-chat-artifacts/builds/{0}/android_client".format(os.getenv("TRAVIS_BUILD_NUMBER"))
 
   local_coverage = "app/build/JacocoCoverageReport/jacocoTestProductionReleaseUnitTestReport/html/"
-  local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/productionRelease/"
-  local_lint = "app/build/outputs/lint-results-betaDebug.html"
+  local_tests = "app/build/reports/tests/testProductionReleaseUnitTest/"
+  local_lint = "app/build/outputs/lint-results-productionRelease.html"
   local_checkstyle = "app/build/reports/checkstyle/checkstyle.html"
 
   try:

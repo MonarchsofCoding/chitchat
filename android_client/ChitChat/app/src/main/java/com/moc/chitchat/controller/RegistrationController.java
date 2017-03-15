@@ -67,11 +67,6 @@ public class RegistrationController {
         Response.ErrorListener errorListener,
         String username, String password, String passwordCheck) throws ValidationException {
 
-        System.out.println(
-            String.format("Username: %s, Password length: %s, passwordCheck length: %s",
-                username, password.length(), passwordCheck.length())
-        );
-
         // Create a User object
         UserModel user = this.userResolver.createRegisterUser(
             username,
@@ -89,7 +84,8 @@ public class RegistrationController {
             "/api/v1/users",
             user.toJsonObject(),
             successListener,
-            errorListener
+            errorListener,
+            false
         );
 
     }

@@ -46,21 +46,18 @@ public class SearchUserController {
         Context context,
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,
-        String queryString,
-        Map<String, String> requestHeaders
+        String queryString
     ) {
 
         // Make a GET request to find all the connected users.
-        this.httpClient.sendRequestWithHeader(
+        this.httpClient.sendRequest(
             context,
             Request.Method.GET,
             "/api/v1/users?username=" + queryString,
             null,
             successListener,
             errorListener,
-            requestHeaders
+            true
         );
     }
-
-
 }

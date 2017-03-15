@@ -1,8 +1,5 @@
 package com.moc.chitchat.controller;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
@@ -11,7 +8,10 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
-import com.moc.chitchat.validator.UserValidator;
+import com.moc.chitchat.resolver.UserResolver;
+import com.moc.chitchat.validator.MessageValidator;
+import java.io.IOException;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,23 +23,26 @@ public class MessageController {
 
     private HttpClient httpClient;
     private Configuration configuration;
-    private UserValidator userValidator;
+    private MessageValidator messageValidator;
     private MessageResolver messageResolver;
     private ChitChatData chitChatData;
+    private UserResolver userResolver;
 
     @Autowired
     MessageController(
             HttpClient httpClient,
             Configuration configuration,
-            UserValidator userValidator,
+            MessageValidator messageValidator,
             MessageResolver messageResolver,
-            ChitChatData chitChatData
+            ChitChatData chitChatData,
+            UserResolver userResolver
     ) {
         this.httpClient = httpClient;
         this.configuration = configuration;
-        this.userValidator = userValidator;
+        this.messageValidator = messageValidator;
         this.messageResolver = messageResolver;
         this.chitChatData = chitChatData;
+        this.userResolver = userResolver;
     }
 
     /**
@@ -48,24 +51,44 @@ public class MessageController {
      * @param to      - The user that would receive a message
      * @param message - The actual message
      * @return - a new message object
-     * @throws UnirestException            - if invalid post with http client
      * @throws ValidationException         - if invalid recipient or message (e.g. empty) entered
      * @throws UnexpectedResponseException - unexpected response
      */
     public Message send(UserModel to, String message)
-            throws UnirestException, ValidationException, UnexpectedResponseException {
+            throws ValidationException, UnexpectedResponseException, IOException {
 
         Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(), to, message);
-        HttpResponse<JsonNode> response = httpClient.post("/api/v1/messages", newMessage);
+        Response response = httpClient.post("/api/v1/messages", newMessage);
 
-        if (response.getStatus() == 422) {
-            this.userValidator.throwErrorsFromResponse(response);
-        } else if (response.getStatus() != 201) {
+        if (response.code() == 422) {
+            this.messageValidator.throwErrorsFromResponse(response);
+        } else if (response.code() != 201) {
             throw new UnexpectedResponseException(response);
         }
 
         this.chitChatData.addMessageToConversation(to, newMessage);
 
         return newMessage;
+
+    }
+
+    /**
+     * Deals with receiving messages from other users.
+     * @param receivedMessage - the message
+     * @param username - the sender of the message
+     * @return - a new message object
+     */
+    public Message receive(String receivedMessage, String username) {
+        UserModel from = this.userResolver.createUser(username);
+
+        Message message = this.messageResolver.createMessage(
+            from,
+            this.configuration.getLoggedInUser(),
+            receivedMessage
+        );
+
+        chitChatData.addMessageToConversation(from, message);
+
+        return message;
     }
 }

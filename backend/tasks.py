@@ -1,6 +1,7 @@
 from invoke import task
 from docker import Client
 import os
+import shutil
 from invoke_tools import lxc, system, vcs
 
 
@@ -15,55 +16,141 @@ def __check_branch():
   elif os.getenv("TRAVIS_BRANCH") == "develop":
     return "beta"
   else:
-    exit("Not master or develop, so not deploying.")
+    return "alpha"
 
 @task
 def build(ctx):
   """
   Builds a Docker container for the Backend
   """
-  __check_branch()
+  # __check_branch()
+  lxc.Docker.clean(cli, [
+    "chit_chat/_build",
+    "chit_chat/deps"
+  ])
   git = vcs.Git()
-
   version = git.get_version()
+
+  # TODO: Upgrade Phoenix as soon as it supports poision 3.0. Doing this stuff isn't pleasant.
+  fix_gossip = "sed -i 's#\[opts\]#opts#' deps/libcluster/lib/strategy/gossip.ex"
+
+  lxc.Docker.build(cli,
+      dockerfile='Dockerfile.dev',
+      tag="{0}-dev".format("chitchat-backend")
+  )
+
+  lxc.Docker.run(cli,
+      tag="{0}-dev".format("chitchat-backend"),
+      command='/bin/sh -c "mix do deps.get && {0} && mix deps.compile && mix release --env=prod --verbose"'.format(fix_gossip),
+      volumes=[
+          "{0}/chit_chat:/app".format(os.getcwd())
+      ],
+      working_dir="/app",
+      environment={
+        "TERM": "xterm",
+        "MIX_ENV": "prod"
+      }
+  )
+
+  src = "chit_chat/_build/prod/rel/{0}/releases/{1}/{0}.tar.gz".format("chit_chat", "0.0.1")
+  shutil.copyfile(src, "{0}.tar.gz".format("chit_chat"))
 
   lxc.Docker.build(cli,
       dockerfile='Dockerfile.app',
-      tag="monarchsofcoding/chitchat:{0}".format(version)
+      tag="monarchsofcoding/chitchat:release-{0}".format(version)
   )
 
-  lxc.Docker.login(cli)
+  cli.tag(
+    "monarchsofcoding/chitchat:release-{0}".format(version),
+    "monarchsofcoding/chitchat",
+    "release"
+  )
 
-  lxc.Docker.push(cli, ["monarchsofcoding/chitchat:{0}".format(version)])
 
 @task
 def deploy(ctx):
   """
   Deploys container to AWS ECS
   """
-  # env_dir = __check_branch()
-  #
-  # cli.pull("articulate/terragrunt", "0.8.6")
-  #
-  # git = vcs.Git()
-  # version = git.get_version()
-  #
-  # terragrunt_container = lxc.Docker.run(cli,
-  #   "articulate/terragrunt:0.8.6",
-  #   command="apply",
-  #   environment={
-  #     "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
-  #     "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
-  #     "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
-  #     "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
-  #     "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env_dir)),
-  #     "TF_VAR_container_version": version
-  #   },
-  #   volumes=[
-  #     "{0}/terraform:/app".format(os.getcwd())
-  #   ],
-  #   working_dir="/app/environments/{0}".format(env_dir)
-  # )
+  env_dir = __check_branch()
+
+  cli.pull("articulate/terragrunt", "0.8.6")
+
+  git = vcs.Git()
+  version = git.get_version()
+
+  lxc.Docker.login(cli)
+  lxc.Docker.push(cli, [
+    "monarchsofcoding/chitchat:release-{0}".format(version),
+    "monarchsofcoding/chitchat:release"
+  ])
+
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="apply",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
+      "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
+      "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env_dir)),
+      "TF_VAR_container_version": version
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env_dir)
+  )
+  pass
+
+@task
+def destroy(ctx, env):
+  env_dir = env
+
+  cli.pull("articulate/terragrunt", "0.8.6")
+
+  git = vcs.Git()
+  version = git.get_version()
+
+  # lxc.Docker.login(cli)
+  # lxc.Docker.push(cli, [
+  #   "monarchsofcoding/chitchat:release-{0}".format(version),
+  #   "monarchsofcoding/chitchat:release"
+  # ])
+
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="get",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
+      "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
+      "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env_dir)),
+      "TF_VAR_container_version": version
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env_dir)
+  )
+
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="destroy --force",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": "destroy",
+      "TF_VAR_secret_key_base": "destroy",
+      "TF_VAR_guardian_secret_key": "destroy",
+      "TF_VAR_container_version": "destroy"
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env_dir)
+  )
   pass
 
 @task
@@ -91,10 +178,8 @@ def test(ctx):
       detach=True
     )
 
-    import time
-    time.sleep(10)
-
-    setup = "mix local.hex --force && mix local.rebar --force && mix deps.get"
+    setup = "mix deps.get"
+    wait = "/bin/wait-for-it.sh -t 120 postgres:5432"
     tests = "mix test --color --trace"
     coverage = "mix coveralls.html --color"
     lint = "mix credo --strict"
@@ -103,13 +188,14 @@ def test(ctx):
     try:
       lxc.Docker.run(cli,
           tag="{0}-dev".format("chitchat-backend"),
-          command='/bin/sh -c "{0} && {1} && {2}; {3} && {4}"'.format(setup, tests, coverage, lint, dogma),
+          command='/bin/sh -c "{0} && {1} && {2} && {3} && {4} && {5}"'.format(
+            setup, wait, tests, coverage, lint, dogma),
           volumes=[
               "{0}/chit_chat:/app".format(os.getcwd())
           ],
           working_dir="/app",
           environment={
-            "TERM": "xterm-color",
+            "TERM": "xterm",
             "MIX_ENV": "test"
           },
           links={

@@ -1,5 +1,7 @@
 package com.moc.chitchat.application;
 
+import android.support.v7.app.AppCompatActivity;
+
 import com.moc.chitchat.model.UserModel;
 
 public class SessionConfiguration {

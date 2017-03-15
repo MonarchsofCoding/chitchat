@@ -50,17 +50,18 @@ public class SearchUserControllerTest {
             mockContext,
             mockResponselistener,
             mockErrorListener,
-            "spi",
-            null);
+            "spi"
+        );
 
 
-        this.mockHttpClient.sendRequestWithHeader(mockContext,
+        this.mockHttpClient.sendRequest(mockContext,
             Request.Method.POST,
             "/api/v1/users?username=" + "spi",
             null,
             mockResponselistener,
             mockErrorListener,
-            null);
+            true
+        );
 
 
     }

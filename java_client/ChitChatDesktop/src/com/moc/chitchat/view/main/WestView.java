@@ -1,7 +1,7 @@
 package com.moc.chitchat.view.main;
 
 import com.moc.chitchat.model.Conversation;
-import com.moc.chitchat.view.authentication.BaseView;
+import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -11,7 +11,7 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 
 /**
- * WestView provides the west side of the Main application stage.
+ * WestView provides the west side of the MainView.
  */
 @Component
 public class WestView extends BaseView implements EventHandler<ActionEvent> {
@@ -52,6 +52,7 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
 
         this.togglePaneButton = new Button();
         this.togglePaneButton.setOnAction(this);
+        this.togglePaneButton.setId("ToggleBtn");
         this.westPane.add(this.togglePaneButton, "dock north");
         this.showConversationListView();
 

@@ -10,6 +10,7 @@ defmodule ChitChat.MessageController do
   alias ChitChat.ChangesetView
   alias ChitChat.AuthController
   alias ChitChat.ErrorView
+  alias ChitChat.Endpoint
 
   @doc """
   Creates a new Message with the given parameters
@@ -24,6 +25,12 @@ defmodule ChitChat.MessageController do
          {:ok, message} <- Message.create_with_participants(
                                     changeset, recipient, user)
     do
+      Endpoint.broadcast! "user:#{message.destination.username}",
+        "new:message",
+        %{
+          from: message.source.username,
+          body: message.message
+        }
       conn
       |> put_status(:created)
       |> render("show.json", message: message)

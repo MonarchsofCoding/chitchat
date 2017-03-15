@@ -17,19 +17,41 @@ def __check_branch():
   else:
     exit("Not master or develop, so not deploying.")
 
+@task
+def build_dev_image(ctx):
+  """
+  Builds development image to run tests on
+  """
+  git = vcs.Git()
+  version = git.get_version()
+
+  lxc.Docker.build(cli,
+      dockerfile='Dockerfile.dev',
+      tag="monarchsofcoding/chitchat:desktop-dev-{0}".format(version)
+  )
+
+  cli.tag(
+    "monarchsofcoding/chitchat:desktop-dev-{0}".format(version),
+    "monarchsofcoding/chitchat",
+    "desktop-dev"
+  )
+
+  lxc.Docker.login(cli)
+
+  lxc.Docker.push(cli, [
+    "monarchsofcoding/chitchat:desktop-dev-{0}".format(version),
+    "monarchsofcoding/chitchat:desktop-dev"
+  ])
 
 @task
 def build(ctx):
   """
   Build release JAR
   """
-  lxc.Docker.build(cli,
-      dockerfile='Dockerfile.dev',
-      tag="{0}-dev".format("chitchat-javaclient")
-  )
+  cli.pull("monarchsofcoding/chitchat:desktop-dev")
 
   lxc.Docker.run(cli,
-      tag="{0}-dev".format("chitchat-javaclient"),
+      tag="monarchsofcoding/chitchat:desktop-dev",
       command='/bin/bash -c "vnc4server -geometry 1920x1080 && export DISPLAY=:1 && gradle jfxJar && zip -r ChitChatDesktop.zip build/jfx/app"',
       volumes=[
           "{0}/ChitChatDesktop:/app".format(os.getcwd())
@@ -68,22 +90,28 @@ def test(ctx):
   """
   Tests the ChitChat Desktop
   """
+  # lxc.Docker.build(cli,
+  #     dockerfile='Dockerfile.dev',
+  #     tag="{0}-dev".format("chitchat-javaclient")
+  # )
 
-  lxc.Docker.build(cli,
-    dockerfile='Dockerfile.dev',
-    tag="{0}-dev".format("chitchat-javaclient")
-  )
+  cli.pull("monarchsofcoding/chitchat:desktop-dev")
 
   vnc = "vnc4server -geometry 1920x1080 && export DISPLAY=:1"
+  tests = "gradle test"
+  static_analysis = "gradle jacocoTestReport; gradle check -x test"
 
   lxc.Docker.run(cli,
-    tag="{0}-dev".format("chitchat-javaclient"),
-    command='/bin/bash -c "{0} && gradle test && gradle jacocoTestReport && gradle check"'.format(vnc),
+    tag="monarchsofcoding/chitchat:desktop-dev",
+    command='/bin/bash -c "{0} && {1} && {2}"'.format(
+    vnc, tests, static_analysis),
     volumes=[
       "{0}/ChitChatDesktop:/app".format(os.getcwd())
     ],
     working_dir="/app",
-    environment={}
+    environment={
+      "CHITCHAT_ENV": "test"
+    }
   )
 
 @task

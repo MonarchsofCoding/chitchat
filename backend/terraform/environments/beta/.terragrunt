@@ -2,7 +2,7 @@
 lock = {
   backend = "dynamodb"
   config {
-    state_file_id = "kcl-moc-chitchat-app"
+    state_file_id = "kcl-moc-chitchat-app-beta"
   }
 }
 
@@ -12,7 +12,7 @@ remote_state = {
   config {
     encrypt = "true"
     bucket = "monarchs-of-coding-terraform-state"
-    key = "chit_chat/terraform.tfstate"
+    key = "chit_chat/beta/terraform.tfstate"
     region = "eu-west-1"
   }
 }

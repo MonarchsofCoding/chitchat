@@ -85,7 +85,8 @@ public class LoginControllerTest {
             "/api/v1/auth",
             mockUser.toJsonObject(),
             mockResponselistener,
-            mockErrorListener);
+            mockErrorListener,
+            false);
 
 
     }

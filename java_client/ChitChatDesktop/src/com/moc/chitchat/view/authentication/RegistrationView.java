@@ -3,9 +3,9 @@ package com.moc.chitchat.view.authentication;
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
+import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -17,7 +17,7 @@ import org.springframework.validation.Errors;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 /**
- * RegistrationView provides the window used for registering a User.
+ * RegistrationView provides the view used for registering a User.
  */
 @Component
 public class RegistrationView extends BaseView implements EventHandler<ActionEvent> {
@@ -26,15 +26,17 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
     private TextField usernameField;
     private Label usernameErrors;
+
     private PasswordField passwordField;
     private Label passwordErrors;
+
     private PasswordField passwordCheckField;
     private Label passwordCheckErrors;
 
     private Button registerBtn;
     private Button loginBtn;
 
-    private AuthenticationStage stage;
+    private Label unexpectedErrors;
 
     @Autowired
     RegistrationView(
@@ -43,69 +45,85 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.registrationController = registrationController;
     }
 
-    public void setStage(AuthenticationStage stage) {
-        this.stage = stage;
-    }
-
     @Override
     public MigPane getContentPane() {
-        MigPane registerForm = new MigPane();
+        this.baseStage.setWindowTitle("Chit Chat - Registration");
 
         this.usernameField = new TextField();
         this.usernameField.setPromptText("Username");
-        registerForm.add(this.usernameField);
+        this.usernameField.setId("register-username-fld");
+        MigPane registerForm = new MigPane();
+        registerForm.setLayout("fill");
+        registerForm.add(this.usernameField, "span");
+
         this.usernameErrors = new Label();
+        this.usernameErrors.setId("register-username-errs");
         this.usernameErrors.setTextFill(Color.RED);
-        registerForm.add(this.usernameErrors, "wrap");
+        this.usernameErrors.setVisible(false);
+        registerForm.add(this.usernameErrors, "span");
 
         this.passwordField = new PasswordField();
         this.passwordField.setPromptText("Password");
+        this.passwordField.setId("register-password-fld");
         this.passwordField.setOnAction(this);
-        registerForm.add(this.passwordField);
+        registerForm.add(this.passwordField, "span");
+
         this.passwordErrors = new Label();
+        this.passwordErrors.setId("register-password-errs");
         this.passwordErrors.setTextFill(Color.RED);
-        registerForm.add(this.passwordErrors, "wrap");
+        this.passwordErrors.setVisible(false);
+        registerForm.add(this.passwordErrors, "span");
 
         this.passwordCheckField = new PasswordField();
         this.passwordCheckField.setPromptText("Re-Password");
+        this.passwordCheckField.setId("register-passwordCheck-fld");
         this.passwordCheckField.setOnAction(this);
-        registerForm.add(this.passwordCheckField);
+        registerForm.add(this.passwordCheckField, "span");
+
         this.passwordCheckErrors = new Label();
+        this.passwordCheckErrors.setId("register-passwordCheck-errs");
         this.passwordCheckErrors.setTextFill(Color.RED);
-        registerForm.add(this.passwordCheckErrors, "wrap");
+        this.passwordCheckErrors.setVisible(false);
+        registerForm.add(this.passwordCheckErrors, "span");
+
         this.registerBtn = new Button("Register");
         this.registerBtn.setOnAction(this);
-        registerForm.add(this.registerBtn, "wrap, grow");
+        this.registerBtn.setId("register-register-btn");
+        registerForm.add(this.registerBtn, "span");
+
+        this.unexpectedErrors = new Label();
+        this.unexpectedErrors.setId("register-errors-lbl");
+        this.unexpectedErrors.setTextFill(Color.RED);
+        this.unexpectedErrors.setVisible(false);
+        registerForm.add(this.unexpectedErrors, "span");
 
         this.loginBtn = new Button("Login");
         this.loginBtn.setOnAction(this);
-        registerForm.add(this.loginBtn, "wrap, grow");
+        this.loginBtn.setId("register-login-btn");
+        registerForm.add(this.loginBtn);
 
         MigPane registerPane = new MigPane();
+        registerPane.setLayout("fill");
         registerPane.add(registerForm, "span, split 2, center");
 
         return registerPane;
     }
 
-    private void changeButtonsStatus(boolean enabled) {
-        if (enabled) {
-            // Make the fields enabled
-            this.usernameField.setDisable(false);
-            this.passwordField.setDisable(false);
-            this.passwordCheckField.setDisable(false);
-            this.registerBtn.setDisable(false);
-            this.loginBtn.setDisable(false);
-        } else {
-            this.usernameField.setDisable(true);
-            this.passwordField.setDisable(true);
-            this.passwordCheckField.setDisable(true);
-            this.registerBtn.setDisable(true);
-            this.loginBtn.setDisable(true);
-        }
+    private void enableFieldsAndButtons(boolean enabled) {
+        this.usernameField.setDisable(!enabled);
+        this.passwordField.setDisable(!enabled);
+        this.passwordCheckField.setDisable(!enabled);
+        this.registerBtn.setDisable(!enabled);
+        this.loginBtn.setDisable(!enabled);
     }
 
     private void registerAction() {
-        changeButtonsStatus(false);
+
+        this.usernameErrors.setVisible(false);
+        this.passwordErrors.setVisible(false);
+        this.passwordCheckErrors.setVisible(false);
+
+        this.enableFieldsAndButtons(false);
 
         try {
             UserModel user = this.registrationController.registerUser(
@@ -113,53 +131,41 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
                     String.valueOf(this.passwordField.getText()),
                     String.valueOf(this.passwordCheckField.getText())
             );
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Success Registration");
-            alert.setTitle("Information of Registration");
-            alert.setContentText("You have now registered as " + user.getUsername());
-            alert.show();
 
             // Clearing the fields
             this.usernameField.clear();
             this.passwordField.clear();
             this.passwordCheckField.clear();
 
-            changeButtonsStatus(true);
+            this.enableFieldsAndButtons(true);
 
-            this.stage.showLogin();
+            this.baseStage.showLogin();
 
         } catch (ValidationException validationException) {
-            this.usernameField.setDisable(false);
-            this.passwordField.setDisable(false);
-            this.passwordCheckField.setDisable(false);
-            this.registerBtn.setDisable(false);
-            this.loginBtn.setDisable(false);
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Unsuccesfull Registration ");
-            alert.show();
+
+            this.enableFieldsAndButtons(true);
 
             Errors errors = validationException.getErrors();
             if (errors.hasErrors()) {
                 if (errors.hasFieldErrors("username")) {
+                    System.out.println("aaa" + errors.getFieldError("username").getDefaultMessage());
                     this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
-                    alert.setContentText("Username " + errors.getFieldError("username").getDefaultMessage());
-                    alert.show();
+                    this.usernameErrors.setVisible(true);
                 }
 
                 if (errors.hasFieldErrors("password")) {
                     this.passwordErrors.setText(errors.getFieldError("password").getDefaultMessage());
-                    alert.setContentText("Password " + errors.getFieldError("password").getDefaultMessage());
-                    alert.show();
+                    this.passwordErrors.setVisible(true);
                 }
 
                 if (errors.hasFieldErrors("passwordCheck")) {
                     this.passwordCheckErrors.setText(errors.getFieldError("passwordCheck").getDefaultMessage());
-                    alert.setContentText("Password " + errors.getFieldError("passwordCheck").getDefaultMessage());
-                    alert.show();
+                    this.passwordCheckErrors.setVisible(true);
                 }
             }
 
         } catch (Exception defaultError) {
+            this.unexpectedErrors.setText("Unexpected error from the server");
             defaultError.printStackTrace();
         }
     }
@@ -168,17 +174,8 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
     public void handle(ActionEvent actionEvent) {
         if (actionEvent.getSource() == this.registerBtn) {
             this.registerAction();
-            if (!this.usernameField.getText().equals("")) {
-                this.usernameErrors.setText("");
-            }
-            if (!this.passwordField.getText().equals("")) {
-                this.passwordErrors.setText("");
-            }
-            if (!this.passwordCheckField.getText().equals("")) {
-                this.passwordCheckErrors.setText("");
-            }
         } else if (actionEvent.getSource() == this.loginBtn) {
-            this.stage.showLogin();
+            this.baseStage.showLogin();
         }
     }
 }

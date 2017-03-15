@@ -1,24 +1,23 @@
 package com.moc.chitchat.controller.authentication;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.client.SocketListener;
+import com.moc.chitchat.client.WebSocketClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
-import org.json.JSONObject;
-import org.junit.Before;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -27,149 +26,192 @@ import static org.mockito.Mockito.*;
 public class LoginControllerTest {
 
 
-
-    @Mock private UserResolver mockUserResolver;
-    @Mock private UserValidator mockUserValidator;
-    @Mock private HttpClient mockHttpClient;
-    @Mock private Configuration configuration;
-
-    @InjectMocks
-    private LoginController loginController;
-
-    @Before
-    public void initMocks() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
-    public void testConstructor() {
-        assertNotNull(this.loginController);
-        assertEquals(
-                this.loginController.getClass(),
-                LoginController.class
+    public void testSuccessfulLogin() throws IOException, InterruptedException {
+        String validUsername = "alice";
+        String validPassword = "abcde1234";
+
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
+
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        String authToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9";
+        String jsonResponse = "{" +
+                "\"data\": {" +
+                "\"username\": \"alice\"," +
+                "\"authToken\": \"" + authToken + "\"," +
+                "}" +
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(200)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+        SocketListener socketListener = mock(SocketListener.class);
+        WebSocketClient webSocketClient = new WebSocketClient(mockConfiguration, socketListener);
+
+        LoginController loginController = new LoginController(
+                userResolver,
+                httpClient,
+                userValidator,
+                mockConfiguration,
+                webSocketClient
         );
-    }
-
-    @Test
-    public void testSuccessfulLoginUser() throws ValidationException, UnirestException, UnexpectedResponseException {
-        // Stub the UserResolver to return a UserModel
-        UserModel mockUser = mock(UserModel.class);
-        when(
-                this.mockUserResolver.createLoginUser(
-                        "spiros",
-                        "aaa"
-                )
-        ).thenReturn(mockUser);
-
-        // Create and define the mocked response to return 201 (success)
-        HttpResponse<JsonNode> mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-        when(mockResponse.getStatus())
-                .thenReturn(200);
-        // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.post("/api/v1/auth", mockUser))
-                .thenReturn(mockResponse);
-
-        // Mock the authorisation token
-        JsonNode bodyResponse = mock(JsonNode.class);
-        when(mockResponse.getBody()).thenReturn(bodyResponse);
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("authToken", "some_string");
-
-        JSONObject bodyJson = new JSONObject();
-        bodyJson.put("data", jsonObject);
-
-        when(bodyResponse.getObject()).thenReturn(bodyJson);
-
-        // Run the function to test
-        this.loginController.loginUser(
-                "spiros",
-                "aaa"
-        );
-    }
-
-
-    @Test
-    public void testServerUnsuccessfulLoginUser() throws UnirestException, ValidationException, UnexpectedResponseException {
-        // Stub the UserResolver to return a UserModel
-        UserModel mockUser = mock(UserModel.class);
-        when(
-                this.mockUserResolver.createLoginUser(
-                        "spiros",
-                        "aaa"
-                )
-        ).thenReturn(mockUser);
-
-
-        // Create and define the mocked response to return 422 (unsuccessful)
-        HttpResponse<JsonNode> mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-        when(mockResponse.getStatus())
-                .thenReturn(401);
-        // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.post("/api/v1/auth", mockUser))
-                .thenReturn(mockResponse);
-
-        // Mock the ValidationException
-        ValidationException mockValidationException = mock(ValidationException.class);
-        when(mockValidationException.getMessage())
-                .thenReturn("Validation Exception");
-
-        // Mock the authorisation token
-        JsonNode bodyResponse = mock(JsonNode.class);
-        when(mockResponse.getBody()).thenReturn(bodyResponse);
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("authToken", "some_string");
-
-        JSONObject bodyJson = new JSONObject();
-        bodyJson.put("data", jsonObject);
-
-        when(bodyResponse.getObject()).thenReturn(bodyJson);
-
-        // Run the function to test
+        UserModel userModel = new UserModel("testName");
         try {
-            this.loginController.loginUser(
-                    "spiros",
-                    "aaa"
+            userModel = loginController.loginUser(
+                    validUsername,
+                    validPassword
             );
+
+        } catch (ValidationException | UnexpectedResponseException e) {
+            fail();
+            e.printStackTrace();
+        }
+
+        // assert requests
+        assertEquals(authToken, userModel.getAuthToken());
+        assertEquals("alice", userModel.getUsername());
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("//api/v1/auth", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
+        server.shutdown();
+    }
+
+    @Test
+    public void testIncorrectCredientials() throws IOException, InterruptedException {
+        String validUsername = "alice";
+        String validPassword = "";
+
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
+
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        String jsonResponse = "{" +
+                "\"errors\": {" +
+                "\"username\": [\"is incorrect\"]," +
+                "\"password\": [\"is incorrect\"]," +
+                "}" +
+                "}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(401)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+        SocketListener socketListener = mock(SocketListener.class);
+        WebSocketClient webSocketClient = new WebSocketClient(mockConfiguration, socketListener);
+
+        LoginController loginController = new LoginController(
+                userResolver,
+                httpClient,
+                userValidator,
+                mockConfiguration,
+                webSocketClient
+        );
+        UserModel userModel = new UserModel("testName");
+        try {
+            userModel = loginController.loginUser(
+                    validUsername,
+                    validPassword
+            );
+
         } catch (ValidationException e) {
-            assertEquals("Validation Exception", e.getMessage());
+            assertEquals("is incorrect", e.getErrors().getFieldError().getDefaultMessage());
+            assertEquals("testName", userModel.getUsername());
+        } catch (UnexpectedResponseException e) {
+            fail();
+            e.printStackTrace();
         }
 
-        // Verify the UserValidator.throwErrorsFromResponse was called
-        verify(mockUserValidator).throwErrorsFromResponse(mockResponse);
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("//api/v1/auth", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
+        server.shutdown();
     }
 
     @Test
-    public void testServerErrorLoginUser() throws UnirestException, ValidationException {
-        // Stub the UserResolver to return a UserModel
-        UserModel mockUser = mock(UserModel.class);
-        when(
-                this.mockUserResolver.createLoginUser(
-                        "spiros",
-                        "aaa"
-                )
-        ).thenReturn(mockUser);
+    public void testUnexpectedErrorsLogin() throws IOException, InterruptedException {
+        String validUsername = "alice";
+        String validPassword = "";
 
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
 
-        // Create and define the mocked response to return 401 (unsuccessful)
-        HttpResponse<JsonNode> mockResponse = (HttpResponse<JsonNode>) mock(HttpResponse.class);
-        when(mockResponse.getStatus())
-                .thenReturn(500);
-        // Stub the HTTPClient to return the mocked response
-        when(this.mockHttpClient.post("/api/v1/auth", mockUser))
-                .thenReturn(mockResponse);
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
 
-        // Run the function to test
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setResponseCode(500)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        // Set up controller
+        UserResolver userResolver = new UserResolver();
+        UserValidator userValidator = new UserValidator();
+        Configuration mockConfiguration = mock(Configuration.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
+        SocketListener socketListener = mock(SocketListener.class);
+        WebSocketClient webSocketClient = new WebSocketClient(mockConfiguration, socketListener);
+
+        LoginController loginController = new LoginController(
+                userResolver,
+                httpClient,
+                userValidator,
+                mockConfiguration,
+                webSocketClient
+        );
+        UserModel userModel = new UserModel("testName");
         try {
-            this.loginController.loginUser(
-                    "spiros",
-                    "aaa"
+            userModel = loginController.loginUser(
+                    validUsername,
+                    validPassword
             );
+
+        } catch (ValidationException e) {
+            fail();
+            e.printStackTrace();
         } catch (UnexpectedResponseException e) {
-            assertEquals("Unexpected Response code: 500", e.getMessage());
+            assertEquals("testName", userModel.getUsername());
         }
 
+        // assert requests
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("//api/v1/auth", recordedRequest.getPath());
+        assertEquals("POST", recordedRequest.getMethod());
+        server.shutdown();
     }
-
 }

@@ -3,18 +3,23 @@ package com.moc.chitchat.view.authentication;
 import com.moc.chitchat.controller.authentication.LoginController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
+import com.moc.chitchat.view.BaseStage;
+import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
-
+/**
+ * Provides the Login view interface.
+ */
 @Component
 public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
@@ -24,8 +29,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     private PasswordField passwordField;
     private Button loginBtn;
     private Button registerBtn;
-
-    private AuthenticationStage stage;
+    private Label unexpectedErrors;
 
     @Autowired
     LoginView(
@@ -34,33 +38,42 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.loginController = loginController;
     }
 
-    public void setStage(AuthenticationStage stage) {
-        this.stage = stage;
-    }
-
     @Override
     public MigPane getContentPane() {
-        MigPane loginForm = new MigPane();
-
+        this.baseStage.setWindowTitle("Chit Chat - Login");
         this.usernameField = new TextField();
+        this.usernameField.setId("login-username-fld");
         this.usernameField.setPromptText("Username");
-        loginForm.add(this.usernameField, "span, wrap");
+        MigPane loginForm = new MigPane();
+        loginForm.add(this.usernameField,"grow,wrap");
 
         this.passwordField = new PasswordField();
         this.passwordField.setPromptText("Password");
+        this.passwordField.setId("login-password-fld");
         this.passwordField.setOnAction(this);
-        loginForm.add(this.passwordField, "span, wrap");
+        loginForm.add(this.passwordField,"grow,wrap");
 
         this.loginBtn = new Button("Login");
         this.loginBtn.setOnAction(this);
+        this.loginBtn.setId("login-login-btn");
         loginForm.add(this.loginBtn, "wrap, grow");
 
         this.registerBtn = new Button("Register");
+        this.registerBtn.setId("login-register-btn");
         this.registerBtn.setOnAction(this);
-        loginForm.add(this.registerBtn, "wrap, grow");
+        loginForm.add(this.registerBtn, "wrap,grow");
+
+        this.unexpectedErrors = new Label();
+        this.unexpectedErrors.setId("login-errors-lbl");
+        this.unexpectedErrors.setTextFill(Color.RED);
+        this.unexpectedErrors.setVisible(false);
+
+        loginForm.add(this.unexpectedErrors,"grow");
 
         MigPane loginPane = new MigPane();
+        loginPane.setLayout("fill");
         loginPane.add(loginForm, "span, split 2, center");
+        loginPane.setId("login-view-pane");
 
         return loginPane;
     }
@@ -71,35 +84,25 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
                     this.usernameField.getText(),
                     this.passwordField.getText()
             );
-
-            this.stage.hide();
-
+            // Clearing the fields
+            this.usernameField.clear();
+            this.passwordField.clear();
+            this.baseStage.showMainView();
 
             //  JOptionPane.showMessageDialog(frame,
             // String.format("Success! You have now registered %s!", user.getUsername()));
         } catch (ValidationException validationException) {
             Errors errors = validationException.getErrors();
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Unsuccesfull Login");
             if (errors.hasErrors()) {
-                if (errors.getFieldError().getField().equals(("username"))) {
-                    alert.setContentText("Username " + errors.getFieldError("username").getDefaultMessage());
-                    alert.show();
-                }
-                if (errors.getFieldError().getField().equals("password")) {
-                    alert.setContentText("Password " + errors.getFieldError("password").getDefaultMessage());
-                    alert.show();
-                }
+                this.unexpectedErrors.setText("Wrong credentials or you have not registered yet !");
+                this.unexpectedErrors.setVisible(true);
+
             }
 
-            alert.setContentText("Wrong credentials or you have not registered yet !");
-            alert.show();
-
-
         } catch (Exception exception) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Unexpected error from server");
-            alert.show();
+
+            this.unexpectedErrors.setText("Unexpected error from server");
+            this.unexpectedErrors.setVisible(true);
             exception.printStackTrace();
         }
     }
@@ -107,9 +110,13 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent actionEvent) {
         if (actionEvent.getSource() == this.passwordField || actionEvent.getSource() == this.loginBtn) {
+            this.unexpectedErrors.setVisible(false);
             this.loginAction();
         } else if (actionEvent.getSource() == this.registerBtn) {
-            this.stage.showRegister();
+            this.unexpectedErrors.setText("");
+            this.usernameField.setText("");
+            this.passwordField.setText("");
+            this.baseStage.showRegister();
         }
     }
 }

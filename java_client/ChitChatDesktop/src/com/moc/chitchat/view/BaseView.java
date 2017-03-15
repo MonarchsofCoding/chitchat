@@ -1,12 +1,19 @@
-package com.moc.chitchat.view.authentication;
+package com.moc.chitchat.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
-
+/**
+ * Provides the base for all primary views in the application.
+ */
 public abstract class BaseView {
+
+    protected BaseStage baseStage;
 
     private int width;
     private int height;
@@ -19,6 +26,10 @@ public abstract class BaseView {
         this.height = height;
     }
 
+    public void setBaseStage(BaseStage stage) {
+        this.baseStage = stage;
+    }
+
     protected abstract MigPane getContentPane();
 
     /**
@@ -28,12 +39,10 @@ public abstract class BaseView {
     public Scene getScene() {
 
         MigPane base = new MigPane();
-        base.setLayout("fill");
+        base.setLayout("fill, wrap 12");
         base.add(this.buildHeader(), "dock north");
 
         MigPane contentPane = this.getContentPane();
-        contentPane.setLayout("fill");
-        contentPane.setStyle("-fx-background-color: #F0F7F4");
         base.add(contentPane, "grow");
 
         base.add(this.buildFooter(), "dock south");
@@ -47,7 +56,6 @@ public abstract class BaseView {
 
         Label title = new Label("Chit Chat");
         title.setTextFill(Color.WHITE);
-        header.add(title, "span, split 2, center");
 
         return header;
     }
@@ -58,9 +66,20 @@ public abstract class BaseView {
         footer.setStyle("-fx-background-color: #705D56;");
 
         Label credits = new Label("Created by: Monarchs of Coding");
+        credits.setId("credits");
         credits.setTextFill(Color.WHITE);
         footer.add(credits);
 
+        if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
+            String username = this.baseStage.getConfiguration().getLoggedInUser().getUsername();
+
+            Label loggedInAs = new Label(String.format("Logged in as: %s", username));
+            loggedInAs.setTextFill(Color.WHITE);
+            loggedInAs.setId("loggedInAs");
+            footer.add(loggedInAs, "right");
+        }
+
         return footer;
     }
+
 }

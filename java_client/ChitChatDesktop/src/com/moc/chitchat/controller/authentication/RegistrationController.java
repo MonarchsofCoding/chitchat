@@ -1,14 +1,13 @@
 package com.moc.chitchat.controller.authentication;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.moc.chitchat.client.HttpClient;
 import com.moc.chitchat.exception.UnexpectedResponseException;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
+import java.io.IOException;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +23,14 @@ public class RegistrationController {
 
     private HttpClient httpClient;
 
+    /**
+     * Registration controller provides the controller to register the use.
+     * @param userResolver - used to create a user.
+     * @param validator - create to validate if correct credentials is inserted
+     * @param httpClient - the httpclient where it is used to provide access to the http APIs.
+     */
     @Autowired
-    RegistrationController(
+    public RegistrationController(
         UserResolver userResolver,
         UserValidator validator,
         HttpClient httpClient
@@ -41,11 +46,10 @@ public class RegistrationController {
      * @param password - this provides the input field password
      * @param passwordCheck - this provides the input field passwordCheck
      * @throws ValidationException - If invalid username,password or passwordcheck
-     * @throws UnirestException - If invalid post with the httpClient
      * @throws UnexpectedResponseException - Unexpected response
      */
     public UserModel registerUser(String username, String password, String passwordCheck)
-            throws ValidationException, UnirestException, UnexpectedResponseException {
+            throws ValidationException, UnexpectedResponseException, IOException {
 
         System.out.printf("Username: %s | Password length: %s | Password Check length: %s\n",
                 username, password.length(), passwordCheck.length());
@@ -57,13 +61,13 @@ public class RegistrationController {
         this.userValidator.validate(user);
 
         // Register the User object on the backend via a HTTP request.
-        HttpResponse<JsonNode> response = this.httpClient.post("/api/v1/users", user);
+        Response response = this.httpClient.post("/api/v1/users", user);
 
         // Process HTTP response. Throw Exception if User invalid. Return void/true if Successful.
-        if (response.getStatus() == 422) {
+        if (response.code() == 422) {
             // Validation failed or username taken.
             this.userValidator.throwErrorsFromResponse(response);
-        } else if (response.getStatus() != 201) {
+        } else if (response.code() != 201) {
             // Unexpected response code. e.g. 500
             throw new UnexpectedResponseException(response);
         }
