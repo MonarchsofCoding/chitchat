@@ -46,7 +46,7 @@ env:
   matrix:
     - SERVICE=backend
     - SERVICE=java_client
-    # - SERVICE="java_client/e2e"
+    - SERVICE="java_client/e2e"
     - SERVICE=android_client
     # We cannot run the x86 android emulator on Travis and the ARM emulator times out. We will run the UI tests locally.
     # - SERVICE="android_client/e2e"
