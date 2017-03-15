@@ -36,6 +36,19 @@ defmodule ChitChat.UserController do
     end
   end
 
+  @spec show(Conn, any, any, any) :: nil
+  def show(conn, %{"id" => username}, _user, _claims) do
+    with {:ok, user} <- User.get_by_username(username)
+    do
+      render(conn, "show.json", user: user)
+    else
+      {:error} ->
+        conn
+        |> put_status(:not_found)
+        |> render(ErrorView, "status.json", status: :not_found)
+    end
+  end
+
   @doc """
   Creates a new User with the given parameters
   """

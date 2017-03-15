@@ -65,6 +65,11 @@ defmodule ChitChat.User do
 
   end
 
+  @spec get_by_username(String) :: User
+  def get_by_username(username) do
+    UserRepository.find_by_username(username)
+  end
+
   @spec search_all(String, User) :: {}
   def search_all(username, user) do
     UserRepository.search(username, user)

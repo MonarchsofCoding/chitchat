@@ -115,6 +115,42 @@ defmodule ChitChat.UserControllerTest do
     end
   end
 
+  describe "show" do
+    test "renders a User resource that exists", %{conn: conn} do
+      create_test_users(conn)
+
+      # Give Bob a public key
+      conn
+      |> recycle()
+      |> post("/api/v1/auth", %{
+        username: "bob",
+        password: "password1234",
+        public_key: "bob public key"})
+      |> json_response(200)
+
+      get_response = conn
+      |> recycle()
+      |> get("/api/v1/users/bob")
+      |> json_response(200)
+
+      assert get_response == %{
+        "data" => %{
+          "username" => "bob",
+          "public_key" => "bob public key"
+        }
+      }
+    end
+
+    test "returns not found if a User resource does not exist", %{conn: conn} do
+      create_test_users(conn)
+
+      conn
+      |> recycle()
+      |> get("/api/v1/users/boba")
+      |> json_response(404)
+    end
+  end
+
   describe "create" do
     test "creates and renders User resource when data is valid", %{conn: conn} do
       response = conn
