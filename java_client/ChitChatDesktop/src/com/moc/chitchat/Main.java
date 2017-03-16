@@ -1,9 +1,13 @@
 package com.moc.chitchat;
 
 import com.moc.chitchat.application.ApplicationLoader;
+import com.moc.chitchat.view.BaseStage;
+import com.moc.chitchat.view.BaseView;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -33,5 +37,11 @@ public class Main extends Application {
         ApplicationLoader applicationLoader = context.getBean(ApplicationLoader.class);
 
         applicationLoader.load(primaryStage, this.getParameters().getUnnamed());
-    }
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+
+                primaryStage.show();            }
+        });
+        }
 }

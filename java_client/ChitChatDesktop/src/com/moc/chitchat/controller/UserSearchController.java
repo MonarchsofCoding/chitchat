@@ -74,7 +74,7 @@ public class UserSearchController {
 
 
         JSONArray jsonArray = jsonObject.getJSONArray("data");
-        System.out.println(jsonArray);
+        System.out.println("edwww the jsonobject responds  "+jsonArray);
         List<UserModel> foundUsers = new ArrayList<>();
 
         for (Object obj : jsonArray) {

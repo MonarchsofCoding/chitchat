@@ -66,7 +66,6 @@ public class LoginController {
         // Create the User object from parameters.
         UserModel user = userResolver.createUser(username, password,userKeyPair.getPublic(),userKeyPair.getPrivate());
 
-        System.out.println(user.toJSONString());
 
         // Register the User object on the backend via a HTTP request.
         Response response = this.httpClient.post("/api/v1/auth", user);
@@ -84,7 +83,6 @@ public class LoginController {
         String jsonData = response.body().string();
         JSONObject jsonObject = new JSONObject(jsonData);
         user.setAuthToken(jsonObject.getJSONObject("data").get("authToken").toString());
-        System.out.println(jsonData);
         this.configuration.setLoggedInUser(user);
 
         webSocketClient.connectToUserMessage(user);
