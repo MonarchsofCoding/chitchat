@@ -46,7 +46,7 @@ public class ConversationListView {
     public MigPane getContentPane() {
 
         this.conversationListView = new JFXListView<>();
-        this.conversationListView.getItems().addAll(this.chitChatData.getConversations());
+        this.conversationListView.setItems(this.chitChatData.getConversations());
 
         this.conversationListView.setId("conversation-user-list");
         this.conversationListView.setPlaceholder(new Label("Add User for Conversation"));
