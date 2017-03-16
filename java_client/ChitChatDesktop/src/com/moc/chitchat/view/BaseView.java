@@ -62,6 +62,7 @@ public abstract class BaseView {
     private MigPane buildHeader() {
         MigPane header = new MigPane();
         header.setLayout("fill");
+        header.setStyle("-fx-background-color:  #3C4F76;");
         header.setId("base-header");
         Label title = new Label("Chit Chat");
         title.setId("base-header-title");
@@ -74,18 +75,25 @@ public abstract class BaseView {
         footer.setId("base-footer");
         footer.setLayout("fill");
 
+        footer.setStyle("-fx-background-color:  #3C4F76;");
+
+        Label credits = new Label("Created by: Monarchs of Coding");
+        credits.setTextFill(Color.WHITE);
+        credits.setId("credits");
+        footer.add(credits,"left");
         if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
             String username = this.baseStage.getConfiguration().getLoggedInUser().getUsername();
 
             Label loggedInAs = new Label(String.format("You are: %s", username));
             loggedInAs.setId("base-footer-username");
-            footer.add(loggedInAs, "left");
+            loggedInAs.setTextFill(Color.WHITE);
+            footer.add(loggedInAs, "right");
+
         }
 
-        Label credits = new Label("Created by: Monarchs of Coding");
-        credits.setTextFill(Color.BLACK);
-        credits.setId("base-footer-credits");
-        footer.add(credits, "right");
+       // credits = new Label("Monarchs of Coding");
+        //credits.setId("base-footer-credits");
+        //footer.add(credits, "right");
 
         return footer;
     }

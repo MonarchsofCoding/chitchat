@@ -17,6 +17,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -92,6 +93,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.searchBtn = new JFXButton("Search");
         this.searchBtn.setId("search-btn");
         this.searchBtn.setOnAction(this);
+        this.searchBtn.setStyle("-fx-background-color: rgba(56,64,166,0.87)");
         searchForm.add(this.searchBtn, "span, grow");
 
         this.observableUserList = FXCollections.observableArrayList();
@@ -103,6 +105,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.startConversationBtn = new JFXButton("Start Chat");
         this.startConversationBtn.setId("search-chat-btn");
         this.startConversationBtn.setOnAction(this);
+        this.startConversationBtn.setStyle("-fx-background-color: rgba(32,137,72,0.99)");
         searchForm.add(this.startConversationBtn, "span, wrap");
 
         this.errorMessage = new Label();
@@ -110,7 +113,6 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.errorMessage.setVisible(false);
         this.errorMessage.setTextFill(Color.RED);
         searchForm.add(this.errorMessage,"span");
-
         MigPane searchPane = new MigPane();
         searchPane.add(searchForm, "grow");
 

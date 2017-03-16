@@ -64,12 +64,14 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.loginBtn = new JFXButton("Login");
         this.loginBtn.setOnAction(this);
         this.loginBtn.setId("login-login-btn");
+        this.loginBtn.setStyle("-fx-background-color: rgba(93,200,127,0.99)");
         this.loginBtn.setMinWidth(295.0); // 295.0 is the magic width
         loginForm.add(this.loginBtn, "wrap, grow");
 
         this.registerBtn = new JFXButton("Register");
         this.registerBtn.setId("login-register-btn");
         this.registerBtn.setOnAction(this);
+        this.registerBtn.setStyle("-fx-background-color: rgba(129,178,248,0.99)");
         this.registerBtn.setMinWidth(295.0); // 295.0 is the magic width
         loginForm.add(this.registerBtn, "wrap,grow");
 

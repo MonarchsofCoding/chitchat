@@ -15,12 +15,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HorizontalDirection;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -80,14 +83,17 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         }
 
         Label header = new Label(String.format("Chat with: %s", c.getOtherParticipant().getUsername()));
+        header.setFont(Font.font(null, FontWeight.BOLD, 15));
+        header.setTextFill(Color.BLUE);
         header.setId("conversation-chatHeader-lbl");
+        header.setPadding(new Insets(10,20,20,10));
         this.conversationPane.add(header, "dock north");
-
         this.messages = FXCollections.observableArrayList(c.getMessages());
 
         JFXListView<Message> viewMessages = new JFXListView<>();
         viewMessages.setItems(c.getMessages());
         viewMessages.setId("conversation-messages-list");
+        viewMessages.setPadding(new Insets(10,20,10,10));
         this.conversationPane.add(viewMessages, "span, growx");
 
         this.newMessageField = new JFXTextField();
@@ -104,8 +110,10 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
         this.sendbtn = new JFXButton("Send");
         this.sendbtn.setId("conversation-send-btn");
+        this.sendbtn.setStyle("-fx-background-color: rgba(32,137,72,0.99)");
         this.sendbtn.setOnAction(this);
         this.conversationPane.add(sendbtn, "span, align right");
+        this.conversationPane.setPadding(new Insets(0,10,10,10));
     }
 
     @Override

@@ -95,6 +95,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.registerBtn = new JFXButton("Register");
         this.registerBtn.setOnAction(this);
         this.registerBtn.setId("register-register-btn");
+        this.registerBtn.setStyle("-fx-background-color: rgba(93,200,127,0.99)");
         this.registerBtn.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.registerBtn, "span");
 
@@ -107,6 +108,7 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
         this.loginBtn = new JFXButton("Login");
         this.loginBtn.setOnAction(this);
         this.loginBtn.setId("register-login-btn");
+        this.loginBtn.setStyle("-fx-background-color: rgba(129,178,248,0.99)");
         this.loginBtn.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.loginBtn);
 

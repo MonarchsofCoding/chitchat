@@ -5,7 +5,9 @@ import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -23,7 +25,7 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
     private ConversationListView conversationListView;
     private MigPane conversationListPane;
 
-    private Button togglePaneButton;
+    private ToggleButton togglePaneButton;
 
     /**
      * WestView constructor
@@ -51,10 +53,11 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
         this.westPane = new MigPane();
         westPane.setLayout("fill");
 
-        this.togglePaneButton = new JFXButton();
+        this.togglePaneButton = new ToggleButton();
         this.togglePaneButton.setOnAction(this);
+        this.togglePaneButton.setMaxWidth(140);
         this.togglePaneButton.setId("west-toggle-btn");
-        this.westPane.add(this.togglePaneButton, "dock north");
+        this.westPane.add(this.togglePaneButton, "dock north,center");
         this.showConversationListView();
 
         return westPane;
