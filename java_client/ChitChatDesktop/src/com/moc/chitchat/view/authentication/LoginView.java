@@ -21,8 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
-import java.awt.*;
-
 /**
  * Provides the Login view interface.
  */
