@@ -49,7 +49,6 @@ public class ConversationListView {
         this.conversationListView.setItems(this.chitChatData.getConversations());
 
         this.conversationListView.setId("conversation-user-list");
-        this.conversationListView.setPlaceholder(new Label("Add User for Conversation"));
 
         MultipleSelectionModel<Conversation> lvSelModel = this.conversationListView.getSelectionModel();
         lvSelModel.selectedItemProperty()
@@ -57,7 +56,7 @@ public class ConversationListView {
 
         MigPane chatListPane = new MigPane();
         chatListPane.setLayout("fill");
-        chatListPane.add(this.conversationListView, "span");
+        chatListPane.add(this.conversationListView, "span, grow");
 
         return chatListPane;
     }

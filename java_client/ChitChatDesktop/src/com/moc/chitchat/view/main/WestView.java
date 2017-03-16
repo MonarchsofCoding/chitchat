@@ -51,13 +51,14 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
     @Override
     protected MigPane getContentPane() {
         this.westPane = new MigPane();
+        this.westPane.setId("west-pane");
         westPane.setLayout("fill");
 
         this.togglePaneButton = new ToggleButton();
         this.togglePaneButton.setOnAction(this);
         this.togglePaneButton.setMaxWidth(140);
         this.togglePaneButton.setId("west-toggle-btn");
-        this.westPane.add(this.togglePaneButton, "dock north,center");
+        this.westPane.add(this.togglePaneButton, "dock north, center");
         this.showConversationListView();
 
         return westPane;

@@ -87,14 +87,14 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.usernameField.setPromptText("Find User");
         this.usernameField.setOnAction(this);
         MigPane searchForm = new MigPane();
-        searchForm.add(this.errorUserMessage,"span,wrap");
-        searchForm.add(this.usernameField, "span, grow");
+        searchForm.add(this.errorUserMessage,"span");
+        searchForm.add(this.usernameField, "span");
 
         this.searchBtn = new JFXButton("Search");
         this.searchBtn.setId("search-btn");
         this.searchBtn.setOnAction(this);
         this.searchBtn.setStyle("-fx-background-color: rgba(56,64,166,0.87)");
-        searchForm.add(this.searchBtn, "span, grow");
+        searchForm.add(this.searchBtn, "span");
 
         this.observableUserList = FXCollections.observableArrayList();
         this.searchList = new JFXListView<>();
@@ -106,7 +106,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.startConversationBtn.setId("search-chat-btn");
         this.startConversationBtn.setOnAction(this);
         this.startConversationBtn.setStyle("-fx-background-color: rgba(32,137,72,0.99)");
-        searchForm.add(this.startConversationBtn, "span, wrap");
+        searchForm.add(this.startConversationBtn, "span");
 
         this.errorMessage = new Label();
         this.errorMessage.setId("search-error-messages");
@@ -114,7 +114,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.errorMessage.setTextFill(Color.RED);
         searchForm.add(this.errorMessage,"span");
         MigPane searchPane = new MigPane();
-        searchPane.add(searchForm, "grow");
+        searchPane.add(searchForm, "span");
 
         return searchPane;
     }

@@ -74,6 +74,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
      */
     void showConversation(Conversation c) {
         this.conversationPane.getChildren().clear(); // Clear the conversation view
+        this.conversationPane.setId("conversation-pane");
 
         this.conversation = c;
 
@@ -85,14 +86,12 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         header.setFont(Font.font(null, FontWeight.BOLD, 15));
         header.setTextFill(Color.BLUE);
         header.setId("conversation-chatHeader-lbl");
-        header.setPadding(new Insets(10,20,20,10));
         this.conversationPane.add(header, "dock north");
         this.messages = FXCollections.observableArrayList(c.getMessages());
 
         JFXListView<Message> viewMessages = new JFXListView<>();
         viewMessages.setItems(c.getMessages());
         viewMessages.setId("conversation-messages-list");
-        viewMessages.setPadding(new Insets(10,20,10,10));
         this.conversationPane.add(viewMessages, "span, growx");
 
         this.newMessageField = new JFXTextField();
@@ -112,7 +111,6 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.sendbtn.setStyle("-fx-background-color: rgba(32,137,72,0.99)");
         this.sendbtn.setOnAction(this);
         this.conversationPane.add(sendbtn, "span, align right");
-        this.conversationPane.setPadding(new Insets(0,10,10,10));
     }
 
     @Override

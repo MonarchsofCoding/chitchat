@@ -10,12 +10,12 @@
     -fx-background-insets: 0 0 -1 0,0,1;
     -fx-background-radius: 5,5,4;
     -fx-padding: 7 30 7 30;
-    -fx-text-fill: #242d35;
-    -fx-font-family: "Helvetica";
+    -fx-font-family: "Lato", sans-serif;
     -fx-font-size: 14px;
     -fx-text-fill: white;
 }
-.toggle-button{
+
+#west-toggle-btn {
     -fx-background-color:
             linear-gradient(#ff6d5e, #ff3558),
             radial-gradient(center 50% -40%, radius 200%, #ee7f6b 45%, #c84c24 50%);
@@ -56,3 +56,21 @@
     -fx-text-fill: #F1FAEE;
 }
 
+#west-pane {
+    -fx-min-width: 200px;
+    -fx-min-height: 200px;
+}
+
+/* Required to set JFoenix ListView size */
+#search-user-list, #conversation-user-list {
+    -fx-pref-height: 400px;
+    -fx-pref-width: 200px;
+}
+
+#conversation-messages-list {
+    -fx-pref-height: 400px;
+}
+
+#conversation-pane {
+    -fx-padding: 10px, 10px, 10px, 10px;
+}
