@@ -5,14 +5,12 @@ import com.moc.chitchat.view.authentication.LoginView;
 import com.moc.chitchat.view.authentication.RegistrationView;
 import com.moc.chitchat.view.main.MainView;
 
-import java.awt.*;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.util.Observable;
 import java.util.Observer;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -100,8 +98,8 @@ public class BaseStage implements Observer {
         this.primaryStage.setScene(this.registrationView.getScene());
     }
 
-    public void showMainView() {this.primaryStage.setScene(this.mainView.getScene());
-
+    public void showMainView() {
+        this.primaryStage.setScene(this.mainView.getScene());
     }
 
 

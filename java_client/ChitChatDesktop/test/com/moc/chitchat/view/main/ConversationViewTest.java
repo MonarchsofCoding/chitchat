@@ -3,20 +3,9 @@ package com.moc.chitchat.view.main;
 import com.moc.chitchat.view.PrimaryStageTest;
 import com.moc.chitchat.view.helper.MessageHelper;
 import com.moc.chitchat.view.helper.UserHelper;
-import com.sun.java.swing.action.ExitAction;
-import javafx.application.Platform;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
-import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
-import org.testfx.matcher.base.WindowMatchers;
-
 import java.io.IOException;
-import java.lang.management.PlatformLoggingMXBean;
-
-import static java.awt.SystemColor.window;
 import static org.testfx.api.FxAssert.verifyThat;
 
 /**
