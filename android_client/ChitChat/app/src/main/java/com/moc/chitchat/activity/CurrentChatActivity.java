@@ -32,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.spec.InvalidKeySpecException;
+
 /**
  * CurrentChatActivity provides the View and Actions involved with searching a User.
  */
@@ -125,31 +127,54 @@ public class CurrentChatActivity extends AppCompatActivity
     public void onClick(View view) {
         if (!messageText.getText().toString().equals("")) {
             keyboardManager.hideSoftInputFromWindow(messageText.getWindowToken(), 0);
-            try {
-                currentMessage.setTo(currentReceiver);
-                currentMessage.setMessage(messageText.getText().toString());
-                currentChatController.sendMessageToRecipient(
-                    this,
-                    this,
-                    this,
-                    new MessageModel(
-                        currentReceiver,
-                        cryptoBox.encrypt(
-                            messageText.getText().toString(),
-                            currentReceiver.getPublicKey())
-                    )
-                );
-            } catch (JSONException jsonexception) {
-                jsonexception.printStackTrace();
-                Toast.makeText(this,
-                    "Error caused by JSONObject: " + jsonexception.getMessage(),
-                    Toast.LENGTH_LONG);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Toast.makeText(this,
-                    "Error caused by Encryption System: " + ex.getMessage(),
-                    Toast.LENGTH_LONG);
+            if(currentReceiver.getPublicKey() != null) {
+                try {
+                    sendMessage();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(this,
+                        "Error caused by Encryption System: " + ex.getMessage(),
+                        Toast.LENGTH_LONG);
+                }
             }
+            else {
+                try {
+                    currentChatController.getRecipientPublicKey(
+                        this,
+                        this,
+                        this,
+                        currentReceiverUsername
+                    );
+                } catch (JSONException jsonexception) {
+                    jsonexception.printStackTrace();
+                    Toast.makeText(this,
+                        "Error caused by JSONObject: " + jsonexception.getMessage(),
+                        Toast.LENGTH_LONG);
+                }
+            }
+        }
+    }
+
+    public void sendMessage() throws Exception {
+        try {
+            currentMessage.setTo(currentReceiver);
+            currentMessage.setMessage(messageText.getText().toString());
+            currentChatController.sendMessageToRecipient(
+                this,
+                this,
+                this,
+                new MessageModel(
+                    currentReceiver,
+                    cryptoBox.encrypt(
+                        messageText.getText().toString(),
+                        currentReceiver.getPublicKey())
+                )
+            );
+        } catch (JSONException jsonexception) {
+            jsonexception.printStackTrace();
+            Toast.makeText(this,
+                "Error caused by JSONObject: " + jsonexception.getMessage(),
+                Toast.LENGTH_LONG);
         }
     }
 
@@ -159,20 +184,22 @@ public class CurrentChatActivity extends AppCompatActivity
         try {
             JSONObject response = this.errorResponseResolver.getResponseBody(error);
 
-            JSONObject responseErrors = response.getJSONObject("errors");
+            if(response.has("errors")) {
+                JSONObject responseErrors = response.getJSONObject("errors");
 
-            if (responseErrors.has("recipient")) {
-                JSONArray recipientErrors = responseErrors.getJSONArray("recipient");
-                Toast.makeText(this,
-                    String.format("Recipient: %s", recipientErrors.toString()),
-                    Toast.LENGTH_LONG).show();
-            }
+                if (responseErrors.has("recipient")) {
+                    JSONArray recipientErrors = responseErrors.getJSONArray("recipient");
+                    Toast.makeText(this,
+                        String.format("Recipient: %s", recipientErrors.toString()),
+                        Toast.LENGTH_LONG).show();
+                }
 
-            if (responseErrors.has("message")) {
-                JSONArray messageErrors = responseErrors.getJSONArray("message");
-                Toast.makeText(this,
-                    String.format("Message: %s", messageErrors.toString()),
-                    Toast.LENGTH_LONG).show();
+                if (responseErrors.has("message")) {
+                    JSONArray messageErrors = responseErrors.getJSONArray("message");
+                    Toast.makeText(this,
+                        String.format("Message: %s", messageErrors.toString()),
+                        Toast.LENGTH_LONG).show();
+                }
             }
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
@@ -183,24 +210,39 @@ public class CurrentChatActivity extends AppCompatActivity
     @Override
     public void onResponse(JSONObject response) {
         try {
-            String from = response.getJSONObject("data").get("sender").toString();
+            if(!((JSONObject) response.get("data")).has("public_key")) {
+                String from = response.getJSONObject("data").get("sender").toString();
 
-            UserModel fromUser = new UserModel(from);
-            UserModel toUser = currentMessage.getTo();
+                UserModel fromUser = new UserModel(from);
+                UserModel toUser = currentMessage.getTo();
 
-            chitChatMessagesConfiguration.addMessageToConversation(
-                toUser,
-                new MessageModel(fromUser, toUser, currentMessage.getMessage()),
-                true
-            );
-            addMessageToPanel(from, currentMessage.getMessage(), true);
-            System.out.println("Message from " + fromUser.getUsername() + " is sent to "
-                + toUser.getUsername());
-            System.out.println("The sent message: " + currentMessage.getMessage());
+                chitChatMessagesConfiguration.addMessageToConversation(
+                    toUser,
+                    new MessageModel(fromUser, toUser, currentMessage.getMessage()),
+                    true
+                );
+                addMessageToPanel(from, currentMessage.getMessage(), true);
+                System.out.println("Message from " + fromUser.getUsername() + " is sent to "
+                    + toUser.getUsername());
+                System.out.println("The sent message: " + currentMessage.getMessage());
+            }
+            else {
+                String publicKey = ((JSONObject) response.get("data")).get("public_key").toString();
+                currentChatConfiguration.setCurrentRecipient(
+                    currentChatConfiguration.getCurrentRecipient().setPublicKey(
+                        cryptoBox.pubKeyStringToKey(publicKey)
+                    )
+                );
+                sendMessage();
+            }
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
             Toast.makeText(this,
                 "Error caused by JSONObject: " + jsonexception.getMessage(), Toast.LENGTH_LONG);
+        } catch (InvalidKeySpecException keyException) {
+            keyException.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 

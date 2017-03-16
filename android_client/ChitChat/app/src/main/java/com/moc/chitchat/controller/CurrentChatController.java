@@ -71,4 +71,22 @@ public class CurrentChatController {
             true
         );
     }
+
+    public void getRecipientPublicKey(
+        Context context,
+        Response.Listener<JSONObject> successListener,
+        Response.ErrorListener errorListener,
+        String username
+    ) throws JSONException {
+        // Make a POST request to send the message.
+        this.httpClient.sendRequest(
+            context,
+            Request.Method.GET,
+            "/api/v1/users/" + username,
+            null,
+            successListener,
+            errorListener,
+            false
+        );
+    }
 }
