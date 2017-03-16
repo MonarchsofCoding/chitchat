@@ -11,6 +11,8 @@
     -fx-background-insets: 0,1,1;
     -fx-text-fill: black;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+    -fx-font: 14 arial;
+    -fx-base: #b5dbe8;
 }
 
 
@@ -19,8 +21,15 @@
 }
 
 #base-header, #base-footer {
-    -fx-background-color: #1C3144;
     -fx-text-fill: #F1FAEE;
+}
+
+#base-header {
+    -fx-background-color: #3C4F76;
+}
+
+#base-footer {
+    -fx-background-color: #EB5E55;
 }
 
 #base-header-title {
@@ -34,8 +43,8 @@
 }
 
 #base-footer-credits {
-    -fx-font-family: 'Playfair Display', serif;
-    -fx-font-weight: 700;
+    /* -fx-font-family: 'Playfair Display', serif;
+    -fx-font-weight: 700; */
     -fx-font-size: 12pt;
     -fx-text-fill: #F1FAEE;
 }
