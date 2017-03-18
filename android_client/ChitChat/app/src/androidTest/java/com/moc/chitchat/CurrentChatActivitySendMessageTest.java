@@ -9,15 +9,23 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.mockito.Mockito.mock;
 
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.moc.chitchat.activity.LoginActivity;
+import com.moc.chitchat.crypto.CryptoBox;
+import com.moc.chitchat.model.UserModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.security.KeyPair;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,6 +41,7 @@ public class CurrentChatActivitySendMessageTest{
         LoginActivity.class);
 
     private String usernameTyped;
+    private String passwordTyped;
     private String usernameToSearch;
 
     /**
@@ -41,10 +50,11 @@ public class CurrentChatActivitySendMessageTest{
      * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
     @Before
-    public void initialization() throws InterruptedException {
+    public void initialization() throws Exception {
         register("test1");
         register("test2");
-        login();
+        loginOther();
+        loginActual();
         search();
     }
 
@@ -54,7 +64,7 @@ public class CurrentChatActivitySendMessageTest{
      * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
     public void register(String usernameTyped) throws InterruptedException {
-        String passwordTyped = "Abc123!?";
+        passwordTyped = "Abc123!?";
         String passwordReTyped = "Abc123!?";
 
         onView(withId(R.id.register_button)).perform(click());
@@ -74,10 +84,10 @@ public class CurrentChatActivitySendMessageTest{
     }
 
     /**
-     * Login.
+     * Login the actual user.
      * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
-    public void login() throws InterruptedException {
+    public void loginActual() throws InterruptedException {
         usernameTyped = "test1";
         String passwordTyped = "Abc123!?";
 
@@ -90,6 +100,31 @@ public class CurrentChatActivitySendMessageTest{
         onView(withId(R.id.login_button)).perform(click());
 
         Thread.sleep(2000);
+    }
+
+    public void loginOther() throws Exception {
+        usernameToSearch = "test2";
+        CryptoBox cryptoBox = new CryptoBox().initialize();
+
+        UserModel user = new UserModel(usernameToSearch);
+        user.setPassword(passwordTyped);
+
+        KeyPair keyPair = cryptoBox.generateKeyPair();
+        user.setPublicKey(keyPair.getPublic());
+        user.setPrivateKey(keyPair.getPrivate());
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+            Request.Method.POST,
+            String.format("%s%s",
+                loginClassActivityRule.getActivity().getResources().getString(R.string.server_url),
+                "/api/v1/auth"
+            ),
+            user.toJsonObjectForLogin(),
+            mock(Response.Listener.class),
+            mock(Response.ErrorListener.class)
+        );
+        Volley.newRequestQueue(loginClassActivityRule.getActivity().getBaseContext())
+            .add(jsonObjectRequest);
     }
 
     /**
