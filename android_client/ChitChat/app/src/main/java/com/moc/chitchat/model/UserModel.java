@@ -43,11 +43,6 @@ public class UserModel {
      */
     private PublicKey publicKey;
 
-    /** CryptoBox.
-     * TODO: returns null from @Inject.
-     */
-    //@Inject CryptoBox cryptoBox;
-
     /**
      * UserModel constructor
      *

@@ -140,7 +140,7 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
                 loginActivityRule.getActivity().getResources().getString(R.string.server_url),
                 "/api/v1/auth"
             ),
-            user.toJsonObject(),
+            user.toJsonObjectForLogin(),
             this,
             mock(Response.ErrorListener.class)
         );

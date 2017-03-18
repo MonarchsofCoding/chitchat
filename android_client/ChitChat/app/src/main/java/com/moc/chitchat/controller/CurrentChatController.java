@@ -52,7 +52,12 @@ public class CurrentChatController {
     }
 
     /**
-     * {@sendMessageToRecipientr}.
+     * Message send request.
+     * @param context the context for the request.
+     * @param successListener Listener when the request succeeds.
+     * @param errorListener Listener when the request returns an error.
+     * @param message The messsage to be sent
+     * @throws JSONException In case the JSON object creation fails.
      */
     public void sendMessageToRecipient(
         Context context,
@@ -72,6 +77,14 @@ public class CurrentChatController {
         );
     }
 
+    /**
+     * Request to retrieve the recipient's public key, if it's not fetched via searching.
+     * @param context the context for the request.
+     * @param successListener Listener when the request succeeds.
+     * @param errorListener Listener when the request returns an error.
+     * @param username The recipient
+     * @throws JSONException In case the JSON object creation fails.
+     */
     public void getRecipientPublicKey(
         Context context,
         Response.Listener<JSONObject> successListener,

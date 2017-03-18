@@ -79,6 +79,8 @@ public class SearchUserActivity extends AppCompatActivity
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
+        sessionConfiguration.setCurrentActivity(this);
+
         this.setContentView(R.layout.activity_search);
         getSupportActionBar().setTitle("Search");
 
@@ -122,7 +124,6 @@ public class SearchUserActivity extends AppCompatActivity
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if(which == DialogInterface.BUTTON_POSITIVE) {
-            //TODO: close the connection on the service, to let the backend know about the logout.
             sessionConfiguration.cleanCurrentUser();
             currentChatConfiguration.cleanCurrentRecipient();
             chitChatMessagesConfiguration.clearChitChatMessagesConfiguration();
@@ -273,6 +274,5 @@ public class SearchUserActivity extends AppCompatActivity
         startActivity(toLaunchIntent);
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
     }
-
 
 }

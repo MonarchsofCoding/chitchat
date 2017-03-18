@@ -47,6 +47,8 @@ public class ChatListActivity extends AppCompatActivity
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
+        sessionConfiguration.setCurrentActivity(this);
+
         this.setContentView(R.layout.activity_chat_list);
         getSupportActionBar().setTitle("ChitChat");
 

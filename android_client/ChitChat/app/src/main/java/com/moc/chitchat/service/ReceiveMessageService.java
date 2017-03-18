@@ -3,10 +3,10 @@ package com.moc.chitchat.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -15,8 +15,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
-import com.moc.chitchat.activity.SearchUserActivity;
 import com.moc.chitchat.application.ChitChatMessagesConfiguration;
+import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.MessageModel;
@@ -30,17 +30,21 @@ import org.phoenixframework.channels.Envelope;
 import org.phoenixframework.channels.IMessageCallback;
 import org.phoenixframework.channels.Socket;
 
-public class ReceiveMessageService extends Service {
+public class ReceiveMessageService extends Service{
 
     @Inject
     ChitChatMessagesConfiguration chitChatMessagesConfiguration;
     @Inject
     SessionConfiguration sessionConfiguration;
     @Inject
+    CurrentChatConfiguration currentChatConfiguration;
+    @Inject
     CryptoBox cryptoBox;
 
     Socket socket;
     Channel channel;
+
+    Service receiveMessageService = this;
 
     Context serviceContext = this;
 
@@ -116,6 +120,29 @@ public class ReceiveMessageService extends Service {
                 }
             });
 
+            channel.on("user:logout", new IMessageCallback() {
+                @Override
+                public void onMessage(Envelope envelope) {
+                    currentChatConfiguration.cleanCurrentRecipient();
+                    chitChatMessagesConfiguration.clearChitChatMessagesConfiguration();
+                    if(sessionConfiguration.getCurrentActivity() != null) {
+                        sessionConfiguration.getCurrentActivity().finish();
+                    }
+                    NotificationCompat.Builder builder = new NotificationCompat
+                        .Builder(receiveMessageService);
+                    builder
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setDefaults(Notification.DEFAULT_VIBRATE)
+                        .setContentTitle("Session Terminated")
+                        .setContentText("Your account is used to log in from another device.")
+                        .setPriority(Notification.PRIORITY_MAX);
+                    NotificationManager logoutNotificationManager
+                        = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    logoutNotificationManager.notify(0, builder.build());
+                    receiveMessageService.stopSelf();
+                }
+            });
+
             channel.on(ChannelEvent.CLOSE.getPhxEvent(), new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
@@ -139,5 +166,17 @@ public class ReceiveMessageService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    channel.leave();
+                    socket.disconnect();
+                    System.out.println("Service for receiving message gracefully stopped.");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 }

@@ -26,13 +26,12 @@ import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
+import java.security.spec.InvalidKeySpecException;
 import javax.inject.Inject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.security.spec.InvalidKeySpecException;
 
 /**
  * CurrentChatActivity provides the View and Actions involved with searching a User.
@@ -77,6 +76,8 @@ public class CurrentChatActivity extends AppCompatActivity
 
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
+
+        sessionConfiguration.setCurrentActivity(this);
 
         keyboardManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -136,8 +137,7 @@ public class CurrentChatActivity extends AppCompatActivity
                         "Error caused by Encryption System: " + ex.getMessage(),
                         Toast.LENGTH_LONG);
                 }
-            }
-            else {
+            } else {
                 try {
                     currentChatController.getRecipientPublicKey(
                         this,
@@ -155,6 +155,10 @@ public class CurrentChatActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Invokes message sending functionality.
+     * @throws Exception in case encryption fails.
+     */
     public void sendMessage() throws Exception {
         try {
             currentMessage.setTo(currentReceiver);
@@ -225,8 +229,7 @@ public class CurrentChatActivity extends AppCompatActivity
                 System.out.println("Message from " + fromUser.getUsername() + " is sent to "
                     + toUser.getUsername());
                 System.out.println("The sent message: " + currentMessage.getMessage());
-            }
-            else {
+            } else {
                 String publicKey = ((JSONObject) response.get("data")).get("public_key").toString();
                 currentChatConfiguration.setCurrentRecipient(
                     currentChatConfiguration.getCurrentRecipient().setPublicKey(
