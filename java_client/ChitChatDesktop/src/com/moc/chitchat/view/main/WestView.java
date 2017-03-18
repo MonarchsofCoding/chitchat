@@ -1,12 +1,9 @@
 package com.moc.chitchat.view.main;
 
-import com.jfoenix.controls.JFXButton;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.view.BaseView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

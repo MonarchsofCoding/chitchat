@@ -1,6 +1,9 @@
 package com.moc.chitchat.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -8,10 +11,10 @@ import org.tbee.javafx.scene.layout.fxml.MigPane;
 /**
  * Provides the base for all primary views in the application.
  */
-public abstract class BaseView {
+public abstract class BaseView implements EventHandler<ActionEvent> {
 
     protected BaseStage baseStage;
-
+    private Button logout;
     private int width;
     private int height;
 
@@ -31,6 +34,7 @@ public abstract class BaseView {
 
     /**
      * getScene creates a new scene for the baseview.
+     *
      * @return - returns a new scene
      */
     public Scene getScene() {
@@ -63,8 +67,20 @@ public abstract class BaseView {
         header.setStyle("-fx-background-color:  #3C4F76;");
         header.setId("base-header");
         Label title = new Label("Chit Chat");
+        title.setWrapText(true);
         title.setId("base-header-title");
-        header.add(title, "center");
+        if (this.baseStage.getConfiguration() != null
+                && this.baseStage.getConfiguration().getLoggedInUser() != null) {
+
+            logout = new Button("Log out");
+            logout.setOnAction(this);
+            logout.setStyle("-fx-background-color: transparent");
+            header.add(title, "center,wrap");
+            header.add(logout, "center");
+        } else {
+            header.add(title, "center, wrap");
+        }
+
         return header;
     }
 
@@ -78,7 +94,7 @@ public abstract class BaseView {
         Label credits = new Label("Created by: Monarchs of Coding");
         credits.setTextFill(Color.WHITE);
         credits.setId("credits");
-        footer.add(credits,"left");
+        footer.add(credits, "left");
         if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
             String username = this.baseStage.getConfiguration().getLoggedInUser().getUsername();
 
@@ -92,4 +108,13 @@ public abstract class BaseView {
         return footer;
     }
 
+    @Override
+    public void handle(ActionEvent event) {
+        if (event.getSource() == this.logout) {
+            this.baseStage.getConfiguration().setLoggedInUser(null);
+            baseStage.showLogin();
+        }
+    }
+
 }
+
