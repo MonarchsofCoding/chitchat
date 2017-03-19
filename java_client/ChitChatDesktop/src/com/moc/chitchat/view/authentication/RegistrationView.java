@@ -158,7 +158,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
             Errors errors = validationException.getErrors();
             if (errors.hasErrors()) {
                 if (errors.hasFieldErrors("username")) {
-                    System.out.println("aaa" + errors.getFieldError("username").getDefaultMessage());
                     this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
                     this.usernameErrors.setVisible(true);
                 }
@@ -176,6 +175,9 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
         } catch (Exception defaultError) {
             this.unexpectedErrors.setText("Unexpected error from the server");
+            this.unexpectedErrors.setVisible(true);
+            this.enableFieldsAndButtons(true);
+
             defaultError.printStackTrace();
         }
     }
