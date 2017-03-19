@@ -12,8 +12,15 @@ import com.moc.chitchat.resolver.MessageResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.MessageValidator;
 import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * MessageController provides the actions involved with messaging.
@@ -73,6 +80,12 @@ public class MessageController {
 
         this.chitChatData.addMessageToConversation(to, newMessage);
 
+
+
+
+
+
+
         return newMessage;
 
     }
@@ -90,14 +103,37 @@ public class MessageController {
         String messagedecrypt = cryptoFunctions.decrypt(receivedMessage,
                 this.configuration.getLoggedInUser().getPrivatekey());
         Message message = this.messageResolver.createMessage(
-            from,
-            this.configuration.getLoggedInUser(),
-            messagedecrypt,
+                from,
+                this.configuration.getLoggedInUser(),
+                messagedecrypt,
                 receivedMessage
         );
 
         chitChatData.addMessageToConversation(from, message);
+        if (from.getPublicKey() == null) {
 
+            Map<String, Object> mapper1 = new HashMap<>();
+            mapper1.put("username", from.getUsername());
+
+            Response response = this.httpClient.get("/api/v1/users/", mapper1);
+
+            if (response.code() != 200) {
+                throw new UnexpectedResponseException(response);
+            }
+
+            String jsonData = response.body().string();
+            JSONObject jsonObject = new JSONObject(jsonData);
+
+            JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+            for (Object obj : jsonArray) {
+                JSONObject jsonobjectname = (JSONObject) obj;
+                from.setPublicKey(userResolver.getUserModelViaJSonObject(jsonobjectname).getPublicKey());
+            }
+
+        }
         return message;
     }
+
+
 }
