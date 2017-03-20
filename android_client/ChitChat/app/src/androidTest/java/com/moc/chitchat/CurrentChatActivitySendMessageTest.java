@@ -104,7 +104,7 @@ public class CurrentChatActivitySendMessageTest{
 
     public void loginOther() throws Exception {
         usernameToSearch = "test2";
-        CryptoBox cryptoBox = new CryptoBox().initialize();
+        CryptoBox cryptoBox = new CryptoBox();
 
         UserModel user = new UserModel(usernameToSearch);
         user.setPassword(passwordTyped);

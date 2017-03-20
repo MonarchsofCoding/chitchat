@@ -115,6 +115,6 @@ public class CryptoBox {
         Cipher decriptCipher = Cipher.getInstance(CryptoBox.cipherAlgorithm);
         decriptCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-        return new String(decriptCipher.doFinal(bytes), "UTF-8");
+        return new String(decriptCipher.doFinal(bytes), "UTF-8").trim();
     }
 }

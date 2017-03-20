@@ -189,8 +189,6 @@ public class UserModel {
     public JSONObject toJsonObjectForLogin() {
         HashMap<String, String> userMap = new HashMap<>();
 
-        System.out.println(Base64.encodeToString(this.getPublicKey().getEncoded(),Base64.NO_WRAP));
-
         userMap.put("username", this.getUsername());
         userMap.put("password", this.getPassword());
         userMap.put(
