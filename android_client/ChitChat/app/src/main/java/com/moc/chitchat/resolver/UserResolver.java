@@ -2,6 +2,9 @@ package com.moc.chitchat.resolver;
 
 import com.moc.chitchat.model.UserModel;
 
+import java.security.PrivateKey;
+import java.security.PublicKey;
+
 /**
  * UserResolver provides the methods involved with creating a User from parameters.
  */
@@ -32,10 +35,19 @@ public class UserResolver {
      * @param username the username.
      * @param password takes the user's password.
      */
-    public UserModel createLoginUser(String username, String password) {
+    public UserModel createLoginUser(
+        String username,
+        String password,
+        PublicKey publicKey,
+        PrivateKey privateKey
+    ) {
         UserModel user = new UserModel(username);
 
-        user.setPassword(password);
+        user
+            .setPassword(password)
+            .setPublicKey(publicKey)
+            .setPrivateKey(privateKey)
+        ;
         return user;
     }
 }

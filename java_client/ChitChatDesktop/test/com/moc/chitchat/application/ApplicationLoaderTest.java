@@ -85,6 +85,25 @@ public class ApplicationLoaderTest {
     }
 
     @Test
+    public void testLoadAlphaEnvironment() {
+        Configuration mockConfiguration = mock(Configuration.class);
+        BaseStage mockBaseStage = mock(BaseStage.class);
+        ApplicationCloser applicationCloser = mock(ApplicationCloser.class);
+        ApplicationLoader applicationLoader = new ApplicationLoader(mockConfiguration, mockBaseStage, applicationCloser);
+
+        Stage mockStage = mock(Stage.class);
+        List<String> args = new ArrayList<>();
+        args.add("alpha");
+
+        applicationLoader.load(mockStage, args);
+
+        verify(mockConfiguration).setAlphaMode();
+
+        verify(mockBaseStage).setPrimaryStage(mockStage);
+        verify(mockBaseStage).show();
+    }
+
+    @Test
     public void testLoadBetaEnvironment() {
         Configuration mockConfiguration = mock(Configuration.class);
         BaseStage mockBaseStage = mock(BaseStage.class);

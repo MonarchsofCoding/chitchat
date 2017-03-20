@@ -20,11 +20,20 @@ import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.CurrentChatController;
+import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.ConversationModel;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
 
 import org.json.JSONArray;
@@ -53,6 +62,8 @@ public class CurrentChatActivity extends AppCompatActivity
     ConversationModel currentConversation;
     InputMethodManager keyboardManager;
 
+    private MessageModel currentMessage;
+
     @Inject
     CurrentChatController currentChatController;
     @Inject
@@ -63,6 +74,8 @@ public class CurrentChatActivity extends AppCompatActivity
     ChitChatMessagesConfiguration chitChatMessagesConfiguration;
     @Inject
     ErrorResponseResolver errorResponseResolver;
+    @Inject
+    CryptoBox cryptoBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,19 +84,26 @@ public class CurrentChatActivity extends AppCompatActivity
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
+        sessionConfiguration.setCurrentActivity(this);
+
         keyboardManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        currentReceiverUsername = getIntent().getStringExtra("recipient_username");
+        currentReceiver = currentChatConfiguration.getCurrentRecipient();
 
-        currentReceiver = new UserModel(currentReceiverUsername);
+        currentReceiverUsername = currentReceiver.getUsername();
 
-        currentConversation = chitChatMessagesConfiguration
-            .getConversation(new UserModel(currentReceiverUsername));
+        currentConversation = chitChatMessagesConfiguration.getConversation(currentReceiver);
 
         this.setContentView(R.layout.activity_current_chat);
         getSupportActionBar().setTitle(currentReceiverUsername);
 
         messageText = (TextView) findViewById(R.id.message_text);
+
+        currentMessage = new MessageModel(
+            sessionConfiguration.getCurrentUser(),
+            null,
+            ""
+        );
 
         messagePanel = (TextView) findViewById(R.id.message_panel);
         messagePanel.setMovementMethod(new ScrollingMovementMethod());
@@ -115,23 +135,69 @@ public class CurrentChatActivity extends AppCompatActivity
     public void onClick(View view) {
         if (!messageText.getText().toString().equals("")) {
             keyboardManager.hideSoftInputFromWindow(messageText.getWindowToken(), 0);
-
-            try {
-                currentChatController.sendMessageToRecipient(
-                    this,
-                    this,
-                    this,
-                    new MessageModel(
-                        currentReceiver,
-                        messageText.getText().toString()
-                    )
-                );
-            } catch (JSONException jsonexception) {
-                jsonexception.printStackTrace();
-                Toast.makeText(this,
-                    "Error caused by JSONObject: " + jsonexception.getMessage(),
-                    Toast.LENGTH_LONG);
+            if(currentReceiver.getPublicKey() != null) {
+                try {
+                    sendMessage();
+                } catch (
+                    NoSuchAlgorithmException
+                    | InvalidKeyException
+                    | NoSuchPaddingException
+                    | UnsupportedEncodingException
+                    | BadPaddingException
+                    | IllegalBlockSizeException ex
+                ) {
+                    ex.printStackTrace();
+                    Toast.makeText(this,
+                        "Error caused by Encryption System: " + ex.getMessage(),
+                        Toast.LENGTH_LONG);
+                }
+            } else {
+                try {
+                    currentChatController.getRecipientPublicKey(
+                        this,
+                        this,
+                        this,
+                        currentReceiverUsername
+                    );
+                } catch (JSONException jsonexception) {
+                    jsonexception.printStackTrace();
+                    Toast.makeText(this,
+                        "Error caused by JSONObject: " + jsonexception.getMessage(),
+                        Toast.LENGTH_LONG);
+                }
             }
+        }
+    }
+
+    /**
+     * Invokes message sending functionality.
+     */
+    public void sendMessage() throws
+            NoSuchPaddingException,
+            BadPaddingException,
+            NoSuchAlgorithmException,
+            IllegalBlockSizeException,
+            UnsupportedEncodingException,
+            InvalidKeyException {
+        try {
+            currentMessage.setTo(currentReceiver);
+            currentMessage.setMessage(messageText.getText().toString());
+            currentChatController.sendMessageToRecipient(
+                this,
+                this,
+                this,
+                new MessageModel(
+                    currentReceiver,
+                    cryptoBox.encrypt(
+                        messageText.getText().toString(),
+                        currentReceiver.getPublicKey())
+                )
+            );
+        } catch (JSONException jsonexception) {
+            jsonexception.printStackTrace();
+            Toast.makeText(this,
+                "Error caused by JSONObject: " + jsonexception.getMessage(),
+                Toast.LENGTH_LONG);
         }
     }
 
@@ -141,20 +207,22 @@ public class CurrentChatActivity extends AppCompatActivity
         try {
             JSONObject response = this.errorResponseResolver.getResponseBody(error);
 
-            JSONObject responseErrors = response.getJSONObject("errors");
+            if(response.has("errors")) {
+                JSONObject responseErrors = response.getJSONObject("errors");
 
-            if (responseErrors.has("recipient")) {
-                JSONArray recipientErrors = responseErrors.getJSONArray("recipient");
-                Toast.makeText(this,
-                    String.format("Recipient: %s", recipientErrors.toString()),
-                    Toast.LENGTH_LONG).show();
-            }
+                if (responseErrors.has("recipient")) {
+                    JSONArray recipientErrors = responseErrors.getJSONArray("recipient");
+                    Toast.makeText(this,
+                        String.format("Recipient: %s", recipientErrors.toString()),
+                        Toast.LENGTH_LONG).show();
+                }
 
-            if (responseErrors.has("message")) {
-                JSONArray messageErrors = responseErrors.getJSONArray("message");
-                Toast.makeText(this,
-                    String.format("Message: %s", messageErrors.toString()),
-                    Toast.LENGTH_LONG).show();
+                if (responseErrors.has("message")) {
+                    JSONArray messageErrors = responseErrors.getJSONArray("message");
+                    Toast.makeText(this,
+                        String.format("Message: %s", messageErrors.toString()),
+                        Toast.LENGTH_LONG).show();
+                }
             }
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
@@ -165,26 +233,44 @@ public class CurrentChatActivity extends AppCompatActivity
     @Override
     public void onResponse(JSONObject response) {
         try {
-            String from = response.getJSONObject("data").get("sender").toString();
-            String to = response.getJSONObject("data").get("recipient").toString();
-            String message = response.getJSONObject("data").get("message").toString();
+            if(!((JSONObject) response.get("data")).has("public_key")) {
+                String from = response.getJSONObject("data").get("sender").toString();
 
-            UserModel fromUser = new UserModel(from);
-            UserModel toUser = new UserModel(to);
+                UserModel fromUser = new UserModel(from);
+                UserModel toUser = currentMessage.getTo();
 
-            chitChatMessagesConfiguration.addMessageToConversation(
-                toUser,
-                new MessageModel(fromUser, toUser, message),
-                true
-            );
-            addMessageToPanel(from, message, true);
-            System.out.println("Message from " + fromUser.getUsername() + " is sent to "
-                + toUser.getUsername());
-            System.out.println("The sent message: " + message);
+                chitChatMessagesConfiguration.addMessageToConversation(
+                    toUser,
+                    new MessageModel(fromUser, toUser, currentMessage.getMessage()),
+                    true
+                );
+                addMessageToPanel(from, currentMessage.getMessage(), true);
+                System.out.println("Message from " + fromUser.getUsername() + " is sent to "
+                    + toUser.getUsername());
+                System.out.println("The sent message: " + currentMessage.getMessage());
+            } else {
+                String publicKey = ((JSONObject) response.get("data")).get("public_key").toString();
+                currentChatConfiguration.setCurrentRecipient(
+                    currentChatConfiguration.getCurrentRecipient().setPublicKey(
+                        cryptoBox.pubKeyStringToKey(publicKey)
+                    )
+                );
+                sendMessage();
+            }
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
             Toast.makeText(this,
                 "Error caused by JSONObject: " + jsonexception.getMessage(), Toast.LENGTH_LONG);
+        } catch (
+            NoSuchAlgorithmException
+            | InvalidKeyException
+            | NoSuchPaddingException
+            | BadPaddingException
+            | UnsupportedEncodingException
+            | InvalidKeySpecException
+            | IllegalBlockSizeException exception
+        ) {
+            exception.printStackTrace();
         }
     }
 

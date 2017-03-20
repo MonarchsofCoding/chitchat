@@ -64,7 +64,7 @@ def build(ctx):
     verify = "apksigner verify {1}/app-{0}-release.apk".format(bin_version, build_dir)
 
     lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-androidclient"),
+        tag="monarchsofcoding/chitchat:android-dev",
         command='/bin/bash -c "cd app && gradle assembleRelease && {0} && {1} && {2}"'.format(zipalign, sign, verify),
         volumes=[
             "{0}/ChitChat:/app".format(os.getcwd())

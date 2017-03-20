@@ -1,5 +1,10 @@
 package com.moc.chitchat.model;
 
+import android.util.Base64;
+
+import com.moc.chitchat.crypto.CryptoBox;
+
+import java.security.KeyPair;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,13 +53,13 @@ public class UserModelTest {
     }
 
     @Test
-    public void testToJSONObject() {
+    public void testToJSONObjectForRegister() {
         String expectedUserName = "Ozhan";
         UserModel userModel = new UserModel(expectedUserName);
         String expectedPassword = "Security123";
         userModel.setPassword(expectedPassword);
 
-        JSONObject userJson = userModel.toJsonObject();
+        JSONObject userJson = userModel.toJsonObjectForRegister();
         try {
             assertEquals(expectedUserName, userJson.getString("username"));
             assertEquals(expectedPassword, userJson.getString("password"));

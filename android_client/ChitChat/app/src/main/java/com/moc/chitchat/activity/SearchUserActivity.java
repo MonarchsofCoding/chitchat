@@ -27,16 +27,19 @@ import com.moc.chitchat.application.ChitChatMessagesConfiguration;
 import com.moc.chitchat.application.CurrentChatConfiguration;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.SearchUserController;
+import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 import com.moc.chitchat.service.ReceiveMessageService;
 
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -62,6 +65,8 @@ public class SearchUserActivity extends AppCompatActivity
     CurrentChatConfiguration currentChatConfiguration;
     @Inject
     ChitChatMessagesConfiguration chitChatMessagesConfiguration;
+    @Inject
+    CryptoBox cryptoBox;
 
     TabLayout menuTabs;
     ListView usersList;
@@ -75,6 +80,8 @@ public class SearchUserActivity extends AppCompatActivity
 
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
+
+        sessionConfiguration.setCurrentActivity(this);
 
         this.setContentView(R.layout.activity_search);
         getSupportActionBar().setTitle("Search");
@@ -119,7 +126,6 @@ public class SearchUserActivity extends AppCompatActivity
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if(which == DialogInterface.BUTTON_POSITIVE) {
-            //TODO: close the connection on the service, to let the backend know about the logout.
             sessionConfiguration.cleanCurrentUser();
             currentChatConfiguration.cleanCurrentRecipient();
             chitChatMessagesConfiguration.clearChitChatMessagesConfiguration();
@@ -154,34 +160,36 @@ public class SearchUserActivity extends AppCompatActivity
     @Override
     public void onErrorResponse(VolleyError error) {
         System.out.println("Error searching a user");
-        try {
-            Toast.makeText(this,
-                String.format("The user you are trying to found is not connected or not existing"),
-                Toast.LENGTH_LONG).show();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        Toast.makeText(this,
+            String.format("The user you are trying to found is not connected or not existing"),
+            Toast.LENGTH_LONG).show();
     }
 
     //For Volley Success response
     @Override
     public void onResponse(JSONObject response) {
         try {
-            List<String> userList = new ArrayList<String>();
+            List<UserModel> userList = new ArrayList<UserModel>();
 
             JSONArray usernameArray = (JSONArray) response.get("data");
             for (int i = 0; i < usernameArray.length(); i++) {
-                userList.add(usernameArray.getJSONObject(i).get("username").toString());
+                UserModel toAdd = new UserModel(usernameArray.getJSONObject(i).get("username")
+                        .toString());
+                toAdd.setPublicKey(cryptoBox.pubKeyStringToKey(
+                        usernameArray.getJSONObject(i).get("public_key").toString())
+                );
+
+                userList.add(toAdd);
             }
 
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                userList);
+            ArrayAdapter<UserModel> arrayAdapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    userList);
 
             usersList.setAdapter(arrayAdapter);
-        } catch (Exception exept) {
-            exept.printStackTrace();
+        } catch (InvalidKeySpecException | JSONException exception) {
+            exception.printStackTrace();
         }
     }
 
@@ -232,14 +240,11 @@ public class SearchUserActivity extends AppCompatActivity
     //When the user clicks on an user.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String newRecipientUsername = parent.getItemAtPosition(position).toString();
+        UserModel newRecipient = (UserModel) parent.getItemAtPosition(position);
 
-        currentChatConfiguration.setCurrentRecipient(new UserModel(newRecipientUsername));
+        currentChatConfiguration.setCurrentRecipient(newRecipient);
 
         Intent currentChatIntent = new Intent(getBaseContext(), CurrentChatActivity.class);
-        currentChatIntent.putExtra(
-            "recipient_username",
-            newRecipientUsername);
         startActivity(currentChatIntent);
 
         overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
@@ -267,6 +272,5 @@ public class SearchUserActivity extends AppCompatActivity
         startActivity(toLaunchIntent);
         overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
     }
-
 
 }

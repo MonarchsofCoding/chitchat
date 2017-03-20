@@ -18,6 +18,7 @@ defmodule ChitChat.UserView do
   def render("user.json", %{user: user}) do
     %{
       username: user.username,
+      public_key: user.public_key,
     }
   end
 end

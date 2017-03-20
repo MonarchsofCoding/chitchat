@@ -96,6 +96,7 @@ test {
         includeTestsMatching "com.moc.chitchat.model.*"
         includeTestsMatching "com.moc.chitchat.resolver.*"
         includeTestsMatching "com.moc.chitchat.validator.*"
+        includeTestsMatching "com.moc.chitchat.crypto.*"
     }
 }
 

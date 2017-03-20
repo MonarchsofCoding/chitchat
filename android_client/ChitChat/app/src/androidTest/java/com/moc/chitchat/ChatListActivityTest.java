@@ -14,6 +14,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.mockito.Mockito.mock;
 
 import android.app.Activity;
 import android.support.test.filters.LargeTest;
@@ -23,9 +24,16 @@ import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.moc.chitchat.activity.CurrentChatActivity;
 import com.moc.chitchat.activity.LoginActivity;
+import com.moc.chitchat.crypto.CryptoBox;
+import com.moc.chitchat.model.UserModel;
 
+import java.security.KeyPair;
 import java.util.Collection;
 
 import org.hamcrest.Matcher;
@@ -52,10 +60,11 @@ public class ChatListActivityTest {
      * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
     @Before
-    public void initialization() throws InterruptedException {
+    public void initialization() throws Exception {
         register("test5");
         register("test6");
-        login();
+        loginOther();
+        loginActual();
         search();
     }
 
@@ -85,10 +94,10 @@ public class ChatListActivityTest {
     }
 
     /**
-     * Login.
+     * Login the actual user.
      * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
-    public void login() throws InterruptedException {
+    public void loginActual() throws InterruptedException {
         usernameTyped = "test5";
         String passwordTyped = "Abc123!?";
 
@@ -101,6 +110,34 @@ public class ChatListActivityTest {
         onView(withId(R.id.login_button)).perform(click());
 
         Thread.sleep(2000);
+    }
+
+    /**
+     * Login the other user.
+     */
+    public void loginOther() throws Exception {
+        usernameToSearch = "test6";
+        CryptoBox cryptoBox = new CryptoBox();
+
+        UserModel user = new UserModel(usernameToSearch);
+        user.setPassword(passwordTyped);
+
+        KeyPair keyPair = cryptoBox.generateKeyPair();
+        user.setPublicKey(keyPair.getPublic());
+        user.setPrivateKey(keyPair.getPrivate());
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+            Request.Method.POST,
+            String.format("%s%s",
+                loginActivityRule.getActivity().getResources().getString(R.string.server_url),
+                "/api/v1/auth"
+            ),
+            user.toJsonObjectForLogin(),
+            mock(Response.Listener.class),
+            mock(Response.ErrorListener.class)
+        );
+        Volley.newRequestQueue(loginActivityRule.getActivity().getBaseContext())
+            .add(jsonObjectRequest);
     }
 
     /**

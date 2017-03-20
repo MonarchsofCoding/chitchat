@@ -71,6 +71,10 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
     void showConversation(Conversation c) {
         this.conversationPane.getChildren().clear(); // Clear the conversation view
 
+        if (c == null) {
+            return;
+        }
+
         this.conversation = c;
 
         for (Node n : this.conversationPane.getChildren()) {
@@ -133,6 +137,8 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
                 errormessage.setText("Incorrect input");
                 errormessage.setVisible(true);
                 ioException.printStackTrace();
+            } catch (Exception expt) {
+                expt.printStackTrace();
             }
 
             this.newMessageField.clear();

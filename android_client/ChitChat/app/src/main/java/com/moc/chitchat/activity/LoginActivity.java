@@ -1,13 +1,16 @@
 package com.moc.chitchat.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -38,7 +41,9 @@ public class LoginActivity extends AppCompatActivity
     @Inject
     ErrorResponseResolver errorResponseResolver;
     @Inject
-    public SessionConfiguration sessionConfiguration;
+    SessionConfiguration sessionConfiguration;
+
+    private ProgressDialog circleDialog;
 
     EditText usernameField;
     EditText passwordField;
@@ -49,6 +54,8 @@ public class LoginActivity extends AppCompatActivity
 
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
+
+        sessionConfiguration.setCurrentActivity(this);
 
         this.setContentView(R.layout.activity_login);
         getSupportActionBar().setTitle("ChitChat");
@@ -61,12 +68,23 @@ public class LoginActivity extends AppCompatActivity
 
         this.usernameField = (EditText) this.findViewById(R.id.username_input);
         this.passwordField = (EditText) this.findViewById(R.id.password_input);
+
+        circleDialog = new ProgressDialog(this);
+        circleDialog.setCancelable(false);
+        circleDialog.setMessage("Logging in ...");
+        circleDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == findViewById(R.id.login_button).getId()) {
-            loginButton();
+            circleDialog.show();
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    loginButton();
+                }
+            });
         } else if (view.getId() == findViewById(R.id.register_button).getId()) {
             registerButton();
         }
@@ -102,6 +120,7 @@ public class LoginActivity extends AppCompatActivity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
+        circleDialog.dismiss();
         System.out.println("Error on login: Invalid credentials or you didn't registered yet");
         Toast.makeText(this,
             "Invalid credentials or you didn't registered yet",
@@ -118,6 +137,7 @@ public class LoginActivity extends AppCompatActivity
      */
     @Override
     public void onResponse(JSONObject response) {
+        circleDialog.dismiss();
         try {
             String username = response.getJSONObject("data").get("username").toString();
             System.out.println(String.format("Successfully logged in: %s", username));
@@ -134,7 +154,7 @@ public class LoginActivity extends AppCompatActivity
         Intent searchIntent = new Intent(this, SearchUserActivity.class);
         startActivity(searchIntent);
         startService(new Intent(this, ReceiveMessageService.class));
-        overridePendingTransition(R.transition.anim_left1, R.transition.anim_left2);
+        overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
     }
 
     @Override
@@ -147,10 +167,5 @@ public class LoginActivity extends AppCompatActivity
         exitAlert.setButton(DialogInterface.BUTTON_POSITIVE,"Yes",this);
         exitAlert.setButton(DialogInterface.BUTTON_NEGATIVE,"No",this);
         exitAlert.show();
-    }
-
-    public void exitActivity() {
-        this.finish();
-        overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
     }
 }
