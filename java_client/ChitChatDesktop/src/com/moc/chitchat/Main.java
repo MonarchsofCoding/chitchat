@@ -1,7 +1,6 @@
 package com.moc.chitchat;
 
 import com.moc.chitchat.application.ApplicationLoader;
-import java.rmi.UnexpectedException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -31,7 +30,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws UnexpectedException{
+    public void start(Stage primaryStage) throws Exception{
         Platform.setImplicitExit(true);
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
 
