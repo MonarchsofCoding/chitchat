@@ -99,7 +99,7 @@ public class CryptoFunctions  {
         Cipher decriptCipher = Cipher.getInstance(CryptoFunctions.cipherAlgorithm);
         decriptCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-        return new String(decriptCipher.doFinal(bytes), "UTF-8");
+        return new String(decriptCipher.doFinal(bytes), "UTF-8").trim();
     }
 
     /**
