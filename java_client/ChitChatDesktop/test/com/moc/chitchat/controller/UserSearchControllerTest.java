@@ -38,7 +38,7 @@ public class UserSearchControllerTest {
         String user = "John";
         String jsonResponse = "{" +
                 "\"data\": " +
-                "[{\"username\": \""+user+"\", \"public_key\": \""+pubkey+"\"}]" +
+                String.format("[{\"username\": \"%s\", \"public_key\": \"%s\"}]", user, pubkey) +
                 "}";
 
         mockResponse
@@ -76,7 +76,7 @@ public class UserSearchControllerTest {
 
         // assert requests
         RecordedRequest recordedRequest = server.takeRequest();
-        assertEquals("/api/v1/users?username="+user, recordedRequest.getPath());
+        assertEquals(String.format("/api/v1/users?username=%s", user), recordedRequest.getPath());
         assertEquals("GET", recordedRequest.getMethod());
         server.shutdown();
     }
@@ -139,7 +139,7 @@ public class UserSearchControllerTest {
 
         // assert requests
         RecordedRequest recordedRequest = server.takeRequest();
-        assertEquals("/api/v1/users?username="+user, recordedRequest.getPath());
+        assertEquals(String.format("/api/v1/users?username=%s", user), recordedRequest.getPath());
         assertEquals("GET", recordedRequest.getMethod());
         server.shutdown();
     }
@@ -196,7 +196,7 @@ public class UserSearchControllerTest {
 
         // assert requests
         RecordedRequest recordedRequest = server.takeRequest();
-        assertEquals("/api/v1/users?username="+user, recordedRequest.getPath());
+        assertEquals(String.format("/api/v1/users?username=%s", user), recordedRequest.getPath());
         assertEquals("GET", recordedRequest.getMethod());
         server.shutdown();
     }
