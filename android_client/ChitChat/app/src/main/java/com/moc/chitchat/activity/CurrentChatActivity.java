@@ -148,8 +148,8 @@ public class CurrentChatActivity extends AppCompatActivity
                 ) {
                     ex.printStackTrace();
                     Toast.makeText(this,
-                    "Error caused by Encryption System: " + ex.getMessage(),
-                    Toast.LENGTH_LONG);
+                        "Error caused by Encryption System: " + ex.getMessage(),
+                        Toast.LENGTH_LONG);
                 }
             } else {
                 try {
@@ -178,8 +178,7 @@ public class CurrentChatActivity extends AppCompatActivity
             NoSuchAlgorithmException,
             IllegalBlockSizeException,
             UnsupportedEncodingException,
-            InvalidKeyException
-    {
+            InvalidKeyException {
         try {
             currentMessage.setTo(currentReceiver);
             currentMessage.setMessage(messageText.getText().toString());
@@ -269,9 +268,9 @@ public class CurrentChatActivity extends AppCompatActivity
             | BadPaddingException
             | UnsupportedEncodingException
             | InvalidKeySpecException
-            | IllegalBlockSizeException e
+            | IllegalBlockSizeException exception
         ) {
-            e.printStackTrace();
+            exception.printStackTrace();
         }
     }
 

@@ -22,6 +22,11 @@ import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -32,11 +37,6 @@ import org.phoenixframework.channels.ChannelEvent;
 import org.phoenixframework.channels.Envelope;
 import org.phoenixframework.channels.IMessageCallback;
 import org.phoenixframework.channels.Socket;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 
 public class ReceiveMessageService extends Service{
 
@@ -97,8 +97,8 @@ public class ReceiveMessageService extends Service{
                         //Receiving callback to accept the acceptance.
                     }
                 });
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
 
         channel.on("new:message", new IMessageCallback() {
@@ -140,7 +140,7 @@ public class ReceiveMessageService extends Service{
                 }
             });
 
-            channel.on("user:logout", new IMessageCallback() {
+        channel.on("user:logout", new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
                     currentChatConfiguration.cleanCurrentRecipient();
@@ -163,14 +163,14 @@ public class ReceiveMessageService extends Service{
                 }
             });
 
-            channel.on(ChannelEvent.CLOSE.getPhxEvent(), new IMessageCallback() {
+        channel.on(ChannelEvent.CLOSE.getPhxEvent(), new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
                     System.out.println("CLOSED: " + envelope.toString());
                 }
             });
 
-            channel.on(ChannelEvent.ERROR.getPhxEvent(), new IMessageCallback() {
+        channel.on(ChannelEvent.ERROR.getPhxEvent(), new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
                     System.out.println("ERROR: " + envelope.toString());
@@ -190,8 +190,8 @@ public class ReceiveMessageService extends Service{
                     channel.leave();
                     socket.disconnect();
                     System.out.println("Service for receiving message gracefully stopped.");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
             }
         });

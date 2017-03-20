@@ -10,10 +10,10 @@ import com.moc.chitchat.resolver.ErrorResponseResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 
-import java.security.NoSuchAlgorithmException;
-
 import dagger.Module;
 import dagger.Provides;
+
+import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Singleton;
 
@@ -78,8 +78,8 @@ public class ApplicationModule {
     CryptoBox provideCryptoBox() {
         try {
             return new CryptoBox();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException algorithmException) {
+            algorithmException.printStackTrace();
         }
         return null;
     }

@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                loginButton();
+                    loginButton();
                 }
             });
         } else if (view.getId() == findViewById(R.id.register_button).getId()) {

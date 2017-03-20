@@ -188,12 +188,12 @@ public class SearchUserActivity extends AppCompatActivity
                     userList);
 
             usersList.setAdapter(arrayAdapter);
-        } catch (InvalidKeySpecException | JSONException e) {
-            e.printStackTrace();
+        } catch (InvalidKeySpecException | JSONException exception) {
+            exception.printStackTrace();
         }
     }
 
-        //For a selected tab
+    //For a selected tab
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         String tabName = tab.getText().toString();

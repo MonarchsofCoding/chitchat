@@ -102,8 +102,7 @@ public class CryptoBox {
             InvalidKeyException,
             UnsupportedEncodingException,
             BadPaddingException,
-            IllegalBlockSizeException
-    {
+            IllegalBlockSizeException{
         Cipher encryptCipher = Cipher.getInstance(CryptoBox.cipherAlgorithm);
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
@@ -124,8 +123,7 @@ public class CryptoBox {
             InvalidKeyException,
             BadPaddingException,
             IllegalBlockSizeException,
-            UnsupportedEncodingException
-    {
+            UnsupportedEncodingException{
         byte[] bytes = Base64.decode(cipherText, Base64.NO_WRAP);
 
         Cipher decriptCipher = Cipher.getInstance(CryptoBox.cipherAlgorithm);
