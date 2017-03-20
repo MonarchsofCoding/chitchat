@@ -11,16 +11,13 @@ import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.MessageValidator;
+import java.util.HashMap;
+import java.util.Map;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * MessageController provides the actions involved with messaging.
@@ -80,14 +77,7 @@ public class MessageController {
 
         this.chitChatData.addMessageToConversation(to, newMessage);
 
-
-
-
-
-
-
         return newMessage;
-
     }
 
     /**
@@ -98,7 +88,6 @@ public class MessageController {
      */
     public Message receive(String receivedMessage, String username) throws Exception {
         UserModel from = this.userResolver.createUser(username);
-        System.out.println(receivedMessage);
 
         String messagedecrypt = cryptoFunctions.decrypt(receivedMessage,
                 this.configuration.getLoggedInUser().getPrivatekey());
@@ -109,9 +98,7 @@ public class MessageController {
                 receivedMessage
         );
 
-        chitChatData.addMessageToConversation(from, message);
-        if (from.getPublicKey() == null) {
-
+        if(chitChatData.findConversation(from) == null) {
             Map<String, Object> mapper1 = new HashMap<>();
             mapper1.put("username", from.getUsername());
 
@@ -130,8 +117,9 @@ public class MessageController {
                 JSONObject jsonobjectname = (JSONObject) obj;
                 from.setPublicKey(userResolver.getUserModelViaJSonObject(jsonobjectname).getPublicKey());
             }
-
         }
+        chitChatData.addMessageToConversation(from, message);
+
         return message;
     }
 

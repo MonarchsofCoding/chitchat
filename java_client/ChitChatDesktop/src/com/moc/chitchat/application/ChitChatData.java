@@ -69,7 +69,7 @@ public class ChitChatData {
      * @param user the user to find a conversation for.
      * @return returns the conversation if found, null otherwise.
      */
-    private Conversation findConversation(UserModel user) {
+    public Conversation findConversation(UserModel user) {
         for (Conversation c: this.conversations) {
             if (c.getOtherParticipant().getUsername().equals(user.getUsername())) {
                 return c;

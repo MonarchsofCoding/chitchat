@@ -12,6 +12,7 @@ import com.moc.chitchat.resolver.MessageResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.MessageValidator;
 import com.moc.chitchat.validator.UserValidator;
+import javafx.embed.swing.JFXPanel;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -362,51 +363,71 @@ public class MessageControllerTest {
 
     @Test
     public void testSuccessfulReceive () throws Exception {
-        String name = "John";
-        String myText = "What'supJohn!!!!!!!!!!";
+        // Set up mock server
+        MockWebServer server = new MockWebServer();
 
-        HttpClient mockHttpClient = mock(HttpClient.class);
+        // Schedule the valid response
+        MockResponse mockResponse = new MockResponse();
+
+        // Not used, but for completeness
+        String jsonResponse = "{\"data\":" +
+        "[{\"public_key\":\"MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEApUYOLj82dD0zybk/0fxF7fYxr12VOr6bv0xNOZXYNaPDSYEqe3VNAeOa5nMgatx8rJ5VGC/A/3xKBq243VDSBVcihvNIQT/MWDyRMhMG+PyEHLQaT3SiyC12ukWxFPQUpUwGvYIvEd1RE/nlYzt1NqOfOsWUtLd6Lx9QwxMVf8d25KSVenkQm6p9LVyk/kWWOjMleg7O4beKm4VbtxPu6qSHSYD5WX8yIzDlrFTzoOnM2X9bN4FgjAzMp4lsUtwwCozXewlb64ds/WQS/0dgWCnnzEWA2AAsuzAmjzdnGKc+Iz7vi5JsRKbcAIBb0OFruGUBYbRXxaICnuPaWCCLzxNRiu2Q+3wy9Nyr1PUXw7+As3CQiTCXlmTG1/SqlrYfxQPeWnmm4ujlme6HzLTzvjIM0CRZcw/1u7+/Tzu1xdpoE3gxR7s6TBJa8gxuewKqbbil6M7uGAU28uOQ3R7dsTKrGixVdqt6fsE6gQk4sGZesuPyDKmdZOZN9HndtnMzVTCrA3PAPyYaj5a3XLL/f+9n7Knux2m9YiIzCUBCrPLGePX0cDfnxgS16sj2k7GYIZx9jnorRLDFTHgWIKli2KBRU8vLraj5y6sOcUqTVFFbqotddEywt547TAGTT5DQqCl7X81ybf7oqahhyzV3BLFYkfGeqOGurVNwSltWQqMCAwEAAQ==\", "+
+        "\"username\":\"john\"}]}";
+
+        mockResponse
+                .addHeader("Content-Type", "application/json")
+                .setBody(jsonResponse)
+                .setResponseCode(200)
+        ;
+
+        server.enqueue(mockResponse);
+
+        HttpUrl baseUrl = server.url("/");
+
+        String name = "John";
+        String expectedMessage = "What'supJohn!!!!!!!!!!";
+
+        // Set up controller
+        MessageResolver messageResolver = new MessageResolver();
+        MessageValidator messageValidator = new MessageValidator();
         Configuration mockConfiguration = mock(Configuration.class);
-        MessageValidator mockMessageValidator = mock(MessageValidator.class);
-        MessageResolver mockMessageResolver = mock(MessageResolver.class);
+        when(mockConfiguration.getBackendAddress()).thenReturn(baseUrl.toString());
+        HttpClient httpClient = new HttpClient(mockConfiguration);
         ChitChatData mockChitChatData = mock(ChitChatData.class);
-        UserResolver mockUserResolver = mock(UserResolver.class);
+        UserResolver userResolver = new UserResolver();
         CryptoFunctions cryptoFunctions = new CryptoFunctions();
 
+        // set up public/private keys
+        KeyPair userKeyPair = cryptoFunctions.generateKeyPair();
+        UserModel userModel = new UserModel(name);
+        userModel.setPublicKey(userKeyPair.getPublic());
+        userModel.setPrivatekey(userKeyPair.getPrivate());
+        String encrypted_message = cryptoFunctions.encrypt(expectedMessage, userKeyPair.getPublic());
+        when(mockConfiguration.getLoggedInUser()).thenReturn(userModel);
+
         MessageController messageController = new MessageController(
-                mockHttpClient,
+                httpClient,
                 mockConfiguration,
-                mockMessageValidator,
-                mockMessageResolver,
+                messageValidator,
+                messageResolver,
                 mockChitChatData,
-                mockUserResolver,
+                userResolver,
                 cryptoFunctions
         );
 
-        UserModel mockFromUser = mock(UserModel.class);
-        when(mockUserResolver.createUser(name))
-                .thenReturn(mockFromUser)
-        ;
+        Message foundMessage = new Message(userModel, "test");
 
-        UserModel mockLoggedInUser = mock(UserModel.class);
-        when(mockConfiguration.getLoggedInUser())
-                .thenReturn(mockLoggedInUser)
-        ;
+        try {
+            foundMessage = messageController.receive(encrypted_message, name);
+        } catch(Exception e) {
+            e.printStackTrace();
+            fail("Failed");
+        }
 
-        KeyPair userKeyPair = cryptoFunctions.generateKeyPair();
+        RecordedRequest recordedRequest = server.takeRequest();
+        assertEquals("/api/v1/users?username=John", recordedRequest.getPath());
+        assertEquals(expectedMessage, foundMessage.getMessage());
 
-        String encrypted_message = cryptoFunctions.encrypt(myText, userKeyPair.getPublic());
-
-        when(mockLoggedInUser.getPrivatekey()).thenReturn(userKeyPair.getPrivate());
-
-        Message mockMessage = mock(Message.class);
-        when(mockMessageResolver.createMessage(mockFromUser, mockLoggedInUser, myText, encrypted_message))
-                .thenReturn(mockMessage)
-        ;
-
-        messageController.receive(encrypted_message, name);
-
-        verify(mockChitChatData).addMessageToConversation(mockFromUser, mockMessage);
     }
 
     @Test
