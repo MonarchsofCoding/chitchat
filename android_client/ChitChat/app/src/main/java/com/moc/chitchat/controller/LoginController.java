@@ -71,7 +71,7 @@ public class LoginController {
         Context context,
         Response.Listener<JSONObject> successListener,
         Response.ErrorListener errorListener,
-        String username, String password) throws Exception {
+        String username, String password) {
 
         KeyPair userKeyPair = cryptoBox.generateKeyPair();
 

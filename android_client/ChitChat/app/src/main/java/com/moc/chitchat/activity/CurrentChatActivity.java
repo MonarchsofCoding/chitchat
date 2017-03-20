@@ -26,7 +26,14 @@ import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
 
 import org.json.JSONArray;
@@ -131,11 +138,18 @@ public class CurrentChatActivity extends AppCompatActivity
             if(currentReceiver.getPublicKey() != null) {
                 try {
                     sendMessage();
-                } catch (Exception ex) {
+                } catch (
+                    NoSuchAlgorithmException
+                    | InvalidKeyException
+                    | NoSuchPaddingException
+                    | UnsupportedEncodingException
+                    | BadPaddingException
+                    | IllegalBlockSizeException ex
+                ) {
                     ex.printStackTrace();
                     Toast.makeText(this,
-                        "Error caused by Encryption System: " + ex.getMessage(),
-                        Toast.LENGTH_LONG);
+                    "Error caused by Encryption System: " + ex.getMessage(),
+                    Toast.LENGTH_LONG);
                 }
             } else {
                 try {
@@ -157,9 +171,15 @@ public class CurrentChatActivity extends AppCompatActivity
 
     /**
      * Invokes message sending functionality.
-     * @throws Exception in case encryption fails.
      */
-    public void sendMessage() throws Exception {
+    public void sendMessage() throws
+            NoSuchPaddingException,
+            BadPaddingException,
+            NoSuchAlgorithmException,
+            IllegalBlockSizeException,
+            UnsupportedEncodingException,
+            InvalidKeyException
+    {
         try {
             currentMessage.setTo(currentReceiver);
             currentMessage.setMessage(messageText.getText().toString());
@@ -242,10 +262,16 @@ public class CurrentChatActivity extends AppCompatActivity
             jsonexception.printStackTrace();
             Toast.makeText(this,
                 "Error caused by JSONObject: " + jsonexception.getMessage(), Toast.LENGTH_LONG);
-        } catch (InvalidKeySpecException keyException) {
-            keyException.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (
+            NoSuchAlgorithmException
+            | InvalidKeyException
+            | NoSuchPaddingException
+            | BadPaddingException
+            | UnsupportedEncodingException
+            | InvalidKeySpecException
+            | IllegalBlockSizeException e
+        ) {
+            e.printStackTrace();
         }
     }
 

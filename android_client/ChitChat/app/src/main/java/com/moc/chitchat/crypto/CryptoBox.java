@@ -2,6 +2,8 @@ package com.moc.chitchat.crypto;
 
 import android.util.Base64;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -13,7 +15,10 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class CryptoBox {
 
@@ -35,9 +40,8 @@ public class CryptoBox {
     /**
      * Generates keys.
      * @return The key pair.
-     * @throws Exception in case generation fails.
      */
-    public KeyPair generateKeyPair() throws Exception {
+    public KeyPair generateKeyPair() {
         generator.initialize(4096, new SecureRandom());
 
         return generator.generateKeyPair();
@@ -91,9 +95,15 @@ public class CryptoBox {
      * @param plainText The text to encrypt.
      * @param publicKey The public key to encrypt the text.
      * @return The cipher text
-     * @throws Exception if the encryption fails.
      */
-    public String encrypt(String plainText, PublicKey publicKey) throws Exception {
+    public String encrypt(String plainText, PublicKey publicKey) throws
+            NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidKeyException,
+            UnsupportedEncodingException,
+            BadPaddingException,
+            IllegalBlockSizeException
+    {
         Cipher encryptCipher = Cipher.getInstance(CryptoBox.cipherAlgorithm);
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
@@ -107,9 +117,15 @@ public class CryptoBox {
      * @param cipherText The cipherText to decipher.
      * @param privateKey The private key to decipher the text.
      * @return The plaintext.
-     * @throws Exception if the decipher fails.
      */
-    public String decrypt(String cipherText, PrivateKey privateKey) throws Exception {
+    public String decrypt(String cipherText, PrivateKey privateKey) throws
+            NoSuchPaddingException,
+            NoSuchAlgorithmException,
+            InvalidKeyException,
+            BadPaddingException,
+            IllegalBlockSizeException,
+            UnsupportedEncodingException
+    {
         byte[] bytes = Base64.decode(cipherText, Base64.NO_WRAP);
 
         Cipher decriptCipher = Cipher.getInstance(CryptoBox.cipherAlgorithm);
