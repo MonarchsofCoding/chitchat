@@ -20,7 +20,14 @@ public class SearchViewTest extends PrimaryStageTest {
     public final static String chatBtn = "#search-chat-btn";
     public final static String errorMessage = "#search-error-messages";
     public final static String errorUserMessage ="#search-error-users-msg";
-
+    public final static String logoutBtn = "#logoutbtn";
+    public static final String viewPane = "#login-view-pane";
+    public static final String usernameloginFld = "#login-username-fld";
+    public static final String passwordFld = "#login-password-fld";
+    public static final String loginBtn = "#login-login-btn";
+    public static final String registerBtn = "#login-register-btn";
+    public static final String unexpectedErrors = "#login-errors-lbl";
+    public static final String credits = "#credits";
     /**
      * Test that the search view is visible.
      */
@@ -44,6 +51,7 @@ public class SearchViewTest extends PrimaryStageTest {
 
         verifyThat(errorMessage, NodeMatchers.isInvisible());
         verifyThat(errorUserMessage,NodeMatchers.isInvisible());
+        verifyThat(logoutBtn ,NodeMatchers.isVisible());
     }
 
     /**
@@ -92,4 +100,29 @@ public class SearchViewTest extends PrimaryStageTest {
 
         verifyThat(userList, NodeMatchers.anything());
     }
+
+
+    /**
+     * We test the logout button that returns the user to the login screen.
+     */
+    @Test
+    public void test_logout_button(){
+        UserHelper.createUser(this, "search_user6", "search1234");
+        UserHelper.loginUser(this, "search_user6", "search1234");
+        clickOn(logoutBtn);
+        verifyThat(usernameloginFld, NodeMatchers.isVisible());
+        verifyThat(passwordFld, NodeMatchers.isVisible());
+
+        verifyThat(loginBtn, hasText("Login"));
+        verifyThat(loginBtn, NodeMatchers.isEnabled());
+
+        verifyThat(registerBtn, hasText("Register"));
+        verifyThat(registerBtn, NodeMatchers.isEnabled());
+
+        verifyThat(unexpectedErrors, NodeMatchers.isInvisible());
+        verifyThat(credits,NodeMatchers.isVisible());
+        verifyThat(credits,NodeMatchers.hasText("Created by: Monarchs of Coding"));
+
+    }
+
 }

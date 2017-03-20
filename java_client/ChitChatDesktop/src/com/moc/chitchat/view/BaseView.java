@@ -75,6 +75,7 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
             logout = new Button("Log out");
             logout.setOnAction(this);
             logout.setStyle("-fx-background-color: transparent");
+            logout.setId("logoutbtn");
             header.add(title, "center,wrap");
             header.add(logout, "center");
         } else {
