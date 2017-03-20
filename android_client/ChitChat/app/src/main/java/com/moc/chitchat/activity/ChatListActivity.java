@@ -48,7 +48,10 @@ public class ChatListActivity extends AppCompatActivity
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
         this.setContentView(R.layout.activity_chat_list);
-        getSupportActionBar().setTitle("ChitChat");
+        getSupportActionBar().setTitle(String.format(
+            "Welcome %s",
+            sessionConfiguration.getCurrentUser().getUsername()
+        ));
 
         chatsList = (ListView) findViewById(R.id.chats_list);
         chatsList.setOnItemClickListener(this);
