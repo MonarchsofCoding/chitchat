@@ -59,6 +59,7 @@ public class WebSocketClient implements Observer {
 
         WebSocket webSocket = client.newWebSocket(request, this.socketListener);
         this.sockets.put("chitchat.socket", webSocket);
+        this.configuration.addObserver(this);
         client.dispatcher().executorService().shutdown();
     }
 
