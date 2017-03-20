@@ -54,7 +54,18 @@ The whole developing process was made using Agile development methodology, we ha
 
 \section{Encrypted communication protocols}
 
+\subsection{Why encryption}
+The exchanging message process is the main feature of our application and for this reason the security on our communication channel was one of our first goals. During our security protocols research we came out with three different models (Gnu PG key chain model, RSA ,Signal). 
+
+\subsection{RSA-GPG}
+The Gnu PG key chain model uses both symmetric and asymmetric key encryption protocols. The RSA public key cryptosystem model uses assymetric key encryption. We prefer to use RSA instead of AES or 3DES for the reason that the last two is symmetric key encryptio. For the RSA we used the cipheralgorithm of ECB(Electronic Code Book) instead of OFB,CBC and CFB as it is faster and simpler on his implementation. Beginning with the libraries, we used the Java SE Security and its libraries in order to apply our cryptographic protocols in the CryptoBox(Android) and Cryptofunctions(JavaDesktop) classes. On the side of client, we generate a pair of keys (a public and its private) and we store it locally as instances of the UserModel class. The generator of this pair uses the RSA algorithm with 4096 key length which is important as the factorization uses big prime numbers that are extremely difficult to be guessed. After the creation of the two keys, we send the public key to our server. The creation of the two keys takes place during the login activity. Each time a user wants to start a conversation with another user must ask for his public key from the server. The user encrypts his message with the user’s public key and he sends it. The receiver on the other side can decrypt the encrypted message as he is the only one who knows the private key that is needed.
+
 \subsection{Signal}
+Signal is a protocol developed by Open Whisper Systems. On this protocol clientsl using their mobile numbers as id can send end-to-end encrypted messages to each other. One of the feature of signal is that clients create a pair of public and private keys which are stored to the endpoints. Moreover, clients can be authenticated using key fingerprints (or scan QR codes). Using a passphrase the user can encrypt the whole database where he stores his messages. One last feature is that users can keep for a specific time their messages to the database using a timer. One of the limitation is that the user can be registered in only one device. 
+
+\subsection{Applying to our application}
+In our application we used a combination of this research as we described on the previous paragraphs and we manage to use our application in both desktop and mobile device for the one user. In order to succeed on this approach we put some limitations to our system. The first is that user does not keep any message history on his local data as everything is deleted when the users are log out. The second one is that each time the user tries to connect from a different device he creates a different public-private key pair. The new generated public key replaces the previous in our webserver database. That helps our user to protect his message even if his device was stolen or even if he had forgotten his application open to a, accessible from others, device.
+
 
 
 \chapter{Requirements and Design}
@@ -73,10 +84,10 @@ The whole developing process was made using Agile development methodology, we ha
 \section{Unit Testing}
 
 \subsection{Why Unit Testing}
-One of the dynamic testing methods we did is unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed. 
+Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and the expected results that he wants to have from these tests.The first one, is the JUnit unit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after click on them, the error display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on Java Fx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register user name.The dynamic testing methods we did is unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed. 
 
 \subsection{Mocking}
-We used mocking for several of different reasons such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. We used it when we wanted to return a particular value when the method is called. E.g. in the “RegistrationControllerTest.java” the “testSuccessfulRegisterUser” test function we mocked the configuration object (which provides global configuration variables for the application). We mocked the configuration, because when our registration controller calls the http client to post we need a URL. The URL is retrieved from a function inside the configuration class. Therefore using “when(mockConfiguration
+The second testing framework library that we used is Mockito. We used mocking for several of different reasons such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. We used it when we wanted to return a particular value when the method is called. E.g. in the “RegistrationControllerTest.java” the “testSuccessfulRegisterUser” test function we mocked the configuration object (which provides global configuration variables for the application). We mocked the configuration, because when our registration controller calls the http client to post we need a URL. The URL is retrieved from a function inside the configuration class. Therefore using “when(mockConfiguration
 .getBackendAddress()).thenReturn(baseUrl.toString())” we enable to provide the URL when “getBackendAddress“ function is called. We have also mocked the server by using “MockWebServer” library, which this allows us to specify the response and then we can verify the right nodes are being executed and test on what was returned. Hence, in our test function “testSuccessfulRegisterUser” we created a user named “test” and if the right nodes have been executed then user name would change to the expected username “alice”. 
 
 \subsection{Report}
@@ -134,5 +145,12 @@ Credo and Dogma
 \chapter{Peer Review}
 
 \bibliographystyle{plain}
-\bibliography{final-report}{}
+\bibliography{final-report}{
+https://www.gnupg.org/
+https://en.wikipedia.org/wiki/RSA_(cryptosystem)
+http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136007.html
+http://junit.org/junit4/
+http://site.mockito.org/
+
+}
 \end{document}
