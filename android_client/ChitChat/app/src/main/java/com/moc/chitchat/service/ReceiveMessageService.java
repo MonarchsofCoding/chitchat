@@ -65,7 +65,7 @@ public class ReceiveMessageService extends Service{
         try {
             socket = new Socket((this.getResources().getString(R.string.server_url)
                 + "/api/v1/messages/websocket?authToken="
-                + sessionConfiguration.getCurrentUser().getAuthToken()).replace("https", "ws"));
+                + sessionConfiguration.getCurrentUser().getAuthToken()).replace("http", "ws"));
             socket.connect();
 
             ObjectNode auth = JsonNodeFactory.instance.objectNode();
