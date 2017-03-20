@@ -24,34 +24,18 @@ public class CryptoFunctions  {
     private KeyPairGenerator generator;
     private KeyFactory keyFactory;
 
+    private static String cipherAlgorithm = "RSA/ECB/NOPADDING";
+    private static String keyFactoryAlgorithm = "RSA";
+    private static String keyGeneratorAlgorithm = "RSA";
+
     /**
      * CryptoFunctions constructor.
      * @throws NoSuchAlgorithmException No such Algorithm Security Exception if RSA doesn't exist.
      */
-    @Autowired
     public CryptoFunctions() throws NoSuchAlgorithmException {
-
-        this.generator = KeyPairGenerator.getInstance("RSA");
-        this.keyFactory = KeyFactory.getInstance("RSA");
+        this.generator = KeyPairGenerator.getInstance(CryptoFunctions.keyGeneratorAlgorithm);
+        this.keyFactory = KeyFactory.getInstance(CryptoFunctions.keyFactoryAlgorithm);
     }
-
-
-    /**
-     * Initializes the object.
-     * @return The CryptoFunction object.
-     */
-    public CryptoFunctions initialize() {
-        try {
-            this.generator = KeyPairGenerator.getInstance("RSA");
-            this.keyFactory = KeyFactory.getInstance("RSA");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            this.generator = null;
-            this.keyFactory = null;
-        }
-        return this;
-    }
-
 
     /**
      * In this function we generate the pair of keys using RSA and 4096 key lenght.
@@ -60,16 +44,15 @@ public class CryptoFunctions  {
      */
     public  KeyPair generateKeyPair() throws Exception {
         this.generator.initialize(4096, new SecureRandom());
-        KeyPair pair = generator.generateKeyPair();
 
-        return pair;
+        return generator.generateKeyPair();
     }
 
     /**
      * This function converts the string into a public key.
      * @param pubKey the public key string as a parameter.
-     * @return the publickey.
-     * @throws InvalidKeySpecException exception to invadlidkey.
+     * @return the publicKey.
+     * @throws InvalidKeySpecException when there is an invalid key.
      */
     public PublicKey pubKeyStringToKey(String pubKey) throws InvalidKeySpecException {
         X509EncodedKeySpec converterSpec = new X509EncodedKeySpec(Base64.getDecoder().decode(pubKey));
@@ -80,7 +63,7 @@ public class CryptoFunctions  {
      * This function converts the string into a private key.
      * @param privKey the private key string as a parameter.
      * @return the private key
-     * @throws InvalidKeySpecException exception to invadlidkey.
+     * @throws InvalidKeySpecException when there is an invalid key.
      */
     public PrivateKey privKeyStringToKey(String privKey) throws InvalidKeySpecException {
         PKCS8EncodedKeySpec converterSpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privKey));
@@ -95,7 +78,7 @@ public class CryptoFunctions  {
      * @throws Exception exception.
      */
     public String encrypt(String plainText, PublicKey publicKey) throws Exception {
-        Cipher encryptCipher = Cipher.getInstance("RSA");
+        Cipher encryptCipher = Cipher.getInstance(CryptoFunctions.cipherAlgorithm);
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
         byte[] cipherText = encryptCipher.doFinal(plainText.getBytes("UTF-8"));
@@ -113,7 +96,7 @@ public class CryptoFunctions  {
     public String decrypt(String cipherText, PrivateKey privateKey) throws Exception {
         byte[] bytes = Base64.getDecoder().decode(cipherText);
 
-        Cipher decriptCipher = Cipher.getInstance("RSA");
+        Cipher decriptCipher = Cipher.getInstance(CryptoFunctions.cipherAlgorithm);
         decriptCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
         return new String(decriptCipher.doFinal(bytes), "UTF-8");

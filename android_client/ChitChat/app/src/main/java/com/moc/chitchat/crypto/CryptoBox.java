@@ -5,6 +5,7 @@ import android.util.Base64;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -17,30 +18,18 @@ import javax.crypto.Cipher;
 public class CryptoBox {
 
     private KeyPairGenerator generator;
-    private KeyFactory converterFactory;
+    private KeyFactory keyFactory;
+
+    private static String cipherAlgorithm = "RSA/ECB/NOPADDING";
+    private static String keyFactoryAlgorithm = "RSA";
+    private static String keyGeneratorAlgorithm = "RSA";
 
     /**
      * Constructor.
      */
-    public CryptoBox() {
-        this.generator = null;
-        this.converterFactory = null;
-    }
-
-    /**
-     * Initializes the object.
-     * @return The CryptoBox object.
-     */
-    public CryptoBox initialize() {
-        try {
-            this.generator = KeyPairGenerator.getInstance("RSA");
-            this.converterFactory = KeyFactory.getInstance("RSA");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            this.generator = null;
-            this.converterFactory = null;
-        }
-        return this;
+    public CryptoBox() throws NoSuchAlgorithmException {
+        this.generator = KeyPairGenerator.getInstance(CryptoBox.keyGeneratorAlgorithm);
+        this.keyFactory = KeyFactory.getInstance(CryptoBox.keyFactoryAlgorithm);
     }
 
     /**
@@ -50,9 +39,8 @@ public class CryptoBox {
      */
     public KeyPair generateKeyPair() throws Exception {
         generator.initialize(4096, new SecureRandom());
-        KeyPair pair = generator.generateKeyPair();
 
-        return pair;
+        return generator.generateKeyPair();
     }
 
     /**
@@ -61,7 +49,10 @@ public class CryptoBox {
      * @return The string form of the key.
      */
     public String keyToString(PublicKey key) {
-        return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
+        String enc = Base64.encodeToString(key.getEncoded(), Base64.NO_WRAP);
+
+        System.out.println(enc);
+        return enc;
     }
 
     /**
@@ -70,7 +61,7 @@ public class CryptoBox {
      * @return The string form of the key.
      */
     public String keyToString(PrivateKey key) {
-        return Base64.encodeToString(key.getEncoded(), Base64.DEFAULT);
+        return Base64.encodeToString(key.getEncoded(), Base64.NO_WRAP);
     }
 
     /**
@@ -80,8 +71,8 @@ public class CryptoBox {
      * @throws InvalidKeySpecException if the specification is invalid.
      */
     public PublicKey pubKeyStringToKey(String pubKey) throws InvalidKeySpecException {
-        X509EncodedKeySpec converterSpec = new X509EncodedKeySpec(Base64.decode(pubKey, Base64.DEFAULT));
-        return converterFactory.generatePublic(converterSpec);
+        X509EncodedKeySpec converterSpec = new X509EncodedKeySpec(Base64.decode(pubKey, Base64.NO_WRAP));
+        return keyFactory.generatePublic(converterSpec);
     }
 
     /**
@@ -91,8 +82,8 @@ public class CryptoBox {
      * @throws InvalidKeySpecException if the specification is invalid.
      */
     public PrivateKey privKeyStringToKey(String privKey) throws InvalidKeySpecException {
-        PKCS8EncodedKeySpec converterSpec = new PKCS8EncodedKeySpec(Base64.decode(privKey, Base64.DEFAULT));
-        return converterFactory.generatePrivate(converterSpec);
+        PKCS8EncodedKeySpec converterSpec = new PKCS8EncodedKeySpec(Base64.decode(privKey, Base64.NO_WRAP));
+        return keyFactory.generatePrivate(converterSpec);
     }
 
     /**
@@ -103,12 +94,12 @@ public class CryptoBox {
      * @throws Exception if the encryption fails.
      */
     public String encrypt(String plainText, PublicKey publicKey) throws Exception {
-        Cipher encryptCipher = Cipher.getInstance("RSA");
+        Cipher encryptCipher = Cipher.getInstance(CryptoBox.cipherAlgorithm);
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
         byte[] cipherText = encryptCipher.doFinal(plainText.getBytes("UTF-8"));
 
-        return Base64.encodeToString(cipherText, Base64.DEFAULT);
+        return Base64.encodeToString(cipherText, Base64.NO_WRAP);
     }
 
     /**
@@ -119,9 +110,9 @@ public class CryptoBox {
      * @throws Exception if the decipher fails.
      */
     public String decrypt(String cipherText, PrivateKey privateKey) throws Exception {
-        byte[] bytes = Base64.decode(cipherText, Base64.DEFAULT);
+        byte[] bytes = Base64.decode(cipherText, Base64.NO_WRAP);
 
-        Cipher decriptCipher = Cipher.getInstance("RSA");
+        Cipher decriptCipher = Cipher.getInstance(CryptoBox.cipherAlgorithm);
         decriptCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
         return new String(decriptCipher.doFinal(bytes), "UTF-8");

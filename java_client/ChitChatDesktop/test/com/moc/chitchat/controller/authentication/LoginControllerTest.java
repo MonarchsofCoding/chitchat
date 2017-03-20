@@ -38,7 +38,6 @@ public class LoginControllerTest {
         String validPassword = "abcde1234";
 
         CryptoFunctions cryptoFunctions = new CryptoFunctions();
-        cryptoFunctions.initialize();
         KeyPair pair = cryptoFunctions.generateKeyPair();
         PublicKey publicKey = pair.getPublic();
         PrivateKey privateKey = pair.getPrivate();
@@ -184,7 +183,6 @@ public class LoginControllerTest {
         String validUsername = "alice";
         String validPassword = "";
         CryptoFunctions cryptoFunctions = new CryptoFunctions();
-        cryptoFunctions.initialize();
         KeyPair pair = cryptoFunctions.generateKeyPair();
         PublicKey publicKey = pair.getPublic();
         PrivateKey privateKey = pair.getPrivate();
