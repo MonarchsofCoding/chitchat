@@ -509,7 +509,7 @@ public class MessageControllerTest {
         MessageValidator messageValidator = new MessageValidator();
         Configuration mockConfiguration = mock(Configuration.class);
         HttpClient httpClient = new HttpClient(mockConfiguration);
-        ChitChatData chitChatData = new ChitChatData();
+        ChitChatData chitChatData = new ChitChatData(mockConfiguration);
         UserResolver userResolver = new UserResolver();
         CryptoFunctions cryptoFunctions = new CryptoFunctions();
 

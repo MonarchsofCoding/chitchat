@@ -3,17 +3,21 @@ package com.moc.chitchat.application;
 import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.model.Message;
 import com.moc.chitchat.model.UserModel;
+import java.util.Observable;
+import java.util.Observer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.springframework.stereotype.Component;
 
 
+
+
 /**
  * ChitChatData provides the main application states.
  */
 @Component
-public class ChitChatData {
+public class ChitChatData implements Observer {
 
     /**
      * ObservableList of Conversations. This allows the views to update automatically when this reference changes.
@@ -23,8 +27,11 @@ public class ChitChatData {
     /**
      * Constructor for ChitChatData.
      */
-    public ChitChatData() {
+    public ChitChatData(
+        Configuration configuration
+    ) {
         this.conversations = FXCollections.observableArrayList();
+        configuration.addObserver(this);
     }
 
     /**
@@ -78,4 +85,8 @@ public class ChitChatData {
         return null;
     }
 
+    @Override
+    public void update(Observable observable, Object obj) {
+        this.conversations.setAll();
+    }
 }

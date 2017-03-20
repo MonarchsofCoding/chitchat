@@ -37,11 +37,5 @@ public class Main extends Application {
         ApplicationLoader applicationLoader = context.getBean(ApplicationLoader.class);
 
         applicationLoader.load(primaryStage, this.getParameters().getUnnamed());
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                primaryStage.show();
-            }
-        });
     }
 }

@@ -1,9 +1,19 @@
 package com.moc.chitchat.channel.handler;
 
 import com.moc.chitchat.controller.MessageController;
+import com.moc.chitchat.exception.UnexpectedResponseException;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+
 
 /**
  * NewMessageHandler handles the new:message event.
@@ -44,9 +54,17 @@ public class NewMessageHandler implements HandlerInterface {
                     payload.getString("body"),
                     payload.getString("from")
             );
-        } catch (Exception exp) {
-            // TODO: don't use global Exception!!!
-            exp.printStackTrace();
+        } catch (
+            BadPaddingException
+            | NoSuchAlgorithmException
+            | IOException
+            | IllegalBlockSizeException
+            | InvalidKeyException
+            | NoSuchPaddingException
+            | InvalidKeySpecException
+            | UnexpectedResponseException exception
+        ) {
+            exception.printStackTrace();
         }
     }
 }
