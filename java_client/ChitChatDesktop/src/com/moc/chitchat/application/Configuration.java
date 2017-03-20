@@ -59,15 +59,6 @@ public class Configuration extends Observable {
     }
 
     /**
-     * setBetaMode applies changes to the configuration for use when testing.
-     */
-    public void setAlphaMode() {
-        System.out.println("\nEntering Alpha Mode!\n"); // TODO: Use Apache Commons logger!
-
-        this.backendAddress = ALPHA_BACKEND_ADDRESS;
-    }
-
-    /**
      * setTestingMode applies changes to the configuration for use when testing.
      */
     public void setTestingMode() {
