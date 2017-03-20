@@ -64,7 +64,7 @@ public class LoginControllerTest {
     }
 
 
-    /* TODO: CryptoBox is null again after @Inject for some reason.
+    /* Commented out because of injection problems. Will cover through UI Tests
     @Test
     public void testSuccesfulLoginUser() throws Exception {
         UserModel mockUser = mock(UserModel.class);
