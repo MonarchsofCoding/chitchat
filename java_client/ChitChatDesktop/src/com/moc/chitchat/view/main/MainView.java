@@ -30,7 +30,6 @@ public class MainView extends BaseView {
         MigPane basePane = new MigPane();
         basePane.setId("main-view-pane");
         basePane.setLayout("fill");
-
         MigPane westPane = westView.getContentPane();
         basePane.add(westPane, "dock west");
         basePane.add(conversationView.getContentPane(), "grow");

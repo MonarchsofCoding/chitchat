@@ -44,11 +44,11 @@ public class ConversationListView {
 
     public MigPane getContentPane() {
 
-
         this.conversationListView = new ListView<>(this.chitChatData.getConversations());
+        this.conversationListView.setId("conversation-user-list");
         this.conversationListView.setPlaceholder(new Label("Add User for Conversation"));
-        MultipleSelectionModel<Conversation> lvSelModel = this.conversationListView.getSelectionModel();
 
+        MultipleSelectionModel<Conversation> lvSelModel = this.conversationListView.getSelectionModel();
         lvSelModel.selectedItemProperty().addListener(new ChangeListener<Conversation>() {
             public void changed(ObservableValue<? extends Conversation> changed,
                                 Conversation oldConvo, Conversation newConvo) {
@@ -56,6 +56,7 @@ public class ConversationListView {
             }
 
         });
+
         MigPane chatListPane = new MigPane();
         chatListPane.setLayout("fill");
         chatListPane.add(this.conversationListView, "span");

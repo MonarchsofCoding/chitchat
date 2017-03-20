@@ -8,6 +8,8 @@ import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +56,8 @@ public class UserSearchController {
      * @throws ValidationException - If not enough characters inserted
      */
     public List<UserModel> searchUser(String username)
-            throws UnexpectedResponseException, ValidationException, IOException {
+            throws UnexpectedResponseException, ValidationException, IOException,
+            InvalidKeySpecException, NoSuchAlgorithmException {
         Map<String, Object> mapper = new HashMap<>();
         mapper.put("username", username);
 
@@ -69,12 +72,13 @@ public class UserSearchController {
         String jsonData = response.body().string();
         JSONObject jsonObject = new JSONObject(jsonData);
 
+
         JSONArray jsonArray = jsonObject.getJSONArray("data");
         List<UserModel> foundUsers = new ArrayList<>();
 
         for (Object obj : jsonArray) {
-            JSONObject jsonobject = (JSONObject) obj;
-            foundUsers.add(userResolver.getUserModelViaJSonObject(jsonobject));
+            JSONObject jsonobjectname = (JSONObject) obj;
+            foundUsers.add(userResolver.getUserModelViaJSonObject(jsonobjectname));
         }
 
         return foundUsers;

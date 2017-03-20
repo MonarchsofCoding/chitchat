@@ -47,6 +47,8 @@ public class ChatListActivity extends AppCompatActivity
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
 
+        sessionConfiguration.setCurrentActivity(this);
+
         this.setContentView(R.layout.activity_chat_list);
         getSupportActionBar().setTitle("ChitChat");
 
@@ -66,15 +68,15 @@ public class ChatListActivity extends AppCompatActivity
      * Gets every ongoing conversation.
      */
     public void getConversations() {
-        ArrayList<String> chatsArrayList = new ArrayList<String>();
+        ArrayList<UserModel> chatsArrayList = new ArrayList<UserModel>();
 
         ArrayList<ConversationModel> conversations = chitChatMessagesConfiguration
             .getConversations();
         for (ConversationModel conv : conversations) {
-            chatsArrayList.add(conv.getOtherParticipant().getUsername());
+            chatsArrayList.add(conv.getOtherParticipant());
         }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+        ArrayAdapter<UserModel> arrayAdapter = new ArrayAdapter<>(
             this,
             android.R.layout.simple_list_item_1,
             chatsArrayList);
@@ -85,17 +87,13 @@ public class ChatListActivity extends AppCompatActivity
     //When the user clicks on a chat.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String newRecipientUsername = parent.getItemAtPosition(position).toString();
+        UserModel newRecipient = (UserModel) parent.getItemAtPosition(position);
 
-        currentChatConfiguration.setCurrentRecipient(new UserModel(newRecipientUsername));
+        currentChatConfiguration.setCurrentRecipient(newRecipient);
 
         this.finish();
 
         Intent currentChatIntent = new Intent(getBaseContext(), CurrentChatActivity.class);
-        currentChatIntent.putExtra(
-            "recipient_username",
-            newRecipientUsername);
-
         startActivity(currentChatIntent);
         overridePendingTransition(R.transition.anim_right1, R.transition.anim_right2);
     }

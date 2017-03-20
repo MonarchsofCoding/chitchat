@@ -17,7 +17,7 @@ public class MessageResolverTest {
         String messageText = "This is the message";
 
         MessageResolver messageResolver = new MessageResolver();
-        Message message = messageResolver.createMessage(from, to, messageText);
+        Message message = messageResolver.createMessage(from, to, messageText, "");
 
         assertEquals(from.getUsername(), message.getFrom().getUsername());
         assertEquals(to.getUsername(), message.getTo().getUsername());

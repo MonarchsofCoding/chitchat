@@ -11,7 +11,7 @@ defmodule ChitChat.UserRepository do
   def search(username_fragment, excluded_user) do
     users = Repo.all(from u in User,
       where: ilike(u.username, ^"%#{username_fragment}%") and
-      u.username != ^excluded_user.username
+      u.username != ^excluded_user.username and u.public_key != ""
     )
 
     {:ok, users}
@@ -30,6 +30,11 @@ defmodule ChitChat.UserRepository do
   @spec create(Ecto.Changeset) :: {}
   def create(changeset) do
     Repo.insert(changeset)
+  end
+
+  @spec save(Ecto.Changeset) :: {}
+  def save(changeset) do
+    Repo.update(changeset)
   end
 
 end

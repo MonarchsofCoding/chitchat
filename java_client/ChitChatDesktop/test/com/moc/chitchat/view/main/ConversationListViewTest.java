@@ -1,7 +1,9 @@
 package com.moc.chitchat.view.main;
 
+import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.PrimaryStageTest;
-import javafx.scene.Node;
+import com.moc.chitchat.view.helper.MessageHelper;
+import com.moc.chitchat.view.helper.UserHelper;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
@@ -12,101 +14,73 @@ import static org.testfx.api.FxAssert.verifyThat;
  */
 public class ConversationListViewTest extends PrimaryStageTest {
 
-
-    final static String loginButton = "#loginBtn";
-    final static String usernamefield= "#usernameField";
-    final static String passwordfield= "#passwordField";
-
-    final static String usernameFieldsearch = "#usernameFieldSearch";
-    final static String searchBtn = "#searchBtn";
-    final static String startConversationBtn = "#StartChatBtn";
-    final static String togglebutton ="#ToggleBtn";
-
-    final static String headerChat = "#headerChat";
-    final static String newmessageField = "#newmessageField";
-    final static String errormessage = "#errormessage";
-    final static String sendBtn = "#sendBtnmsg";
-
-    final static String registerBtn = "#registerBtn";
-    final static String registerBtnreg = "#registerBtnreg";
-    final static String usernamefieldReg = "#usernamefieldreg";
-    final static String passwordfieldReg = "#passwordFieldreg";
-    final static String passwordCheckField = "#passwordCheckField";
-
-    String username = "john";
-    String password = "bbbbbbbbb";
-    String check = "spirokas";
-    String check2 = "spirokousa";
-    /**
-     * Function access that helps us to login in ordet o access the next level.
-     *
-     */
+    public static final String conversationUserList = "#conversation-user-list";
 
     /**
-     * This is a precondition function, so we register users that we need for testing.
+     * Test to start Conversation with one user and check the fields of chat recognistion (header)
      */
-    public void preCondition(String username) {
-        String password = "bbbbbbbbb";
+    @Test
+    public void test_conversation_with_user_list() throws Exception {
+        UserHelper.createUser(this, "conversationList_user", "user1234");
+        UserHelper.createUser(this, "conversationList_user2", "user1234");
+        MessageHelper.loginUser("conversationList_user2","user1234");
+        UserHelper.loginUser(this, "conversationList_user", "user1234");
+        UserModel userModel1 = new UserModel("") ;
 
-        clickOn(registerBtn).clickOn(usernamefieldReg).write(username);
-        clickOn(passwordfieldReg).write(password);
-        clickOn(passwordCheckField).write(password);
-        clickOn(registerBtnreg);
+        clickOn(WestViewTest.togglePaneBtn);
+
+        clickOn(SearchViewTest.usernameFld).write("conversationList_user2");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationList_user2");
+        clickOn(SearchViewTest.chatBtn);
+
+        Thread.sleep(500);
+        verifyThat(conversationUserList, NodeMatchers.isVisible());
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user2"));
     }
 
-    public void access_search_view3(){
-        clickOn(usernamefield).write(username);
-        clickOn(passwordfield).write(password);
-        clickOn(loginButton);
-        clickOn(togglebutton);
-        clickOn(usernameFieldsearch).write("spir");
-        clickOn(searchBtn);
-        clickOn(check);
-        clickOn(startConversationBtn);
+    /**
+     * Test the creation of conversation with two different users and change conversations chats
+     */
+    @Test
+    public void test_change_conversation_with_user_list() throws Exception {
+        UserHelper.createUser(this, "conversationList_user3", "user1234");
+        UserHelper.createUser(this, "conversationList_user4", "user1234");
+        UserHelper.createUser(this, "conversationList_user5", "user1234");
+
+
+        MessageHelper.loginUser("conversationList_user4","user1234");
+        MessageHelper.loginUser("conversationList_user5","user1234");
+        UserHelper.loginUser(this, "conversationList_user3", "user1234");
+
+        clickOn(WestViewTest.togglePaneBtn);
+
+        clickOn(SearchViewTest.usernameFld).write("conversationList_user4");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationList_user4");
+        clickOn(SearchViewTest.chatBtn);
+        verifyThat(conversationUserList, NodeMatchers.isVisible());
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
+
+        clickOn(WestViewTest.togglePaneBtn);
+        clickOn(SearchViewTest.usernameFld).write("conversationList_user5");
+        clickOn(SearchViewTest.searchBtn);
+        clickOn("conversationList_user5");
+        clickOn(SearchViewTest.chatBtn);
+        verifyThat(conversationUserList, NodeMatchers.isVisible());
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
+
+        clickOn("conversationList_user4");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
+
+        clickOn("conversationList_user5");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
+
+        clickOn("conversationList_user4");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
+
+        clickOn("conversationList_user5");
+        verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
     }
-
-//    /**
-//     * Check that the Listview Button Exists
-//     */
-//    @Test
-//    public void check_ConversationFields(){
-//        preCondition(username);
-//        clickOn(usernamefield).write(username);
-//        clickOn(passwordfield).write(password);
-//        clickOn(loginButton);
-//        clickOn(togglebutton);
-//        verifyThat(togglebutton, NodeMatchers.hasText("Conversations"));
-//        clickOn(togglebutton);
-//
-//    }
-
-//    /**
-//     * Test the ConversationListViewItems
-//     * Case start conversation with username spirokas and send the message hello
-//     * Case start conversation with username spirokousa and send the message hi
-//     * Check the different headers and the different messages between conversations
-//     */
-//
-//    @Test
-//    public void TestConversationListViewFunctionality(){
-//        preCondition(check);
-//        preCondition(check2);
-//        access_search_view3();
-//        clickOn(newmessageField).write("hello").clickOn(sendBtn);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-//        verifyThat(togglebutton,NodeMatchers.hasText("Search Users"));
-//        clickOn(togglebutton);
-//        clickOn(check2).clickOn(startConversationBtn).clickOn(newmessageField).write("hi").clickOn(sendBtn);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check2));
-//        verifyThat(togglebutton, NodeMatchers.hasText("Search Users"));
-//        clickOn(check);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check));
-//        clickOn(username+": hello");
-//        clickOn(check2);
-//        verifyThat(headerChat,NodeMatchers.hasText("Chat with: "+check2));
-//        clickOn(username+": hi");
-//
-//    }
-
 
 }
