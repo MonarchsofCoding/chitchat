@@ -112,6 +112,9 @@ public class ChatListActivityTest {
         Thread.sleep(2000);
     }
 
+    /**
+     * Login the other user.
+     */
     public void loginOther() throws Exception {
         usernameToSearch = "test6";
         CryptoBox cryptoBox = new CryptoBox();

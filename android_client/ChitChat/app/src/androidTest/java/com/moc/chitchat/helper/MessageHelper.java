@@ -13,17 +13,24 @@ import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.security.KeyPair;
 import java.security.PublicKey;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * MessageHelper provides helper functions for sending a message during tests.
  */
 public class MessageHelper {
 
+    /**
+    * sendMessage provides the function to send a message.
+    * @param fromUsername The sender username.
+    * @param fromPassword The sender password.
+    * @param toUsername The receiver username.
+    * @param message The message being sent
+    */
     public static void sendMessage(
             String fromUsername,
             String fromPassword,
@@ -72,8 +79,8 @@ public class MessageHelper {
                             fromUser,
                             message
                         );
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    } catch (JSONException exception) {
+                        exception.printStackTrace();
                     }
                 }
             },
@@ -123,8 +130,8 @@ public class MessageHelper {
                             messageStr
                         );
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
                     }
                 }
             },
@@ -138,8 +145,17 @@ public class MessageHelper {
         );
     }
 
+    /**
+    * afterGetPubKey function.
+    * @param context The context.
+    * @param client The http client.
+    * @param cryptoBox The cryptoBox.
+    * @param fromUser The message being sent from this user.
+    * @param toUser The message being being received to this user.
+    * @param messageStr The message being sent.
+    */
     public static void afterGetPubKey(
-        Context c,
+        Context context,
         HttpClient client,
         CryptoBox cryptoBox,
         UserModel fromUser,
@@ -151,7 +167,7 @@ public class MessageHelper {
         MessageModel message = new MessageModel(fromUser, toUser, encMessage);
 
         client.sendRequest(
-            c,
+            context,
             Request.Method.POST,
             "/api/v1/messages",
             message.tojsonObject(),

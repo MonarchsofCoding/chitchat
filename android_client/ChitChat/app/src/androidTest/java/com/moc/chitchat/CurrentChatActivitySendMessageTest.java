@@ -102,6 +102,9 @@ public class CurrentChatActivitySendMessageTest{
         Thread.sleep(2000);
     }
 
+    /**
+     *  login other user.
+     */
     public void loginOther() throws Exception {
         usernameToSearch = "test2";
         CryptoBox cryptoBox = new CryptoBox();
