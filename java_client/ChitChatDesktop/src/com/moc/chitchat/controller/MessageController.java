@@ -18,15 +18,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * MessageController provides the actions involved with messaging.
@@ -71,7 +71,9 @@ public class MessageController {
      * @throws UnexpectedResponseException - unexpected response
      */
     public Message send(UserModel to, String message)
-            throws IOException, ValidationException, UnexpectedResponseException, NoSuchAlgorithmException, BadPaddingException, NoSuchPaddingException, IllegalBlockSizeException, InvalidKeyException {
+            throws IOException, ValidationException, UnexpectedResponseException,
+            NoSuchAlgorithmException, BadPaddingException, NoSuchPaddingException,
+             IllegalBlockSizeException, InvalidKeyException {
 
         String messageencrypt = cryptoFunctions.encrypt(message, to.getPublicKey());
         Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(),
@@ -95,7 +97,9 @@ public class MessageController {
      * @param username - the sender of the message
      * @return - a new message object
      */
-    public Message receive(String receivedMessage, String username) throws BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, IOException, NoSuchPaddingException, InvalidKeyException, UnexpectedResponseException, InvalidKeySpecException {
+    public Message receive(String receivedMessage, String username) throws BadPaddingException,
+             NoSuchAlgorithmException, IllegalBlockSizeException, IOException, NoSuchPaddingException,
+             InvalidKeyException, UnexpectedResponseException, InvalidKeySpecException {
         UserModel from = this.userResolver.createUser(username);
 
         String messagedecrypt = cryptoFunctions.decrypt(receivedMessage,

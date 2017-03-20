@@ -1,7 +1,14 @@
 package com.moc.chitchat.crypto;
 
 import java.io.UnsupportedEncodingException;
-import java.security.*;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -10,8 +17,6 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,7 +46,7 @@ public class CryptoFunctions  {
      * @return the pair of the keys
      * @throws Exception the exception if doesnt exist the RSA.
      */
-    public  KeyPair generateKeyPair()  {
+    public KeyPair generateKeyPair()  {
         this.generator.initialize(4096, new SecureRandom());
 
         return generator.generateKeyPair();
@@ -76,7 +81,9 @@ public class CryptoFunctions  {
      * @return the ciphertext
      * @throws Exception exception.
      */
-    public String encrypt(String plainText, PublicKey publicKey) throws InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+    public String encrypt(String plainText, PublicKey publicKey) throws InvalidKeyException,
+            NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException,
+            BadPaddingException, IllegalBlockSizeException {
         Cipher encryptCipher = Cipher.getInstance(CryptoFunctions.cipherAlgorithm);
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
@@ -92,7 +99,9 @@ public class CryptoFunctions  {
      * @return The plaintext.
      * @throws Exception throws Exception.
      */
-    public String decrypt(String cipherText, PrivateKey privateKey) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+    public String decrypt(String cipherText, PrivateKey privateKey) throws InvalidKeyException,
+            IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException,
+            UnsupportedEncodingException {
         byte[] bytes = Base64.getDecoder().decode(cipherText);
 
         Cipher decriptCipher = Cipher.getInstance(CryptoFunctions.cipherAlgorithm);

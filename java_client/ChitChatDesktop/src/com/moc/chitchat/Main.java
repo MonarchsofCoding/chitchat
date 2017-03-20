@@ -1,8 +1,7 @@
 package com.moc.chitchat;
 
 import com.moc.chitchat.application.ApplicationLoader;
-import com.moc.chitchat.view.BaseStage;
-import com.moc.chitchat.view.BaseView;
+import java.rmi.UnexpectedException;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -12,6 +11,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
+
 
 /**
  * Class Application provides the entry point for the application.
@@ -30,7 +31,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws UnexpectedException{
         Platform.setImplicitExit(true);
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
 
