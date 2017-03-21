@@ -16,7 +16,7 @@ import static org.testfx.matcher.base.NodeMatchers.hasText;
  */
 public class LoginViewTest extends PrimaryStageTest {
 
-    public static final String viewPane = "#login-view-pane";
+    public static final String viewPane = "#login-view-form";
     public static final String usernameFld = "#login-username-fld";
     public static final String passwordFld = "#login-password-fld";
     public static final String loginBtn = "#login-login-btn";
@@ -25,7 +25,7 @@ public class LoginViewTest extends PrimaryStageTest {
     public static final String credits = "#credits";
 
     @Before
-    public void enterRegistrationView() {
+    public void enterLoginView() {
         System.out.println("Entering LoginView");
     }
 
@@ -34,6 +34,7 @@ public class LoginViewTest extends PrimaryStageTest {
      */
     @Test
     public void test_login_buttons_are_enabled(){
+        
         verifyThat(usernameFld, NodeMatchers.isVisible());
         verifyThat(passwordFld, NodeMatchers.isVisible());
 
@@ -69,12 +70,12 @@ public class LoginViewTest extends PrimaryStageTest {
     public void test_valid_login_credentials() throws InterruptedException {
 
         // Create a User first
-       // UserHelper.createUser(this,"login_validUser", "validPassword");
+        UserHelper.createUser(this,"login_validUser", "validPassword");
         // Test login with created user
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
         verifyThat(WestViewTest.westview, NodeMatchers.isVisible());
     }
 

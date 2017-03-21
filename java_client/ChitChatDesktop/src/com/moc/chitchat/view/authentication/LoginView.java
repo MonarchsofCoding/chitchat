@@ -84,13 +84,13 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         MigPane loginPane = new MigPane();
         loginPane.setLayout("fill");
         loginPane.add(loginForm, "span, split 2, center");
-        loginPane.setId("login-view-pane");
+        loginForm.setId("login-view-form");
 
         return loginPane;
     }
 
     private void loginAction() {
-        
+
         try {
             UserModel user = this.loginController.loginUser(
                     this.usernameField.getText(),
