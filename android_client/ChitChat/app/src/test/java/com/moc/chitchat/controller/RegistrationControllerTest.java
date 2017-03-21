@@ -80,7 +80,7 @@ public class RegistrationControllerTest {
         this.mockHttpClient.sendRequest(mockcontext,
             Request.Method.POST,
             "/api/v1/users",
-            mockUser.toJsonObject(),
+            mockUser.toJsonObjectForRegister(),
             mockResponselistener,
             mockErrorListener,
             true);

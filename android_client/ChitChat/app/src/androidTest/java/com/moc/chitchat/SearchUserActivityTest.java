@@ -17,7 +17,8 @@ import com.moc.chitchat.activity.SearchUserActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,22 +27,59 @@ import org.junit.runner.RunWith;
 @LargeTest
 public class SearchUserActivityTest {
 
-    @Rule
-    public ActivityTestRule<LoginActivity> loginActivityRule = new ActivityTestRule<>(
+    @ClassRule
+    public static ActivityTestRule<LoginActivity> loginClassActivityRule = new ActivityTestRule<>(
         LoginActivity.class);
+
+    @Rule
+    public ActivityTestRule<SearchUserActivity> searchUserActivityActivityTestRule
+        = new ActivityTestRule<>(SearchUserActivity.class);
     
     private String usernameTyped;
-    private String passwordTyped;
 
     /**
-     *Does login before tests to go through the login activity.
+     *Does login before tests to go through the register and the login activities.
      * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
-    @Before
-    public void login() throws InterruptedException {
+    @BeforeClass
+    public static void initialization() throws InterruptedException {
+        register("ozzy");
+        register("spiros");
+        login();
+    }
 
-        usernameTyped = "vjftw";
-        passwordTyped = "Abc123!?";
+    /**
+     * Registration.
+     * @param usernameTyped username to register.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
+    public static void register(String usernameTyped) throws InterruptedException {
+        String passwordTyped = "Abc123!?";
+        String passwordReTyped = "Abc123!?";
+
+        onView(withId(R.id.register_button)).perform(click());
+
+        onView(withId(R.id.username_input))
+            .perform(typeText(usernameTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.password_input))
+            .perform(typeText(passwordTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.reinput_password_input))
+            .perform(typeText(passwordReTyped), closeSoftKeyboard());
+
+        onView(withId(R.id.register_button)).perform(click());
+
+        Thread.sleep(1000);
+    }
+
+    /**
+     * Login.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
+    public static void login() throws InterruptedException {
+        String usernameTyped = "ozzy";
+        String passwordTyped = "Abc123!?";
 
         onView(withId(R.id.username_input))
             .perform(typeText(usernameTyped), closeSoftKeyboard());
@@ -56,7 +94,7 @@ public class SearchUserActivityTest {
 
     @Test
     public void lessThanThreeCharQuery() throws InterruptedException {
-        usernameTyped = "ay";
+        usernameTyped = "sp";
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
@@ -94,7 +132,7 @@ public class SearchUserActivityTest {
 
     @Test
     public void true_ThreeCharInput() throws InterruptedException {
-        usernameTyped = "ayd";
+        usernameTyped = "spi";
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
@@ -111,7 +149,7 @@ public class SearchUserActivityTest {
 
     @Test
     public void true_LongInput() throws InterruptedException {
-        usernameTyped = "aydinakyol";
+        usernameTyped = "spiros";
 
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));

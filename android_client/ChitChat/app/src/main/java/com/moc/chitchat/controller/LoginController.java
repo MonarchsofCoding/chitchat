@@ -6,9 +6,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.client.HttpClient;
+import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 
+import java.security.KeyPair;
 import javax.inject.Inject;
 
 import org.json.JSONObject;
@@ -31,6 +33,10 @@ public class LoginController {
      */
     private SessionConfiguration sessionConfiguration;
 
+    /* CryptoBox.
+     */
+    private CryptoBox cryptoBox;
+
     /**
      * {LoginController constructor}.
      *
@@ -41,12 +47,14 @@ public class LoginController {
     public LoginController(
         UserResolver userResolver,
         HttpClient httpClient,
-        SessionConfiguration sessionConfiguration
+        SessionConfiguration sessionConfiguration,
+        CryptoBox cryptoBox
 
     ) {
         this.userResolver = userResolver;
         this.httpClient = httpClient;
         this.sessionConfiguration = sessionConfiguration;
+        this.cryptoBox = cryptoBox;
     }
 
     /**
@@ -65,12 +73,15 @@ public class LoginController {
         Response.ErrorListener errorListener,
         String username, String password) {
 
+        KeyPair userKeyPair = cryptoBox.generateKeyPair();
+
         // Create a User object
         UserModel user = this.userResolver.createLoginUser(
             username,
-            password
+            password,
+            userKeyPair.getPublic(),
+            userKeyPair.getPrivate()
         );
-
 
         /**
          * Setting the current user object
@@ -84,7 +95,7 @@ public class LoginController {
             context,
             Request.Method.POST,
             "/api/v1/auth",
-            user.toJsonObject(),
+            user.toJsonObjectForLogin(),
             successListener,
             errorListener,
             false

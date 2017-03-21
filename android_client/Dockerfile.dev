@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -y
 
 # Install recording and ppa
-RUN apt-get install -y screen python python-dev python-pip zip libav-tools software-properties-common python-software-properties
+RUN apt-get install -y screen python python-dev python-pip zip libav-tools software-properties-common python-software-properties nginx-light
 
 RUN pip install vnc2flv
 
@@ -52,3 +52,13 @@ RUN mkdir /app
 VOLUME /app
 
 WORKDIR /app
+
+ADD https://github.com/just-containers/s6-overlay/releases/download/v1.19.1.1/s6-overlay-amd64.tar.gz /tmp/
+RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
+ENTRYPOINT ["/init"]
+
+# Copy NGINX configuration
+COPY nginx.proxy.conf /var/nginx.conf
+# Copy NGINX service script
+COPY start_nginx.sh /etc/services.d/nginx/run
+RUN chmod 755 /etc/services.d/nginx/run

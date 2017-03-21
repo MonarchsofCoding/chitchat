@@ -13,6 +13,8 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -25,18 +27,18 @@ import static org.mockito.Mockito.when;
 public class UserSearchControllerTest {
 
     @Test
-    public void testSuccessfulSearch() throws IOException, InterruptedException {
+    public void testSuccessfulSearch() throws IOException, InterruptedException, InvalidKeySpecException, NoSuchAlgorithmException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
         // Schedule the valid response
         MockResponse mockResponse = new MockResponse();
-
+        String pubkey= "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAhWx9x7ThkaLaCom5HZ3EyzXMZNg87AhDrxm2Z14FEGaiCgslMbxuxd5uYRwR2WToGHm1BcR8UeweKd/nYzOYRxA4kBU7zPuTRVBsik6xDevDBInd6Pf2eTwsVvkqQ1jY0zBbmbxuR60Xu4eQmudXOfqnG1kUBz6nqjcSHEd/GKtUKwxTQ2S/Ow1YTnkag4BANsheb7HyI3VfronQjhqwspzVbuyVi97Vu2pBO7wdsJVBzjIc7sxWOhPRr9V09f3erWJUiQxjY2Er8x48tvgQRmsar23ZqHIbt5T6tKGQU3dSLjHA+1HNjfd2JX7NPNabczQymg6DX9BfwcoJKVYJdnq4TvbHQckVPWZVu2IBM/VusePjRw9PCnaQ2C1MH/WBC7act6earIJne2cPHpCo+GaNuPLytzMFU6J4+npmU2NaXOAb5wjzJErg/c6HZIkfWHTWCp7RQpkfMC9XqsijOx9DDNs3CK0PCUo/7Gav8LiTPXDPPZp/D8+048PSAiYqt7kKTz3grN1rT4BiE/4ZsjReseEzpIXWskB37V+aTRfFJ1NX0qJGYhPYqJQiWTcBX5LsB60k+nrpSzkP6EAM2JoIEM2JlOFZ8GOJ96wUTTnH8SsnWQdfyMPox0mCxxM7RkaPM/OhpZv0FjWACWOZaq4qLywh+K2Zy7ytfW6L2m0CAwEAAQ==";
         // Not used, but for completeness
         String user = "John";
         String jsonResponse = "{" +
                 "\"data\": " +
-                "[{\"username\": \""+user+"\"}]" +
+                "[{\"username\": \""+user+"\", \"public_key\": \""+pubkey+"\"}]" +
                 "}";
 
         mockResponse
@@ -85,7 +87,7 @@ public class UserSearchControllerTest {
      * @throws InterruptedException
      */
     @Test
-    public void testValidator() throws IOException, InterruptedException {
+    public void testValidator() throws IOException, InterruptedException, InvalidKeySpecException, NoSuchAlgorithmException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 
@@ -143,7 +145,7 @@ public class UserSearchControllerTest {
     }
 
     @Test
-    public void testUnexpectedResponse() throws IOException, InterruptedException {
+    public void testUnexpectedResponse() throws IOException, InterruptedException, InvalidKeySpecException, NoSuchAlgorithmException {
         // Set up mock server
         MockWebServer server = new MockWebServer();
 

@@ -5,6 +5,8 @@ import com.moc.chitchat.model.UserModel;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Component;
  * WebSocketClient provides the full duplex communications, e.g. we are using this for receiving messages.
  */
 @Component
-public class WebSocketClient {
+public class WebSocketClient implements Observer {
 
     private Configuration configuration;
     private Map<String, WebSocket> sockets;
@@ -57,6 +59,7 @@ public class WebSocketClient {
 
         WebSocket webSocket = client.newWebSocket(request, this.socketListener);
         this.sockets.put("chitchat.socket", webSocket);
+        this.configuration.addObserver(this);
         client.dispatcher().executorService().shutdown();
     }
 
@@ -65,9 +68,17 @@ public class WebSocketClient {
      * @throws IOException the exception in a problem situation.
      */
     public void stopAll() throws IOException {
-        for(WebSocket s: this.sockets.values()) {
-            s.close(1000, "Bye!");
+        for(WebSocket sock: this.sockets.values()) {
+            sock.close(1000, "Bye!");
         }
     }
 
+    @Override
+    public void update(Observable observable, Object obj) {
+        try {
+            this.stopAll();
+        } catch (IOException expt) {
+            expt.printStackTrace();
+        }
+    }
 }

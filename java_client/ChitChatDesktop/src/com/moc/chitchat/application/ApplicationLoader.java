@@ -43,6 +43,8 @@ public class ApplicationLoader {
             this.configuration.setTestingMode();
         } else if (args.size() > 0 && args.get(0).equals("beta")) {
             this.configuration.setBetaMode();
+        } else if (args.size() > 0 && args.get(0).equals("alpha")) {
+            this.configuration.setAlphaMode();
         }
 
         stage.setOnCloseRequest(this.applicationCloser);

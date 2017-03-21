@@ -38,9 +38,9 @@ def test(ctx):
   # )
   # os.chdir("{0}/e2e/".format(os.getcwd()))
 
-  cli.pull("monarchsofcoding/chitchat:desktop-dev")
+  lxc.Docker.pull(cli, "monarchsofcoding/chitchat:desktop-dev")
 
-  cli.pull("postgres", "latest")
+  lxc.Docker.pull(cli, "postgres:latest")
   postgres_container = lxc.Docker.run(
     cli,
     'postgres',

@@ -10,6 +10,10 @@ public class SessionConfiguration {
      */
     private UserModel currentUser;
 
+    /* Current Activity
+     */
+    private AppCompatActivity currentActivity;
+
     /* getCurrentUser to get the current logged in user
      * @return the current user
      */
@@ -29,6 +33,18 @@ public class SessionConfiguration {
      */
     public void cleanCurrentUser() {
         this.currentUser = null;
+    }
+
+    /**
+     * Return the current activity.
+     * @return the current activity.
+     */
+    public AppCompatActivity getCurrentActivity() {
+        return this.currentActivity;
+    }
+
+    public void setCurrentActivity(AppCompatActivity activity) {
+        this.currentActivity = activity;
     }
 
 }

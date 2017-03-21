@@ -1,13 +1,14 @@
 package com.moc.chitchat.client;
 
 import com.moc.chitchat.channel.ChannelInterface;
-import com.moc.chitchat.channel.UserMessageChannel;
+import com.moc.chitchat.channel.UserChannel;
 import java.util.HashMap;
 import java.util.Map;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -23,13 +24,14 @@ public class SocketListener extends WebSocketListener {
 
     /**
      * SocketListener constructor.
-     * @param userMessageChannel the UserMessage channel.
+     * @param userChannel the UserMessage channel.
      */
+    @Autowired
     public SocketListener(
-        UserMessageChannel userMessageChannel
+        UserChannel userChannel
     ) {
         this.channels = new HashMap<>();
-        this.channels.put(userMessageChannel.getEvent(), userMessageChannel);
+        this.channels.put("user.channel", userChannel);
     }
 
     /**
@@ -62,12 +64,16 @@ public class SocketListener extends WebSocketListener {
         System.out.println("WS sent: " + text);
         JSONObject jsonMsg = new JSONObject(text);
 
-        String event = jsonMsg.getString("event");
+        String event = jsonMsg.getString("topic");
 
-        // Send payload to relevant channel
+        // Send payload to relevant eventHandler
         for (ChannelInterface channel: this.channels.values()) {
-            if (channel.getEvent().equals(event)) {
-                channel.handleMessage(jsonMsg.getJSONObject("payload"));
+            if (event.equals(channel.getTopic())) {
+                try {
+                    channel.handleMessage(jsonMsg.getString("event"), jsonMsg.getJSONObject("payload"));
+                } catch (Exception expt) {
+                    expt.printStackTrace();
+                }
                 break;
             }
         }
@@ -100,7 +106,7 @@ public class SocketListener extends WebSocketListener {
 
     /**
      * makeRef creates a new reference for use in Phoenix Channels.
-     * Implementation from: https://github.com/eoinsha/JavaPhoenixChannels/blob/master/src/main/java/org/phoenixframework/channels/Socket.java#L350
+     * Implementation from: https://github.com/eoinsha/JavaPhoenixChannels/blob/a854213bccb73c5a6088f2cb71cd1d752e5b4336/src/main/java/org/phoenixframework/channels/Socket.java#L350
      *
      * @return A new reference.
      */

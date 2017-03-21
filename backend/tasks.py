@@ -74,7 +74,7 @@ def deploy(ctx):
   """
   env_dir = __check_branch()
 
-  cli.pull("articulate/terragrunt", "0.8.6")
+  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
 
   git = vcs.Git()
   version = git.get_version()
@@ -164,7 +164,7 @@ def test(ctx):
         tag="{0}-dev".format("chitchat-backend")
     )
 
-    cli.pull("postgres", "latest")
+    lxc.Docker.pull(cli, "postgres:latest")
 
     postgres_container = lxc.Docker.run(
       cli,

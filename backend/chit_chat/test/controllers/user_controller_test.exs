@@ -24,12 +24,25 @@ defmodule ChitChat.UserControllerTest do
   end
 
   describe "index" do
-    test "returns filtered list of users when request is authenticated and query param is valid", %{conn: conn} do
+    test "returns filtered list of users when request is authenticated and query param is valid and users have a public key", %{conn: conn} do
 
       create_test_users(conn)
+
+      # Give Bob a public key
+      conn
+      |> recycle()
+      |> post("/api/v1/auth", %{
+        username: "bob",
+        password: "password1234",
+        public_key: "bob public key"})
+      |> json_response(200)
+
       auth_response = conn
       |> recycle()
-      |> post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> post("/api/v1/auth", %{
+        username: "alice",
+        password: "password1233",
+        public_key: "alice public key"})
       |> json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
@@ -42,8 +55,9 @@ defmodule ChitChat.UserControllerTest do
 
       assert search_response == %{
         "data" => [
-          %{"username" => "bob"},
-          %{"username" => "bobob"}
+          %{"username" => "bob",
+            "public_key" => "bob public key"
+          },
         ]
       }
     end
@@ -58,7 +72,10 @@ defmodule ChitChat.UserControllerTest do
       create_test_users(conn)
       auth_response = conn
       |> recycle()
-      |> post("/api/v1/auth", %{username: "bob", password: "password1234"})
+      |> post("/api/v1/auth", %{
+        username: "bob",
+        password: "password1234",
+        public_key: "bob public key"})
       |> json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
@@ -70,9 +87,7 @@ defmodule ChitChat.UserControllerTest do
       |> json_response(200)
 
       assert search_response == %{
-        "data" => [
-          %{"username" => "bobob"}
-        ]
+        "data" => []
       }
     end
 
@@ -84,7 +99,10 @@ defmodule ChitChat.UserControllerTest do
 
       auth_response = conn
       |> recycle()
-      |> post("/api/v1/auth", %{username: "bob", password: "password123"})
+      |> post("/api/v1/auth", %{
+        username: "bob",
+        password: "password123",
+        public_key: "bob public key"})
       |> json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
@@ -94,6 +112,42 @@ defmodule ChitChat.UserControllerTest do
         |> put_req_header("authorization", "Bearer #{auth_token}")
         |> get("/api/v1/users?username=bo")
         |> json_response(400)
+    end
+  end
+
+  describe "show" do
+    test "renders a User resource that exists", %{conn: conn} do
+      create_test_users(conn)
+
+      # Give Bob a public key
+      conn
+      |> recycle()
+      |> post("/api/v1/auth", %{
+        username: "bob",
+        password: "password1234",
+        public_key: "bob public key"})
+      |> json_response(200)
+
+      get_response = conn
+      |> recycle()
+      |> get("/api/v1/users/bob")
+      |> json_response(200)
+
+      assert get_response == %{
+        "data" => %{
+          "username" => "bob",
+          "public_key" => "bob public key"
+        }
+      }
+    end
+
+    test "returns not found if a User resource does not exist", %{conn: conn} do
+      create_test_users(conn)
+
+      conn
+      |> recycle()
+      |> get("/api/v1/users/boba")
+      |> json_response(404)
     end
   end
 

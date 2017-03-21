@@ -32,7 +32,7 @@ android {
     }
     productFlavors {
         uiTests {
-            resValue "string", "server_url", "http://chitchat:4000"
+            resValue "string", "server_url", "http://10.0.2.2:4000"
         }
         development {
             resValue "string", "server_url", "http://10.0.2.2:4000"
@@ -69,6 +69,7 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.github.eoinsha:JavaPhoenixChannels:0.2'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
     compile 'com.android.support:design:25.1.1'
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:2.7.5"
@@ -118,6 +119,8 @@ jacocoAndroidUnitTestReport {
     excludes += ['com/moc/chitchat/activity/**',
                  'com/moc/chitchat/application/**',
                  'com/moc/chitchat/client/**',
+                 'com/moc/chitchat/crypto/**',
+                 'com/moc/chitchat/service/**',
                  'com/moc/chitchat/controller/*_Factory.class',
                  'com/moc/chitchat/ApplicationModule.class',
                  'com/moc/chitchat/ChitChatApplication.class']

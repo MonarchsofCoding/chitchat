@@ -11,9 +11,12 @@ import javafx.embed.swing.JFXPanel;
 import org.junit.Test;
 
 
+import java.util.Observable;
 import java.util.concurrent.Semaphore;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * ChitChatDataTest provides tests for the ChitChatData
@@ -33,7 +36,8 @@ public class ChitChatDataTest {
 
     @Test
     public void testAddingNewConversation() {
-        ChitChatData chitChatData = new ChitChatData();
+        Configuration mockConfiguration = mock(Configuration.class);
+        ChitChatData chitChatData = new ChitChatData(mockConfiguration);
 
         UserModel user = new UserModel("Frank");
         Conversation conversation = chitChatData.getConversation(user);
@@ -44,7 +48,8 @@ public class ChitChatDataTest {
 
     @Test
     public void testGetOnGoingConversation() throws InterruptedException {
-        ChitChatData chitChatData = new ChitChatData();
+        Configuration mockConfiguration = mock(Configuration.class);
+        ChitChatData chitChatData = new ChitChatData(mockConfiguration);
 
         UserModel user = new UserModel("Frank");
         Message message = new Message(user, "This is the message");
@@ -65,7 +70,8 @@ public class ChitChatDataTest {
 
     @Test
     public void testGetListOfConversations() {
-        ChitChatData chitChatData = new ChitChatData();
+        Configuration mockConfiguration = mock(Configuration.class);
+        ChitChatData chitChatData = new ChitChatData(mockConfiguration);
 
         UserModel frank = new UserModel("Frank");
         UserModel conor = new UserModel("Conor");
@@ -78,7 +84,8 @@ public class ChitChatDataTest {
 
     @Test
     public void testAddToConvo() throws InterruptedException {
-        ChitChatData chitChatData = new ChitChatData();
+        Configuration mockConfiguration = mock(Configuration.class);
+        ChitChatData chitChatData = new ChitChatData(mockConfiguration);
 
         UserModel frank = new UserModel("Frank");
         Message frankMessage = new Message(frank, "This is the message");
@@ -96,5 +103,25 @@ public class ChitChatDataTest {
         assertEquals(2, chitChatData.getConversation(frank).getMessages().size());
         assertEquals(frankMessage.getMessage(), chitChatData.getConversation(frank).getMessages().get(0).getMessage());
         assertEquals(frankMessage2.getMessage(), chitChatData.getConversation(frank).getMessages().get(1).getMessage());
+    }
+
+    @Test
+    public void testConversationsAreRemovedWhenLoggedOut() {
+        Configuration mockConfiguration = mock(Configuration.class);
+        ChitChatData chitChatData = new ChitChatData(mockConfiguration);
+
+        verify(mockConfiguration).addObserver(chitChatData);
+
+        Observable mockObservable = mock(Observable.class);
+        Object mockObject = mock(Object.class);
+
+        // add a conversation for a user
+        UserModel userModel = new UserModel("Ben");
+        chitChatData.getConversation(userModel);
+        assertEquals(1, chitChatData.getConversations().size());
+
+        chitChatData.update(mockObservable, mockObject);
+
+        assertEquals(0, chitChatData.getConversations().size());
     }
 }

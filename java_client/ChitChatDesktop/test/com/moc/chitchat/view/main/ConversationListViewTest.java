@@ -1,6 +1,8 @@
 package com.moc.chitchat.view.main;
 
+import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.view.PrimaryStageTest;
+import com.moc.chitchat.view.helper.MessageHelper;
 import com.moc.chitchat.view.helper.UserHelper;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
@@ -18,11 +20,12 @@ public class ConversationListViewTest extends PrimaryStageTest {
      * Test to start Conversation with one user and check the fields of chat recognistion (header)
      */
     @Test
-    public void test_conversation_with_user_list() throws InterruptedException {
+    public void test_conversation_with_user_list() throws Exception {
         UserHelper.createUser(this, "conversationList_user", "user1234");
         UserHelper.createUser(this, "conversationList_user2", "user1234");
-
+        MessageHelper.loginUser("conversationList_user2","user1234");
         UserHelper.loginUser(this, "conversationList_user", "user1234");
+        UserModel userModel1 = new UserModel("") ;
 
         clickOn(WestViewTest.togglePaneBtn);
 
@@ -40,11 +43,14 @@ public class ConversationListViewTest extends PrimaryStageTest {
      * Test the creation of conversation with two different users and change conversations chats
      */
     @Test
-    public void test_change_conversation_with_user_list() {
+    public void test_change_conversation_with_user_list() throws Exception {
         UserHelper.createUser(this, "conversationList_user3", "user1234");
         UserHelper.createUser(this, "conversationList_user4", "user1234");
         UserHelper.createUser(this, "conversationList_user5", "user1234");
 
+
+        MessageHelper.loginUser("conversationList_user4","user1234");
+        MessageHelper.loginUser("conversationList_user5","user1234");
         UserHelper.loginUser(this, "conversationList_user3", "user1234");
 
         clickOn(WestViewTest.togglePaneBtn);

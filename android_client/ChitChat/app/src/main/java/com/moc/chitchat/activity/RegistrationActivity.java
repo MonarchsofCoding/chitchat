@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.moc.chitchat.ChitChatApplication;
 import com.moc.chitchat.R;
+import com.moc.chitchat.application.SessionConfiguration;
 import com.moc.chitchat.controller.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
@@ -36,6 +37,8 @@ public class RegistrationActivity extends AppCompatActivity
     RegistrationController registrationController;
     @Inject
     ErrorResponseResolver errorResponseResolver;
+    @Inject
+    SessionConfiguration sessionConfiguration;
 
     EditText usernameField;
     EditText passwordField;
@@ -52,6 +55,8 @@ public class RegistrationActivity extends AppCompatActivity
 
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
+
+        sessionConfiguration.setCurrentActivity(this);
 
         this.setContentView(R.layout.activity_register);
         getSupportActionBar().setTitle("Register");
@@ -80,10 +85,6 @@ public class RegistrationActivity extends AppCompatActivity
                 this.passwordCheckField.getText().toString()
             );
         } catch (ValidationException excevalid) {
-            // Validation implementation with Maps.
-            // Could use something other than toasts?
-            // Turn the fields red?? Have labels?
-            // TODO: can be turned into a function with the field as a parameter.
             Map<String, List<String>> errors = excevalid.getErrors();
 
             if (errors.containsKey("username")) {
@@ -155,12 +156,11 @@ public class RegistrationActivity extends AppCompatActivity
      */
     @Override
     public void onResponse(JSONObject response) {
-        System.out.println(response.toString());
-
         try {
             String username = response.getJSONObject("data").get("username").toString();
             Toast.makeText(this,
                 String.format("Successfully registered: %s", username), Toast.LENGTH_LONG).show();
+            System.out.println(String.format("Successfully registered: %s", username));
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
         }

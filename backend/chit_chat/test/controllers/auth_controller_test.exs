@@ -9,12 +9,17 @@ defmodule ChitChat.AuthControllerTest do
 
     conn
     |> recycle()
-    |> post("/api/v1/users", %{username: "bob", password: "password123"})
+    |> post("/api/v1/users", %{
+      username: "bob",
+      password: "password123"})
     |> json_response(201)
 
     auth_response = conn
     |> recycle()
-    |> post("/api/v1/auth", %{username: "bob", password: "password123"})
+    |> post("/api/v1/auth", %{
+      username: "bob",
+      password: "password123",
+      public_key: "A public key"})
     |> json_response(200)
 
     auth_token = auth_response["data"]["authToken"]
@@ -30,14 +35,20 @@ defmodule ChitChat.AuthControllerTest do
 
     conn
     |> recycle()
-    |> post("/api/v1/auth", %{username: "bob", password: "password1234"})
+    |> post("/api/v1/auth", %{
+      username: "bob",
+      password: "password1234",
+      public_key: "A public key"})
     |> json_response(401)
   end
 
   test "does not render auth token when username does not exist", %{conn: conn} do
     conn
     |> recycle()
-    |> post("/api/v1/auth", %{username: "bob", password: "password1234"})
+    |> post("/api/v1/auth", %{
+      username: "bob",
+      password: "password1234",
+      public_key: "A public key"})
     |> json_response(401)
   end
 

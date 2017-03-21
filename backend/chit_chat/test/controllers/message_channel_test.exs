@@ -27,7 +27,10 @@ defmodule ChitChat.MessageChannelTest do
       create_test_users(conn)
       auth_response = conn
       |> Phoenix.ConnTest.recycle()
-      |> Phoenix.ConnTest.post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> Phoenix.ConnTest.post("/api/v1/auth", %{
+        username: "alice",
+        password: "password1233",
+        public_key: "alice public key"})
       |> Phoenix.ConnTest.json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
@@ -48,7 +51,10 @@ defmodule ChitChat.MessageChannelTest do
       create_test_users(conn)
       auth_response = conn
       |> Phoenix.ConnTest.recycle()
-      |> Phoenix.ConnTest.post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> Phoenix.ConnTest.post("/api/v1/auth", %{
+        username: "alice",
+        password: "password1233",
+        public_key: "alice public key"})
       |> Phoenix.ConnTest.json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
@@ -73,7 +79,10 @@ defmodule ChitChat.MessageChannelTest do
       create_test_users(conn)
       auth_response = conn
       |> Phoenix.ConnTest.recycle()
-      |> Phoenix.ConnTest.post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> Phoenix.ConnTest.post("/api/v1/auth", %{
+        username: "alice",
+        password: "password1233",
+        public_key: "alice public key"})
       |> Phoenix.ConnTest.json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
