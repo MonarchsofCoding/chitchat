@@ -75,9 +75,19 @@ defmodule ChitChat.ReleaseTasks do
         IO.binwrite env_file, "export DATABASE_HOSTNAME=#{to_string(db_hostname)}\n"
         IO.binwrite env_file, "export DATABASE_PORT=#{to_string(db_port)}\n"
       end
+    end
 
+    :init.stop()
+  end
+
+  @spec aws_cluster() :: {}
+  def aws_cluster do
       {:ok, env_file} = File.open "cluster_env", [:write]
-      container_name = :crypto.strong_rand_bytes(32) |> Base.url_encode64 |> binary_part(0, 32)
+      container_name = :crypto.strong_rand_bytes(32)
+      container_name
+      |> Base.url_encode64
+      |> binary_part(0, 32)
+
       IO.puts "Generated unique container name #{container_name}"
       IO.binwrite env_file, "export VM_NAME=#{to_string(container_name)}\n"
       # http://169.254.169.254/latest/meta-data/local-ipv4
@@ -85,10 +95,6 @@ defmodule ChitChat.ReleaseTasks do
       IO.puts response.status_code
       IO.puts String.trim(response.body)
       IO.binwrite env_file, "export VM_IP=#{to_string(String.trim(response.body))}\n"
-
-    end
-
-    :init.stop()
   end
 
 end

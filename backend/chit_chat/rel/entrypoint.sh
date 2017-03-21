@@ -13,8 +13,9 @@ if [ -z ${ECS_DNS_POSTGRES+x} ]; then
 else
   echo "On AWS ECS"
   /opt/app/bin/chit_chat command Elixir.ChitChat.ReleaseTasks aws_ecs_dns
-
   source db_env
+
+  /opt/app/bin/chit_chat command Elixir.ChitChat.ReleaseTasks aws_cluster
   source cluster_env
 fi
 
