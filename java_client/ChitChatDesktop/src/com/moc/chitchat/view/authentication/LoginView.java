@@ -36,7 +36,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     private Label unexpectedErrors;
     private MigPane loginForm;
     private ProgressBar pb = new ProgressBar(-1.0);
-    private Label label = new Label("Encryption process .....");
+    // private Label label = new Label("Encryption process .....");
 
     @Autowired
     LoginView(
@@ -82,8 +82,8 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.unexpectedErrors.setVisible(false);
 
         this.loginForm.add(this.unexpectedErrors, "wrap");
-        label.setVisible(false);
-        this.loginForm.add(label, "wrap");
+        //label.setVisible(false);
+        //  this.loginForm.add(label, "wrap");
         pb.setVisible(false);
         this.loginForm.add(pb, "wrap");
 
@@ -104,7 +104,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
                     this.passwordField.getText()
             );
             this.pb.setVisible(true);
-            this.label.setVisible(false);
+            // this.label.setVisible(false);
             this.usernameField.clear();
             this.passwordField.clear();
             this.baseStage.showMainView();

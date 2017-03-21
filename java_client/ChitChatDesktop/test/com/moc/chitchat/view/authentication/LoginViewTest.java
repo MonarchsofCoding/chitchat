@@ -3,6 +3,7 @@ package com.moc.chitchat.view.authentication;
 import com.moc.chitchat.view.PrimaryStageTest;
 import com.moc.chitchat.view.helper.UserHelper;
 import com.moc.chitchat.view.main.MainViewTest;
+import com.moc.chitchat.view.main.WestViewTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
@@ -65,16 +66,16 @@ public class LoginViewTest extends PrimaryStageTest {
      * Tests valid credentials take you to the main view.
      */
     @Test
-    public void test_valid_login_credentials() {
+    public void test_valid_login_credentials() throws InterruptedException {
 
         // Create a User first
-        UserHelper.createUser(this,"login_validUser", "validPassword");
+       // UserHelper.createUser(this,"login_validUser", "validPassword");
         // Test login with created user
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-
-        verifyThat(MainViewTest.viewPane, NodeMatchers.isVisible());
+        Thread.sleep(5000);
+        verifyThat(WestViewTest.westview, NodeMatchers.isVisible());
     }
 
 
