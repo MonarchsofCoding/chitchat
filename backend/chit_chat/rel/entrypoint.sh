@@ -2,14 +2,12 @@
 
 set -e
 
-
-
 if [ -z ${ECS_DNS_POSTGRES+x} ]; then
   echo "Not on AWS ECS."
   export VM_NAME=chitchat
-  echo "Setting LOCAL_IP"
+  echo "Setting VM_IP"
   export VM_IP=$(hostname -i)
-  echo "Set LOCAL_IP as ${LOCAL_IP}"
+  echo "Set VM_IP as ${LOCAL_IP}"
 else
   echo "On AWS ECS"
   /opt/app/bin/chit_chat command Elixir.ChitChat.ReleaseTasks aws_ecs_dns
@@ -19,9 +17,9 @@ else
   source cluster_env
 fi
 
+env
+
 echo "Waiting for database to become available"
 /bin/wait-for-it.sh -t 120 ${DATABASE_HOSTNAME}:${DATABASE_PORT}
-
-env
 
 /opt/app/bin/chit_chat $@

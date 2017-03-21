@@ -20,3 +20,5 @@ terragrunt = {
     }
   }
 }
+
+swarm_name = "monarchsofcoding"

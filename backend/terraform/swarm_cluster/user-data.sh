@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Generate locales
+locale-gen en_GB.UTF-8
+
 # Install Docker
 apt-get install -y --no-install-recommends \
     apt-transport-https \
