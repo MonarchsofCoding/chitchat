@@ -83,10 +83,9 @@ defmodule ChitChat.ReleaseTasks do
   @spec aws_cluster() :: {}
   def aws_cluster do
       {:ok, env_file} = File.open "cluster_env", [:write]
-      container_name = :crypto.strong_rand_bytes(32)
-      container_name
-      |> Base.url_encode64
-      |> binary_part(0, 32)
+      container_name = :crypto.strong_rand_bytes(16)
+      container_name = Base.url_encode64(container_name)
+      container_name = binary_part(container_name, 0, 16)
 
       IO.puts "Generated unique container name #{container_name}"
       IO.binwrite env_file, "export VM_NAME=#{to_string(container_name)}\n"
