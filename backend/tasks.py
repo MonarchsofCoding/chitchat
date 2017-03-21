@@ -15,8 +15,8 @@ def __check_branch():
     return "production"
   elif os.getenv("TRAVIS_BRANCH") == "develop":
     return "beta"
-  else:
-    return "alpha"
+
+  exit("Not on master or develop")
 
 @task
 def build(ctx):
@@ -68,13 +68,14 @@ def build(ctx):
 
 
 @task
-def deploy(ctx):
+def deploy(ctx, env=None):
   """
   Deploys container to AWS ECS
   """
-  # env_dir = __check_branch()
+  if not env:
+    env = __check_branch()
 
-  # lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
+  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
 
   git = vcs.Git()
   version = git.get_version()
@@ -84,23 +85,22 @@ def deploy(ctx):
     "monarchsofcoding/chitchat:release-{0}".format(version),
     "monarchsofcoding/chitchat:release"
   ])
-
-  # terragrunt_container = lxc.Docker.run(cli,
-  #   "articulate/terragrunt:0.8.6",
-  #   command="apply",
-  #   environment={
-  #     "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
-  #     "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
-  #     "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env_dir)),
-  #     "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env_dir)),
-  #     "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env_dir)),
-  #     "TF_VAR_container_version": version
-  #   },
-  #   volumes=[
-  #     "{0}/terraform:/app".format(os.getcwd())
-  #   ],
-  #   working_dir="/app/environments/{0}".format(env_dir)
-  # )
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="apply",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env)),
+      "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env)),
+      "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env)),
+      "TF_VAR_container_version": version
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env)
+  )
   pass
 
 @task

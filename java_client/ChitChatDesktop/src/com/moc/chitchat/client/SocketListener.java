@@ -61,7 +61,7 @@ public class SocketListener extends WebSocketListener {
      */
     @Override
     public void onMessage(WebSocket webSocket, String text) {
-        System.out.println("WS sent: " + text);
+        System.out.println(String.format("WS sent: %s", text));
         JSONObject jsonMsg = new JSONObject(text);
 
         String event = jsonMsg.getString("topic");
@@ -89,7 +89,7 @@ public class SocketListener extends WebSocketListener {
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
         webSocket.close(1000, null);
-        System.out.println("CLOSE: " + code + " " + reason);
+        System.out.println(String.format("CLOSE: %s %s", code, reason));
     }
 
     /**

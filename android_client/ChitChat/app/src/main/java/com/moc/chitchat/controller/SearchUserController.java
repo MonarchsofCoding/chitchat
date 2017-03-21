@@ -53,7 +53,7 @@ public class SearchUserController {
         this.httpClient.sendRequest(
             context,
             Request.Method.GET,
-            "/api/v1/users?username=" + queryString,
+            String.format("/api/v1/users?username=%s", queryString),
             null,
             successListener,
             errorListener,

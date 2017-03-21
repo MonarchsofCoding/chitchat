@@ -33,24 +33,25 @@ public class HttpClient {
      *
      * @param uri    adds the location of the url
      * @param object adds the object to JSONString to the body
-     * @return response in Unirest
+     * @return response object in okhttp3
      */
     public Response post(String uri, JSONString object) throws IOException {
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, object.toJSONString());
         if (this.configuration.getLoggedInUser() != null) {
             Request request = new Request.Builder()
-                    .url(this.configuration.getBackendAddress() + uri)
+                    .url(String.format("%s%s", this.configuration.getBackendAddress(), uri))
                     .header("accept", "application/json")
                     .header("Content-Type", "application/json")
-                    .header("Authorization", "bearer " + this.configuration.getLoggedInUser().getAuthToken())
+                    .header("Authorization", String.format("bearer %s",
+                            this.configuration.getLoggedInUser().getAuthToken()))
                     .post(body)
                     .build();
 
             return client.newCall(request).execute();
         }
         Request request = new Request.Builder()
-                .url(this.configuration.getBackendAddress() + uri)
+                .url(String.format("%s%s", this.configuration.getBackendAddress(), uri))
                 .header("accept", "application/json")
                 .header("Content-Type", "application/json")
                 .post(body)
@@ -65,7 +66,7 @@ public class HttpClient {
      *
      * @param uri   adds the location of the url
      * @param query - query the server. Can have multiple quries
-     * @return response in Unirest
+     * @return response object in okhttp3
      * @throws IOException - If invalid
      */
     public Response get(String uri, Map<String, Object> query) throws IOException {
@@ -90,8 +91,8 @@ public class HttpClient {
             request = new Request.Builder()
                     .url(urlBuilder.build().toString())
                     .header("Accept", "application/json")
-                    .addHeader("Authorization", "bearer "
-                            + this.configuration.getLoggedInUser().getAuthToken()).build();
+                    .addHeader("Authorization", String.format("bearer %s",
+                            this.configuration.getLoggedInUser().getAuthToken())).build();
         } else {
             request = new Request.Builder()
                     .url(urlBuilder.build().toString()).build();
