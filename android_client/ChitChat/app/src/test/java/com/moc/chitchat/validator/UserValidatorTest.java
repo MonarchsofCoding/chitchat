@@ -49,6 +49,25 @@ public class UserValidatorTest {
     }
 
     @Test
+    public void testValidateUsernameInvalid() {
+        String username = "^^^^^^";
+        String password = "12345678";
+        String passwordCheck = "12345678";
+
+        UserModel user = new UserModel(username);
+        user.setPassword(password);
+        user.setPasswordCheck(passwordCheck);
+
+        UserValidator userValidator = new UserValidator();
+        try {
+            userValidator.validate(user);
+        } catch (ValidationException e) {
+            Map<String, List<String>> errors = e.getErrors();
+            assertEquals(1, errors.get("username").size());
+        }
+    }
+
+    @Test
     public void testValidatePasswordIsNotEmpty() {
         String username = "John_Smith";
         String password = "";
