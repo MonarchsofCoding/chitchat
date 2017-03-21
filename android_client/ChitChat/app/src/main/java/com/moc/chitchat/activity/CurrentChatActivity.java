@@ -148,7 +148,7 @@ public class CurrentChatActivity extends AppCompatActivity
                 ) {
                     ex.printStackTrace();
                     Toast.makeText(this,
-                        "Error caused by Encryption System: " + ex.getMessage(),
+                        String.format("Error caused by Encryption System: %s", ex.getMessage()),
                         Toast.LENGTH_LONG);
                 }
             } else {
@@ -162,7 +162,7 @@ public class CurrentChatActivity extends AppCompatActivity
                 } catch (JSONException jsonexception) {
                     jsonexception.printStackTrace();
                     Toast.makeText(this,
-                        "Error caused by JSONObject: " + jsonexception.getMessage(),
+                        String.format("Error caused by JSONObject: %s", jsonexception.getMessage()),
                         Toast.LENGTH_LONG);
                 }
             }
@@ -196,7 +196,7 @@ public class CurrentChatActivity extends AppCompatActivity
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
             Toast.makeText(this,
-                "Error caused by JSONObject: " + jsonexception.getMessage(),
+                String.format("Error caused by JSONObject: %s", jsonexception.getMessage()),
                 Toast.LENGTH_LONG);
         }
     }
@@ -245,9 +245,9 @@ public class CurrentChatActivity extends AppCompatActivity
                     true
                 );
                 addMessageToPanel(from, currentMessage.getMessage(), true);
-                System.out.println("Message from " + fromUser.getUsername() + " is sent to "
-                    + toUser.getUsername());
-                System.out.println("The sent message: " + currentMessage.getMessage());
+                System.out.println(String.format("Message from %s is sent to %s",
+                    fromUser.getUsername(), toUser.getUsername()));
+                System.out.println(String.format("The sent message: %s", currentMessage.getMessage()));
             } else {
                 String publicKey = ((JSONObject) response.get("data")).get("public_key").toString();
                 currentChatConfiguration.setCurrentRecipient(
@@ -260,7 +260,7 @@ public class CurrentChatActivity extends AppCompatActivity
         } catch (JSONException jsonexception) {
             jsonexception.printStackTrace();
             Toast.makeText(this,
-                "Error caused by JSONObject: " + jsonexception.getMessage(), Toast.LENGTH_LONG);
+                String.format("Error caused by JSONObject: %s", jsonexception.getMessage()), Toast.LENGTH_LONG);
         } catch (
             NoSuchAlgorithmException
             | InvalidKeyException
@@ -294,7 +294,7 @@ public class CurrentChatActivity extends AppCompatActivity
     //For a re-selected tab.
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
+        System.out.println(String.format("Tab: %s is reselected.", tab.getText().toString()));
     }
 
     /**
@@ -304,11 +304,10 @@ public class CurrentChatActivity extends AppCompatActivity
      * @param message  the message that desired to be added
      */
     public void addMessageToPanel(String username, String message, boolean isLocal) {
-        messagePanel.setText(messagePanel.getText().toString()
-            + "\n"
-            + username
-            + ": "
-            + message);
+        messagePanel.setText(String.format("%s \n %s : %s",
+            messagePanel.getText().toString(),
+            username,
+            message));
         if(isLocal) {
             messageText.setText("");
         }

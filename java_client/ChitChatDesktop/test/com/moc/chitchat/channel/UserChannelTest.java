@@ -99,7 +99,7 @@ public class UserChannelTest {
         JSONObject jsonObject = userChannel.getJoin();
 
         assertEquals("phx_join", jsonObject.get("event"));
-        assertEquals("user:"+ user.getUsername(), jsonObject.get("topic"));
+        assertEquals(String.format("user:%s", user.getUsername()), jsonObject.get("topic"));
         assertEquals(authToken, jsonObject.getJSONObject("payload").get("authToken"));
     }
 
