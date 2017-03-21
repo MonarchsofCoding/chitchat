@@ -76,7 +76,7 @@ public class HttpClient {
             requestHeaders = new HashMap<String, String>();
             requestHeaders.put(
                 "authorization",
-                "Bearer " + sessionConfiguration.getCurrentUser().getAuthToken());
+                String.format("Bearer %s", sessionConfiguration.getCurrentUser().getAuthToken()));
         }
 
         final Map<String, String> finalRequestHeaders = requestHeaders;
