@@ -70,7 +70,7 @@ public class UserValidator implements Validator {
         String jsonData = response.body().string();
         JSONObject serverErrors = new JSONObject(jsonData).getJSONObject("errors");
 
-        System.out.println("serverErrors are " + serverErrors.toString());
+        System.out.println(String.format("serverErrors are %s", serverErrors.toString()));
 
         MapBindingResult validationErrors = new MapBindingResult(
             new HashMap<String, String>(),

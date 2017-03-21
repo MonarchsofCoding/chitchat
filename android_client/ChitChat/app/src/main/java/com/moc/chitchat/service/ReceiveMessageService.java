@@ -72,16 +72,16 @@ public class ReceiveMessageService extends Service{
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
 
-            socket = new Socket((this.getResources().getString(R.string.server_url)
-                + "/api/v1/messages/websocket?authToken="
-                + sessionConfiguration.getCurrentUser().getAuthToken()).replace("http", "ws"));
+            socket = new Socket((String.format("%s/api/v1/messages/websocket?authToken=%s",
+                this.getResources().getString(R.string.server_url),
+                sessionConfiguration.getCurrentUser().getAuthToken())).replace("http", "ws"));
             socket.connect();
 
             ObjectNode auth = JsonNodeFactory.instance.objectNode();
             auth.put("authToken", sessionConfiguration.getCurrentUser().getAuthToken());
 
-            channel = socket.chan("user:"
-                    + sessionConfiguration.getCurrentUser().getUsername(),
+            channel = socket.chan(String.format("user:%s",
+                    sessionConfiguration.getCurrentUser().getUsername()),
                 auth);
 
             channel.join()
@@ -135,8 +135,8 @@ public class ReceiveMessageService extends Service{
                         toAdd,
                         false
                     );
-                    System.out.println("Message from " + fromUser.getUsername() + " is received.");
-                    System.out.println("The received message: " + message);
+                    System.out.println(String.format("Message from %s is received.", fromUser.getUsername()));
+                    System.out.println(String.format("The received message: %s", message));
                 }
             });
 
@@ -166,14 +166,14 @@ public class ReceiveMessageService extends Service{
         channel.on(ChannelEvent.CLOSE.getPhxEvent(), new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
-                    System.out.println("CLOSED: " + envelope.toString());
+                    System.out.println(String.format("CLOSED: ", envelope.toString()));
                 }
             });
 
         channel.on(ChannelEvent.ERROR.getPhxEvent(), new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
-                    System.out.println("ERROR: " + envelope.toString());
+                    System.out.println(String.format("ERROR: %s", envelope.toString()));
                 }
             });
 

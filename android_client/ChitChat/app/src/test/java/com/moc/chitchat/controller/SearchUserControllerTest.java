@@ -56,7 +56,7 @@ public class SearchUserControllerTest {
 
         this.mockHttpClient.sendRequest(mockContext,
             Request.Method.POST,
-            "/api/v1/users?username=" + "spi",
+            "/api/v1/users?username=spi",
             null,
             mockResponselistener,
             mockErrorListener,
