@@ -1,5 +1,5 @@
 ## Node name
--name chitchat@${LOCAL_IP}
+-name ${VM_NAME}@${VM_IP}
 
 ## Node cookie, used for distribution
 -setcookie ${NODE_COOKIE}
