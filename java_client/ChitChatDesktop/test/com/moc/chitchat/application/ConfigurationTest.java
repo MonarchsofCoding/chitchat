@@ -37,6 +37,15 @@ public class ConfigurationTest {
     }
 
     @Test
+    public void testAlphaMode() {
+        Configuration configuration = new Configuration();
+
+        configuration.setAlphaMode();
+
+        assertEquals(configuration.getBackendAddress(), "https://alpha.chitchat.monarchsofcoding.com");
+    }
+
+    @Test
     public void testSetBetaMode() {
         Configuration configuration = new Configuration();
 

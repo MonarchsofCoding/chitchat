@@ -13,6 +13,7 @@ public class Configuration extends Observable {
 
     private static final String PROD_BACKEND_ADDRESS = "https://chitchat.monarchsofcoding.com";
     private static final String BETA_BACKEND_ADDRESS = "https://beta.chitchat.monarchsofcoding.com";
+    private static final String ALPHA_BACKEND_ADDRESS = "https://alpha.chitchat.monarchsofcoding.com";
     private static final String TEST_BACKEND_ADDRESS = "http://chitchat:4000";
     private static final String DEV_BACKEND_ADDRESS = "http://localhost:4000";
 
@@ -49,6 +50,15 @@ public class Configuration extends Observable {
         System.out.println("\nEntering Beta Mode!\n"); // TODO: Use Apache Commons logger!
 
         this.backendAddress = BETA_BACKEND_ADDRESS;
+    }
+
+    /**
+     * setAlpha applies changes to the configuration for use when testing.
+     */
+    public void setAlphaMode() {
+        System.out.println("\nEntering Alpha Mode!\n"); // TODO: Use Apache Commons logger!
+
+        this.backendAddress = ALPHA_BACKEND_ADDRESS;
     }
 
     /**

@@ -11,9 +11,22 @@ import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.MessageResolver;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.MessageValidator;
+
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import okhttp3.Response;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 /**
  * MessageController provides the actions involved with messaging.
@@ -58,7 +71,9 @@ public class MessageController {
      * @throws UnexpectedResponseException - unexpected response
      */
     public Message send(UserModel to, String message)
-            throws Exception {
+            throws IOException, ValidationException, UnexpectedResponseException,
+            NoSuchAlgorithmException, BadPaddingException, NoSuchPaddingException,
+             IllegalBlockSizeException, InvalidKeyException {
 
         String messageencrypt = cryptoFunctions.encrypt(message, to.getPublicKey());
         Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(),
@@ -74,7 +89,6 @@ public class MessageController {
         this.chitChatData.addMessageToConversation(to, newMessage);
 
         return newMessage;
-
     }
 
     /**
@@ -83,21 +97,44 @@ public class MessageController {
      * @param username - the sender of the message
      * @return - a new message object
      */
-    public Message receive(String receivedMessage, String username) throws Exception {
+    public Message receive(String receivedMessage, String username) throws BadPaddingException,
+             NoSuchAlgorithmException, IllegalBlockSizeException, IOException, NoSuchPaddingException,
+             InvalidKeyException, UnexpectedResponseException, InvalidKeySpecException {
         UserModel from = this.userResolver.createUser(username);
-        System.out.println(receivedMessage);
 
         String messagedecrypt = cryptoFunctions.decrypt(receivedMessage,
                 this.configuration.getLoggedInUser().getPrivatekey());
         Message message = this.messageResolver.createMessage(
-            from,
-            this.configuration.getLoggedInUser(),
-            messagedecrypt,
+                from,
+                this.configuration.getLoggedInUser(),
+                messagedecrypt,
                 receivedMessage
         );
 
+        if(chitChatData.findConversation(from) == null) {
+            Map<String, Object> mapper1 = new HashMap<>();
+            mapper1.put("username", from.getUsername());
+
+            Response response = this.httpClient.get("/api/v1/users/", mapper1);
+
+            if (response.code() != 200) {
+                throw new UnexpectedResponseException(response);
+            }
+
+            String jsonData = response.body().string();
+            JSONObject jsonObject = new JSONObject(jsonData);
+
+            JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+            for (Object obj : jsonArray) {
+                JSONObject jsonobjectname = (JSONObject) obj;
+                from.setPublicKey(userResolver.getUserModelViaJSonObject(jsonobjectname).getPublicKey());
+            }
+        }
         chitChatData.addMessageToConversation(from, message);
 
         return message;
     }
+
+
 }

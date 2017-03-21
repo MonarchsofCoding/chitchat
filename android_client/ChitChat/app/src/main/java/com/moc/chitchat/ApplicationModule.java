@@ -13,6 +13,8 @@ import com.moc.chitchat.validator.UserValidator;
 import dagger.Module;
 import dagger.Provides;
 
+import java.security.NoSuchAlgorithmException;
+
 import javax.inject.Singleton;
 
 
@@ -74,6 +76,11 @@ public class ApplicationModule {
     @Provides
     @Singleton
     CryptoBox provideCryptoBox() {
-        return new CryptoBox().initialize();
+        try {
+            return new CryptoBox();
+        } catch (NoSuchAlgorithmException algorithmException) {
+            algorithmException.printStackTrace();
+        }
+        return null;
     }
 }

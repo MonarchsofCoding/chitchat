@@ -26,7 +26,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -38,7 +38,13 @@ android {
             resValue "string", "server_url", "http://10.0.2.2:4000"
         }
         beta {
-            resValue "string", "server_url", "https://beta.chitchat.monarchsofcofing.com"
+            resValue "string", "server_url", "https://beta.chitchat.monarchsofcoding.com"
+            minSdkVersion 19
+            applicationId 'com.moc.chitchat'
+            targetSdkVersion 25
+            testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+            versionCode 1
+            versionName '1.0'
         }
         production {
             resValue "string", "server_url", "https://chitchat.monarchsofcoding.com"
@@ -62,21 +68,22 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.google.dagger:dagger:2.9'
     apt "com.google.dagger:dagger-compiler:2.9"
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.github.eoinsha:JavaPhoenixChannels:0.2'
+    compile 'commons-codec:commons-codec:1.10'
     compile 'com.android.support:design:25.1.1'
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.7.5"
+    testCompile 'org.mockito:mockito-core:2.7.5'
     testCompile 'org.json:json:20160810'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile "org.mockito:mockito-core:1.10.19"
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
 }
@@ -118,6 +125,8 @@ jacocoAndroidUnitTestReport {
     excludes += ['com/moc/chitchat/activity/**',
                  'com/moc/chitchat/application/**',
                  'com/moc/chitchat/client/**',
+                 'com/moc/chitchat/crypto/**',
+                 'com/moc/chitchat/service/**',
                  'com/moc/chitchat/controller/*_Factory.class',
                  'com/moc/chitchat/ApplicationModule.class',
                  'com/moc/chitchat/ChitChatApplication.class']

@@ -193,7 +193,7 @@ public class UserModel {
         userMap.put("password", this.getPassword());
         userMap.put(
             "public_key",
-            Base64.encodeToString(this.getPublicKey().getEncoded(),Base64.DEFAULT)
+            Base64.encodeToString(this.getPublicKey().getEncoded(),Base64.NO_WRAP)
         );
 
         return new JSONObject(userMap);

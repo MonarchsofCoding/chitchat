@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);;
+        super.onCreate(savedInstanceState);
 
         // Inject with Dagger
         ((ChitChatApplication) this.getApplication()).getComponent().inject(this);
@@ -82,12 +82,7 @@ public class LoginActivity extends AppCompatActivity
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        loginButton();
-                    } catch (Exception ex) {
-                        circleDialog.dismiss();
-                        ex.printStackTrace();
-                    }
+                    loginButton();
                 }
             });
         } else if (view.getId() == findViewById(R.id.register_button).getId()) {
@@ -102,7 +97,7 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private void loginButton() throws Exception {
+    private void loginButton() {
         this.loginController.loginUser(
             this,
             this,

@@ -22,6 +22,14 @@ import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.inject.Inject;
 
 import org.phoenixframework.channels.Channel;
@@ -63,9 +71,10 @@ public class ReceiveMessageService extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
+
             socket = new Socket((this.getResources().getString(R.string.server_url)
                 + "/api/v1/messages/websocket?authToken="
-                + sessionConfiguration.getCurrentUser().getAuthToken()).replace("https", "ws"));
+                + sessionConfiguration.getCurrentUser().getAuthToken()).replace("http", "ws"));
             socket.connect();
 
             ObjectNode auth = JsonNodeFactory.instance.objectNode();
@@ -88,8 +97,11 @@ public class ReceiveMessageService extends Service{
                         //Receiving callback to accept the acceptance.
                     }
                 });
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
 
-            channel.on("new:message", new IMessageCallback() {
+        channel.on("new:message", new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
                     String cipherMessage = envelope.getPayload().get("body").asText();
@@ -99,10 +111,18 @@ public class ReceiveMessageService extends Service{
                             cipherMessage,
                             sessionConfiguration.getCurrentUser().getPrivateKey()
                         );
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    } catch (
+                        NoSuchPaddingException
+                        | NoSuchAlgorithmException
+                        | InvalidKeyException
+                        | IllegalBlockSizeException
+                        | BadPaddingException
+                        | UnsupportedEncodingException exc
+                    ) {
+                        exc.printStackTrace();
                         message = "\"ChitChat: Message couldn't decrypted.\"";
                     }
+
                     String from = envelope.getPayload().get("from").asText();
                     UserModel fromUser = new UserModel(from);
                     MessageModel toAdd = new MessageModel(
@@ -120,7 +140,7 @@ public class ReceiveMessageService extends Service{
                 }
             });
 
-            channel.on("user:logout", new IMessageCallback() {
+        channel.on("user:logout", new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
                     currentChatConfiguration.cleanCurrentRecipient();
@@ -143,23 +163,20 @@ public class ReceiveMessageService extends Service{
                 }
             });
 
-            channel.on(ChannelEvent.CLOSE.getPhxEvent(), new IMessageCallback() {
+        channel.on(ChannelEvent.CLOSE.getPhxEvent(), new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
                     System.out.println("CLOSED: " + envelope.toString());
                 }
             });
 
-            channel.on(ChannelEvent.ERROR.getPhxEvent(), new IMessageCallback() {
+        channel.on(ChannelEvent.ERROR.getPhxEvent(), new IMessageCallback() {
                 @Override
                 public void onMessage(Envelope envelope) {
                     System.out.println("ERROR: " + envelope.toString());
                 }
             });
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         return START_NOT_STICKY;
     }
 
@@ -173,8 +190,8 @@ public class ReceiveMessageService extends Service{
                     channel.leave();
                     socket.disconnect();
                     System.out.println("Service for receiving message gracefully stopped.");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
             }
         });

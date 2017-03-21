@@ -1,5 +1,7 @@
 package com.moc.chitchat.crypto;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -11,8 +13,10 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,52 +28,35 @@ public class CryptoFunctions  {
     private KeyPairGenerator generator;
     private KeyFactory keyFactory;
 
+    private static String cipherAlgorithm = "RSA/ECB/NOPADDING";
+    private static String keyFactoryAlgorithm = "RSA";
+    private static String keyGeneratorAlgorithm = "RSA";
+
     /**
      * CryptoFunctions constructor.
      * @throws NoSuchAlgorithmException No such Algorithm Security Exception if RSA doesn't exist.
      */
-    @Autowired
     public CryptoFunctions() throws NoSuchAlgorithmException {
-
-        this.generator = KeyPairGenerator.getInstance("RSA");
-        this.keyFactory = KeyFactory.getInstance("RSA");
+        this.generator = KeyPairGenerator.getInstance(CryptoFunctions.keyGeneratorAlgorithm);
+        this.keyFactory = KeyFactory.getInstance(CryptoFunctions.keyFactoryAlgorithm);
     }
-
-
-    /**
-     * Initializes the object.
-     * @return The CryptoFunction object.
-     */
-    public CryptoFunctions initialize() {
-        try {
-            this.generator = KeyPairGenerator.getInstance("RSA");
-            this.keyFactory = KeyFactory.getInstance("RSA");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            this.generator = null;
-            this.keyFactory = null;
-        }
-        return this;
-    }
-
 
     /**
      * In this function we generate the pair of keys using RSA and 4096 key lenght.
      * @return the pair of the keys
      * @throws Exception the exception if doesnt exist the RSA.
      */
-    public  KeyPair generateKeyPair() throws Exception {
+    public KeyPair generateKeyPair()  {
         this.generator.initialize(4096, new SecureRandom());
-        KeyPair pair = generator.generateKeyPair();
 
-        return pair;
+        return generator.generateKeyPair();
     }
 
     /**
      * This function converts the string into a public key.
      * @param pubKey the public key string as a parameter.
-     * @return the publickey.
-     * @throws InvalidKeySpecException exception to invadlidkey.
+     * @return the publicKey.
+     * @throws InvalidKeySpecException when there is an invalid key.
      */
     public PublicKey pubKeyStringToKey(String pubKey) throws InvalidKeySpecException {
         X509EncodedKeySpec converterSpec = new X509EncodedKeySpec(Base64.getDecoder().decode(pubKey));
@@ -80,7 +67,7 @@ public class CryptoFunctions  {
      * This function converts the string into a private key.
      * @param privKey the private key string as a parameter.
      * @return the private key
-     * @throws InvalidKeySpecException exception to invadlidkey.
+     * @throws InvalidKeySpecException when there is an invalid key.
      */
     public PrivateKey privKeyStringToKey(String privKey) throws InvalidKeySpecException {
         PKCS8EncodedKeySpec converterSpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privKey));
@@ -94,8 +81,10 @@ public class CryptoFunctions  {
      * @return the ciphertext
      * @throws Exception exception.
      */
-    public String encrypt(String plainText, PublicKey publicKey) throws Exception {
-        Cipher encryptCipher = Cipher.getInstance("RSA");
+    public String encrypt(String plainText, PublicKey publicKey) throws InvalidKeyException,
+            NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException,
+            BadPaddingException, IllegalBlockSizeException {
+        Cipher encryptCipher = Cipher.getInstance(CryptoFunctions.cipherAlgorithm);
         encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
         byte[] cipherText = encryptCipher.doFinal(plainText.getBytes("UTF-8"));
@@ -110,13 +99,15 @@ public class CryptoFunctions  {
      * @return The plaintext.
      * @throws Exception throws Exception.
      */
-    public String decrypt(String cipherText, PrivateKey privateKey) throws Exception {
+    public String decrypt(String cipherText, PrivateKey privateKey) throws InvalidKeyException,
+            IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException,
+            UnsupportedEncodingException {
         byte[] bytes = Base64.getDecoder().decode(cipherText);
 
-        Cipher decriptCipher = Cipher.getInstance("RSA");
+        Cipher decriptCipher = Cipher.getInstance(CryptoFunctions.cipherAlgorithm);
         decriptCipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-        return new String(decriptCipher.doFinal(bytes), "UTF-8");
+        return new String(decriptCipher.doFinal(bytes), "UTF-8").trim();
     }
 
     /**

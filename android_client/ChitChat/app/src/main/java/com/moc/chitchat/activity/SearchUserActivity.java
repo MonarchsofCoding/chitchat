@@ -32,12 +32,14 @@ import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.ErrorResponseResolver;
 import com.moc.chitchat.service.ReceiveMessageService;
 
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -158,13 +160,9 @@ public class SearchUserActivity extends AppCompatActivity
     @Override
     public void onErrorResponse(VolleyError error) {
         System.out.println("Error searching a user");
-        try {
-            Toast.makeText(this,
-                String.format("The user you are trying to found is not connected or not existing"),
-                Toast.LENGTH_LONG).show();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        Toast.makeText(this,
+            String.format("The user you are trying to found is not connected or not existing"),
+            Toast.LENGTH_LONG).show();
     }
 
     //For Volley Success response
@@ -176,22 +174,22 @@ public class SearchUserActivity extends AppCompatActivity
             JSONArray usernameArray = (JSONArray) response.get("data");
             for (int i = 0; i < usernameArray.length(); i++) {
                 UserModel toAdd = new UserModel(usernameArray.getJSONObject(i).get("username")
-                    .toString());
+                        .toString());
                 toAdd.setPublicKey(cryptoBox.pubKeyStringToKey(
-                    usernameArray.getJSONObject(i).get("public_key").toString())
+                        usernameArray.getJSONObject(i).get("public_key").toString())
                 );
 
                 userList.add(toAdd);
             }
 
             ArrayAdapter<UserModel> arrayAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                userList);
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    userList);
 
             usersList.setAdapter(arrayAdapter);
-        } catch (Exception exept) {
-            exept.printStackTrace();
+        } catch (InvalidKeySpecException | JSONException exception) {
+            exception.printStackTrace();
         }
     }
 

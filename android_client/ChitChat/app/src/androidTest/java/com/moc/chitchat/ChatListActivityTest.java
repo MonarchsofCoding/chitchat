@@ -118,7 +118,7 @@ public class ChatListActivityTest {
      */
     public void loginOther() throws Exception {
         usernameToSearch = "test6";
-        CryptoBox cryptoBox = new CryptoBox().initialize();
+        CryptoBox cryptoBox = new CryptoBox();
 
         UserModel user = new UserModel(usernameToSearch);
         user.setPassword(passwordTyped);
