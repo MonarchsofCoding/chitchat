@@ -18,4 +18,6 @@ fi
 echo "Waiting for database to become available"
 /bin/wait-for-it.sh -t 120 ${DATABASE_HOSTNAME}:${DATABASE_PORT}
 
+env
+
 /opt/app/bin/chit_chat $@
