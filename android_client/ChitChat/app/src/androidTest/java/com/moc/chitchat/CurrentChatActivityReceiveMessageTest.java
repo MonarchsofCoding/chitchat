@@ -114,6 +114,10 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         Thread.sleep(2000);
     }
 
+    /**
+     * Login another user.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void loginOther() throws Exception {
         usernameToSearch = "test4";
         CryptoBox cryptoBox = new CryptoBox().initialize();
@@ -164,8 +168,8 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
 
         try {
             header = response.getJSONObject("data").get("authToken").toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (JSONException jsonexception) {
+            jsonexception.printStackTrace();
         }
     }
 

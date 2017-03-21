@@ -112,6 +112,10 @@ public class ChatListActivityTest {
         Thread.sleep(2000);
     }
 
+    /**
+     * Login another user.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
+     */
     public void loginOther() throws Exception {
         usernameToSearch = "test6";
         CryptoBox cryptoBox = new CryptoBox().initialize();
