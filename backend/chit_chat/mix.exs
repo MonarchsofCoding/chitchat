@@ -37,7 +37,7 @@ defmodule ChitChat.Mixfile do
         :elixir_make,
         :libcluster,
         :distillery,
-        :httpotion
+        :ibrowse
       ]
     ]
   end
@@ -67,7 +67,8 @@ defmodule ChitChat.Mixfile do
       {:guardian, "~> 0.14"},
       {:jose, "~> 1.8"},
       {:libcluster, "~> 2.0.3"},
-      {:httpotion, "~> 3.0.2"},
+      {:tesla, "~> 0.6.0"},
+      {:ibrowse, "~> 4.2"},
       # {:mix_docker, "~> 0.3.2"}
     ]
   end
