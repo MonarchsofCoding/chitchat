@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static junit.framework.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 
 public class SessionConfigurationTest {
@@ -29,8 +30,13 @@ public class SessionConfigurationTest {
     }
 
     @Test
-    public void testCleanCurrentUser() {
+    public void testSetCurrentActivity() {
         SessionConfiguration sessionConfiguration = new SessionConfiguration();
-        sessionConfiguration.cleanCurrentUser();
+        AppCompatActivity activity = mock(AppCompatActivity.class);
+        sessionConfiguration.setCurrentActivity(activity);
+
+        assertEquals(activity,sessionConfiguration.getCurrentActivity());
+
     }
+
 }

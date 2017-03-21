@@ -7,6 +7,7 @@ defmodule ChitChat.AuthController do
   alias ChitChat.User
   alias Guardian.Plug
   alias ChitChat.ChangesetView
+  alias ChitChat.Endpoint
 
   @spec authenticate(ChitChat.User) :: {}
   def authenticate(user) do
@@ -21,13 +22,15 @@ defmodule ChitChat.AuthController do
   def create(conn, user_params) do
 
     with changeset <- User.changeset(%User{}, user_params),
-        {:ok, changeset} <- User.validate_login_or_register(changeset),
+        {:ok, changeset} <- User.validate_login(changeset),
         {:ok, user} <- User.find_and_check_password(changeset)
     do
       new_conn = Plug.api_sign_in(conn, user)
       jwt = Plug.current_token(new_conn)
       {:ok, claims} = Plug.claims(new_conn)
       exp = Map.get(claims, "exp")
+
+      Endpoint.broadcast! "user:#{user.username}", "user:logout", %{}
 
       conn
       |> put_status(:ok)

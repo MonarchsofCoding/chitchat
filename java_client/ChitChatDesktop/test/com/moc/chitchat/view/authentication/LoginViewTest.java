@@ -3,6 +3,7 @@ package com.moc.chitchat.view.authentication;
 import com.moc.chitchat.view.PrimaryStageTest;
 import com.moc.chitchat.view.helper.UserHelper;
 import com.moc.chitchat.view.main.MainViewTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
 
@@ -21,6 +22,11 @@ public class LoginViewTest extends PrimaryStageTest {
     public static final String registerBtn = "#login-register-btn";
     public static final String unexpectedErrors = "#login-errors-lbl";
     public static final String credits = "#credits";
+
+    @Before
+    public void enterRegistrationView() {
+        System.out.println("Entering LoginView");
+    }
 
     /**
      * Testing existence of our buttons and TextFields areas to the login view.
@@ -63,7 +69,6 @@ public class LoginViewTest extends PrimaryStageTest {
 
         // Create a User first
         UserHelper.createUser(this,"login_validUser", "validPassword");
-        clickOn(loginBtn);
         // Test login with created user
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");

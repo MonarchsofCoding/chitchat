@@ -15,13 +15,14 @@ public interface ChannelInterface {
 
     /**
      * handleMessage handles a new message on this channel.
+     * @param event the event sent to the channel.
      * @param payload the payload sent to the channel.
      */
-    void handleMessage(JSONObject payload);
+    void handleMessage(String event, JSONObject payload) throws Exception;
 
     /**
-     * getEvent returns the event this handler is for.
+     * getTopic returns the topic this channel is for.
      * @return the event string this handler is for.
      */
-    String getEvent();
+    String getTopic();
 }

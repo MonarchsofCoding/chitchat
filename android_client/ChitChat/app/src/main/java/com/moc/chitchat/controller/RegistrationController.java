@@ -82,7 +82,7 @@ public class RegistrationController {
             context,
             Request.Method.POST,
             "/api/v1/users",
-            user.toJsonObject(),
+            user.toJsonObjectForRegister(),
             successListener,
             errorListener,
             false

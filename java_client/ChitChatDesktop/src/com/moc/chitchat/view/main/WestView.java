@@ -21,7 +21,6 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
     private MigPane searchPane;
     private ConversationListView conversationListView;
     private MigPane conversationListPane;
-
     private Button togglePaneButton;
 
     /**
@@ -49,10 +48,9 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
     protected MigPane getContentPane() {
         this.westPane = new MigPane();
         westPane.setLayout("fill");
-
         this.togglePaneButton = new Button();
         this.togglePaneButton.setOnAction(this);
-        this.togglePaneButton.setId("ToggleBtn");
+        this.togglePaneButton.setId("west-toggle-btn");
         this.westPane.add(this.togglePaneButton, "dock north");
         this.showConversationListView();
 
@@ -94,5 +92,7 @@ public class WestView extends BaseView implements EventHandler<ActionEvent> {
         } else if (this.togglePaneButton.getText().equals("Conversations")) {
             this.showConversationListView();
         }
+
+
     }
 }

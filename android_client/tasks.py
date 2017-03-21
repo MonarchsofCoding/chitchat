@@ -52,7 +52,7 @@ def build(ctx):
       "ChitChat/app/build",
     ])
 
-    cli.pull("monarchsofcoding/chitchat:android-dev")
+    lxc.Docker.pull(cli, "monarchsofcoding/chitchat:android-dev")
 
     bin_version = __check_branch()
     build_dir = "build/outputs/apk"
@@ -64,7 +64,7 @@ def build(ctx):
     verify = "apksigner verify {1}/app-{0}-release.apk".format(bin_version, build_dir)
 
     lxc.Docker.run(cli,
-        tag="{0}-dev".format("chitchat-androidclient"),
+        tag="monarchsofcoding/chitchat:android-dev",
         command='/bin/bash -c "cd app && gradle assembleRelease && {0} && {1} && {2}"'.format(zipalign, sign, verify),
         volumes=[
             "{0}/ChitChat:/app".format(os.getcwd())
@@ -114,7 +114,7 @@ def test(ctx):
     #     tag="{0}-dev".format("chitchat-androidclient")
     # )
 
-    cli.pull("monarchsofcoding/chitchat:android-dev")
+    lxc.Docker.pull(cli, "monarchsofcoding/chitchat:android-dev")
 
     tests = "gradle testProductionReleaseUnitTest"
     coverage = "gradle jacocoTestProductionReleaseUnitTestReport"

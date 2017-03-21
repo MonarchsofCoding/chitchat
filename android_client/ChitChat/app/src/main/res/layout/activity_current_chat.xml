@@ -47,16 +47,19 @@
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/menu_tabs_chats"
             android:text="Chats" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/menu_tabs_search"
             android:text="Search Users" />
 
         <android.support.design.widget.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/menu_tabs_current"
             android:text="Current Chat" />
     </android.support.design.widget.TabLayout>
 

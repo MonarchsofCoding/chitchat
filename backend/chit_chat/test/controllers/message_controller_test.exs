@@ -35,7 +35,11 @@ defmodule ChitChat.MessageControllerTest do
       create_test_users(conn)
       auth_response = conn
       |> recycle()
-      |> post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> post("/api/v1/auth", %{
+        username: "alice",
+        password: "password1233",
+        public_key: "A public key"
+        })
       |> json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
@@ -58,7 +62,10 @@ defmodule ChitChat.MessageControllerTest do
       create_test_users(conn)
       auth_response = conn
       |> recycle()
-      |> post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> post("/api/v1/auth", %{
+        username: "alice",
+        password: "password1233",
+        public_key: "A public key"})
       |> json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
@@ -79,7 +86,10 @@ defmodule ChitChat.MessageControllerTest do
       create_test_users(conn)
       auth_response = conn
       |> recycle()
-      |> post("/api/v1/auth", %{username: "alice", password: "password1233"})
+      |> post("/api/v1/auth", %{
+        username: "alice",
+        password: "password1233",
+        public_key: "A public key"})
       |> json_response(200)
 
       auth_token = auth_response["data"]["authToken"]
