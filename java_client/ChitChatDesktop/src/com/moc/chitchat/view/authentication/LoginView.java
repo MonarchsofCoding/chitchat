@@ -36,7 +36,6 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     private Label unexpectedErrors;
     private MigPane loginForm;
     private ProgressBar pb = new ProgressBar(-1.0);
-    // private Label label = new Label("Encryption process .....");
 
     @Autowired
     LoginView(
@@ -80,12 +79,7 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
         this.unexpectedErrors.setId("login-errors-lbl");
         this.unexpectedErrors.setTextFill(Color.RED);
         this.unexpectedErrors.setVisible(false);
-
         this.loginForm.add(this.unexpectedErrors, "wrap");
-        //label.setVisible(false);
-        //  this.loginForm.add(label, "wrap");
-        pb.setVisible(false);
-        this.loginForm.add(pb, "wrap");
 
         MigPane loginPane = new MigPane();
         loginPane.setLayout("fill");
@@ -96,15 +90,12 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
     }
 
     private void loginAction() {
-
-
+        
         try {
             UserModel user = this.loginController.loginUser(
                     this.usernameField.getText(),
                     this.passwordField.getText()
             );
-            this.pb.setVisible(true);
-            // this.label.setVisible(false);
             this.usernameField.clear();
             this.passwordField.clear();
             this.baseStage.showMainView();
