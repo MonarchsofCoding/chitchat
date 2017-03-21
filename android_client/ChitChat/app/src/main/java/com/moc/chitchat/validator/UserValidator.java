@@ -31,6 +31,12 @@ public class UserValidator {
             errors.put("username", usernameErrors);
         }
 
+        String pattern = "^[a-zA-Z0-9_]*$";
+        if(!user.getUsername().matches(pattern)) {
+            usernameErrors.add("Username is not valid.");
+            errors.put("username", usernameErrors);
+        }
+
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             passwordErrors.add("Password cannot be empty.");
             errors.put("password", passwordErrors);

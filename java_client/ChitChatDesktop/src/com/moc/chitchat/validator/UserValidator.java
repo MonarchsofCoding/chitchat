@@ -30,6 +30,11 @@ public class UserValidator implements Validator {
             errors.rejectValue("username", "field.required", "cannot be empty");
         }
 
+        String pattern = "^[a-zA-Z0-9_]*$";
+        if(!user.getUsername().matches(pattern)) {
+            errors.rejectValue("username", "field.required", "invalid username");
+        }
+
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             errors.rejectValue("password", "field.required", "cannot be empty");
         }

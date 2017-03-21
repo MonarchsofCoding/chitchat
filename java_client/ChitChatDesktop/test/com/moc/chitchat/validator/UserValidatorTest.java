@@ -10,6 +10,7 @@ import org.springframework.validation.Errors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 /**
  * UserValidatorTest provides tests for the UserValidator
@@ -100,5 +101,25 @@ public class UserValidatorTest {
     public void testSupportsInValid() {
         UserValidator userValidator = new UserValidator();
         assertFalse(userValidator.supports(UserResolver.class));
+    }
+
+    @Test
+    public void testInvalidUsername() {
+        String username = "^^^";
+        String password = "12345678";
+        String passwordCheck = "12345678";
+
+        UserModel user = new UserModel(username);
+        user.setPassword(password);
+        user.setPasswordCheck(passwordCheck);
+
+        UserValidator userValidator = new UserValidator();
+        try {
+            userValidator.validate(user);
+            fail("This should throw an exception");
+        } catch (ValidationException e) {
+            Errors errors = e.getErrors();
+            assertEquals(1, errors.getFieldErrorCount("username"));
+        }
     }
 }
