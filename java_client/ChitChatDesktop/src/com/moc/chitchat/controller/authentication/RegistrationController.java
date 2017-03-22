@@ -77,7 +77,6 @@ public class RegistrationController {
         }
         response.body().close();
 
-
         return user;
     }
 }
