@@ -71,9 +71,8 @@ public class RegistrationController {
             // Unexpected response code. e.g. 500
             throw new UnexpectedResponseException(response);
         }
-        else if(response.code()==200){
            response.body().close();
-        }
+
 
         return user;
     }
