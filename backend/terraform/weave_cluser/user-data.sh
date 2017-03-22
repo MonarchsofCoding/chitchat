@@ -1,4 +1,12 @@
 #!/bin/bash
+
+echo ""
+echo "Updating ECS"
+echo ""
+sudo yum update -y ecs-init
+sudo service docker restart
+sudo start ecs
+
 echo ""
 echo "Joining ECS Cluster: ${ecs_cluster_name}!"
 echo ""
@@ -10,7 +18,7 @@ echo ""
 sudo curl -L git.io/scope -o /usr/local/bin/scope
 sudo chmod a+x /usr/local/bin/scope
 sudo stop scope
-sudo start scope
+# sudo start scope
 
 echo ""
 echo "Upgrading Weave Net"

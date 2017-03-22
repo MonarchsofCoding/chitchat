@@ -22,7 +22,7 @@ config :chit_chat, ChitChat.Endpoint,
   # cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
-config :logger, level: :debug
+config :logger, level: :info
 
 config :libcluster,
   topologies: [
