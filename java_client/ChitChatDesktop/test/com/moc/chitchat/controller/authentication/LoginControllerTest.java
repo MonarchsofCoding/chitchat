@@ -55,7 +55,7 @@ public class LoginControllerTest {
         String jsonResponse = "{" +
                 "\"data\": {" +
                 "\"username\": \"alice\"," +
-                "\"authToken\": \"" + authToken + "\"," +
+                String.format("\"authToken\": \"%s\",", authToken) +
                 "}" +
                 "}";
 

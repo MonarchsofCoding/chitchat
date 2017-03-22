@@ -95,7 +95,7 @@ public class CurrentChatController {
         this.httpClient.sendRequest(
             context,
             Request.Method.GET,
-            "/api/v1/users/" + username,
+            String.format("/api/v1/users/%s", username),
             null,
             successListener,
             errorListener,

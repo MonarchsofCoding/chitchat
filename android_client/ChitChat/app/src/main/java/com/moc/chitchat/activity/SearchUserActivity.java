@@ -107,7 +107,7 @@ public class SearchUserActivity extends AppCompatActivity
         String query = searchText.getText().toString();
         if (query.length() >= 3) {
 
-            System.out.println("Query made with query text: " + query);
+            System.out.println(String.format("Query made with query text: %s", query));
 
             searchUserController.searchUser(
                 this,
@@ -233,7 +233,7 @@ public class SearchUserActivity extends AppCompatActivity
     //For a re-selected tab
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
+        System.out.println(String.format("Tab: %s is reselected.", tab.getText().toString()));
         //Basically do nothing.
     }
 

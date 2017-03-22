@@ -143,7 +143,7 @@ public class ChatListActivity extends AppCompatActivity
     //For a re-selected tab
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        System.out.println("Tab: " + tab.getText().toString() + " is reselected.");
+        System.out.println(String.format("Tab: %s is reselected.", tab.getText().toString()));
         //Basically do nothing.
     }
 
