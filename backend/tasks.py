@@ -75,7 +75,7 @@ def deploy(ctx, env=None):
   if not env:
     env = __check_branch()
 
-  lxc.Docker.pull(cli, "articulate/terragrunt:latest")
+  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
 
   git = vcs.Git()
   version = git.get_version()
@@ -87,7 +87,7 @@ def deploy(ctx, env=None):
   ])
 
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:latest",
+    "articulate/terragrunt:0.8.6",
     command="get",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -104,7 +104,7 @@ def deploy(ctx, env=None):
   )
 
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:latest",
+    "articulate/terragrunt:0.8.6",
     command="apply",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -125,7 +125,7 @@ def deploy(ctx, env=None):
 def destroy(ctx, env):
   env_dir = env
 
-  lxc.Docker.pull(cli, "articulate/terragrunt:latest")
+  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
 
   git = vcs.Git()
   version = git.get_version()
@@ -137,7 +137,7 @@ def destroy(ctx, env):
   # ])
 
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:latest",
+    "articulate/terragrunt:0.8.6",
     command="get",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -154,7 +154,7 @@ def destroy(ctx, env):
   )
 
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:latest",
+    "articulate/terragrunt:0.8.6",
     command="destroy --force",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
