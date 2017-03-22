@@ -162,6 +162,17 @@ Credo and Dogma
 % What we've achieved.
 
 \section{Security}
+\subsubsection{Why encryption}
+After the wikileaks of Snowden people become more aware about the security of their communications. It is very difficult to succeed on a 100 per cent secure system. On our implementation we used all the security protocols that we already knows and we change them in order to cover our application demandings. All of our exchanging messages are encrypted and we are using some id in order to avoid a man in the middle attack. Even if an attacker steal the encrypted message it is very hard to decrypt it as it takes a long time. Moreover the value of information that he is going to collect after decryption is useless as the keys change in every log in of a user.
+\subsubsection{Username and Password}
+The first part of our application that we have to think about security was the front end implementation and specifically the registration form. We used two rules in order a user to be eligible to be sign up to our database. The first was his username to be at least 3 characters and his password 8. Both password and username are checked to the side of the front end and to the back end. The reason that we choose 8character length password it is for a future security implementation where we can use it as a signature of our user. 
+\subsubsection{Json-Https}
+As we described above the client communicates with the server exchanging information. For this reason we used https connection exchanging Json messages. In order to implement this we used okhttp (Java Desktop) and Volley (Android). 
+\subsubsection{Authentication Tokens}
+After the registration process the user tries to login to our application using his username and his password. The server receives the https post request with his username and password and checks him on the database. If the user exists then he responds him with an authentication token .  This token it is used as signature on the header of the message when the user tries to sends a message to an other client. 
+\subsubsection{Encryption}
+On the side of Encryption as we described to our previous sections we used Assymetric key encryption using a public and a private key. Both Java Desktop and Android Client use the same Java SE security libraries generating using RSA (ECB) the pair of keys using a 4096 key length during the generation process. 
+\subsubsection{Server-Side maybe}
 
 % To what extent this system is secure.
 

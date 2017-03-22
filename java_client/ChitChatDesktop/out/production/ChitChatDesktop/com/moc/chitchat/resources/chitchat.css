@@ -1,0 +1,76 @@
+.root {
+    -fx-font-family: 'Lato', sans-serif;
+}
+
+.button {
+    -fx-background-color:
+            #a6b5c9,
+            linear-gradient(#303842 0%, #3e5577 20%, #375074 100%),
+            linear-gradient(#768aa5 0%, #849cbb 5%, #5877a2 50%, #486a9a 51%, #4a6c9b 100%);
+    -fx-background-insets: 0 0 -1 0,0,1;
+    -fx-background-radius: 5,5,4;
+    -fx-padding: 7 30 7 30;
+    -fx-font-family: "Lato", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+#west-toggle-btn {
+    -fx-background-color:
+            linear-gradient(#ff6d5e, #ff3558),
+            radial-gradient(center 50% -40%, radius 200%, #ee7f6b 45%, #c84c24 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(122, 77, 36, 0.82), 5, 0.0 , 0 , 1 );
+    -fx-text-fill: white, #f9f9f9
+}
+
+
+.text-field {
+    -fx-text-fill: #383a37;
+}
+
+#base-header, #base-footer {
+    -fx-background-color: rgba(58, 93, 207, 0.66);
+    -fx-text-fill: #F1FAEE;
+}
+
+#base-header-title {
+    -fx-font-family: 'Pacifico', cursive;
+    -fx-font-size: 22pt;
+    -fx-text-fill: #F1FAEE;
+}
+
+#base-content-pane {
+    -fx-background-color: rgba(249, 236, 247, 0.01);
+}
+
+#base-footer-credits {
+    -fx-font-family: 'Playfair Display', serif;
+    -fx-font-weight: 700;
+    -fx-font-size: 12pt;
+    -fx-text-fill: #F1FAEE;
+}
+
+#base-footer-username {
+    -fx-text-fill: #F1FAEE;
+}
+
+#west-pane {
+    -fx-min-width: 200px;
+    -fx-min-height: 200px;
+}
+
+/* Required to set JFoenix ListView size */
+#search-user-list, #conversation-user-list {
+    -fx-pref-height: 400px;
+    -fx-pref-width: 200px;
+}
+
+#conversation-messages-list {
+    -fx-pref-height: 400px;
+}
+
+#conversation-pane {
+    -fx-padding: 10px, 10px, 10px, 10px;
+}
