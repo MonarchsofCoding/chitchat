@@ -22,16 +22,20 @@ config :chit_chat, ChitChat.Endpoint,
   # cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 
 config :libcluster,
   topologies: [
-    k8s_example: [
-      strategy: Cluster.Strategy.Kubernetes,
+    gossip: [
+      strategy: Elixir.Cluster.Strategy.Gossip,
       config: [
-        kubernetes_selector: "app=chitchat",
-        kubernetes_node_basename: "chitchat"]]]
-
+        port: 45892,
+        if_addr: {0,0,0,0},
+        multicast_addr: {230,1,1,251},
+        multicast_ttl: 5
+      ]
+    ]
+  ]
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

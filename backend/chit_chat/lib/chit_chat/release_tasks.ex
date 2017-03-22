@@ -87,13 +87,13 @@ defmodule ChitChat.ReleaseTasks do
     encoded_bytes = Base.url_encode64(rand_bytes)
     container_name = binary_part(encoded_bytes, 0, 16)
 
-    IO.puts "Generated unique container name #{container_name}"
     IO.binwrite env_file, "export VM_NAME=#{to_string(container_name)}\n"
     # http://169.254.169.254/latest/meta-data/local-ipv4
     Application.ensure_all_started(:httpotion)
     response = HTTPotion.get "http://169.254.169.254/latest/meta-data/local-ipv4"
     IO.puts response.status_code
     IO.puts String.trim(response.body)
+    IO.puts "\n> Generated unique node name #{container_name}@#{response.body}\n"
     IO.binwrite env_file, "export VM_IP=#{to_string(String.trim(response.body))}\n"
     :init.stop()
   end
