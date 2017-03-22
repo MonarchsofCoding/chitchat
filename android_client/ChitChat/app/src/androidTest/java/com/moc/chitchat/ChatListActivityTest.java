@@ -113,7 +113,8 @@ public class ChatListActivityTest {
     }
 
     /**
-     * Login the other user.
+     * Login another user.
+     * @throws InterruptedException throws in case the Thread.sleep(ms) fails
      */
     public void loginOther() throws Exception {
         usernameToSearch = "test6";
