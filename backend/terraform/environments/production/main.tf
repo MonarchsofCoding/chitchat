@@ -3,7 +3,7 @@ module "main" {
 
   aws_region = "eu-west-1"
 
-  cluster_name = "monarchs-of-coding"
+  cluster_name = "monarchsofcoding"
 
   environment = "production"
   domain      = "chitchat.monarchsofcoding.com"

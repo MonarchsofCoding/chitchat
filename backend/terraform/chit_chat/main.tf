@@ -36,8 +36,9 @@ data "template_file" "ecs_chit-chat_def" {
     database_username  = "chit-chat_${var.environment}"
     database_password  = "${var.database_password}"
     database_name      = "chit-chat_${var.environment}"
-    ecs_postgres_name  = "postgres_${var.environment}.servicediscovery.internal"
-    domain             = "${var.domain}"
+
+    /*ecs_postgres_name  = "postgres_${var.environment}.servicediscovery.internal"*/
+    domain = "${var.domain}"
 
     backend_version = "${var.container_version}"
 
@@ -55,12 +56,12 @@ resource "aws_ecs_service" "chat_chat" {
   name            = "chit-chat_${var.environment}"
   cluster         = "${var.cluster_name}"
   task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
-  desired_count   = 1
+  desired_count   = 3
   iam_role        = "${aws_iam_role.ecs_service.arn}"
 
   placement_strategy {
-    type  = "binpack"
-    field = "cpu"
+    type  = "spread"
+    field = "attribute:ecs.availability-zone"
   }
 
   load_balancer {
@@ -145,7 +146,7 @@ resource "aws_alb_target_group" "front_end" {
   vpc_id   = "${data.aws_vpc.app_cluster.id}"
 
   health_check {
-    healthy_threshold   = 3
+    healthy_threshold   = 2
     unhealthy_threshold = 3
     timeout             = 3
     protocol            = "HTTP"

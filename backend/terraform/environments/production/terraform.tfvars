@@ -1,10 +1,10 @@
-# Configure Terragrunt to use DynamoDB for locking
 terragrunt = {
+  # Configure Terragrunt to use DynamoDB for locking
   lock = {
     backend = "dynamodb"
 
     config {
-      state_file_id = "kcl-moc-swarm-cluster"
+      state_file_id = "kcl-moc-chitchat-app-production"
     }
   }
 
@@ -15,7 +15,7 @@ terragrunt = {
     config {
       encrypt = "true"
       bucket  = "monarchs-of-coding-terraform-state"
-      key     = "swarm_cluster/terraform.tfstate"
+      key     = "chit_chat/production/terraform.tfstate"
       region  = "eu-west-1"
     }
   }
