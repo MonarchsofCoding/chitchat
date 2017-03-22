@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo ""
-echo "Updating ECS"
+echo "Upgrading ECS"
 echo ""
 sudo yum update -y ecs-init
 sudo service docker restart

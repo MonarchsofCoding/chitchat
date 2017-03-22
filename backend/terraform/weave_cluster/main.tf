@@ -79,7 +79,7 @@ resource "aws_autoscaling_group" "app_cluster" {
   name                 = "${var.cluster_name}.asg"
   vpc_zone_identifier  = ["${aws_subnet.app.*.id}"]
   min_size             = "1"
-  max_size             = "3"
+  max_size             = "4"
   desired_capacity     = "2"
   launch_configuration = "${aws_launch_configuration.app.name}"
 
@@ -112,6 +112,7 @@ resource "aws_launch_configuration" "app" {
     "${aws_security_group.instance_sg.id}",
   ]
 
+  /*image_id                    = "ami-48f9a52e"*/
   image_id                    = "ami-25adf356"
   instance_type               = "t2.small"
   associate_public_ip_address = true
@@ -194,13 +195,6 @@ resource "aws_security_group" "instance_sg" {
     from_port   = 0
     to_port     = 0
     cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/16"]
   }
 
   egress {
