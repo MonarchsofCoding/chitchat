@@ -1,6 +1,6 @@
 [
   {
-    "name": "postgres-${environment}",
+    "name": "postgres_${environment}",
     "image": "postgres:latest",
     "cpu": 10,
     "memory": 512,

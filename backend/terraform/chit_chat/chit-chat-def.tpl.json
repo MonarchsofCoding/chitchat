@@ -32,7 +32,7 @@
       },
       {
         "Name": "DATABASE_HOSTNAME",
-        "Value": "postgres-${environment}"
+        "Value": "postgres_${environment}"
       },
       {
         "Name": "DATABASE_PORT",
