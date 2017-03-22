@@ -75,7 +75,7 @@ def deploy(ctx, env=None):
   if not env:
     env = __check_branch()
 
-  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
+  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.8")
 
   git = vcs.Git()
   version = git.get_version()
@@ -87,7 +87,7 @@ def deploy(ctx, env=None):
   ])
 
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:0.8.6",
+    "articulate/terragrunt:0.8.8",
     command="get",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -104,7 +104,7 @@ def deploy(ctx, env=None):
   )
 
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:0.8.6",
+    "articulate/terragrunt:0.8.8",
     command="apply",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -125,19 +125,13 @@ def deploy(ctx, env=None):
 def destroy(ctx, env):
   env_dir = env
 
-  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
+  lxc.Docker.pull(cli, "articulate/terragrunt:0.8.8")
 
   git = vcs.Git()
   version = git.get_version()
 
-  # lxc.Docker.login(cli)
-  # lxc.Docker.push(cli, [
-  #   "monarchsofcoding/chitchat:release-{0}".format(version),
-  #   "monarchsofcoding/chitchat:release"
-  # ])
-
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:0.8.6",
+    "articulate/terragrunt:0.8.8",
     command="get",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -154,7 +148,7 @@ def destroy(ctx, env):
   )
 
   terragrunt_container = lxc.Docker.run(cli,
-    "articulate/terragrunt:0.8.6",
+    "articulate/terragrunt:0.8.8",
     command="destroy --force",
     environment={
       "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -231,13 +225,13 @@ def test(ctx):
 
 @task
 def test_infra(ctx):
-    lxc.Docker.pull(cli, "articulate/terragrunt:0.8.6")
+    lxc.Docker.pull(cli, "articulate/terragrunt:0.8.8")
 
     git = vcs.Git()
     version = git.get_version()
 
     terragrunt_container = lxc.Docker.run(cli,
-      "articulate/terragrunt:0.8.6",
+      "articulate/terragrunt:0.8.8",
       command="get",
       environment={
         "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
@@ -254,7 +248,7 @@ def test_infra(ctx):
     )
 
     terragrunt_container = lxc.Docker.run(cli,
-      "articulate/terragrunt:0.8.6",
+      "articulate/terragrunt:0.8.8",
       command="plan",
       environment={
         "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
