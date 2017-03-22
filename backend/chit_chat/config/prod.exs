@@ -32,7 +32,7 @@ config :libcluster,
         port: 45892,
         if_addr: {0,0,0,0},
         multicast_addr: {230,1,1,251},
-        multicast_ttl: 5
+        multicast_ttl: 1
       ]
     ]
   ]
