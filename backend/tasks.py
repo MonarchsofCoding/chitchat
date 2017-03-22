@@ -85,6 +85,24 @@ def deploy(ctx, env=None):
     "monarchsofcoding/chitchat:release-{0}".format(version),
     "monarchsofcoding/chitchat:release"
   ])
+
+  terragrunt_container = lxc.Docker.run(cli,
+    "articulate/terragrunt:0.8.6",
+    command="get",
+    environment={
+      "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY_ID"),
+      "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_SECRET_ACCESS_KEY"),
+      "TF_VAR_database_password": os.getenv("{0}_DB_PASSWORD".format(env)),
+      "TF_VAR_secret_key_base": os.getenv("{0}_SECRET_KEY_BASE".format(env)),
+      "TF_VAR_guardian_secret_key": os.getenv("{0}_GUARDIAN_SECRET_KEY".format(env)),
+      "TF_VAR_container_version": version
+    },
+    volumes=[
+      "{0}/terraform:/app".format(os.getcwd())
+    ],
+    working_dir="/app/environments/{0}".format(env)
+  )
+
   terragrunt_container = lxc.Docker.run(cli,
     "articulate/terragrunt:0.8.6",
     command="apply",
