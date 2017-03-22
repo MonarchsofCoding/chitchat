@@ -80,7 +80,7 @@ public class UserSearchController {
             JSONObject jsonobjectname = (JSONObject) obj;
             foundUsers.add(userResolver.getUserModelViaJSonObject(jsonobjectname));
         }
-
+        response.body().close();
         return foundUsers;
     }
 

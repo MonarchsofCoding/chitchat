@@ -86,6 +86,7 @@ public class LoginController {
 
         webSocketClient.connectToUserMessage(user);
         //open chatroom
+        response.body().close();
         return user;
     }
 
