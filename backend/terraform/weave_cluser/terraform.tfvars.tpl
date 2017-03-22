@@ -1,0 +1,3 @@
+region = ""
+
+cluster_name = ""

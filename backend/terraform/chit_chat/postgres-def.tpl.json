@@ -1,6 +1,6 @@
 [
   {
-    "name": "postgres-db",
+    "name": "postgres-${environment}",
     "image": "postgres:latest",
     "cpu": 10,
     "memory": 512,
@@ -11,10 +11,6 @@
       }
     ],
     "environment": [
-      {
-        "Name": "SERVICE_5432_NAME",
-        "Value": "postgres_${environment}"
-      },
       {
         "Name" : "POSTGRES_USER",
         "Value": "${db_username}"

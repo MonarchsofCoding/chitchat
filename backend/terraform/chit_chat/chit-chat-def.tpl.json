@@ -23,16 +23,20 @@
     ],
     "environment": [
       {
-        "Name": "ECS_DNS_POSTGRES",
-        "Value": "${ecs_postgres_name}"
-      },
-      {
         "Name": "SECRET_KEY_BASE",
         "Value": "${secret_key_base}"
       },
       {
         "Name": "GUARDIAN_SECRET_KEY",
         "Value": "${guadian_secret_key}"
+      },
+      {
+        "Name": "DATABASE_HOSTNAME",
+        "Value": "postgres-${environment}"
+      },
+      {
+        "Name": "DATABASE_PORT",
+        "Value": "5432"
       },
       {
         "Name": "DATABASE_USERNAME",
@@ -58,10 +62,6 @@
         "Name": "NODE_COOKIE",
         "Value": "${node_cookie}"
       }
-    ],
-    "dockerLabels": {
-      "traefik.enable": "true",
-      "traefik.frontend.rule": "Host:${domain}"
-    }
+    ]
   }
 ]
