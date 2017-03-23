@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXListView;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.model.Conversation;
+import com.moc.chitchat.view.BaseView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
@@ -25,6 +26,7 @@ public class ConversationListView {
     private ListView<Conversation> conversationListView;
 
     /**
+
      * Constructor for ConversationListView
      * @param chitChatData the application data state.
      * @param conversationView the view that shows conversations.

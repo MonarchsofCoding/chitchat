@@ -95,7 +95,6 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.searchBtn = new JFXButton("Search");
         this.searchBtn.setId("search-btn");
         this.searchBtn.setOnAction(this);
-        this.searchBtn.setStyle("-fx-background-color: rgba(56,64,166,0.87)");
         searchForm.add(this.searchBtn, "span");
 
         this.observableUserList = FXCollections.observableArrayList();
@@ -107,7 +106,6 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.startConversationBtn = new JFXButton("Start Chat");
         this.startConversationBtn.setId("search-chat-btn");
         this.startConversationBtn.setOnAction(this);
-        this.startConversationBtn.setStyle("-fx-background-color: rgba(32,137,72,0.99)");
         searchForm.add(this.startConversationBtn, "span");
 
         this.errorMessage = new Label();

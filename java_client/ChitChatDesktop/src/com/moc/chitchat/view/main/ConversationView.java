@@ -112,7 +112,7 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
         this.sendbtn = new JFXButton("Send");
         this.sendbtn.setId("conversation-send-btn");
-        this.sendbtn.setStyle("-fx-background-color: rgba(32,137,72,0.99)");
+
         this.sendbtn.setOnAction(this);
         this.conversationPane.add(sendbtn, "span, align right");
     }

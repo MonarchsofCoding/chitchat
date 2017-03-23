@@ -50,8 +50,25 @@
     -fx-font-size: 12pt;
     -fx-text-fill: #F1FAEE;
 }
+
 #logout-button{
     -fx-background-color: transparent;
+}
+
+#search-btn{
+
+    -fx-background-color: rgba(56,64,166,0.87)
+
+}
+
+#search-chat-btn{
+
+    -fx-background-color: rgba(32,137,72,0.99)
+}
+
+#conversation-send-btn{
+
+    -fx-background-color: rgba(32,137,72,0.99)
 }
 
 #base-header{
@@ -77,6 +94,19 @@
     -fx-pref-height: 400px;
 }
 
+#login-login-btn{
+    -fx-background-color: rgba(93,200,127,0.99);
+}
+
+#login-register-btn{
+    -fx-background-color: rgba(129,178,248,0.99);
+}
+#register-register-btn{
+    -fx-background-color: rgba(93,200,127,0.99);
+}
+#register-login-btn{
+    -fx-background-color: rgba(129,178,248,0.99)
+}
 #conversation-pane {
     -fx-padding: 10px, 10px, 10px, 10px;
 }

@@ -1,5 +1,7 @@
 package com.moc.chitchat.view;
 
+import com.moc.chitchat.view.main.ConversationListView;
+import com.moc.chitchat.view.main.ConversationView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
