@@ -79,7 +79,11 @@ public class CryptoFunctions  {
      * @param plainText the message that we want to encrypt.
      * @param publicKey the key we are going to use to encrypt.
      * @return the ciphertext
-     * @throws Exception exception.
+     * @throws NoSuchAlgorithmException - cryptographic algorithm is requested but is not available in the environment
+     * @throws BadPaddingException - data was not padded properly
+     * @throws IllegalBlockSizeException - data provided to cipher is incorrect
+     * @throws InvalidKeyException - invalid keys
+     * @throws NoSuchPaddingException - padding required but is not available in the environment
      */
     public String encrypt(String plainText, PublicKey publicKey) throws InvalidKeyException,
             NoSuchPaddingException, NoSuchAlgorithmException, UnsupportedEncodingException,
@@ -97,7 +101,12 @@ public class CryptoFunctions  {
      * @param cipherText THe encrypted message that we want to decrypt.
      * @param privateKey The private key that we will use to decrypt.
      * @return The plaintext.
-     * @throws Exception throws Exception.
+     * @throws NoSuchAlgorithmException - cryptographic algorithm is requested but is not available in the environment
+     * @throws BadPaddingException - data was not padded properly
+     * @throws IllegalBlockSizeException - data provided to cipher is incorrect
+     * @throws InvalidKeyException - invalid keys
+     * @throws NoSuchPaddingException - padding required but is not available in the environment
+     * @throws UnsupportedEncodingException - character encoding is not supported
      */
     public String decrypt(String cipherText, PrivateKey privateKey) throws InvalidKeyException,
             IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException,
