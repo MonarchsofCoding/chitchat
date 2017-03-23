@@ -1,0 +1,32 @@
+[
+  {
+    "name": "postgres_${environment}",
+    "image": "postgres:latest",
+    "cpu": 10,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 5432
+      }
+    ],
+    "environment": [
+      {
+        "Name": "WEAVE_CIDR",
+        "Value": "net:${weave_cidr}"
+      },
+      {
+        "Name" : "POSTGRES_USER",
+        "Value": "${db_username}"
+      },
+      {
+        "Name" : "POSTGRES_PASSWORD",
+        "Value": "${db_password}"
+      },
+      {
+        "Name" : "POSTGRES_DB",
+        "Value": "${db_name}"
+      }
+    ]
+  }
+]

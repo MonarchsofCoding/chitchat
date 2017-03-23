@@ -1,1 +1,9 @@
 .idea
+.gradle
+*.iml
+*.DS_Store
+*.zip
+*.dump
+*.log
+*.mp4
+*.flv

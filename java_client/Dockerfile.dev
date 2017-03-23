@@ -1,0 +1,16 @@
+FROM frekele/gradle:3.4-jdk8
+
+RUN mkdir /app
+
+VOLUME /app
+
+WORKDIR /app
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update -y
+RUN apt-get install -y screen python python-dev python-pip vnc4server xfce4 zip libav-tools
+RUN echo "docker\ndocker\n|n" | vncpasswd
+RUN echo "docker" > /vncpasswd
+
+RUN pip install vnc2flv

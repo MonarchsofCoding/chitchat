@@ -1,0 +1,8 @@
+## Node name
+-name ${VM_NAME}@${VM_IP}
+
+## Node cookie, used for distribution
+-setcookie ${NODE_COOKIE}
+
+-smp auto
+-kernel inet_dist_listen_min 9100 inet_dist_listen_max 9155

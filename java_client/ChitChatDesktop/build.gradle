@@ -1,0 +1,125 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+
+
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.3.RELEASE")
+        classpath(group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2')
+
+
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: "jacoco" // Jacoco Code Coverage
+apply plugin: 'checkstyle'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'javafx-gradle-plugin'
+
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+
+    // Spring MVC Framework
+    compile 'org.springframework:spring-context:4.3.5.RELEASE'
+    // https://mvnrepository.com/artifact/commons-logging/commons-logging
+    compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+
+    //https://mvnrepository.com/artifact/com.miglayout/miglayout-javafx
+    compile group: 'com.miglayout', name: 'miglayout-javafx', version: '5.0'
+
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20160810'
+
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+
+    testCompile "junit:junit:4.12"
+    testCompile 'org.mockito:mockito-core:2.+'
+    testCompile "junit:junit:4.10"
+    testCompile "org.testfx:testfx-core:4.0.+"
+    testCompile "org.testfx:testfx-junit:4.0.+"
+    testCompile 'com.squareup.okhttp3:mockwebserver:3.6.0'
+}
+
+mainClassName = 'com.moc.chitchat.Application'
+
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.test.java.srcDirs = ['test']
+
+jar {
+    manifest {
+        attributes(
+//            'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+            'Main-Class': 'com.moc.chitchat.Main'
+        )
+    }
+}
+
+jfx {
+    verbose = true
+    mainClass = 'com.moc.chitchat.Main'
+    vendor = 'Monarchs of Coding'
+    jfxMainAppJarName = "ChitChatDesktop.jar"
+
+    copyAdditionalAppResourcesToJar = true
+
+    // jfxNative installer
+    identifier = null
+    vendor = "Monarchs of Coding"
+    nativeReleaseVersion = "0.0"
+    appName = "chit_chat"
+
+}
+
+test {
+    afterTest { desc, result ->
+        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+
+    filter {
+
+        //include all tests from package
+        includeTestsMatching "com.moc.chitchat.application.*"
+        includeTestsMatching "com.moc.chitchat.controller.*"
+        includeTestsMatching "com.moc.chitchat.channel.*"
+        includeTestsMatching "com.moc.chitchat.exception.*"
+        includeTestsMatching "com.moc.chitchat.model.*"
+        includeTestsMatching "com.moc.chitchat.resolver.*"
+        includeTestsMatching "com.moc.chitchat.validator.*"
+        includeTestsMatching "com.moc.chitchat.crypto.*"
+    }
+}
+
+jacoco {
+    toolVersion = "0.7.8"
+    reportsDir = file("$buildDir/JacocoCoverageReport")
+}
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['com/moc/chitchat/view**', 'com/moc/chitchat/client/', 'com/moc/chitchat/Main**'])
+        })
+    }
+}
+
+checkstyle {
+    toolVersion = "7.4"
+    configFile = file("config/checkstyle/checkstyle.xml")
+    sourceSets = [project.sourceSets.main]
+    showViolations = true
+}
+
+task printGradleHomeDir << {
+    println gradle.gradleHomeDir
+}

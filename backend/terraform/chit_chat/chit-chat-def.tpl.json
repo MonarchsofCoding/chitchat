@@ -1,0 +1,71 @@
+[
+  {
+    "name": "chit-chat_${environment}",
+    "image": "monarchsofcoding/chitchat:release-${backend_version}",
+    "cpu": 20,
+    "memory": 256,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${environment}.chit-chat-container-logs",
+        "awslogs-region": "${cloudwatch_region}",
+        "awslogs-stream-prefix": "chit-chat"
+      }
+    },
+    "command": [
+      "foreground"
+    ],
+    "environment": [
+      {
+        "Name": "WEAVE_CIDR",
+        "Value": "net:${weave_cidr}"
+      },
+      {
+        "Name": "SECRET_KEY_BASE",
+        "Value": "${secret_key_base}"
+      },
+      {
+        "Name": "GUARDIAN_SECRET_KEY",
+        "Value": "${guadian_secret_key}"
+      },
+      {
+        "Name": "DATABASE_HOSTNAME",
+        "Value": "postgres_${environment}"
+      },
+      {
+        "Name": "DATABASE_PORT",
+        "Value": "5432"
+      },
+      {
+        "Name": "DATABASE_USERNAME",
+        "Value": "${database_username}"
+      },
+      {
+        "Name": "DATABASE_PASSWORD",
+        "Value": "${database_password}"
+      },
+      {
+        "Name": "DATABASE_NAME",
+        "Value": "${database_name}"
+      },
+      {
+        "Name": "PORT",
+        "Value": "80"
+      },
+      {
+        "Name": "MIX_ENV",
+        "Value": "prod"
+      },
+      {
+        "Name": "NODE_COOKIE",
+        "Value": "${node_cookie}"
+      }
+    ]
+  }
+]

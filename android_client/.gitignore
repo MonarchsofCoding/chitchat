@@ -1,0 +1,33 @@
+# built application files
+*.apk
+*.ap_
+
+# All JAR files
+*.jar
+
+# generated build folders
+/bin
+/gen
+
+# Java class files
+*.class
+
+# Project module file
+*.iml
+
+# Gradle build related folders and files
+ChitChat/build
+.gradle
+
+# Local properties and settings, and IDEA project files
+ChitChat/local.properties
+.idea
+
+# OSX Files
+.DS_Store
+/captures
+.externalNativeBuild
+
+screenlog.*
+ChitChatAndroid.flv
+ChitChatAndroid.mp4
