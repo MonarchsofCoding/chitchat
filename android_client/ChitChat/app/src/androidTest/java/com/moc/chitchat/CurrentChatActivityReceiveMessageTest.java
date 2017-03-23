@@ -5,23 +5,18 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static junit.framework.Assert.assertEquals;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.mockito.Mockito.mock;
 
-import android.app.Activity;
-import android.os.AsyncTask;
-import android.support.test.espresso.core.deps.guava.collect.Iterables;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
-import android.support.test.runner.lifecycle.Stage;
 import android.view.View;
 
 import com.android.volley.Request;
@@ -31,15 +26,9 @@ import com.android.volley.toolbox.Volley;
 import com.moc.chitchat.activity.LoginActivity;
 import com.moc.chitchat.crypto.CryptoBox;
 import com.moc.chitchat.helper.MessageHelper;
-import com.moc.chitchat.model.MessageModel;
 import com.moc.chitchat.model.UserModel;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.security.KeyPair;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.hamcrest.Matcher;
 import org.json.JSONException;
@@ -126,7 +115,7 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
      */
     public void loginOther() throws Exception {
         usernameToSearch = "test4";
-        CryptoBox cryptoBox = new CryptoBox().initialize();
+        CryptoBox cryptoBox = new CryptoBox();
 
         UserModel user = new UserModel(usernameToSearch);
         user.setPassword(passwordTyped);
@@ -202,7 +191,7 @@ public class CurrentChatActivityReceiveMessageTest implements Response.Listener<
         ;
         Thread.sleep(2000);
 
-        onView(withId(R.id.message_panel)).check(matches(withText("\ntest4: Hello!")));
+        onView(withId(R.id.message_panel)).check(matches(withText(" \n test4 : Hello!")));
 
     }
 }
