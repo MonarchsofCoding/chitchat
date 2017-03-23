@@ -25,16 +25,20 @@ public class ConversationListView {
 
     private ListView<Conversation> conversationListView;
 
-    /**
+    public void clearConversationListView() {
+        this.conversationListView.getItems().clear();
+    }
 
+    /**
      * Constructor for ConversationListView
-     * @param chitChatData the application data state.
+     *
+     * @param chitChatData     the application data state.
      * @param conversationView the view that shows conversations.
      */
     @Autowired
     public ConversationListView(
-        ChitChatData chitChatData,
-        ConversationView conversationView
+            ChitChatData chitChatData,
+            ConversationView conversationView
     ) {
         this.chitChatData = chitChatData;
         this.conversationView = conversationView;
@@ -42,6 +46,7 @@ public class ConversationListView {
 
     /**
      * Returns content pane for this view.
+     *
      * @return the content pane
      */
 
@@ -66,6 +71,7 @@ public class ConversationListView {
     /**
      * Sets the conversation that is currently selected.
      * Used by the SearchView when a new conversation is started.
+     *
      * @param c the conversation to select and show.
      */
     void setSelectedConversation(Conversation c) {

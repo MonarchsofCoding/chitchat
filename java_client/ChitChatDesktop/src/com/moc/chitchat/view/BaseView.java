@@ -1,5 +1,6 @@
 package com.moc.chitchat.view;
 
+import com.moc.chitchat.model.Conversation;
 import com.moc.chitchat.view.main.ConversationListView;
 import com.moc.chitchat.view.main.ConversationView;
 import javafx.event.ActionEvent;
@@ -113,6 +114,7 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
     public void handle(ActionEvent event) {
         if (event.getSource() == this.logout) {
             this.baseStage.getConfiguration().setLoggedInUser(null);
+            baseStage.clearListView();
             baseStage.showLogin();
         }
     }
