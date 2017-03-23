@@ -57,7 +57,7 @@ resource "aws_ecs_service" "chat_chat" {
   name            = "chit-chat_${var.environment}"
   cluster         = "${var.cluster_name}"
   task_definition = "${aws_ecs_task_definition.chit_chat.arn}"
-  desired_count   = 3
+  desired_count   = "${var.num_of_containers}"
   iam_role        = "${aws_iam_role.ecs_service.arn}"
 
   placement_strategy {
