@@ -134,6 +134,7 @@ public class CurrentChatActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         if (!messageText.getText().toString().equals("")) {
+            sendButton.setClickable(false);
             keyboardManager.hideSoftInputFromWindow(messageText.getWindowToken(), 0);
             if(currentReceiver.getPublicKey() != null) {
                 try {
@@ -234,6 +235,8 @@ public class CurrentChatActivity extends AppCompatActivity
     public void onResponse(JSONObject response) {
         try {
             if(!((JSONObject) response.get("data")).has("public_key")) {
+                sendButton.setClickable(true);
+
                 String from = response.getJSONObject("data").get("sender").toString();
 
                 UserModel fromUser = new UserModel(from);
