@@ -26,11 +26,16 @@ config :logger, level: :info
 
 config :libcluster,
   topologies: [
-    gossip_example: [
+    gossip: [
       strategy: Elixir.Cluster.Strategy.Gossip,
+      config: [
+        port: 45892,
+        if_addr: {0,0,0,0},
+        multicast_addr: {230,1,1,251},
+        multicast_ttl: 1
+      ]
     ]
   ]
-
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

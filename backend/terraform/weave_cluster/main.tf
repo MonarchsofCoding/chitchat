@@ -1,10 +1,10 @@
 provider "aws" {
-    region = "${var.aws_region}"
+  region = "${var.aws_region}"
 }
 
-data "aws_route53_zone" "organisation" {
+/*data "aws_route53_zone" "organisation" {
   name = "${var.domain_name}."
-}
+}*/
 
 ## AWS ECS - Elastic Container Service
 resource "aws_ecs_cluster" "app" {
@@ -17,11 +17,12 @@ data "aws_availability_zones" "available" {}
 resource "aws_vpc" "app" {
   cidr_block = "10.0.0.0/16"
 
-  enable_dns_support = true
+  enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags {
     cluster = "${var.cluster_name}"
+    Name    = "${var.cluster_name}.ecs"
   }
 }
 
@@ -33,6 +34,7 @@ resource "aws_subnet" "app" {
 
   tags {
     cluster = "${var.cluster_name}"
+    Name    = "${var.cluster_name}.ecs.${count.index}"
   }
 }
 
@@ -51,6 +53,11 @@ resource "aws_route_table" "app" {
     cidr_block = "0.0.0.0/0"
     gateway_id = "${aws_internet_gateway.app.id}"
   }
+
+  tags {
+    cluster = "${var.cluster_name}"
+    Name    = "${var.cluster_name}.ecs"
+  }
 }
 
 resource "aws_route_table_association" "a" {
@@ -61,8 +68,8 @@ resource "aws_route_table_association" "a" {
 
 ## Route53
 resource "aws_route53_zone" "service_discovery" {
-  name = "servicediscovery.internal"
-  vpc_id = "${aws_vpc.app.id}"
+  name          = "servicediscovery.internal"
+  vpc_id        = "${aws_vpc.app.id}"
   force_destroy = true
 }
 
@@ -72,19 +79,31 @@ resource "aws_autoscaling_group" "app_cluster" {
   name                 = "${var.cluster_name}.asg"
   vpc_zone_identifier  = ["${aws_subnet.app.*.id}"]
   min_size             = "1"
-  max_size             = "3"
-  desired_capacity     = "2"
+  desired_capacity     = "3"
+  max_size             = "5"
   launch_configuration = "${aws_launch_configuration.app.name}"
+
+  tag {
+    key                 = "Name"
+    value               = "${var.cluster_name}.ecs"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "cluster"
+    value               = "${var.cluster_name}"
+    propagate_at_launch = true
+  }
 }
 
 data "template_file" "user_data" {
   template = "${file("user-data.sh")}"
 
   vars {
-    aws_region         = "${var.aws_region}"
-    ecs_cluster_name   = "${aws_ecs_cluster.app.name}"
-    ecs_log_level      = "info"
-    ecs_agent_version  = "latest"
+    aws_region        = "${var.aws_region}"
+    ecs_cluster_name  = "${aws_ecs_cluster.app.name}"
+    ecs_log_level     = "info"
+    ecs_agent_version = "latest"
   }
 }
 
@@ -93,18 +112,19 @@ resource "aws_launch_configuration" "app" {
     "${aws_security_group.instance_sg.id}",
   ]
 
-  image_id                    = "ami-48f9a52e"
+  /*image_id                    = "ami-48f9a52e"*/
+  image_id                    = "ami-25adf356"
   instance_type               = "t2.small"
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.app.name}"
-  user_data = "${data.template_file.user_data.rendered}"
+  user_data                   = "${data.template_file.user_data.rendered}"
 
   lifecycle {
     create_before_destroy = true
   }
 
   depends_on = [
-    "aws_ecs_cluster.app"
+    "aws_ecs_cluster.app",
   ]
 }
 
@@ -127,6 +147,7 @@ resource "aws_iam_role_policy" "app_instance" {
       "Action": [
         "ec2:*",
         "ecs:*",
+        "autoscaling:DescribeAutoScalingInstances",
         "ecr:GetAuthorizationToken",
         "ecr:BatchCheckLayerAvailability",
         "ecr:GetDownloadUrlForLayer",
@@ -170,9 +191,9 @@ resource "aws_security_group" "instance_sg" {
   name        = "${var.cluster_name}.ecs-sg"
 
   ingress {
-    protocol = "tcp"
-    from_port = 0
-    to_port = 65535
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
     cidr_blocks = ["10.0.0.0/16"]
   }
 
@@ -181,5 +202,10 @@ resource "aws_security_group" "instance_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    cluster = "${var.cluster_name}"
+    Name    = "${var.cluster_name}.ecs.instance"
   }
 }

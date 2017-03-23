@@ -34,6 +34,7 @@ public class HttpClient {
      * @param uri    adds the location of the url
      * @param object adds the object to JSONString to the body
      * @return response object in okhttp3
+     * @throws IOException - If invalid
      */
     public Response post(String uri, JSONString object) throws IOException {
         OkHttpClient client = new OkHttpClient();

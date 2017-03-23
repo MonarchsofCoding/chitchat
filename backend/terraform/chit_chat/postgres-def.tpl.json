@@ -1,6 +1,6 @@
 [
   {
-    "name": "postgres-db",
+    "name": "postgres_${environment}",
     "image": "postgres:latest",
     "cpu": 10,
     "memory": 512,
@@ -12,8 +12,8 @@
     ],
     "environment": [
       {
-        "Name": "SERVICE_5432_NAME",
-        "Value": "postgres_${environment}"
+        "Name": "WEAVE_CIDR",
+        "Value": "net:${weave_cidr}"
       },
       {
         "Name" : "POSTGRES_USER",

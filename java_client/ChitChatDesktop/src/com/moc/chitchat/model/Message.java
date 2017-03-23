@@ -18,6 +18,7 @@ public class Message implements JSONString {
      * @param from - is the sender of a message
      * @param to - is the receiver of a message
      * @param message - the actual message
+     * @param encryptedmessage - message in encrypted format
      */
     public Message(UserModel from, UserModel to, String message, String encryptedmessage) {
         this.from = from;

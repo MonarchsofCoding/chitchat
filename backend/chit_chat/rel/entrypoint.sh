@@ -2,17 +2,18 @@
 
 set -e
 
-echo "Setting LOCAL_IP"
-export LOCAL_IP=$(hostname -i)
-echo "Set LOCAL_IP as ${LOCAL_IP}"
-
 if [ -z ${ECS_DNS_POSTGRES+x} ]; then
-  echo "Not on AWS ECS."
+  export VM_NAME=chitchat
+  echo "Setting VM_IP"
+  export VM_IP=$(hostname -i)
+  echo "Set VM_IP as ${LOCAL_IP}"
 else
   echo "On AWS ECS"
   /opt/app/bin/chit_chat command Elixir.ChitChat.ReleaseTasks aws_ecs_dns
-
   source db_env
+
+  /opt/app/bin/chit_chat command Elixir.ChitChat.ReleaseTasks aws_cluster
+  source cluster_env
 fi
 
 echo "Waiting for database to become available"
