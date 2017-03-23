@@ -38,6 +38,16 @@ variable "container_version" {
   description = "The version of the container to deploy"
 }
 
+variable "weave_cidr" {
+  type = "string"
+  description = "The Weave subnet to join. This should be unique across applications/environments"
+}
+
+variable "num_of_containers" {
+  type = "string"
+  description = "The number of containers to launch for the service"
+}
+
 variable "aws_availability_zones" {
   default = "list"
 }
