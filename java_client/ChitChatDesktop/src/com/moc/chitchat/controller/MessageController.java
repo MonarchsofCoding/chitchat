@@ -69,6 +69,11 @@ public class MessageController {
      * @return - a new message object
      * @throws ValidationException         - if invalid recipient or message (e.g. empty) entered
      * @throws UnexpectedResponseException - unexpected response
+     * @throws IOException - If invalid
+     * @throws NoSuchAlgorithmException - cryptographic algorithm is requested but is not available in the environment
+     * @throws BadPaddingException - data was not padded properly
+     * @throws IllegalBlockSizeException - data provided to cipher is incorrect
+     * @throws InvalidKeyException - invalid keys
      */
     public Message send(UserModel to, String message)
             throws IOException, ValidationException, UnexpectedResponseException,
@@ -96,6 +101,13 @@ public class MessageController {
      * @param receivedMessage - the message
      * @param username - the sender of the message
      * @return - a new message object
+     * @throws UnexpectedResponseException - unexpected response
+     * @throws IOException - If invalid
+     * @throws NoSuchAlgorithmException - cryptographic algorithm is requested but is not available in the environment
+     * @throws BadPaddingException - data was not padded properly
+     * @throws IllegalBlockSizeException - data provided to cipher is incorrect
+     * @throws InvalidKeyException - invalid keys
+     * @throws InvalidKeySpecException - invalid key specification
      */
     public Message receive(String receivedMessage, String username) throws BadPaddingException,
              NoSuchAlgorithmException, IllegalBlockSizeException, IOException, NoSuchPaddingException,

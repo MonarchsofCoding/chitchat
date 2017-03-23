@@ -56,6 +56,7 @@ public class LoginController {
      * @return - returns a new UserModel
      * @throws UnexpectedResponseException - unexpected response
      * @throws ValidationException - if incorrect username or password
+     * @throws IOException - If invalid
      */
     public UserModel loginUser(String username, String password)
             throws ValidationException, UnexpectedResponseException, IOException {

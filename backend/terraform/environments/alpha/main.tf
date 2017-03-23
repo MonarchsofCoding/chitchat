@@ -3,12 +3,14 @@ module "main" {
 
   aws_region = "eu-west-1"
 
-  cluster_name = "monarchs-of-coding"
+  cluster_name = "monarchsofcoding"
 
   environment = "alpha"
   domain      = "alpha.chitchat.monarchsofcoding.com"
 
   container_version = "${var.container_version}"
+  weave_cidr = "10.32.100.0/24"
+  num_of_containers = 2
 
   secret_key_base     = "${var.secret_key_base}"
   database_password   = "${var.database_password}"

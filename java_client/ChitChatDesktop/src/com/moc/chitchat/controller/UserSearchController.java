@@ -54,6 +54,9 @@ public class UserSearchController {
      * @return - a list of the users that matches the string
      * @throws UnexpectedResponseException - unexpected response
      * @throws ValidationException - If not enough characters inserted
+     * @throws IOException - If invalid
+     * @throws NoSuchAlgorithmException - cryptographic algorithm is requested but is not available in the environment
+     * @throws InvalidKeySpecException - invalid key specification
      */
     public List<UserModel> searchUser(String username)
             throws UnexpectedResponseException, ValidationException, IOException,

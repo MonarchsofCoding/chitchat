@@ -128,7 +128,7 @@ jacoco {
 jacocoTestReport {
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['com/moc/chitchat/view**', 'com/moc/chitchat/client/'])
+            fileTree(dir: it, exclude: ['com/moc/chitchat/view**', 'com/moc/chitchat/client/', 'com/moc/chitchat/Main**'])
         })
     }
 }

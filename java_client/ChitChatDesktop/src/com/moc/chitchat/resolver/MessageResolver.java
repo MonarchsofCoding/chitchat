@@ -15,6 +15,7 @@ public class MessageResolver {
      * @param from - This is the user that is sending the message
      * @param to - This is the user that is receiving messages
      * @param message - This is actual message
+     * @param encryptedmessage - the message in encrypted format
      * @return - The message object
      */
     public Message createMessage(UserModel from, UserModel to, String message,String encryptedmessage) {

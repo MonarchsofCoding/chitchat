@@ -1,3 +1,0 @@
-region = ""
-
-cluster_name = ""

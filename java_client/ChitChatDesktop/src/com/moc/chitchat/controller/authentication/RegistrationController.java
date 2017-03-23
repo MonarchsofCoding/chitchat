@@ -51,6 +51,7 @@ public class RegistrationController {
      * @param passwordCheck - this provides the input field passwordCheck
      * @throws ValidationException         - If invalid username,password or passwordcheck
      * @throws UnexpectedResponseException - Unexpected response
+     * @throws IOException - If invalid
      */
     public UserModel registerUser(String username, String password, String passwordCheck)
             throws ValidationException, UnexpectedResponseException, IOException {
