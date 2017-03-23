@@ -79,8 +79,8 @@ resource "aws_autoscaling_group" "app_cluster" {
   name                 = "${var.cluster_name}.asg"
   vpc_zone_identifier  = ["${aws_subnet.app.*.id}"]
   min_size             = "1"
-  max_size             = "4"
-  desired_capacity     = "2"
+  desired_capacity     = "3"
+  max_size             = "5"
   launch_configuration = "${aws_launch_configuration.app.name}"
 
   tag {
