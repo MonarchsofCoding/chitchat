@@ -20,7 +20,7 @@ public class SearchViewTest extends PrimaryStageTest {
     public final static String chatBtn = "#search-chat-btn";
     public final static String errorMessage = "#search-error-messages";
     public final static String errorUserMessage ="#search-error-users-msg";
-    public final static String logoutBtn = "#logoutbtn";
+    public final static String logoutBtn = "#logout-button";
     public static final String viewPane = "#login-view-pane";
     public static final String usernameloginFld = "#login-username-fld";
     public static final String passwordFld = "#login-password-fld";

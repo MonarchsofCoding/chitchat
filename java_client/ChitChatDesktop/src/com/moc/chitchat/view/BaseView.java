@@ -64,7 +64,7 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
     private MigPane buildHeader() {
         MigPane header = new MigPane();
         header.setLayout("fill");
-        header.setStyle("-fx-background-color:  #3C4F76;");
+        header.getStyleClass().add("base-header");
         header.setId("base-header");
         Label title = new Label("Chit Chat");
         title.setWrapText(true);
@@ -74,8 +74,8 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
 
             logout = new Button("Log out");
             logout.setOnAction(this);
-            logout.setStyle("-fx-background-color: transparent");
-            logout.setId("logoutbtn");
+            logout.getStyleClass().add("logout-button");
+            logout.setId("logout-button");
             header.add(title, "center,wrap");
             header.add(logout, "center");
         } else {
@@ -89,9 +89,7 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
         MigPane footer = new MigPane();
         footer.setId("base-footer");
         footer.setLayout("fill");
-
-        footer.setStyle("-fx-background-color:  #3C4F76;");
-
+        footer.getStyleClass().add("base-footer");
         Label credits = new Label("Created by: Monarchs of Coding");
         credits.setTextFill(Color.WHITE);
         credits.setId("credits");

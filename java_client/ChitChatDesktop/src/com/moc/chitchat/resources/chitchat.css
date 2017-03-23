@@ -31,8 +31,7 @@
 }
 
 #base-header, #base-footer {
-    -fx-background-color: rgba(58, 93, 207, 0.66);
-    -fx-text-fill: #F1FAEE;
+    -fx-background-color:  #3C4F76;    -fx-text-fill: #F1FAEE;
 }
 
 #base-header-title {
@@ -51,7 +50,14 @@
     -fx-font-size: 12pt;
     -fx-text-fill: #F1FAEE;
 }
+#logout-button{
+    -fx-background-color: transparent;
+}
 
+#base-header{
+    -fx-background-color:  #3C4F76;
+
+}
 #base-footer-username {
     -fx-text-fill: #F1FAEE;
 }
