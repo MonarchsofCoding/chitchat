@@ -9,6 +9,7 @@ module "main" {
   domain      = "chitchat.monarchsofcoding.com"
 
   container_version = "${var.container_version}"
+  weave_cidr = "10.32.102.0/24"
 
   secret_key_base     = "${var.secret_key_base}"
   database_password   = "${var.database_password}"

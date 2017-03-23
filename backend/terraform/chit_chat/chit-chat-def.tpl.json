@@ -23,6 +23,10 @@
     ],
     "environment": [
       {
+        "Name": "WEAVE_CIDR",
+        "Value": "net:${weave_cidr}"
+      },
+      {
         "Name": "SECRET_KEY_BASE",
         "Value": "${secret_key_base}"
       },

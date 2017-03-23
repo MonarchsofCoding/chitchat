@@ -12,6 +12,10 @@
     ],
     "environment": [
       {
+        "Name": "WEAVE_CIDR",
+        "Value": "net:${weave_cidr}"
+      },
+      {
         "Name" : "POSTGRES_USER",
         "Value": "${db_username}"
       },

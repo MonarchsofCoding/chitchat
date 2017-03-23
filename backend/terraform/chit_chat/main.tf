@@ -37,13 +37,14 @@ data "template_file" "ecs_chit-chat_def" {
     database_password  = "${var.database_password}"
     database_name      = "chit-chat_${var.environment}"
 
-    /*ecs_postgres_name  = "postgres_${var.environment}.servicediscovery.internal"*/
     domain = "${var.domain}"
 
     backend_version = "${var.container_version}"
 
     cloudwatch_log_group = "${aws_cloudwatch_log_group.chit_chat.arn}"
     cloudwatch_region    = "${var.aws_region}"
+
+    weave_cidr = "${var.weave_cidr}"
   }
 }
 
@@ -97,6 +98,7 @@ data "template_file" "ecs_postgres_def" {
     db_password = "${var.database_password}"
     db_name     = "chit-chat_${var.environment}"
     environment = "${var.environment}"
+    weave_cidr = "${var.weave_cidr}"
   }
 }
 
