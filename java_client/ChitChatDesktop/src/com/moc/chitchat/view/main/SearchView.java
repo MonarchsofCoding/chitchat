@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.List;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -48,8 +49,10 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
     private Label errorMessage;
     private WestView westView;
     private Label errorUserMessage;
+
     /**
      * SearchView constructor.
+     *
      * @param userSearchController the controller holding functions for searching Users.
      * @param chitChatData         the application data state.
      */
@@ -89,7 +92,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.usernameField.setPromptText("Find User");
         this.usernameField.setOnAction(this);
         MigPane searchForm = new MigPane();
-        searchForm.add(this.errorUserMessage,"span");
+        searchForm.add(this.errorUserMessage, "span");
         searchForm.add(this.usernameField, "span");
 
         this.searchBtn = new JFXButton("Search");
@@ -112,11 +115,21 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.errorMessage.setId("search-error-messages");
         this.errorMessage.setVisible(false);
         this.errorMessage.setTextFill(Color.RED);
-        searchForm.add(this.errorMessage,"span");
+        searchForm.add(this.errorMessage, "span");
         MigPane searchPane = new MigPane();
         searchPane.add(searchForm, "span");
 
         return searchPane;
+    }
+
+    /**
+     * Clear all the errormessages and userfields.
+     */
+    public void clearfields() {
+        this.errorUserMessage.setVisible(false);
+        this.errorMessage.setVisible(false);
+        this.usernameField.clear();
+        this.searchList.getItems().clear();
     }
 
     /**
@@ -128,7 +141,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
             this.errorUserMessage.setVisible(false);
             List<UserModel> listUsers = this.userSearchController.searchUser(this.usernameField.getText());
             this.observableUserList.addAll(listUsers);
-            if(this.observableUserList.isEmpty()){
+            if (this.observableUserList.isEmpty()) {
                 this.errorUserMessage.setText("No User Available");
                 this.errorUserMessage.setVisible(true);
             } else {
