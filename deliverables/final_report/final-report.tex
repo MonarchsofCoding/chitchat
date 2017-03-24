@@ -139,6 +139,24 @@ Another major problem we faced is about the search user feature. At first, the s
 The major problem we faced that not about programming is the problems between Android Virtual Device (AVD) manager and Docker. Since both system use virtual machinery, the Mac OSX version of Docker clashed with the x86 Intel HAXM Acceleration system, which aids the AVD to be faster as in execution. Even though the Linux version didn’t cause any problems like this, this particular problem forced us to use ARM images in AVD to run the system on OSX machines, which is extremely heavy compared to x86 Intel images. After running the AVD with an ARM image, we realized that the heavy processing is not even bearable. Hence, the members that owns OSX machines participated on implementation of functionality and testing without running the AVD, while others did the manual testing on the code for the implementation that both them and the OSX machine users are responsible for.  
 
 \subsection{Libraries}
+\subparagraph{Android Open Source Project SDK 25}
+As discussed, Android API level 25 is chosen to have all the libraries possible. Hence, the SDK version 25 is used to develop the application throughout the project.
+\subparagraph{Android Support Library v7}
+Android Support Library is a library provided via the Android SDK which enables support for multiple API versions. Via this library, one can add newer functionalities or older functionalities without changing the API. In addition, this library adds new classes and layout items core Android library doesn’t provide \cite{website:android_support_library}. For many reasons whilst developing the UI of the application, elements like widgets are used from this library. Furthermore, all activities are implemented with AppCompatActivity class of this library, rather than using the generic activity.
+\subparagraph{Java Security}
+As the Java client, Java’s own security library is used to create the CryptoBox class. This library contains key generation, encryption and decryption functionalities and many more.
+\subparagraph{Dagger 2}
+Dagger 2 is a static dependency injection framework for Java and Android that works in compile time. The first version was an open-source project that was ongoing in a GitHub repository, until Google acquired the project \cite{website:dagger_homepage}. Dagger 2 is chosen for the Android client simply because Spring Framework is not compatible with Android. Hence, Dagger 2 is used to enable dependency injection in the Android client.
+\subparagraph{Volley}
+Volley is a HTTP library for Android that makes the implementation for REST services easier. \cite{website:volley_homepage}. After some manual implementation trials, we decided to use Volley for our REST requests, for its automatic request handling and ease of implementation with listeners, without threads.
+\subparagraph{JavaPhoenixChannels}
+JavaPhoenixChannels is an open-source project to provide a framework for client applications for communicating a backend that runs on Elixir/Phoenix \cite{website:java_phoenix_channels_homepage}. This framework provides us a simple, thread free listener service to listen to the backend for upcoming messages. The service for receiving messages is implemented with this framework. 
+\subparagraph{JUnit}
+JUnit is a framework which aids through implementing repeatable unit tests \cite{website:junit_homepage}. It has many functionalities like different types of assertions and annotations for test files. As the Java client, during the implementation of the Android client we used JUnit to write the unit tests for the Android client. 
+\subparagraph{Mockito}
+Mockito is an object mocking library for unit testing that enables easy object mocking for programmers \cite {website:mockito_homepage}. Mockito is primarily used for object mocking the Android client’s unit tests.
+\subparagraph{Espresso}
+Espresso is a testing library provided by Android’s testing support library, which provides an API for implementing UI tests in Android via many user action simulating functionalities \cite{website:espresso_homepage}. It is simply an API close to what JUnit does to the UI tests in Android, hence we used Espresso to develop our UI tests.
 
 \section{Backend}
 
