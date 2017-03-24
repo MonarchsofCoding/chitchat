@@ -46,9 +46,10 @@ dependencies {
     testCompile "junit:junit:4.12"
     testCompile 'org.mockito:mockito-core:2.+'
     testCompile "junit:junit:4.10"
-    testCompile "org.testfx:testfx-core:4.0.+"
-    testCompile "org.testfx:testfx-junit:4.0.+"
+    testCompile "org.testfx:testfx-core:4.0.5+"
+    testCompile "org.testfx:testfx-junit:4.0.5+"
     testCompile 'com.squareup.okhttp3:mockwebserver:3.6.0'
+    testCompile 'org.testfx:testfx-core:4.0.5-alpha'
 }
 
 mainClassName = 'com.moc.chitchat.Application'

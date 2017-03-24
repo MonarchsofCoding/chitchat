@@ -72,7 +72,7 @@ public class RegistrationController {
             // Unexpected response code. e.g. 500
             throw new UnexpectedResponseException(response);
         }
-
+        response.body().close();
         return user;
     }
 }
