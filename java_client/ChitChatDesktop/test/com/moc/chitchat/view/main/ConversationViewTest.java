@@ -29,6 +29,7 @@ public class ConversationViewTest extends PrimaryStageTest {
         UserHelper.createUser(this, "conversationView_user1", "user1234");
         UserHelper.loginUser(this, "conversationView_user1", "user1234");
         MessageHelper.loginUser("conversationView_user2","user1234");
+        Thread.sleep(2000);
         clickOn(WestViewTest.togglePaneBtn);
         clickOn(SearchViewTest.usernameFld).write("conversationView_user2");
         clickOn(SearchViewTest.searchBtn);
@@ -50,9 +51,10 @@ public class ConversationViewTest extends PrimaryStageTest {
     public void test_sending_message() throws Exception {
         UserHelper.createUser(this, "conversationView_user3", "user1234");
         MessageHelper.loginUser("conversationView_user3","user1234");
+        Thread.sleep(2000);
         UserHelper.createUser(this, "conversationView_user4", "user1234");
         UserHelper.loginUser(this, "conversationView_user4", "user1234");
-
+        Thread.sleep(2000);
         clickOn(WestViewTest.togglePaneBtn);
         clickOn(SearchViewTest.usernameFld).write("conversationView_user3");
         clickOn(SearchViewTest.searchBtn);
@@ -61,7 +63,7 @@ public class ConversationViewTest extends PrimaryStageTest {
         clickOn(SearchViewTest.chatBtn);
         Thread.sleep(500);
         verifyThat(chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationView_user3"));
-
+        Thread.sleep(500);
         clickOn(newMessageFld).write("Hello!");
         clickOn(sendBtn);
         Thread.sleep(500);
@@ -79,9 +81,9 @@ public class ConversationViewTest extends PrimaryStageTest {
         UserHelper.createUser(this, "conversationView_user5", "user1234");
         UserHelper.createUser(this, "conversationView_user6", "user1234");
         MessageHelper.loginUser("conversationView_user6","user1234");
-
+        Thread.sleep(1500);
         UserHelper.loginUser(this, "conversationView_user5", "user1234");
-
+        Thread.sleep(500);
         clickOn(WestViewTest.togglePaneBtn);
         clickOn(SearchViewTest.usernameFld).write("conversationView_user6");
         clickOn(SearchViewTest.searchBtn);

@@ -34,7 +34,7 @@ public class LoginViewTest extends PrimaryStageTest {
      */
     @Test
     public void test_login_buttons_are_enabled(){
-        
+
         verifyThat(usernameFld, NodeMatchers.isVisible());
         verifyThat(passwordFld, NodeMatchers.isVisible());
 
@@ -54,12 +54,12 @@ public class LoginViewTest extends PrimaryStageTest {
     * Testing the Login for wrong credentials.
     */
     @Test
-    public void test_invalid_login_credentials() {
+    public void test_invalid_login_credentials() throws InterruptedException {
 
         clickOn(usernameFld).write("login_validUse");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-
+        Thread.sleep(2000);
         verifyThat(unexpectedErrors, NodeMatchers.isVisible());
     }
 
@@ -75,7 +75,7 @@ public class LoginViewTest extends PrimaryStageTest {
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-        //Thread.sleep(5000);
+        Thread.sleep(2000);
         verifyThat(WestViewTest.westview, NodeMatchers.isVisible());
     }
 
