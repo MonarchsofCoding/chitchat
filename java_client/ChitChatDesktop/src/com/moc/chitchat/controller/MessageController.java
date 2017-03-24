@@ -92,7 +92,7 @@ public class MessageController {
         }
 
         this.chitChatData.addMessageToConversation(to, newMessage);
-
+        response.body().close();
         return newMessage;
     }
 
