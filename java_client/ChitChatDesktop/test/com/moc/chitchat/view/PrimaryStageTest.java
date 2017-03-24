@@ -34,7 +34,7 @@ public class PrimaryStageTest extends ApplicationTest {
     public void AfterEachTest() throws TimeoutException {
     }
 
-   // public <T extends Node> T find (final String query){
-      //  return (T) lookup(query).queryAll().iterator().next();
-   // }
+    public <T extends Node> T find (final String query){
+        return (T) lookup(query).queryAll().iterator().next();
+    }
 }
