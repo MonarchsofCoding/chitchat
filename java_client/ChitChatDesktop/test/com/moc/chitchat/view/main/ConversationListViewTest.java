@@ -50,15 +50,18 @@ public class ConversationListViewTest extends PrimaryStageTest {
 
 
         MessageHelper.loginUser("conversationList_user4","user1234");
+        Thread.sleep(200);
         MessageHelper.loginUser("conversationList_user5","user1234");
+        Thread.sleep(200);
         UserHelper.loginUser(this, "conversationList_user3", "user1234");
-
+        Thread.sleep(1000);
         clickOn(WestViewTest.togglePaneBtn);
 
         clickOn(SearchViewTest.usernameFld).write("conversationList_user4");
         clickOn(SearchViewTest.searchBtn);
         clickOn("conversationList_user4");
         clickOn(SearchViewTest.chatBtn);
+        Thread.sleep(200);
         verifyThat(conversationUserList, NodeMatchers.isVisible());
         verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
 
@@ -67,19 +70,25 @@ public class ConversationListViewTest extends PrimaryStageTest {
         clickOn(SearchViewTest.searchBtn);
         clickOn("conversationList_user5");
         clickOn(SearchViewTest.chatBtn);
+        Thread.sleep(500);
         verifyThat(conversationUserList, NodeMatchers.isVisible());
         verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
+        Thread.sleep(500);
 
         clickOn("conversationList_user4");
+        Thread.sleep(500);
         verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
 
         clickOn("conversationList_user5");
+        Thread.sleep(500);
         verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
 
         clickOn("conversationList_user4");
+        Thread.sleep(500);
         verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user4"));
 
         clickOn("conversationList_user5");
+        Thread.sleep(500);
         verifyThat(ConversationViewTest.chatHeaderLbl, NodeMatchers.hasText("Chat with: conversationList_user5"));
     }
 

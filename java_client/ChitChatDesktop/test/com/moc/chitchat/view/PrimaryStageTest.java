@@ -1,7 +1,6 @@
 package com.moc.chitchat.view;
 
 import com.moc.chitchat.Main;
-import javafx.scene.Node;
 import javafx.stage.Stage;
 import org.junit.After;
 import org.junit.Before;
@@ -21,12 +20,13 @@ public class PrimaryStageTest extends ApplicationTest {
         if (System.getenv("CHITCHAT_ENV") != null && System.getenv("CHITCHAT_ENV").length() > 0) {
             args = System.getenv("CHITCHAT_ENV");
         }
-
+        Thread.sleep(1500);
         ApplicationTest.launch(Main.class, args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        Thread.sleep(500);
         stage.show();
     }
 
@@ -34,7 +34,4 @@ public class PrimaryStageTest extends ApplicationTest {
     public void AfterEachTest() throws TimeoutException {
     }
 
-    public <T extends Node> T find (final String query){
-        return (T) lookup(query).queryAll().iterator().next();
-    }
 }
