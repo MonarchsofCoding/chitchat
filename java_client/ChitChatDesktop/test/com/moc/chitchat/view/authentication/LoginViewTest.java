@@ -52,12 +52,12 @@ public class LoginViewTest extends PrimaryStageTest {
     * Testing the Login for wrong credentials.
     */
     @Test
-    public void test_invalid_login_credentials() {
+    public void test_invalid_login_credentials() throws InterruptedException {
 
         clickOn(usernameFld).write("login_validUse");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-
+        Thread.sleep(2000);
         verifyThat(unexpectedErrors, NodeMatchers.isVisible());
     }
 
@@ -65,7 +65,7 @@ public class LoginViewTest extends PrimaryStageTest {
      * Tests valid credentials take you to the main view.
      */
     @Test
-    public void test_valid_login_credentials() {
+    public void test_valid_login_credentials() throws InterruptedException {
 
         // Create a User first
         UserHelper.createUser(this,"login_validUser", "validPassword");
@@ -73,7 +73,7 @@ public class LoginViewTest extends PrimaryStageTest {
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-
+        Thread.sleep(2000);
         verifyThat(MainViewTest.viewPane, NodeMatchers.isVisible());
     }
 
