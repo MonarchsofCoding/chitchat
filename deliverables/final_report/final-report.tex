@@ -85,19 +85,40 @@ In our application we used a combination of this research as we described on the
   \item pyinvoke: A task runner in Python.
 \end{itemize}
 
-\section{Unit Testing}
-
-\subsection{Why Unit Testing}
-Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and the expected results that he wants to have from these tests.The first one, is the JUnit unit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after click on them, the error display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on Java Fx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register user name.The dynamic testing methods we did is unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed. 
-
-\subsection{Mocking}
-The second testing framework library that we used is Mockito. We used mocking for several of different reasons such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. We used it when we wanted to return a particular value when the method is called. E.g. in the “RegistrationControllerTest.java” the “testSuccessfulRegisterUser” test function we mocked the configuration object (which provides global configuration variables for the application). We mocked the configuration, because when our registration controller calls the http client to post we need a URL. The URL is retrieved from a function inside the configuration class. Therefore using “when(mockConfiguration
-.getBackendAddress()).thenReturn(baseUrl.toString())” we enable to provide the URL when “getBackendAddress“ function is called. We have also mocked the server by using “MockWebServer” library, which this allows us to specify the response and then we can verify the right nodes are being executed and test on what was returned. Hence, in our test function “testSuccessfulRegisterUser” we created a user named “test” and if the right nodes have been executed then user name would change to the expected username “alice”. 
-
 \subsection{Report}
 We used Java code coverage library to output our report for our testing… 
 
 \section{Desktop Client}
+
+\subsection{Implementation}
+
+\subparagraph{Registration}
+We wanted to provide less work on the backend, by validating on what we can before sending an http request to the server. Our registration controller (package-controller.authentication) calls the function to validate this (package-validator, file-UserValidator, function-validate). Therefore, we validated if the username is not empty, valid characters were inputted by using regex, password is not empty, and password and “password check” matches. If any of these fail it will throw a “ValidationException“ which is a class that we created that inherits from the Exception class (package-exception). Hence, if the exception is thrown, we don’t have to send an http request to the server, which is beneficial since there is now less work on the server, so this improves on the performance.
+
+If the user details that we can check on the client side were correct, then we are able to proceed to a post request and check the response. The backend provides a response, and we retrieve an error if we get a 422 response where the username is already taken or if the password is less than 8 characters (package-validation, file-UserValidator, function- throwErrorsFromResponse), where it retrieves which error it is. If something unexpected occurs, such as it did not post to the backend, we provide a “UnexpectedResponseException” that we have also created. If there was no exception thrown, then the user was successfully was created. 
+
+\subparagraph{User search}
+We only allowed for the user to be able to search for another user if they have entered at least 3 characters. They are only able to see if other users are online. These two implementations do help with security if an attacker wants to get information and find all the users. 
+
+\subparagraph{Conversations}
+To keep track of the list of conversations and messages for the logged in user we have implemented a component called “ChitChatData” that provides the main application state. This class holds a list of conversations, where a conversation class is a model itself. Therefore, each conversation is able to hold a list of messages, where we have a message class that is also a model itself. Therefore when the user initially creates a conversation, this initiates a new Conversation and new Message class. This provides simplicity when the user decides select between conversations, because we can just set the conversation to display, and the users can send each other messages and it would add on into the right conversation. Difficulty with conversation was to update the messages on the user receives a message. Thus, we set the list of messages to be an observable list, so it would track if there were any changes and display them into the view. 
+
+\subparagraph{Checkstyle}
+We started to use checkstyle half way through this project to help us to get in a habit to write up to good standard code. As you can see from the commits from early into the project, we noticed our code not really readable and not clear cut. Therefore we added a check that if checkstyle fails then this would cause a failure in the build on Travis. This has helped the team massively on pushing us to write good code before we do a PR to the develop branch. 
+
+\subsection{Testing}
+Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and the expected results that he wants to have from these tests.The first one, is the JUnit unit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after click on them, the error display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on Java Fx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register user name.The dynamic testing methods we did is unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed.
+
+\subparagraph{Mockito}
+The second testing framework library that we used is Mockito. We used mocking for several of different reasons such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. We used it when we wanted to return a particular value when the method is called. E.g. in the “RegistrationControllerTest.java” the “testSuccessfulRegisterUser” test function we mocked the configuration object (which provides global configuration variables for the application). We mocked the configuration, because when our registration controller calls the http client to post we need a URL. The URL is retrieved from a function inside the configuration class. Therefore in line 62 we enable to provide the URL when “getBackendAddress“ function is called. We have also mocked the server by using “MockWebServer” library, which this allows us to specify the response and then we can verify the right nodes are being executed and test on what was returned. Hence, in our test function “testSuccessfulRegisterUser” we created a user named “test” and if the right nodes have been executed then user name would change to the expected username “alice”. 
+
+\subparagraph{Problems Faced In Testing}
+
+ 
+
+\subsection{Problems Faced}
+At first we decided to deal http requests using unirest library, but we changed this to Okhttp when we started to work on the receive messages feature, and we only need one client. As we began to work on the “feature/receive-messages” branch we were using the JavaPhoenixChannels library to help us to work with the channels. This had lead to issues, because JavaPhoenixChannels library was using the old version of OkHttp and they hadn’t synchronised the functions. A PR for their library has been accepted but they haven’t created a new release yet, so it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation etc.
+
 
 \subsection{Libraries}
 
