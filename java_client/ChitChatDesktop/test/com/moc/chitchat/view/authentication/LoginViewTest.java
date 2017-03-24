@@ -73,7 +73,7 @@ public class LoginViewTest extends PrimaryStageTest {
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-        Thread.sleep(2000);
+        Thread.sleep(5000);
         verifyThat(MainViewTest.viewPane, NodeMatchers.isVisible());
     }
 

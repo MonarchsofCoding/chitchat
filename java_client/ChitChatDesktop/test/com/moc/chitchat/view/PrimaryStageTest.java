@@ -21,12 +21,13 @@ public class PrimaryStageTest extends ApplicationTest {
         if (System.getenv("CHITCHAT_ENV") != null && System.getenv("CHITCHAT_ENV").length() > 0) {
             args = System.getenv("CHITCHAT_ENV");
         }
-
+        Thread.sleep(500);
         ApplicationTest.launch(Main.class, args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        Thread.sleep(500);
         stage.show();
     }
 
@@ -34,7 +35,7 @@ public class PrimaryStageTest extends ApplicationTest {
     public void AfterEachTest() throws TimeoutException {
     }
 
-    public <T extends Node> T find (final String query){
-        return (T) lookup(query).queryAll().iterator().next();
-    }
+    //public <T extends Node> T find (final String query){
+       // return (T) lookup(query).queryAll().iterator().next();
+    //}
 }
