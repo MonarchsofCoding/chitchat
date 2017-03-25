@@ -43,6 +43,8 @@ dependencies {
 
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
 
+    compile 'com.jfoenix:jfoenix:1.0.0'
+
     testCompile "junit:junit:4.12"
     testCompile 'org.mockito:mockito-core:2.+'
     testCompile "junit:junit:4.10"
@@ -54,8 +56,24 @@ dependencies {
 
 mainClassName = 'com.moc.chitchat.Application'
 
-sourceSets.main.java.srcDirs = ['src']
-sourceSets.test.java.srcDirs = ['test']
+sourceSets {
+    main {
+        resources {
+            srcDirs = ["src"]
+            includes = ["**/*.css"]
+        }
+
+        java {
+            srcDirs = ['src']
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ['test']
+        }
+    }
+}
 
 jar {
     manifest {
@@ -79,6 +97,8 @@ jfx {
     vendor = "Monarchs of Coding"
     nativeReleaseVersion = "0.0"
     appName = "chit_chat"
+
+    // additionalAppResources = "src/com/moc/chitchat/resources" // path to some additional resources when creating application-bundle
 
 }
 

@@ -1,8 +1,10 @@
 package com.moc.chitchat.view.main;
 
+import com.jfoenix.controls.JFXListView;
 import com.moc.chitchat.application.ChitChatData;
 import com.moc.chitchat.controller.MessageController;
 import com.moc.chitchat.model.Conversation;
+import com.moc.chitchat.view.BaseView;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
@@ -23,15 +25,20 @@ public class ConversationListView {
 
     private ListView<Conversation> conversationListView;
 
+    public void clearConversationListView() {
+        this.conversationListView.getItems().clear();
+    }
+
     /**
      * Constructor for ConversationListView
-     * @param chitChatData the application data state.
+     *
+     * @param chitChatData     the application data state.
      * @param conversationView the view that shows conversations.
      */
     @Autowired
     public ConversationListView(
-        ChitChatData chitChatData,
-        ConversationView conversationView
+            ChitChatData chitChatData,
+            ConversationView conversationView
     ) {
         this.chitChatData = chitChatData;
         this.conversationView = conversationView;
@@ -39,27 +46,24 @@ public class ConversationListView {
 
     /**
      * Returns content pane for this view.
+     *
      * @return the content pane
      */
 
     public MigPane getContentPane() {
 
-        this.conversationListView = new ListView<>(this.chitChatData.getConversations());
+        this.conversationListView = new JFXListView<>();
+        this.conversationListView.setItems(this.chitChatData.getConversations());
+
         this.conversationListView.setId("conversation-user-list");
-        this.conversationListView.setPlaceholder(new Label("Add User for Conversation"));
 
         MultipleSelectionModel<Conversation> lvSelModel = this.conversationListView.getSelectionModel();
-        lvSelModel.selectedItemProperty().addListener(new ChangeListener<Conversation>() {
-            public void changed(ObservableValue<? extends Conversation> changed,
-                                Conversation oldConvo, Conversation newConvo) {
-                setSelectedConversation(newConvo);
-            }
-
-        });
+        lvSelModel.selectedItemProperty()
+                .addListener((changed, oldConvo, newConvo) -> setSelectedConversation(newConvo));
 
         MigPane chatListPane = new MigPane();
         chatListPane.setLayout("fill");
-        chatListPane.add(this.conversationListView, "span");
+        chatListPane.add(this.conversationListView, "span, grow");
 
         return chatListPane;
     }
@@ -67,6 +71,7 @@ public class ConversationListView {
     /**
      * Sets the conversation that is currently selected.
      * Used by the SearchView when a new conversation is started.
+     *
      * @param c the conversation to select and show.
      */
     void setSelectedConversation(Conversation c) {
