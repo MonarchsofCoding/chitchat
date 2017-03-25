@@ -83,6 +83,9 @@ public class MessageController {
         String messageencrypt = cryptoFunctions.encrypt(message, to.getPublicKey());
         Message newMessage = this.messageResolver.createMessage(this.configuration.getLoggedInUser(),
                 to,message,messageencrypt);
+
+        this.messageValidator.validate(newMessage);
+
         Response response = httpClient.post("/api/v1/messages", newMessage);
 
         if (response.code() == 422) {
