@@ -117,7 +117,8 @@
 #register-password-errs,
 #register-errors-lbl,
 #search-error-users-msg,
-#search-error-messages {
+#search-error-messages,
+#conversation-error-lbl {
     -fx-text-fill: #F33;
 }
 

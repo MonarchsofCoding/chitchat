@@ -107,7 +107,6 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         this.conversationPane.add(newMessageField, "span, growx");
 
         this.errormessage = new Label();
-        this.errormessage.setTextFill(Color.RED);
         this.errormessage.setId("conversation-error-lbl");
         this.errormessage.setVisible(false);
         this.conversationPane.add(errormessage, "span, growx");
