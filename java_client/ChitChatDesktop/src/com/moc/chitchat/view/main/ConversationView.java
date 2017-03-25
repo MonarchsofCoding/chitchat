@@ -12,6 +12,7 @@ import com.moc.chitchat.model.Message;
 import com.moc.chitchat.view.BaseView;
 import java.io.IOException;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -93,6 +94,9 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
 
         JFXListView<Message> viewMessages = new JFXListView<>();
         viewMessages.setItems(c.getMessages());
+        c.getMessages().addListener((ListChangeListener<Message>) change -> {
+            viewMessages.scrollTo(c.getMessages().size() - 1);
+        });
         viewMessages.setId("conversation-messages-list");
         this.conversationPane.add(viewMessages, "span, growx");
 
