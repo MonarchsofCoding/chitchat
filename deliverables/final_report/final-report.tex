@@ -12,6 +12,8 @@
 \date{March 2017}
 \maketitle
 
+\tableofcontents
+
 
 \chapter{Introduction}
 
@@ -59,13 +61,13 @@ MQTT stands for "Message Queuing Telemetry Transport". MQTT is a very light mess
 \section{Encrypted communication protocols}
 
 \subsection{Why encryption}
-The exchanging message process is the main feature of our application and for this reason the security on our communication channel was one of our first goals. During our security protocols research we came out with three different models (Gnu PG key chain model, RSA ,Signal). 
+The exchanging message process is the main feature of our application and for this reason the security on our communication channel was one of our first goals. During our security protocols research we came out with three different models (Gnu PG key chain model, RSA ,Signal).
 
 \subsection{RSA-GPG}
 The Gnu PG key chain model uses both symmetric and asymmetric key encryption protocols. The RSA public key cryptosystem model uses assymetric key encryption. We prefer to use RSA instead of AES or 3DES for the reason that the last two is symmetric key encryptio. For the RSA we used the cipheralgorithm of ECB(Electronic Code Book) instead of OFB,CBC and CFB as it is faster and simpler on his implementation. Beginning with the libraries, we used the Java SE Security and its libraries in order to apply our cryptographic protocols in the CryptoBox(Android) and Cryptofunctions(JavaDesktop) classes. On the side of client, we generate a pair of keys (a public and its private) and we store it locally as instances of the UserModel class. The generator of this pair uses the RSA algorithm with 4096 key length which is important as the factorization uses big prime numbers that are extremely difficult to be guessed. After the creation of the two keys, we send the public key to our server. The creation of the two keys takes place during the login activity. Each time a user wants to start a conversation with another user must ask for his public key from the server. The user encrypts his message with the user’s public key and he sends it. The receiver on the other side can decrypt the encrypted message as he is the only one who knows the private key that is needed.
 
 \subsection{Signal}
-Signal is a protocol developed by Open Whisper Systems. On this protocol clientsl using their mobile numbers as id can send end-to-end encrypted messages to each other. One of the feature of signal is that clients create a pair of public and private keys which are stored to the endpoints. Moreover, clients can be authenticated using key fingerprints (or scan QR codes). Using a passphrase the user can encrypt the whole database where he stores his messages. One last feature is that users can keep for a specific time their messages to the database using a timer. One of the limitation is that the user can be registered in only one device. 
+Signal is a protocol developed by Open Whisper Systems. On this protocol clientsl using their mobile numbers as id can send end-to-end encrypted messages to each other. One of the feature of signal is that clients create a pair of public and private keys which are stored to the endpoints. Moreover, clients can be authenticated using key fingerprints (or scan QR codes). Using a passphrase the user can encrypt the whole database where he stores his messages. One last feature is that users can keep for a specific time their messages to the database using a timer. One of the limitation is that the user can be registered in only one device.
 
 \subsection{Applying to our application}
 In our application we used a combination of this research as we described on the previous paragraphs and we manage to use our application in both desktop and mobile device for the one user. In order to succeed on this approach we put some limitations to our system. The first is that user does not keep any message history on his local data as everything is deleted when the users are log out. The second one is that each time the user tries to connect from a different device he creates a different public-private key pair. The new generated public key replaces the previous in our webserver database. That helps our user to protect his message even if his device was stolen or even if he had forgotten his application open to a, accessible from others, device.
@@ -86,7 +88,7 @@ In our application we used a combination of this research as we described on the
 \end{itemize}
 
 \subsection{Report}
-We used Java code coverage library to output our report for our testing… 
+We used Java code coverage library to output our report for our testing…
 
 \section{Desktop Client}
 
@@ -95,40 +97,45 @@ We used Java code coverage library to output our report for our testing…
 \subparagraph{Registration}
 We wanted to provide less work on the backend, by validating on what we can before sending an http request to the server. Our registration controller (package-controller.authentication) calls the function to validate this (package-validator, file-UserValidator, function-validate). Therefore, we validated if the username is not empty, valid characters were inputted by using regex, password is not empty, and password and “password check” matches. If any of these fail it will throw a “ValidationException“ which is a class that we created that inherits from the Exception class (package-exception). Hence, if the exception is thrown, we don’t have to send an http request to the server, which is beneficial since there is now less work on the server, so this improves on the performance.
 
-If the user details that we can check on the client side were correct, then we are able to proceed to a post request and check the response. The backend provides a response, and we retrieve an error if we get a 422 response where the username is already taken or if the password is less than 8 characters (package-validation, file-UserValidator, function- throwErrorsFromResponse), where it retrieves which error it is. If something unexpected occurs, such as it did not post to the backend, we provide a “UnexpectedResponseException” that we have also created. If there was no exception thrown, then the user was successfully was created. 
+If the user details that we can check on the client side were correct, then we are able to proceed to a post request and check the response. The backend provides a response, and we retrieve an error if we get a 422 response where the username is already taken or if the password is less than 8 characters (package-validation, file-UserValidator, function- throwErrorsFromResponse), where it retrieves which error it is. If something unexpected occurs, such as it did not post to the backend, we provide a “UnexpectedResponseException” that we have also created. If there was no exception thrown, then the user was successfully was created.
 
 \subparagraph{User search}
-We only allowed for the user to be able to search for another user if they have entered at least 3 characters. They are only able to see if other users are online. These two implementations do help with security if an attacker wants to get information and find all the users. 
+We only allowed for the user to be able to search for another user if they have entered at least 3 characters. They are only able to see if other users are online. These two implementations do help with security if an attacker wants to get information and find all the users.
 
 \subparagraph{Conversations}
-To keep track of the list of conversations and messages for the logged in user we have implemented a component called “ChitChatData” that provides the main application state. This class holds a list of conversations, where a conversation class is a model itself. Therefore, each conversation is able to hold a list of messages, where we have a message class that is also a model itself. Therefore when the user initially creates a conversation, this initiates a new Conversation and new Message class. This provides simplicity when the user decides select between conversations, because we can just set the conversation to display, and the users can send each other messages and it would add on into the right conversation. Difficulty with conversation was to update the messages on the user receives a message. Thus, we set the list of messages to be an observable list, so it would track if there were any changes and display them into the view. 
+To keep track of the list of conversations and messages for the logged in user we have implemented a component called “ChitChatData” that provides the main application state. This class holds a list of conversations, where a conversation class is a model itself. Therefore, each conversation is able to hold a list of messages, where we have a message class that is also a model itself. Therefore when the user initially creates a conversation, this initiates a new Conversation and new Message class. This provides simplicity when the user decides select between conversations, because we can just set the conversation to display, and the users can send each other messages and it would add on into the right conversation. Difficulty with conversation was to update the messages on the user receives a message. Thus, we set the list of messages to be an observable list, so it would track if there were any changes and display them into the view.
 
 \subparagraph{Checkstyle}
-We started to use checkstyle half way through this project to help us to get in a habit to write up to good standard code. As you can see from the commits from early into the project, we noticed our code not really readable and not clear cut. Therefore we added a check that if checkstyle fails then this would cause a failure in the build on Travis. This has helped the team massively on pushing us to write good code before we do a PR to the develop branch. 
+We started to use checkstyle half way through this project to help us to get in a habit to write up to good standard code. As you can see from the commits from early into the project, we noticed our code not really readable and not clear cut. Therefore we added a check that if checkstyle fails then this would cause a failure in the build on Travis. This has helped the team massively on pushing us to write good code before we do a PR to the develop branch.
 
 \subsection{Testing}
 Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and the expected results that he wants to have from these tests.The first one, is the JUnit unit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after click on them, the error display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on Java Fx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register user name. The dynamic testing methods we did is unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed.
 
 \subparagraph{Mockito}
-The second testing framework library that we used is Mockito. We used mocking for several of different reasons such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. We used it when we wanted to return a particular value when the method is called. E.g. in the “RegistrationControllerTest.java” the “testSuccessfulRegisterUser” test function we mocked the configuration object (which provides global configuration variables for the application). We mocked the configuration, because when our registration controller calls the http client to post we need a URL. The URL is retrieved from a function inside the configuration class. Therefore in line 62 we enable to provide the URL when “getBackendAddress“ function is called. We have also mocked the server by using “MockWebServer” library, which this allows us to specify the response and then we can verify the right nodes are being executed and test on what was returned. Hence, in our test function “testSuccessfulRegisterUser” we created a user named “test” and if the right nodes have been executed then user name would change to the expected username “alice”. 
+The second testing framework library that we used is Mockito. We used mocking for several of different reasons such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. We used it when we wanted to return a particular value when the method is called. E.g. in the “RegistrationControllerTest.java” the “testSuccessfulRegisterUser” test function we mocked the configuration object (which provides global configuration variables for the application). We mocked the configuration, because when our registration controller calls the http client to post we need a URL. The URL is retrieved from a function inside the configuration class. Therefore in line 62 we enable to provide the URL when “getBackendAddress“ function is called. We have also mocked the server by using “MockWebServer” library, which this allows us to specify the response and then we can verify the right nodes are being executed and test on what was returned. Hence, in our test function “testSuccessfulRegisterUser” we created a user named “test” and if the right nodes have been executed then user name would change to the expected username “alice”.
 
 \subparagraph{Problems Faced In Testing}
  In the user interface graphics we started using Java Swing library for the login and registration form. After this implementation we changed to JavaFx graphics as we realise that JavaFx can give us the opportunity to apply css style design (buttons,colours,fonts) and improve the user interface experience. On more problem was the testing on our graphics for the reason that we used dialog pop up windows which are extremely hard to be tasted as they work individually and not as a part of our window. The solution on this came changing all the dialog (success messages, error messages, infomessages) to Labels on our javafx window forms. The last problem with UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e conversationList_user3 or login_validuser. One last problem we faced on testing the graphic was on the last week and specifically the 24th of March. The programmers of the library testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after change it tests executed normally. We mention this problem cause in order to find it we had to check again our project from the top(code) to the bottom (libraries) in order to find the bug. 
 
- 
+
 
 \subsection{Problems Faced}
+<<<<<<< HEAD
 At first we decided to deal http requests using unirest library, but we changed this to Okhttp when we started to work on the receive messages feature, and we only need one client. As we began to work on the “feature/receive-messages” branch we were using the JavaPhoenixChannels library to help us to work with the channels. This had lead to issues, because JavaPhoenixChannels library was using the old version of OkHttp and they hadn’t synchronised the functions. A PR for their library has been accepted but they haven’t created a new release yet, so it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation etc.
+=======
+At first we decided to deal http requests using unirest library, but we changed this to Okhttp when we started to work on the receive messages feature, and we only need one client. As we began to work on the “feature/receive-messages” branch we were using the JavaPhoenixChannels library to help us to work with the channels. This had lead to issues, because JavaPhoenixChannels library was using the old version of OkHttp and they hadn’t synchronised the functions. A PR for their library has been accepted but they haven’t created a new release yet, so it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation etc. In the user interface graphics we started using Java Swing library for the login and registration form. After this implementation we changed to JavaFx graphics as we realise that JavaFx can give us the opportunity to apply css style design (buttons, colours, fonts) and improve the user interface experience. On more problem was the testing on our graphics for the reason that we used dialog pop up windows which are extremely hard to be tasted as they work individually and not as a part of our window. The solution on this came changing all the dialog (success messages, error messages, infomessages) to Labels on our javafx window forms. The last problem with UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e. conversationList\_user3 or login\_validuser.
+
+>>>>>>> 4d2197d9a5ec36fb4ecad4d9871458e8b8483cfb
 
 \subsection{Libraries}
 
 \section{Android Client}
 
 \subsection{Design}
-Unlike the Java client, the Android client is designed to be as simple as it can get, since a simple chat app should be as simple and easy to use as it can get. So to achieve this objective, the Android client has sleek but simple design through layouts of activities (i.e. views). 
-The login and registration layouts are primitive, with just a welcoming text, textboxes and buttons. However, the rest is designed to increase usability rather than having a better look for the application. 
-To indicate which view is for what functionality, Android Support Library’s ActionBar is used, which is the blue bar with white texts that is visible at every activity. This ActionBar brings sleeker look to the activities, since a simple TextView looks rather like a last-minute job patch, whilst simply states what that activity is for. 
-After the registration and login process, the application welcomes the users via a page with tabs. In Java client, the window can get large as it is desired, since it runs on desktop which has quite a lot of space on the screen. However, an Android device cannot be that big (Except tablets, which are the minority of the Android devices). So, to implement the three-fundamental functionality of chatting features, which are searching a user, chatting and having a chats list, a TabLayout is used. Via this element, one can switch through activities easily. The three functionality is separated to tabs as Chats, Search User and Current Chat. Unlike the Java client, the layout in Android client is designed to show the most recent chat, and users can access earlier chats through the list in Chat List tab. 
+Unlike the Java client, the Android client is designed to be as simple as it can get, since a simple chat app should be as simple and easy to use as it can get. So to achieve this objective, the Android client has sleek but simple design through layouts of activities (i.e. views).
+The login and registration layouts are primitive, with just a welcoming text, textboxes and buttons. However, the rest is designed to increase usability rather than having a better look for the application.
+To indicate which view is for what functionality, Android Support Library’s ActionBar is used, which is the blue bar with white texts that is visible at every activity. This ActionBar brings sleeker look to the activities, since a simple TextView looks rather like a last-minute job patch, whilst simply states what that activity is for.
+After the registration and login process, the application welcomes the users via a page with tabs. In Java client, the window can get large as it is desired, since it runs on desktop which has quite a lot of space on the screen. However, an Android device cannot be that big (Except tablets, which are the minority of the Android devices). So, to implement the three-fundamental functionality of chatting features, which are searching a user, chatting and having a chats list, a TabLayout is used. Via this element, one can switch through activities easily. The three functionality is separated to tabs as Chats, Search User and Current Chat. Unlike the Java client, the layout in Android client is designed to show the most recent chat, and users can access earlier chats through the list in Chat List tab.
 As one may know, Android system has a neat but small element called Toast to alert its user about errors or warnings. To display information to users, such as registration errors or information about successful logins, Toast is used on every occasion. The reason behind this is to maintain the sleek-but-simple design while making the implementation process for showing errors easier. One can choose Toast to have its easy implementation whilst having its minimalistic low profile appearance, rather than updating a TextView for errors.
 Since the group aimed for a sleek-but-simple design, the icon is also desired to be a unique but a simple one. In addition, it’s also a plus not to use the generic auto-generated Android icon. The icon is designed to reflect the simplicity and the fundamental functionality of the application, hence is formed from a simple chat balloon containing the application name with a plain clear and bold font, whilst having a blue background, which is same as the ActionBar of all the activities.
 
@@ -136,18 +143,18 @@ Since the group aimed for a sleek-but-simple design, the icon is also desired to
 The way of implementing the whole application, as in structure and features, is the same with the Java client. However, the technical implementation is a bit different. In Java client, as stated, MVC is used as architectural pattern. However, MVC pattern is not completely suitable for the Android environment’s activity based structure, mainly because of binding the layout updates on activities’ context. Hence, on the implementation of Android client an edited version of MVC is applied, where activities are considered as semi-controllers as well, which updates the layouts (i.e. views) but also handles some of the functionalities that is entitled to that activity. To give an example, the login activity handles getting input and giving information to the user, and at the same time handles the login request’s response from the backend, since it is forced to intervene the layout of an activity inside the activity’s own class. Nonetheless, this intervention on the actual design of MVC pattern doesn’t mean the architecture doesn’t have controller-to-model link. Main functionalities of the features of ChitChat are handled with controllers, and the business logic is handled via models.
 As Monarchs of Coding, the group wanted to deliver the application as many people as possible. For the sake of this objective, Android API level 19 (i.e. version 4.4 KitKat) is chosen as the minimum required API level, to cover approximately 75\% of the Android device pool, whilst having the necessary libraries that the API offers. Even though the minimum SDK is API level 19, the targeted API level for the Android client is API 25 (i.e. version 7.1) to reach the maximum amount of core and support Android libraries.
 As stated before, dependency injection is applied throughout the clients, for the sake of achieving inversion of control, which breaks down the code to make unit testing easier, primarily. To enable dependency injection, a library which is owned by Google called Dagger 2 (refer Android - Libraries for more information). Unlike Spring Framework, which is used for the Java client, Dagger 2 has a whole different structure to apply dependency injection, which required to create class files inside the root of the project directory.
-As the Java client, the Android client is using REST services to send requests to the backend. This decision resulted as having an easier and stateless implementation of requests sent to backend in Android client. To implement this service, many approaches came into practise. As a first approach, a request sending class is implemented with primitive HTTP classes which is provided with the Android core library. For the sake of ease of implementation and efficiency, this design scraped almost immediately. Before scrapping, AsyncTask is also considered to handle the primitive HTTP functions, but again for the same reason this solution also vetoed. To solve this problem without using any kind of thread, a library called Volley is used (refer Android – Libraries for more information). Via implementing the class for sending these requests with Volley, REST services became much easier to use inside the application. In addition, with getting rid of manual thread implementation, there is a considerable amount of improvement in efficiency and performance. 
+As the Java client, the Android client is using REST services to send requests to the backend. This decision resulted as having an easier and stateless implementation of requests sent to backend in Android client. To implement this service, many approaches came into practise. As a first approach, a request sending class is implemented with primitive HTTP classes which is provided with the Android core library. For the sake of ease of implementation and efficiency, this design scraped almost immediately. Before scrapping, AsyncTask is also considered to handle the primitive HTTP functions, but again for the same reason this solution also vetoed. To solve this problem without using any kind of thread, a library called Volley is used (refer Android – Libraries for more information). Via implementing the class for sending these requests with Volley, REST services became much easier to use inside the application. In addition, with getting rid of manual thread implementation, there is a considerable amount of improvement in efficiency and performance.
 To handle incoming messages and incoming requests from backend (like force logout), the Android application has an ongoing service in background. This service can get requests even the application is not in focus, and since there is no manual thread implementation is present, the resources for such a service is relatively low. To actually open a socket and a channel to the backend, a library called JavaPhoenixChannels (refer Android - Libraries for more information) is used.
 As explained above, encryption is enabled throughout the system of ChitChat. To enable this security measurement, a cryptologic class formed from Java’s own security class. This class is similar between Java and Android clients, with differences with the way encoding is handled, since Android only allows to use a Base64 class from its own library.
 
 \subsection{Testing}
-Like in Java client, exhaustive testing with branch coverage is applied to Android client as well. One can split this section into two to discuss; unit testing and UI testing. After the discussion about similarities and differences between clients in testing, the problems faced on testing phase will be discussed. 
+Like in Java client, exhaustive testing with branch coverage is applied to Android client as well. One can split this section into two to discuss; unit testing and UI testing. After the discussion about similarities and differences between clients in testing, the problems faced on testing phase will be discussed.
 
 \subparagraph{Unit Testing}
 The unit tests for the Android client implemented in a similar way to the Java client. The main reason for this is the fact that in Java and Android, JUnit is the best possible candidate to implement unit tests. Although some logic of testing the functionality is similar, the implementation of unit testing for these two clients made separately, mainly because the way of implementing the controllers for the features are different. However, test implementation parts like mocking a class are the same, since both environments uses JUnit as test class.
 
 \subparagraph{UI Testing}
-On the other hand, the UI tests are completely different from the Java client’s UI tests. Although the idea is the same, the way ıf implementation is different. To implement UI tests for the Android client, the group used Espresso (refer to Android – Libraries for more information). Espresso library enables one-line execution of UI actions on the application, hence it makes the implementation of an UI test much easier. The UI tests are designed to handle one activity’s whole functionality, so the tests are separated per activity, except for message sending functionalities, which is split into two as send and receive. 
+On the other hand, the UI tests are completely different from the Java client’s UI tests. Although the idea is the same, the way ıf implementation is different. To implement UI tests for the Android client, the group used Espresso (refer to Android – Libraries for more information). Espresso library enables one-line execution of UI actions on the application, hence it makes the implementation of an UI test much easier. The UI tests are designed to handle one activity’s whole functionality, so the tests are separated per activity, except for message sending functionalities, which is split into two as send and receive.
 
 \subparagraph{Problems Faced In Testing}
 A major hick-up in testing on the Android client is non-testable parts. As the nature of those classes, activities and services cannot be unit tested since they are counted as semi-view and semi-controllers in a sense. In addition, the way service works is like a thread. Hence, to write unit tests for these files is not sensible. Therefore, they are ignored in the coverage data fetched from JaCoCo. Fortunately, the activities are tested via UI tests. In addition, classes created for dependency injection are also ignored, since they are more like configuration files rather than normal class files that provides functionality for the features.
@@ -155,9 +162,9 @@ During unit tests’ implementation, we faced some constraints and rules about t
 
 \subsection{Problems Faced}
 Through the implementation of the Android client, problems and obstacles faced, which mainly caused by Android development environment’s rules. This discussion excludes the direct problems faced during the implementation of testing, which is covered in the testing section.
-At the very beginning of our implantation phase, which began with the implantation of the feature about registering a user, we tried many different REST service implementations, which is discussed in the implementation section of Android client section in this report. As a first approach, we implemented a manual thread with primitive HTTP functionality. This made unit testing on the Android client virtually impossible. In addition, maintaining such implementation is just an unnecessary burden, so this design idea is vetoed. As a follow-up, AsyncTask is used to entail the HTTP functionalities. This made some improvements around maintainability, but as in testability nothing is changed. So, for the third time the implementation of REST service requests changed. We settled on using Volley after some research, mainly for its maintainability, ease of implementation and making not using threaded functions possible. 
+At the very beginning of our implantation phase, which began with the implantation of the feature about registering a user, we tried many different REST service implementations, which is discussed in the implementation section of Android client section in this report. As a first approach, we implemented a manual thread with primitive HTTP functionality. This made unit testing on the Android client virtually impossible. In addition, maintaining such implementation is just an unnecessary burden, so this design idea is vetoed. As a follow-up, AsyncTask is used to entail the HTTP functionalities. This made some improvements around maintainability, but as in testability nothing is changed. So, for the third time the implementation of REST service requests changed. We settled on using Volley after some research, mainly for its maintainability, ease of implementation and making not using threaded functions possible.
 Another major problem we faced is about the search user feature. At first, the search bar for this feature is implemented with SearchView, which is a widget from Android support library. It features a sleek design with query functionality. Untill the start of implementing UI tests, SearchView is used for its sleek design and ease of use, rather than implementing a manual one with EditText and a button. However, as the UI tests came along we realized that it is virtually impossible to test the SearchView, mainly because of its hierarchy inside. Hence, the team swapped the SearchView with an implementation of manual search bar with an EditText and a button. Via this implementation, implementation of the UI tests focusing on search activity became more than possible.
-The major problem we faced that not about programming is the problems between Android Virtual Device (AVD) manager and Docker. Since both system use virtual machinery, the Mac OSX version of Docker clashed with the x86 Intel HAXM Acceleration system, which aids the AVD to be faster as in execution. Even though the Linux version didn’t cause any problems like this, this particular problem forced us to use ARM images in AVD to run the system on OSX machines, which is extremely heavy compared to x86 Intel images. After running the AVD with an ARM image, we realized that the heavy processing is not even bearable. Hence, the members that owns OSX machines participated on implementation of functionality and testing without running the AVD, while others did the manual testing on the code for the implementation that both them and the OSX machine users are responsible for.  
+The major problem we faced that not about programming is the problems between Android Virtual Device (AVD) manager and Docker. Since both system use virtual machinery, the Mac OSX version of Docker clashed with the x86 Intel HAXM Acceleration system, which aids the AVD to be faster as in execution. Even though the Linux version didn’t cause any problems like this, this particular problem forced us to use ARM images in AVD to run the system on OSX machines, which is extremely heavy compared to x86 Intel images. After running the AVD with an ARM image, we realized that the heavy processing is not even bearable. Hence, the members that owns OSX machines participated on implementation of functionality and testing without running the AVD, while others did the manual testing on the code for the implementation that both them and the OSX machine users are responsible for.
 
 \subsection{Libraries}
 \subparagraph{Android Open Source Project SDK 25}
@@ -171,9 +178,9 @@ Dagger 2 is a static dependency injection framework for Java and Android that wo
 \subparagraph{Volley}
 Volley is a HTTP library for Android that makes the implementation for REST services easier. \cite{website:volley_homepage}. After some manual implementation trials, we decided to use Volley for our REST requests, for its automatic request handling and ease of implementation with listeners, without threads.
 \subparagraph{JavaPhoenixChannels}
-JavaPhoenixChannels is an open-source project to provide a framework for client applications for communicating a backend that runs on Elixir/Phoenix \cite{website:java_phoenix_channels_homepage}. This framework provides us a simple, thread free listener service to listen to the backend for upcoming messages. The service for receiving messages is implemented with this framework. 
+JavaPhoenixChannels is an open-source project to provide a framework for client applications for communicating a backend that runs on Elixir/Phoenix \cite{website:java_phoenix_channels_homepage}. This framework provides us a simple, thread free listener service to listen to the backend for upcoming messages. The service for receiving messages is implemented with this framework.
 \subparagraph{JUnit}
-JUnit is a framework which aids through implementing repeatable unit tests \cite{website:junit_homepage}. It has many functionalities like different types of assertions and annotations for test files. As the Java client, during the implementation of the Android client we used JUnit to write the unit tests for the Android client. 
+JUnit is a framework which aids through implementing repeatable unit tests \cite{website:junit_homepage}. It has many functionalities like different types of assertions and annotations for test files. As the Java client, during the implementation of the Android client we used JUnit to write the unit tests for the Android client.
 \subparagraph{Mockito}
 Mockito is an object mocking library for unit testing that enables easy object mocking for programmers \cite {website:mockito_homepage}. Mockito is primarily used for object mocking the Android client’s unit tests.
 \subparagraph{Espresso}
@@ -181,33 +188,75 @@ Espresso is a testing library provided by Android’s testing support library, w
 
 \section{Backend}
 
-The backend for this application has been created with the Elixir programming language. Elixir is a functional language that uses the Erlang VM(Virtual Machine) to run its code \cite{website:elixir_homepage}. The primary reason choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. Without this functionality, we could have created a Redis cluster to handle the publish-subscribe channels, however this would have made the backend more complex.
+The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without elixir's distributed functionality, we could have created a Redis cluster to handle the publish-subscribe channels. However, this would have added more components to the backend, thus raising its complexity.
 
-\subsection{Libraries}
+\subsection{Phoenix Framework}
 
-\begin{tabular}{ | l | p{11cm} |}
-  \hline Package name & Usage \\ \hline
-  phoenix & todo \\
-  phoenix\_pubsub & todo \\
-  phoenix\_ecto & todo \\ \hline
-  postgrex & todo \\
-  comeonin & todo \\
-  guardian & todo \\
-  jose & todo \\ \hline
+The Phoenix Framework for Elixir follows the common Model-View-Controller(MVC) pattern and is currently the most starred Elixir project on GitHub (25th March 2017) \cite{website:github_elixir_trending}. We also chose to use this framework because it offered the most complete documentation, distributed sockets and an ORM.
+
+Using Phoenix, we created a Representational State Transfer(REST) API with the following endpoints:
+
+\begin{center}
+\begin{tabular}{ | l | l | l | p{4cm} |}
+  \hline
+  Endpoint & Method & Authenticated & Purpose \\
+  \hline
+  /api/v1/users & POST & No & Creates a given User. \\
+  \hline
+  /api/v1/users?username=X & GET & Yes & Returns a list of Users filtered by X and excluding the authenticated User. \\
+  \hline
+  /api/v1/users/X & GET & No & Returns a User identified by X. \\
+  \hline
+  /api/v1/auth & POST & No & Returns an authentication token for a User to make authenticated requests with. \\
+  \hline
+  /api/v1/messages & POST & Yes & Creates and sends a Message to a given User. \\
+  \hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Libraries}
+
+Below is a table of the other libraries that the backend uses.
+
+\begin{tabular}{ | l | l |}
+  \hline
+  Package name & Usage \\
+  \hline
+  phoenix & Web framework \\
+  phoenix\_pubsub & Distributed sockets \\
+  phoenix\_ecto & Object-Relational Mapper (ORM) \\
+  \hline
+  postgrex & Postgres connection adapter \\
+  comeonin & Hashing library with bcrypt \\
+  guardian & Authentication library \\
+  jose & JSON Object Signing and Encryption library \\
+  libcluster & Clustering using the Gossip protocol \\
+  \hline
   excoveralls & Coverage reporting \\
   credo & Static analysis \\
   dogma & Static analysis \\
+  distillery & Elixir packaging library \\
   \hline
 \end{tabular}
 
-\subsubsection{Phoenix Framework}
+\subsubsection{Testing}
 
+The Phoenix Framework also came with test examples which were easy to learn from and find documentation about. The backend has 98.6\% coverage through controller testing. Given more time we would have been able to test each Elixir module thoroughly. We are missing 1.4\% coverage because we define an Ecto schema for a Message model to take advantage of the validation features but do not use it in any persistence.
 
 \subsubsection{Static Analysis}
 
-Credo and Dogma
+Credo and Dogma are both code linters for Elixir. The main difference is that Credo focuses on code-readability, refactoring opportunities and inconsistency, whereas Dogma enforces rules from a style guide. We are using Dogma's default style guide \cite{website:elixir_dogma_rules}. These tools were important for us to use as none of us had any experience with Elixir before and so we wanted to learn and make sure we were writing "good" Elixir code.
 
-\subsection{Amazon Web Services with Hashicorp's Terraform}
+\subsection{Terraform with Amazon Web Services(AWS)}
+
+
+
+\subsection{Problems encountered}
+
+% Code style: case pyramids -> with do statement
+
+% Testable infrastructure code
+
 
 
 \chapter{Team Work}
@@ -220,13 +269,13 @@ Credo and Dogma
 \subsubsection{Why encryption}
 After the wikileaks of Snowden people become more aware about the security of their communications. It is very difficult to succeed on a 100 per cent secure system. On our implementation we used all the security protocols that we already knows and we change them in order to cover our application demandings. All of our exchanging messages are encrypted and we are using some id in order to avoid a man in the middle attack. Even if an attacker steal the encrypted message it is very hard to decrypt it as it takes a long time. Moreover the value of information that he is going to collect after decryption is useless as the keys change in every l666644og in of a user.
 \subsubsection{Username and Password}
-The first part of our application that we have to think about security was the front end implementation and specifically the registration form. We used two rules in order a user to be eligible to be sign up to our database. The first was his username to be at least 3 characters and his password 8. Both password and username are checked to the side of the front end and to the back end. The reason that we choose 8character length password it is for a future security implementation where we can use it as a signature of our user. 
+The first part of our application that we have to think about security was the front end implementation and specifically the registration form. We used two rules in order a user to be eligible to be sign up to our database. The first was his username to be at least 3 characters and his password 8. Both password and username are checked to the side of the front end and to the back end. The reason that we choose 8character length password it is for a future security implementation where we can use it as a signature of our user.
 \subsubsection{Json-Https}
-As we described above the client communicates with the server exchanging information. For this reason we used https connection exchanging Json messages. In order to implement this we used okhttp (Java Desktop) and Volley (Android). 
+As we described above the client communicates with the server exchanging information. For this reason we used https connection exchanging Json messages. In order to implement this we used okhttp (Java Desktop) and Volley (Android).
 \subsubsection{Authentication Tokens}
-After the registration process the user tries to login to our application using his username and his password. The server receives the https post request with his username and password and checks him on the database. If the user exists then he responds him with an authentication token .  This token it is used as signature on the header of the message when the user tries to sends a message to an other client. 
+After the registration process the user tries to login to our application using his username and his password. The server receives the https post request with his username and password and checks him on the database. If the user exists then he responds him with an authentication token .  This token it is used as signature on the header of the message when the user tries to sends a message to an other client.
 \subsubsection{Encryption}
-On the side of Encryption as we described to our previous sections we used Assymetric key encryption using a public and a private key. Both Java Desktop and Android Client use the same Java SE security libraries generating using RSA (ECB) the pair of keys using a 4096 key length during the generation process. 
+On the side of Encryption as we described to our previous sections we used Assymetric key encryption using a public and a private key. Both Java Desktop and Android Client use the same Java SE security libraries generating using RSA (ECB) the pair of keys using a 4096 key length during the generation process.
 \subsubsection{Server-Side maybe}
 
 % To what extent this system is secure.
@@ -235,11 +284,5 @@ On the side of Encryption as we described to our previous sections we used Assym
 
 \bibliographystyle{plain}
 \bibliography{final-report}{
-https://www.gnupg.org/
-https://en.wikipedia.org/wiki/RSA_(cryptosystem)
-http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136007.html
-http://junit.org/junit4/
-http://site.mockito.org/
-
 }
 \end{document}
