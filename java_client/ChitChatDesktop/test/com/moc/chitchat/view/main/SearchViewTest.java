@@ -26,7 +26,7 @@ public class SearchViewTest extends PrimaryStageTest {
     public static final String loginBtn = "#login-login-btn";
     public static final String registerBtn = "#login-register-btn";
     public static final String unexpectedErrors = "#login-errors-lbl";
-    public static final String credits = "#credits";
+    public static final String credits = "#base-footer-credits";
     /**
      * Test that the search view is visible.
      */
