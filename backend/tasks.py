@@ -5,7 +5,7 @@ import shutil
 from invoke_tools import lxc, system, vcs
 
 
-cli = APIClient(base_url='unix://var/run/docker.sock', timeout=600)
+cli = APIClient(base_url='unix://var/run/docker.sock', timeout=600, version="auto")
 
 def __check_branch():
   if os.getenv("TRAVIS_PULL_REQUEST") != "false":
