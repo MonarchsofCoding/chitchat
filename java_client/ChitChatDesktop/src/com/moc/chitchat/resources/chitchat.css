@@ -48,7 +48,7 @@
     -fx-font-family: 'Playfair Display', serif;
     -fx-font-weight: 700;
     -fx-font-size: 12pt;
-    -fx-text-fill: #F1FAEE;
+    -fx-text-fill: #FFFFFF;
 }
 
 #logout-button{
@@ -76,7 +76,7 @@
 
 }
 #base-footer-username {
-    -fx-text-fill: #F1FAEE;
+    -fx-text-fill: #FFFFFF;
 }
 
 #west-pane {
@@ -109,4 +109,20 @@
 }
 #conversation-pane {
     -fx-padding: 10px, 10px, 10px, 10px;
+}
+
+#login-errors-lbl,
+#register-username-errs,
+#register-passwordCheck-errs,
+#register-password-errs,
+#register-errors-lbl,
+#search-error-users-msg,
+#search-error-messages {
+    -fx-text-fill: #F33;
+}
+
+#conversation-chatHeader-lbl {
+    -fx-text-fill: #486a9a;
+    -fx-font-weight: bold;
+    -fx-font-size: 15pt;
 }

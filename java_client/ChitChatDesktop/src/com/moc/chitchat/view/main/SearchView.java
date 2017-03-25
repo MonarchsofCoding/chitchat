@@ -83,7 +83,6 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
      */
     public MigPane getContentPane() {
         this.errorUserMessage = new Label();
-        this.errorUserMessage.setTextFill(Color.RED);
         this.errorUserMessage.setId("search-error-users-msg");
         this.errorUserMessage.setVisible(false);
 
@@ -114,7 +113,6 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.errorMessage = new Label();
         this.errorMessage.setId("search-error-messages");
         this.errorMessage.setVisible(false);
-        this.errorMessage.setTextFill(Color.RED);
         searchForm.add(this.errorMessage, "span");
         MigPane searchPane = new MigPane();
         searchPane.add(searchForm, "span");

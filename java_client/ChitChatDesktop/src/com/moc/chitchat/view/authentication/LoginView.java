@@ -75,7 +75,6 @@ public class LoginView extends BaseView implements EventHandler<ActionEvent> {
 
         this.unexpectedErrors = new Label();
         this.unexpectedErrors.setId("login-errors-lbl");
-        this.unexpectedErrors.setTextFill(Color.RED);
         this.unexpectedErrors.setVisible(false);
         this.loginForm.add(this.unexpectedErrors, "wrap");
 

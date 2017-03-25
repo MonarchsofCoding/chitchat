@@ -62,7 +62,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
         this.usernameErrors = new Label();
         this.usernameErrors.setId("register-username-errs");
-        this.usernameErrors.setTextFill(Color.RED);
         this.usernameErrors.setVisible(false);
         registerForm.add(this.usernameErrors, "span");
 
@@ -75,7 +74,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
         this.passwordErrors = new Label();
         this.passwordErrors.setId("register-password-errs");
-        this.passwordErrors.setTextFill(Color.RED);
         this.passwordErrors.setVisible(false);
         registerForm.add(this.passwordErrors, "span");
 
@@ -88,7 +86,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
         this.passwordCheckErrors = new Label();
         this.passwordCheckErrors.setId("register-passwordCheck-errs");
-        this.passwordCheckErrors.setTextFill(Color.RED);
         this.passwordCheckErrors.setVisible(false);
         registerForm.add(this.passwordCheckErrors, "span");
 
@@ -100,7 +97,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
         this.unexpectedErrors = new Label();
         this.unexpectedErrors.setId("register-errors-lbl");
-        this.unexpectedErrors.setTextFill(Color.RED);
         this.unexpectedErrors.setVisible(false);
         registerForm.add(this.unexpectedErrors, "span");
 

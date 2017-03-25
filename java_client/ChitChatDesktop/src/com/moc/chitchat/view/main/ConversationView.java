@@ -87,8 +87,6 @@ public class ConversationView extends BaseView implements EventHandler<ActionEve
         }
 
         Label header = new Label(String.format("Chat with: %s", c.getOtherParticipant().getUsername()));
-        header.setFont(Font.font(null, FontWeight.BOLD, 15));
-        header.setTextFill(Color.BLUE);
         header.setId("conversation-chatHeader-lbl");
         this.conversationPane.add(header, "dock north");
         this.messages = FXCollections.observableArrayList(c.getMessages());

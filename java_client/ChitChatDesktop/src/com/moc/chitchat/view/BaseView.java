@@ -1,14 +1,10 @@
 package com.moc.chitchat.view;
 
-import com.moc.chitchat.model.Conversation;
-import com.moc.chitchat.view.main.ConversationListView;
-import com.moc.chitchat.view.main.ConversationView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
 
 /**
@@ -72,6 +68,8 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
         Label title = new Label("Chit Chat");
         title.setWrapText(true);
         title.setId("base-header-title");
+        header.add(title, "center, wrap");
+
         if (this.baseStage.getConfiguration() != null
                 && this.baseStage.getConfiguration().getLoggedInUser() != null) {
 
@@ -79,10 +77,7 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
             logout.setOnAction(this);
             logout.getStyleClass().add("logout-button");
             logout.setId("logout-button");
-            header.add(title, "center,wrap");
             header.add(logout, "center");
-        } else {
-            header.add(title, "center, wrap");
         }
 
         return header;
@@ -94,15 +89,13 @@ public abstract class BaseView implements EventHandler<ActionEvent> {
         footer.setLayout("fill");
         footer.getStyleClass().add("base-footer");
         Label credits = new Label("Created by: Monarchs of Coding");
-        credits.setTextFill(Color.WHITE);
-        credits.setId("credits");
+        credits.setId("base-footer-credits");
         footer.add(credits, "left");
         if (this.baseStage.getConfiguration() != null && this.baseStage.getConfiguration().getLoggedInUser() != null) {
             String username = this.baseStage.getConfiguration().getLoggedInUser().getUsername();
 
             Label loggedInAs = new Label(String.format("You are: %s", username));
             loggedInAs.setId("base-footer-username");
-            loggedInAs.setTextFill(Color.WHITE);
             footer.add(loggedInAs, "right");
 
         }
