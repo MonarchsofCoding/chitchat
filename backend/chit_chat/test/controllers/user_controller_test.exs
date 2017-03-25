@@ -168,6 +168,17 @@ defmodule ChitChat.UserControllerTest do
       assert json_response(conn, 422)["errors"] != %{}
     end
 
+    test "does not create User resource and renders errors when username has spaces", %{conn: conn} do
+      conn = conn
+      |> post("/api/v1/users", %{username: "bo aa", password: "password123"})
+
+      assert json_response(conn, 422)["errors"] == %{
+        "username" => [
+          "cannot contain spaces"
+        ]
+      }
+    end
+
     test "does not create duplicate User resource and renders errors when username is already taken", %{conn: conn} do
       conn
       |> post("/api/v1/users", %{username: "bob", password: "password123"})
