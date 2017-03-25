@@ -47,7 +47,7 @@
 #base-footer-credits {
     -fx-font-family: 'Playfair Display', serif;
     -fx-font-weight: 700;
-    -fx-font-size: 12pt;
+    -fx-font-size: 10pt;
     -fx-text-fill: #FFFFFF;
 }
 
@@ -86,8 +86,10 @@
 
 /* Required to set JFoenix ListView size */
 #search-user-list, #conversation-user-list {
-    -fx-pref-height: 400px;
+    -fx-pref-height: 500px;
     -fx-pref-width: 200px;
+    -fx-min-height: 60px;
+    -fx-min-width: 50px;
 }
 
 #conversation-messages-list {

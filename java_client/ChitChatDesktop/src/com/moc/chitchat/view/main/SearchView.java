@@ -25,7 +25,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tbee.javafx.scene.layout.fxml.MigPane;
@@ -92,18 +91,19 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.usernameField.setOnAction(this);
         MigPane searchForm = new MigPane();
         searchForm.add(this.errorUserMessage, "span");
-        searchForm.add(this.usernameField, "span");
+        searchForm.add(this.usernameField, "wrap");
 
         this.searchBtn = new JFXButton("Search");
         this.searchBtn.setId("search-btn");
         this.searchBtn.setOnAction(this);
-        searchForm.add(this.searchBtn, "span");
+        searchForm.add(this.searchBtn, "wrap");
 
         this.observableUserList = FXCollections.observableArrayList();
-        this.searchList = new JFXListView<>();
+        this.searchList = new ListView<>();
         this.searchList.setItems(this.observableUserList);
+        this.searchList.setPrefSize(140,300);
         this.searchList.setId("search-user-list");
-        searchForm.add(this.searchList, "span, grow");
+        searchForm.add(this.searchList, " wrap, grow");
 
         this.startConversationBtn = new JFXButton("Start Chat");
         this.startConversationBtn.setId("search-chat-btn");
@@ -115,7 +115,7 @@ public class SearchView extends BaseView implements EventHandler<ActionEvent> {
         this.errorMessage.setVisible(false);
         searchForm.add(this.errorMessage, "span");
         MigPane searchPane = new MigPane();
-        searchPane.add(searchForm, "span");
+        searchPane.add(searchForm, "wrap");
 
         return searchPane;
     }
