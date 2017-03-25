@@ -25,9 +25,10 @@ public class SearchViewTest extends PrimaryStageTest {
      * Test that the search view is visible.
      */
     @Test
-    public void test_search_view_is_visible() {
+    public void test_search_view_is_visible() throws InterruptedException {
         UserHelper.createUser(this, "search_user_visible", "search1234");
         UserHelper.loginUser(this, "search_user_visible", "search1234");
+        Thread.sleep(500);
         WestViewTest.enterSearchView(this);
 
         verifyThat(searchBtn, NodeMatchers.isEnabled());
@@ -50,7 +51,7 @@ public class SearchViewTest extends PrimaryStageTest {
      * Tests for username validation.
      */
     @Test
-    public void test_errors_username_validation() {
+    public void test_errors_username_validation() throws InterruptedException {
         UserHelper.createUser(this, "search_validation", "search1234");
         UserHelper.loginUser(this, "search_validation", "search1234");
         WestViewTest.enterSearchView(this);
@@ -67,6 +68,7 @@ public class SearchViewTest extends PrimaryStageTest {
 
         clickOn(usernameFld).write("register_nonexistent_user");
         clickOn(searchBtn);
+        Thread.sleep(500);
         verifyThat(errorUserMessage, NodeMatchers.isVisible());
         verifyThat(errorUserMessage, NodeMatchers.hasText("No User Available"));
     }
@@ -75,7 +77,7 @@ public class SearchViewTest extends PrimaryStageTest {
      * Tests that users are returned in the search view list.
      */
     @Test
-    public void test_search_users_found_list() {
+    public void test_search_users_found_list() throws InterruptedException {
         // Create dummy users
         UserHelper.createUser(this, "search_user1", "search1234");
         UserHelper.createUser(this, "search_user2", "search1234");
@@ -89,7 +91,7 @@ public class SearchViewTest extends PrimaryStageTest {
 
         clickOn(usernameFld).write("search_user");
         clickOn(searchBtn);
-
+        Thread.sleep(500);
         verifyThat(userList, NodeMatchers.anything());
     }
 }
