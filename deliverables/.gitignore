@@ -3,3 +3,5 @@
 *.pdf
 *.bbl
 *.blg
+*.gz
+*.toc
