@@ -4,6 +4,7 @@
 # generated build folders
 build
 /gen
+out
 
 # Java class files
 *.class
