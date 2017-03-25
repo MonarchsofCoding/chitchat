@@ -54,6 +54,7 @@ public class MessageHelper {
         fromUser.setAuthToken(authToken);
         c.setLoggedInUser(fromUser);
 
+
         HttpClient client = new HttpClient(c);
         Response userResp = client.get(String.format("/api/v1/users/%s", toUsername), new HashMap<String, Object>());
 
@@ -71,6 +72,8 @@ public class MessageHelper {
                 toUser,message,messageencrypt);
         client3.post("/api/v1/messages", newMessage);
 
+        r.body().close();
+        userResp.body().close();
     }
 
     public static void loginUser( String toUsername,String toPassword) throws Exception {
@@ -93,8 +96,7 @@ public class MessageHelper {
         user2.setPublicKey(userKeyPair.getPublic());
         user2.setPrivatekey(userKeyPair.getPrivate());
 
-         client2.post("/api/v1/auth", user2);
-
+        client2.post("/api/v1/auth", user2).body().close();
 
     }
 }

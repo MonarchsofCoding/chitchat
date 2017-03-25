@@ -145,6 +145,7 @@ public class MessageController {
                 JSONObject jsonobjectname = (JSONObject) obj;
                 from.setPublicKey(userResolver.getUserModelViaJSonObject(jsonobjectname).getPublicKey());
             }
+            //this added for the leakage of our okhttp
             response.body().close();
         }
         chitChatData.addMessageToConversation(from, message);

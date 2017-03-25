@@ -16,7 +16,6 @@ public class UserHelper {
      */
     public static void createUser(ApplicationTest testContext, String username, String password) {
         testContext.clickOn(LoginViewTest.registerBtn);
-
         testContext.clickOn(RegistrationViewTest.usernameFld).write(username);
         testContext.clickOn(RegistrationViewTest.passwordFld).write(password);
         testContext.clickOn(RegistrationViewTest.passwordCheckFld).write(password);
