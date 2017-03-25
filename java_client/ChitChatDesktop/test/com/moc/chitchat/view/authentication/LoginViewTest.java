@@ -3,6 +3,7 @@ package com.moc.chitchat.view.authentication;
 import com.moc.chitchat.view.PrimaryStageTest;
 import com.moc.chitchat.view.helper.UserHelper;
 import com.moc.chitchat.view.main.MainViewTest;
+import com.moc.chitchat.view.main.WestViewTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.testfx.matcher.base.NodeMatchers;
@@ -15,16 +16,16 @@ import static org.testfx.matcher.base.NodeMatchers.hasText;
  */
 public class LoginViewTest extends PrimaryStageTest {
 
-    public static final String viewPane = "#login-view-pane";
+    public static final String viewPane = "#login-view-form";
     public static final String usernameFld = "#login-username-fld";
     public static final String passwordFld = "#login-password-fld";
     public static final String loginBtn = "#login-login-btn";
     public static final String registerBtn = "#login-register-btn";
     public static final String unexpectedErrors = "#login-errors-lbl";
-    public static final String credits = "#credits";
+    public static final String credits = "#base-footer-credits";
 
     @Before
-    public void enterRegistrationView() {
+    public void enterLoginView() {
         System.out.println("Entering LoginView");
     }
 
@@ -33,6 +34,7 @@ public class LoginViewTest extends PrimaryStageTest {
      */
     @Test
     public void test_login_buttons_are_enabled(){
+
         verifyThat(usernameFld, NodeMatchers.isVisible());
         verifyThat(passwordFld, NodeMatchers.isVisible());
 
@@ -73,8 +75,8 @@ public class LoginViewTest extends PrimaryStageTest {
         clickOn(usernameFld).write("login_validUser");
         clickOn(passwordFld).write("validPassword");
         clickOn(loginBtn);
-        Thread.sleep(5000);
-        verifyThat(MainViewTest.viewPane, NodeMatchers.isVisible());
+        Thread.sleep(2000);
+        verifyThat(WestViewTest.westview, NodeMatchers.isVisible());
     }
 
 

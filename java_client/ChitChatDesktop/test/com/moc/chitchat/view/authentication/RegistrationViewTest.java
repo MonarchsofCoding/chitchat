@@ -96,14 +96,14 @@ public class RegistrationViewTest extends PrimaryStageTest {
      */
     @Test
     public void test_valid_registration() throws InterruptedException {
-        clickOn(usernameFld).write("register_validUser");
+        clickOn(usernameFld).write("register_validUser14");
         clickOn(passwordFld).write("register_validPassword");
         clickOn(passwordCheckFld).write("register_validPassword");
 
         clickOn(registerBtn);
 
         // Automatically returns to LoginView when registration is successful
-        Thread.sleep(1000);
+       // Thread.sleep(1000);
         verifyThat(LoginViewTest.viewPane, NodeMatchers.isVisible());
     }
 
@@ -125,7 +125,7 @@ public class RegistrationViewTest extends PrimaryStageTest {
         clickOn(passwordCheckFld).write("register_validPassword");
         clickOn(registerBtn);
 
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
 
         verifyThat(usernameErrs, NodeMatchers.isVisible());
     }
