@@ -30,6 +30,14 @@ public class SessionConfigurationTest {
     }
 
     @Test
+    public void testCleanCurrentUser() {
+        SessionConfiguration sessionConfiguration = new SessionConfiguration();
+        sessionConfiguration.setCurrentUser(mock(UserModel.class));
+        sessionConfiguration.cleanCurrentUser();
+
+    }
+
+    @Test
     public void testSetCurrentActivity() {
         SessionConfiguration sessionConfiguration = new SessionConfiguration();
         AppCompatActivity activity = mock(AppCompatActivity.class);
