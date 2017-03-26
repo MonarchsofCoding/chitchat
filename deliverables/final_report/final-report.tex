@@ -78,6 +78,17 @@ In our application we used a combination of this research as we described on the
 
 % Does overall system design go in here? Check final report handout.
 
+To fulfil the agreed requirements we brainstormed some ideas. The simplest solution would have been to implement an email-like system where messages are stored on a backend that clients would manually query for new messages. Instead, to retain the chat-like real-time messaging functionality we opted to use a publish-subscribe model where clients can subscribe to a channel as a \emph{consumer} which a \emph{producer} publishes messages to. With the pub-sub model, a chat program can be very simply implemented by making the following assignments:
+
+\begin{itemize}
+  \item Topic = Conversation.
+  \item Consumer + Producer = Paticipants in a conversation.
+\end{itemize}
+
+One issue with setting this up is that the backend will need to orchestrate the creation of new conversations. i.e. If Alice initiates a conversation with Bob, how can Bob find out that he also needs to subscribe to his and Alice's new topic?
+
+To resolve this, we have a topic for each unique user that they subscribe to when they log in. When Alice sends Bob a message, the backend will act as a postman and deliver Alice's message to Bob's topic which he will then recieve as a consumer. When Alice wants to send a message to Bob, she creates a message (letter) with Bob as the recipient.
+
 \chapter{Implementation}
 
 \subsection{Toolkit}
@@ -235,7 +246,7 @@ Using Phoenix, we created a Representational State Transfer(REST) API with the f
 \end{tabular}
 \end{center}
 
-Our users connect to a websocket endpoint at /api/v1/messages/websocket in order to receive messages they are sent in real-time.
+Our users connect to a websocket endpoint at /api/v1/messages/websocket in order to receive messages that they are sent in real-time.
 
 \subsubsection{Automatic clustering with libcluster}
 
