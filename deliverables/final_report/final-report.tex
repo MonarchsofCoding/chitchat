@@ -87,9 +87,6 @@ In our application we used a combination of this research as we described on the
   \item pyinvoke: A task runner in Python.
 \end{itemize}
 
-\subsection{Report}
-We used Java code coverage library to output our report for our testing…
-
 \section{Desktop Client}
 
 \subsection{Implementation}
@@ -115,7 +112,7 @@ Testing the code and its functionality has the same importance as writing our ac
 The second testing framework library that we used is Mockito. We used mocking for several of different reasons such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. We used it when we wanted to return a particular value when the method is called. E.g. in the “RegistrationControllerTest.java” the “testSuccessfulRegisterUser” test function we mocked the configuration object (which provides global configuration variables for the application). We mocked the configuration, because when our registration controller calls the http client to post we need a URL. The URL is retrieved from a function inside the configuration class. Therefore in line 62 we enable to provide the URL when “getBackendAddress“ function is called. We have also mocked the server by using “MockWebServer” library, which this allows us to specify the response and then we can verify the right nodes are being executed and test on what was returned. Hence, in our test function “testSuccessfulRegisterUser” we created a user named “test” and if the right nodes have been executed then user name would change to the expected username “alice”.
 
 \subparagraph{Problems Faced In Testing}
- In the user interface graphics we started using Java Swing library for the login and registration form. After this implementation we changed to JavaFx graphics as we realise that JavaFx can give us the opportunity to apply css style design (buttons,colours,fonts) and improve the user interface experience. On more problem was the testing on our graphics for the reason that we used dialog pop up windows which are extremely hard to be tasted as they work individually and not as a part of our window. The solution on this came changing all the dialog (success messages, error messages, infomessages) to Labels on our javafx window forms. The last problem with UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e. conversationList\_user3 or login\_validuser. One last problem we faced on testing the graphic was on the last week and specifically the 24th of March. The programmers of the library testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after change it tests executed normally. We mention this problem cause in order to find it we had to check again our project from the top(code) to the bottom (libraries) in order to find the bug. 
+ In the user interface graphics we started using Java Swing library for the login and registration form. After this implementation we changed to JavaFx graphics as we realise that JavaFx can give us the opportunity to apply css style design (buttons,colours,fonts) and improve the user interface experience. On more problem was the testing on our graphics for the reason that we used dialog pop up windows which are extremely hard to be tasted as they work individually and not as a part of our window. The solution on this came changing all the dialog (success messages, error messages, infomessages) to Labels on our javafx window forms. The last problem with UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e. conversationList\_user3 or login\_validuser. One last problem we faced on testing the graphic was on the last week and specifically the 24th of March. The programmers of the library testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after change it tests executed normally. We mention this problem cause in order to find it we had to check again our project from the top(code) to the bottom (libraries) in order to find the bug.
 
 
 
@@ -185,31 +182,11 @@ Espresso is a testing library provided by Android’s testing support library, w
 
 The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without elixir's distributed functionality, we could have created a Redis cluster to handle the publish-subscribe channels. However, this would have added more components to the backend, thus raising its complexity.
 
-\subsection{Phoenix Framework}
 
-The Phoenix Framework for Elixir follows the common Model-View-Controller(MVC) pattern and is currently the most starred Elixir project on GitHub (25th March 2017) \cite{website:github_elixir_trending}. We also chose to use this framework because it offered the most complete documentation, distributed sockets and an ORM.
+\subsection{Design}
 
-Using Phoenix, we created a Representational State Transfer(REST) API with the following endpoints:
 
-\begin{center}
-\begin{tabular}{ | l | l | l | p{4cm} |}
-  \hline
-  Endpoint & Method & Authenticated & Purpose \\
-  \hline
-  /api/v1/users & POST & No & Creates a given User. \\
-  \hline
-  /api/v1/users?username=X & GET & Yes & Returns a list of Users filtered by X and excluding the authenticated User. \\
-  \hline
-  /api/v1/users/X & GET & No & Returns a User identified by X. \\
-  \hline
-  /api/v1/auth & POST & No & Returns an authentication token for a User to make authenticated requests with. \\
-  \hline
-  /api/v1/messages & POST & Yes & Creates and sends a Message to a given User. \\
-  \hline
-\end{tabular}
-\end{center}
-
-\subsubsection{Libraries}
+\subsection{Libraries}
 
 Below is a table of the other libraries that the backend uses.
 
@@ -234,6 +211,36 @@ Below is a table of the other libraries that the backend uses.
   \hline
 \end{tabular}
 
+\subsubsection{Phoenix Framework}
+
+The Phoenix Framework for Elixir follows the common Model-View-Controller(MVC) pattern and is currently the most starred Elixir project on GitHub (25th March 2017) \cite{website:github_elixir_trending}. We also chose to use this framework because it offered the most complete documentation, distributed sockets and an ORM.
+
+Using Phoenix, we created a Representational State Transfer(REST) API with the following endpoints:
+
+\begin{center}
+\begin{tabular}{ | l | l | l | p{4cm} |}
+  \hline
+  Endpoint & Method & Authenticated & Purpose \\
+  \hline
+  /api/v1/users & POST & No & Creates a given User. \\
+  \hline
+  /api/v1/users?username=X & GET & Yes & Returns a list of Users filtered by X and excluding the authenticated User. \\
+  \hline
+  /api/v1/users/X & GET & No & Returns a User identified by X. \\
+  \hline
+  /api/v1/auth & POST & No & Returns an authentication token for a User to make authenticated requests with. \\
+  \hline
+  /api/v1/messages & POST & Yes & Creates and sends a Message to a given User. \\
+  \hline
+\end{tabular}
+\end{center}
+
+Our users connect to a websocket endpoint at /api/v1/messages/websocket in order to receive messages they are sent in real-time.
+
+\subsubsection{Automatic clustering with libcluster}
+
+Using libcluster created by Paul Schoenfelder(bitwalker) made connecting our containerised elixir backends together much easier. We use the \textit{gossip} configuration where each backend will use multicasting to find other containers within the same network and connect to them using a pre-defined shared key.
+
 \subsubsection{Testing}
 
 The Phoenix Framework also came with test examples which were easy to learn from and find documentation about. The backend has 98.6\% coverage through controller testing. Given more time we would have been able to test each Elixir module thoroughly. We are missing 1.4\% coverage because we define an Ecto schema for a Message model to take advantage of the validation features but do not use it in any persistence.
@@ -244,6 +251,33 @@ Credo and Dogma are both code linters for Elixir. The main difference is that Cr
 
 \subsection{Terraform with Amazon Web Services(AWS)}
 
+Amazon Web Services is the most popular public cloud computing provider today with 45\% market share \cite{website:geekwire_cloud_share}. Terraform is an open-sourced tool by Hashicorp that allows us to define our infrastructure as code, allowing us to 'spin up' and 'tear down' the backend programattically, saving us having to remember or document steps required to set-up in detail. We use the following Amazon Web Services products:
+
+\begin{tabular}{ | l | p{6cm} |}
+  \hline
+  Product name & Usage \\
+  \hline
+  Elastic Compute Cloud (EC2) & Virtual machines in a cloud data-center\\
+  EC2 Container Service (ECS) & Container orchestration \\
+  Simple Storage Service (S3) & Storage for build artifacts and built binaries \\
+  Virtual Private Cloud (VPC) & Isolation of cluster network\\
+  Elastic Load Balancing (ELB) & Reverse proxy distributing load to multiple container backends\\
+  AWS Certificate Manager (ACM) & SSL certificate generation\\
+  AWS Route 53 & Domain Name Server (DNS)\\
+  \hline
+\end{tabular}
+
+We also considered using Google Container Engine on Google Cloud Platform which is backed by Kubernetes (another container orchestration platform), but this was more complex to automate and so we stuck with Terraform and AWS ECS.
+
+\subsubsection{Weaveworks' Weave Net}
+
+A couple of Amazon ECS' biggest limitations is that it does not come with container service discovery or container networks.
+
+We required service discovery for our Elixir backend containers to find and the Postgres database containers to connect to. We managed to initially resolve this by using a workaround proposed from AWS' Blog and registering services on AWS Route 53 \cite{website:aws_ecs_dns}. This workaround worked, however this wasn't robust as if a service stopped, requesting containers would still attempt to connect to it until the DNS entry was updated which could take up to 5 minutes.
+
+For container networks, this is an on-going issue for the ECS agent \cite{website:github_user_network_issue} and so our only solution would have been to use 'host-networking' where the containers ports are mapped directly to the instance ports. This would mean that we could only run unique containers that have different ports on the same instance. i.e. only \textbf{one} Postgres database container and one Elixir backend container per instance as Postgres exposes port:5432 and the Elixir backend exposes port:80.
+
+Enter Weaveworks, who have created an open-sourced networking toolkit for containers which solves the above problems. It sits between Amazon's ECS agent and the instance's Docker engine to attach new containers onto a virtual network it creates between other EC2 instances in the same Amazon EC2 Auto Scaling Group (ASG). It also incorporates service discovery by providing a DNS server (named WeaveDNS) that answers any queries on the virtual network \cite{website:weave_dns}. This DNS is more affective than the previous Route53 method as if a container dies, the maximum amount of time it is left in the cache is around 30 seconds \cite{website:weave_dns_fault_tolerance}. We also used the ability to create virtual subnetworks in the weave network to isolate the different environments (alpha, beta and production) \cite{website:weave_subnet_allocation}.
 
 
 \subsection{Problems encountered}
@@ -251,14 +285,6 @@ Credo and Dogma are both code linters for Elixir. The main difference is that Cr
 % Code style: case pyramids -> with do statement
 
 % Testable infrastructure code
-
-
-
-\chapter{Team Work}
-
-\chapter{Evaluation}
-
-% What we've achieved.
 
 \section{Security}
 \subsubsection{Why encryption}
@@ -271,7 +297,31 @@ As we described above the client communicates with the server exchanging informa
 After the registration process the user tries to login to our application using his username and his password. The server receives the https post request with his username and password and checks him on the database. If the user exists then he responds him with an authentication token .  This token it is used as signature on the header of the message when the user tries to sends a message to an other client.
 \subsubsection{Encryption}
 On the side of Encryption as we described to our previous sections we used Assymetric key encryption using a public and a private key. Both Java Desktop and Android Client use the same Java SE security libraries generating using RSA (ECB) the pair of keys using a 4096 key length during the generation process.
-\subsubsection{Server-Side maybe}
+
+
+\chapter{Team Work}
+
+\subsection{Workflow}
+
+% Kanban Agile with Trello.
+
+% Travis Continuous Integration
+
+\subsection{Git Version Control System (VCS)}
+
+% Github
+
+% Decision for git flow over feature/PR
+
+% tying master = production, develop = beta. Pros and Cons.
+
+\subsubsection{Problems encountered}
+
+
+
+\chapter{Evaluation}
+
+% What we've learn and achieved.
 
 % To what extent this system is secure.
 
