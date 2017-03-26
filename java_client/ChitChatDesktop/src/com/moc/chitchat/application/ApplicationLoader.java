@@ -2,6 +2,8 @@ package com.moc.chitchat.application;
 
 import com.moc.chitchat.view.BaseStage;
 import java.util.List;
+
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,7 +50,9 @@ public class ApplicationLoader {
         stage.setOnCloseRequest(this.applicationCloser);
 
         // Show Authentication
+       
         this.baseStage.setPrimaryStage(stage);
+
         this.baseStage.show();
     }
 }

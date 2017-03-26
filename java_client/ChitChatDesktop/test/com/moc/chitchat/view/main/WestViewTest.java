@@ -8,7 +8,7 @@ import org.testfx.framework.junit.ApplicationTest;
 public class WestViewTest {
 
     public static final String togglePaneBtn = "#west-toggle-btn";
-
+    public static final String westview = "#west-pane";
     /**
      * Enters the SearchView.
      * @param testContext

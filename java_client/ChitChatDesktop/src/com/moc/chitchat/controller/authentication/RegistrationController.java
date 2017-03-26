@@ -6,7 +6,9 @@ import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
 import com.moc.chitchat.resolver.UserResolver;
 import com.moc.chitchat.validator.UserValidator;
+
 import java.io.IOException;
+
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,15 +27,16 @@ public class RegistrationController {
 
     /**
      * Registration controller provides the controller to register the use.
+     *
      * @param userResolver - used to create a user.
-     * @param validator - create to validate if correct credentials is inserted
-     * @param httpClient - the httpclient where it is used to provide access to the http APIs.
+     * @param validator    - create to validate if correct credentials is inserted
+     * @param httpClient   - the httpclient where it is used to provide access to the http APIs.
      */
     @Autowired
     public RegistrationController(
-        UserResolver userResolver,
-        UserValidator validator,
-        HttpClient httpClient
+            UserResolver userResolver,
+            UserValidator validator,
+            HttpClient httpClient
     ) {
         this.userResolver = userResolver;
         this.userValidator = validator;
@@ -42,10 +45,11 @@ public class RegistrationController {
 
     /**
      * Registering the user using the username, password and passwordCheck.
-     * @param username - this provides the input field username
-     * @param password - this provides the input field password
+     *
+     * @param username      - this provides the input field username
+     * @param password      - this provides the input field password
      * @param passwordCheck - this provides the input field passwordCheck
-     * @throws ValidationException - If invalid username,password or passwordcheck
+     * @throws ValidationException         - If invalid username,password or passwordcheck
      * @throws UnexpectedResponseException - Unexpected response
      * @throws IOException - If invalid
      */
@@ -73,6 +77,7 @@ public class RegistrationController {
             throw new UnexpectedResponseException(response);
         }
         response.body().close();
+
         return user;
     }
 }

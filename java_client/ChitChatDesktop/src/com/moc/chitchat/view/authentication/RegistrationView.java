@@ -1,5 +1,8 @@
 package com.moc.chitchat.view.authentication;
 
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import com.moc.chitchat.controller.authentication.RegistrationController;
 import com.moc.chitchat.exception.ValidationException;
 import com.moc.chitchat.model.UserModel;
@@ -49,57 +52,58 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
     public MigPane getContentPane() {
         this.baseStage.setWindowTitle("Chit Chat - Registration");
 
-        this.usernameField = new TextField();
+        this.usernameField = new JFXTextField();
         this.usernameField.setPromptText("Username");
         this.usernameField.setId("register-username-fld");
+        this.usernameField.setMinWidth(295.0); // 295.0 is the magic width
         MigPane registerForm = new MigPane();
         registerForm.setLayout("fill");
         registerForm.add(this.usernameField, "span");
 
         this.usernameErrors = new Label();
         this.usernameErrors.setId("register-username-errs");
-        this.usernameErrors.setTextFill(Color.RED);
         this.usernameErrors.setVisible(false);
         registerForm.add(this.usernameErrors, "span");
 
-        this.passwordField = new PasswordField();
+        this.passwordField = new JFXPasswordField();
         this.passwordField.setPromptText("Password");
         this.passwordField.setId("register-password-fld");
         this.passwordField.setOnAction(this);
+        this.passwordField.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.passwordField, "span");
 
         this.passwordErrors = new Label();
         this.passwordErrors.setId("register-password-errs");
-        this.passwordErrors.setTextFill(Color.RED);
         this.passwordErrors.setVisible(false);
         registerForm.add(this.passwordErrors, "span");
 
-        this.passwordCheckField = new PasswordField();
+        this.passwordCheckField = new JFXPasswordField();
         this.passwordCheckField.setPromptText("Re-Password");
         this.passwordCheckField.setId("register-passwordCheck-fld");
         this.passwordCheckField.setOnAction(this);
+        this.passwordCheckField.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.passwordCheckField, "span");
 
         this.passwordCheckErrors = new Label();
         this.passwordCheckErrors.setId("register-passwordCheck-errs");
-        this.passwordCheckErrors.setTextFill(Color.RED);
         this.passwordCheckErrors.setVisible(false);
         registerForm.add(this.passwordCheckErrors, "span");
 
-        this.registerBtn = new Button("Register");
+        this.registerBtn = new JFXButton("Register");
         this.registerBtn.setOnAction(this);
         this.registerBtn.setId("register-register-btn");
+        this.registerBtn.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.registerBtn, "span");
 
         this.unexpectedErrors = new Label();
         this.unexpectedErrors.setId("register-errors-lbl");
-        this.unexpectedErrors.setTextFill(Color.RED);
         this.unexpectedErrors.setVisible(false);
         registerForm.add(this.unexpectedErrors, "span");
 
-        this.loginBtn = new Button("Login");
+        this.loginBtn = new JFXButton("Login");
         this.loginBtn.setOnAction(this);
         this.loginBtn.setId("register-login-btn");
+        this.loginBtn.setMinWidth(295.0); // 295.0 is the magic width
         registerForm.add(this.loginBtn);
 
         MigPane registerPane = new MigPane();
@@ -148,7 +152,6 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
             Errors errors = validationException.getErrors();
             if (errors.hasErrors()) {
                 if (errors.hasFieldErrors("username")) {
-                    System.out.println("aaa" + errors.getFieldError("username").getDefaultMessage());
                     this.usernameErrors.setText(errors.getFieldError("username").getDefaultMessage());
                     this.usernameErrors.setVisible(true);
                 }
@@ -166,13 +169,16 @@ public class RegistrationView extends BaseView implements EventHandler<ActionEve
 
         } catch (Exception defaultError) {
             this.unexpectedErrors.setText("Unexpected error from the server");
+            this.unexpectedErrors.setVisible(true);
+            this.enableFieldsAndButtons(true);
+
             defaultError.printStackTrace();
         }
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == this.registerBtn) {
+        if (actionEvent.getSource() == this.registerBtn || actionEvent.getSource() == this.passwordCheckField) {
             this.registerAction();
         } else if (actionEvent.getSource() == this.loginBtn) {
             this.baseStage.showLogin();
