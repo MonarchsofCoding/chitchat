@@ -114,7 +114,7 @@ resource "aws_launch_configuration" "app" {
 
   /*image_id                    = "ami-48f9a52e"*/
   image_id                    = "ami-25adf356"
-  instance_type               = "t2.small"
+  instance_type               = "m3.medium"
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.app.name}"
   user_data                   = "${data.template_file.user_data.rendered}"
