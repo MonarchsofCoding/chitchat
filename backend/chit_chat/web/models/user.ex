@@ -31,6 +31,9 @@ defmodule ChitChat.User do
     |> validate_required([:username, :password])
     |> validate_length(:password, min: 8)
     |> validate_length(:username, min: 3)
+    |> validate_format(:username, ~r/^\S*$/, [
+      message: "cannot contain spaces"
+    ])
 
     if changeset.valid? do
       {:ok, changeset}
