@@ -308,8 +308,8 @@ As we described above the client communicates with the server exchanging informa
 After the registration process the user tries to login to our application using his username and his password. The server receives the https post request with his username and password and checks him on the database. If the user exists then he responds him with an authentication token .  This token it is used as signature on the header of the message when the user tries to sends a message to an other client.
 \subsubsection{Encryption}
 On the side of Encryption as we described to our previous sections we used Assymetric key encryption using a public and a private key. Both Java Desktop and Android Client use the same Java SE security libraries generating using RSA (ECB) the pair of keys using a 4096 key length during the generation process.
-
-
+\subsubsection{Limitations of our Encryption Scheme}
+Our implementation using encrypted with public key messages between clients does not allow to us to send a message bigger than 512bytes. The problem is that the message is too big to be encrypted on the side of sender and decrypted on the side of our receiver. For this reason we inform user when he tries to send a longer message than 64 characters. The second limitation is a future implementation of group chat as without using  Diffie Hellman key exchange protocol the success of 100 per cent encryption on a group chat messages is almost impossible. In our project we use RSA which is really slow for exchanging encrypted messages each time, but the time limitation make us to choose this implementation instead of Diffie Hellman.
 \chapter{Team Work}
 
 \subsection{Workflow}
