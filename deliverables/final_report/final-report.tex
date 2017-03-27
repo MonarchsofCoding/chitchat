@@ -157,6 +157,24 @@ Mockito is one of the testing frameworks that we have been using. There are seve
 In the beginning, we decided to deal with http requests using the unirest library. As we progressed throughout the project we decided to change to use the Okhttp library. This change took place when we the receive message branch was being worked out. Our first idea to help us with real time messaging we used the JavaPhoneixChannels library, as it was known for ease development for Java and Android clients. We found out that the JavaPhoneixChannels library had issues. It was using the old version of OkHttp and they had not synchronised the functions. A PR for their library has been accepted, but they haven’t created a new release yet. Therefore it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation.  
 
 \subsection{Libraries}
+\begin{table}[h!]
+  \centering
+  \caption{Libraries on JavaDesktop}
+  \begin{tabular}{ccc}
+    \toprule
+    Name & Use & Version\\
+    \midrule
+   Commons logging & Use of the logging in implementation & 1.2\\
+   JavaFx & Use for User Interface Graphics layouts & 2.0\\
+   Java SE Security & Implement Cryptographic functions & Java SE 8.0\\
+   Mig Layout & Use for JavaFx form layout & 5.0\\
+   okhttp3 & Use for http request[Post-Get] with Server  & 3.6.0\\
+   Spring Framework & Develop of Java Application using J2EE & 4.3.5\\
+   Testfx & Use for implementation of JavaFx tests ui  & 4.0.5\\
+
+    \bottomrule
+  \end{tabular}
+\end{table}
 \subparagraph{Spring Framework v4.3.5}
 \subparagraph{Commons logging v1.2}
 \subparagraph{Mig Layout v5.0}
