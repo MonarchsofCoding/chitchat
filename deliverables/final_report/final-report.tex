@@ -92,6 +92,20 @@ One issue with setting this up is that the backend will need to orchestrate the 
 
 To resolve this, we have a topic for each unique user that they subscribe to when they log in. When Alice sends Bob a message, the backend will act as a postman and deliver Alice's message to Bob's topic which he will then recieve as a consumer. When Alice wants to send a message to Bob, she creates a message (letter) with Bob as the recipient.
 
+\section{Feature}
+\subsection{User Registering a New Profile}
+As a start, every single user must be registered to use the system. Via this registration page, the client will collect the user’s credentials, which is the username and the password. The client will also ask for the password to be input again, to verify and check the password. Our acceptance criteria for this feature is; users being able to register, users prevented to register via a username that is already taken and users being obliged to supply the necessary inputs.
+\subsection{User Signs In}
+After the registration process, or a user can be already registered at this point, the user will sign in to be authorised to use the application by the backend. The user must input the correct credentials, as usual, to sign in successfully. Furthermore, on a successful sign in the backend will provide an authentication token which completes the authentication process. Our set acceptance criteria for this feature is; users being able to sign in with correct credentials and users being unable to sign in with invalid credentials.
+\subsection{User Being Able to Search the Users List}
+To initiate a chat, a user must search for the other user whom the user wants to communicate with. To complete this action, the user will input the desired username, or the shortened name with at least 3 characters, to the search box provided. The result from search will be the matching usernames per the queried text. The acceptance criteria for this functionality is; users being able to search for users on the system if they are logged in, allowing the search only if there are 3 or more characters in the query and the response not containing the currently logged in user.
+\subsection{User Can Send a Message}
+Users can send messages to the recipients via the message box provided. The only acceptance criteria we set is users being able to send messages to the recipients.
+\subsection{User Can Receive a Message}
+Users can receive a message from another signed in user when they are signed is as well. The only acceptance criteria present is users being able to receive messages that other users have sent them.
+\subsection{User Can Send and Receive Encrypted Messages}
+The system will use the encryption scheme that is explained below this section to enable encryption between sent and received messages between users. The acceptance criteria for this feature is; having end-to-end encryption on messages and signing out a user if the same credentials are used to sign in from another device.
+
 \chapter{Implementation}
 
 \subsection{Toolkit}
