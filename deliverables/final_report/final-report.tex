@@ -134,53 +134,49 @@ To keep track of the list of conversations and messages for the logged in user w
 We started to use checkstyle half way through this project to help us to get in a habit to write up to good standard code. As you can see from the commits from early into the project, we noticed our code not really readable and not clear cut. Therefore we added a check that if checkstyle fails then this would cause a failure in the build on Travis. This has helped the team massively on pushing us to write good code before we do a PR to the develop branch.
 
 \subsection{Testing}
-Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and the expected results that he wants to have from these tests.The first one, is the JUnit unit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after click on them, the error display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on Java Fx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register user name. 
+Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and the expected results that he wants to have from these tests.The first one, is the JUnit unit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after click on them, the error display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on Java Fx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register user name.
 
 \subparagraph{Verification and Validation}
 While developing and testing we kept our focus on making sure that the software system meets the requirements that we specified on trello, and does the system meets the users needs. Such as in our registration trello card our specification says that the user should be able to sign in, this is verified by our unit test and UI test, and validated by registering takes a reasonable amount of time to register a user.
 
-\subparagraph{Analysis and Testing} 
-Our tests were providing useful consistent results, essentially when they were failing; they were failing all the time and not just sometimes until the specific feature was fixed and it passes consistently. Our test cases do quite have long function names since we were attempting to increase redundant checks to catch specific faults. In reflection, we should have written doc strings for all our test cases instead of having really long test function names. We felt like we’ve done suitable restrictions to our features, so our testing was simpler and specific. When we were doing TDD this would help us on visibility on our features, so when are tests started to pass, we knew were making progress. In hindsight, we should have done more TDD to help us of keeping track of progress. 
+\subparagraph{Analysis and Testing}
+Our tests were providing useful consistent results, essentially when they were failing; they were failing all the time and not just sometimes until the specific feature was fixed and it passes consistently. Our test cases do quite have long function names since we were attempting to increase redundant checks to catch specific faults. In reflection, we should have written doc strings for all our test cases instead of having really long test function names. We felt like we’ve done suitable restrictions to our features, so our testing was simpler and specific. When we were doing TDD this would help us on visibility on our features, so when are tests started to pass, we knew were making progress. In hindsight, we should have done more TDD to help us of keeping track of progress.
 
 
-\subparagraph{Unit Testing} The dynamic testing methods we did are unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed. 
+\subparagraph{Unit Testing} The dynamic testing methods we did are unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed.
 
 \subparagraph{Mockito}
-Mockito is one of the testing frameworks that we have been using. There are several different reasons for mocking, such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. E.g. (RegistrationControllerTest.java, line 62) we mocked the configuration class because we weren’t testing that class, but we were testing the registerUser function that uses the Configuration. Hence, when the configuration is being used, we needed it to return a value we wanted to see if the expected nodes are being hit and producing the expected outcome. 
+Mockito is one of the testing frameworks that we have been using. There are several different reasons for mocking, such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. E.g. (RegistrationControllerTest.java, line 62) we mocked the configuration class because we weren’t testing that class, but we were testing the registerUser function that uses the Configuration. Hence, when the configuration is being used, we needed it to return a value we wanted to see if the expected nodes are being hit and producing the expected outcome.
 
 \subparagraph{Problems Faced In Testing}
- In the user interface graphics we started using Java Swing library for the login and registration form. After this implementation we changed to JavaFx graphics as we realise that JavaFx can give us the opportunity to apply css style design (buttons,colours,fonts) and improve the user interface experience. On more problem was the testing on our graphics for the reason that we used dialog pop up windows which are extremely hard to be tasted as they work individually and not as a part of our window. The solution on this came changing all the dialog (success messages, error messages, infomessages) to Labels on our javafx window forms. The last problem with UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e. conversationList\_user3 or login\_validuser. One last problem we faced on testing the graphic was on the last week and specifically the 24th of March. The programmers of the library testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after change it tests executed normally. We mention this problem cause in order to find it we had to check again our project from the top(code) to the bottom (libraries) in order to find the bug. We created a helper for our UI tests to reduce duplicate code of setting up a user. We made a mistake of not writing helper functions for each of our tests suites for unit testing, because we kept them updated and it did require a lot of work to do so. We learnt from this and during half way through the project when we started UI testing, so we made sure we wrote helper functions for our suites, so it was easier to keep them updated and the code is cleaner. 
+ In the user interface graphics we started using Java Swing library for the login and registration form. After this implementation we changed to JavaFx graphics as we realise that JavaFx can give us the opportunity to apply css style design (buttons,colours,fonts) and improve the user interface experience. On more problem was the testing on our graphics for the reason that we used dialog pop up windows which are extremely hard to be tasted as they work individually and not as a part of our window. The solution on this came changing all the dialog (success messages, error messages, infomessages) to Labels on our javafx window forms. The last problem with UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e. conversationList\_user3 or login\_validuser. One last problem we faced on testing the graphic was on the last week and specifically the 24th of March. The programmers of the library testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after change it tests executed normally. We mention this problem cause in order to find it we had to check again our project from the top(code) to the bottom (libraries) in order to find the bug. We created a helper for our UI tests to reduce duplicate code of setting up a user. We made a mistake of not writing helper functions for each of our tests suites for unit testing, because we kept them updated and it did require a lot of work to do so. We learnt from this and during half way through the project when we started UI testing, so we made sure we wrote helper functions for our suites, so it was easier to keep them updated and the code is cleaner.
 
 
 
 \subsection{Problems Faced}
-In the beginning, we decided to deal with http requests using the unirest library. As we progressed throughout the project we decided to change to use the Okhttp library. This change took place when we the receive message branch was being worked out. Our first idea to help us with real time messaging we used the JavaPhoneixChannels library, as it was known for ease development for Java and Android clients. We found out that the JavaPhoneixChannels library had issues. It was using the old version of OkHttp and they had not synchronised the functions. A PR for their library has been accepted, but they haven’t created a new release yet. Therefore it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation.  
+In the beginning, we decided to deal with http requests using the unirest library. As we progressed throughout the project we decided to change to use the Okhttp library. This change took place when we the receive message branch was being worked out. Our first idea to help us with real time messaging we used the JavaPhoneixChannels library, as it was known for ease development for Java and Android clients. We found out that the JavaPhoneixChannels library had issues. It was using the old version of OkHttp and they had not synchronised the functions. A PR for their library has been accepted, but they haven’t created a new release yet. Therefore it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation.
 
 \subsection{Libraries}
-\begin{table}[h!]
-  \centering
-  \caption{Libraries on JavaDesktop}
-  \begin{tabular}{ccc}
-    \toprule
-    Name & Use & Version\\
-    \midrule
-   Commons logging & Use of the logging in implementation & 1.2\\
-   JavaFx & Use for User Interface Graphics layouts & 2.0\\
-   Java SE Security & Implement Cryptographic functions & Java SE 8.0\\
-   Mig Layout & Use for JavaFx form layout & 5.0\\
-   okhttp3 & Use for http request[Post-Get] with Server  & 3.6.0\\
-   Spring Framework & Develop of Java Application using J2EE & 4.3.5\\
-   Testfx & Use for implementation of JavaFx tests ui  & 4.0.5\\
 
-    \bottomrule
-  \end{tabular}
-\end{table}
+\begin{tabular}{ | l | l | p{4cm} |}
+  \hline
+  Name & Use & Version \\
+  \hline
+  Commons logging & Use of the logging in implementation & 1.2\\
+  JavaFx & Use for User Interface Graphics layouts & 2.0\\
+  Java SE Security & Implement Cryptographic functions & Java SE 8.0\\
+  Mig Layout & Use for JavaFx form layout & 5.0\\
+  okhttp3 & Use for http request[Post-Get] with Server  & 3.6.0\\
+  Spring Framework & Develop of Java Application using J2EE & 4.3.5\\
+  Testfx & Use for implementation of JavaFx tests ui  & 4.0.5\\
+  \hline
+\end{tabular}
+
 \subparagraph{Spring Framework v4.3.5}
 \subparagraph{Commons logging v1.2}
 \subparagraph{Mig Layout v5.0}
 \subparagraph{okhttp3 v3.6.0}
 \subparagraph{testfx v4.0.5}
-
 
 \subsection{Design}
 Unlike the Java client, the Android client is designed to be as simple as it can get, since a simple chat app should be as simple and easy to use as it can get. So to achieve this objective, the Android client has sleek but simple design through layouts of activities (i.e. views).
@@ -211,7 +207,7 @@ On the other hand, the UI tests are completely different from the Java client’
 A major hick-up in testing on the Android client is non-testable parts. As the nature of those classes, activities and services cannot be unit tested since they are counted as semi-view and semi-controllers in a sense. In addition, the way service works is like a thread. Hence, to write unit tests for these files is not sensible. Therefore, they are ignored in the coverage data fetched from JaCoCo. Fortunately, the activities are tested via UI tests. In addition, classes created for dependency injection are also ignored, since they are more like configuration files rather than normal class files that provides functionality for the features.
 During unit tests’ implementation, we faced some constraints and rules about the Android development environment. Especially during the encryption tests, since Android forces the developer to use its own libraries in some cases, the tests didn’t work because Android environment strictly requires mocking every Android core library that is used. Unfortunately, we needed those functions, like encoding a string with Base64 to compare for test purposes. Thus, these tests that this problem are ignored as well, since they are already covered in UI tests as well.
 
-\subsection{Problems Faced}
+\subsection{Problems Faced} \label{android-problems-faced}
 Through the implementation of the Android client, problems and obstacles faced, which mainly caused by Android development environment’s rules. This discussion excludes the direct problems faced during the implementation of testing, which is covered in the testing section.
 At the very beginning of our implantation phase, which began with the implantation of the feature about registering a user, we tried many different REST service implementations, which is discussed in the implementation section of Android client section in this report. As a first approach, we implemented a manual thread with primitive HTTP functionality. This made unit testing on the Android client virtually impossible. In addition, maintaining such implementation is just an unnecessary burden, so this design idea is vetoed. As a follow-up, AsyncTask is used to entail the HTTP functionalities. This made some improvements around maintainability, but as in testability nothing is changed. So, for the third time the implementation of REST service requests changed. We settled on using Volley after some research, mainly for its maintainability, ease of implementation and making not using threaded functions possible.
 Another major problem we faced is about the search user feature. At first, the search bar for this feature is implemented with SearchView, which is a widget from Android support library. It features a sleek design with query functionality. Untill the start of implementing UI tests, SearchView is used for its sleek design and ease of use, rather than implementing a manual one with EditText and a button. However, as the UI tests came along we realized that it is virtually impossible to test the SearchView, mainly because of its hierarchy inside. Hence, the team swapped the SearchView with an implementation of manual search bar with an EditText and a button. Via this implementation, implementation of the UI tests focusing on search activity became more than possible.
@@ -239,7 +235,7 @@ Espresso is a testing library provided by Android’s testing support library, w
 
 \section{Backend}
 
-The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without elixir's distributed functionality, we could have created a Redis cluster to handle the publish-subscribe channels. However, this would have added more components to the backend, thus raising its complexity.
+The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without Elixir's distributed functionality, we could have created a Redis cluster to handle the publish-subscribe channels. However, this would have added more components to the backend, thus raising its complexity.
 
 
 \subsection{Design}
@@ -294,13 +290,13 @@ Using Phoenix, we created a Representational State Transfer(REST) API with the f
 \end{tabular}
 \end{center}
 
-Our users connect to a websocket endpoint at /api/v1/messages/websocket in order to receive messages that they are sent in real-time.
+After log-in, the clients connect to a websocket endpoint at /api/v1/messages/websocket and subscribe to a channel "user:\emph{username}", where \emph{username} is the currently logged in user, in order to receive messages that they are sent in real-time. The connection to both the websocket and channel is authenticated where only valid authentication tokens are accepted to the websocket and a user is only allowed to connect to their own designated channel.
 
 \subsubsection{Automatic clustering with libcluster}
 
-Using libcluster created by Paul Schoenfelder(bitwalker) made connecting our containerised elixir backends together much easier. We use the \textit{gossip} configuration where each backend will use multicasting to find other containers within the same network and connect to them using a pre-defined shared key.
+Using libcluster created by Paul Schoenfelder(bitwalker), we managed to connect our containerised Elixir backends together much easier. We use the \textit{gossip} configuration where each backend will use multicasting to find other containers within the same network and connect to them using a pre-defined shared key.
 
-\subsubsection{Testing}
+\subsection{Testing}
 
 The Phoenix Framework also came with test examples which were easy to learn from and find documentation about. The backend has 98.6\% coverage through controller testing. Given more time we would have been able to test each Elixir module thoroughly. We are missing 1.4\% coverage because we define an Ecto schema for a Message model to take advantage of the validation features but do not use it in any persistence.
 
@@ -332,11 +328,11 @@ We also considered using Google Container Engine on Google Cloud Platform which 
 
 A couple of Amazon ECS' biggest limitations is that it does not come with container service discovery or container networks.
 
-We required service discovery for our Elixir backend containers to find and the Postgres database containers to connect to. We managed to initially resolve this by using a workaround proposed from AWS' Blog and registering services on AWS Route 53 \cite{website:aws_ecs_dns}. This workaround worked, however this wasn't robust as if a service stopped, requesting containers would still attempt to connect to it until the DNS entry was updated which could take up to 5 minutes.
+We required service discovery for our Elixir backend containers to find the Postgres database container to connect to. We managed to initially resolve this by using a workaround proposed from AWS' Blog and registering services on AWS Route 53 \cite{website:aws_ecs_dns}. This workaround worked, however this wasn't robust as if a service stopped, requesting containers would still attempt to connect to it until the DNS entry was updated which could take up to 5 minutes.
 
-For container networks, this is an on-going issue for the ECS agent \cite{website:github_user_network_issue} and so our only solution would have been to use 'host-networking' where the containers ports are mapped directly to the instance ports. This would mean that we could only run unique containers that have different ports on the same instance. i.e. only \textbf{one} Postgres database container and one Elixir backend container per instance as Postgres exposes port:5432 and the Elixir backend exposes port:80.
+For container networks, this is an on-going issue for the ECS agent \cite{website:github_user_network_issue} and so our only solution would have been to use 'host-networking' where the containers ports are mapped directly to the instance ports. This would mean that we could only run unique containers that have different ports on the same instance. i.e. only \textbf{one} Postgres database container and one Elixir backend container per instance as Postgres exposes port tcp:5432 and the Elixir backend exposes port tcp:80.
 
-Enter Weaveworks, who have created an open-sourced networking toolkit for containers which solves the above problems. It sits between Amazon's ECS agent and the instance's Docker engine to attach new containers onto a virtual network it creates between other EC2 instances in the same Amazon EC2 Auto Scaling Group (ASG). It also incorporates service discovery by providing a DNS server (named WeaveDNS) that answers any queries on the virtual network \cite{website:weave_dns}. This DNS is more affective than the previous Route53 method as if a container dies, the maximum amount of time it is left in the cache is around 30 seconds \cite{website:weave_dns_fault_tolerance}. We also used the ability to create virtual subnetworks in the weave network to isolate the different environments (alpha, beta and production) \cite{website:weave_subnet_allocation}.
+Enter Weaveworks, who have created an open-sourced networking toolkit for containers which solves the above problems. It sits between Amazon's ECS agent and the instance's Docker engine to attach new containers onto a virtual network it creates between other EC2 instances in the same Amazon EC2 Auto Scaling Group (ASG). It also incorporates service discovery by providing a DNS server (named WeaveDNS) that answers any queries on the virtual network \cite{website:weave_dns}. This DNS is more effective than the previous Route53 method as if a container dies, the maximum amount of time it is left in the cache is around 30 seconds \cite{website:weave_dns_fault_tolerance}. We also used the ability to create virtual subnetworks in the weave network to isolate the different environments (alpha, beta and production) \cite{website:weave_subnet_allocation}.
 
 
 \subsection{Problems encountered}
@@ -358,27 +354,57 @@ After the registration process the user tries to login to our application using 
 On the side of Encryption as we described to our previous sections we used Assymetric key encryption using a public and a private key. Both Java Desktop and Android Client use the same Java SE security libraries generating using RSA (ECB) the pair of keys using a 4096 key length during the generation process.
 \subsubsection{Limitations of our Encryption Scheme}
 Our implementation using encrypted with public key messages between clients does not allow to us to send a message bigger than 512bytes. The problem is that the message is too big to be encrypted on the side of sender and decrypted on the side of our receiver. For this reason we inform user when he tries to send a longer message than 64 characters. The second limitation is a future implementation of group chat as without using  Diffie Hellman key exchange protocol the success of 100 per cent encryption on a group chat messages is almost impossible. In our project we use RSA which is really slow for exchanging encrypted messages each time, but the time limitation make us to choose this implementation instead of Diffie Hellman.
+
+
 \chapter{Team Work}
-In the first meeting, we first figured out the strengths and the weaknesses of everybody in certain technologies. After some debate, we decided to use Java for the desktop client, since most of the team members is proficient with it, and as the mobile client we decided on Android environment, since some of the members had experience from the past with it. Hence, the workload is divided per who is more proficient with what technology and environment. 
-As the development stage went on, the members primarily worked on the environment that they are proficient and comfortable with. One can say that assigning responsibility to a part or an environment of the project done via this information. However, there were considerable amount of peer programming happened when a teammate had a problem. We tend to taught and helped inside the group when one couldn’t solve a problem or couldn’t understand a part of a code, or couldn’t implement a certain algorithm on a feature. 
-During the development stage, we used Slack to maintain communication between team members. Furthermore, we used the code snippet sharing feature of Slack to share code snippets so that we can discuss implementation ideas outside of the meetings. Finally, with the workflow channel we see who’s build is failed or passed with the help Travis CI provides us, hence we can discuss why it failed and ways to fix it immediately without having a meeting for it. 
+In the first meeting, we first figured out the strengths and the weaknesses of everybody in certain technologies. After some debate, we decided to use Java for the desktop client, since most of the team members is proficient with it, and as the mobile client we decided on Android environment, since some of the members had experience from the past with it. Hence, the workload is divided per who is more proficient with what technology and environment.
+As the development stage went on, the members primarily worked on the environment that they are proficient and comfortable with. One can say that assigning responsibility to a part or an environment of the project done via this information. However, there were considerable amount of peer programming happened when a teammate had a problem. We tend to taught and helped inside the group when one couldn’t solve a problem or couldn’t understand a part of a code, or couldn’t implement a certain algorithm on a feature.
+During the development stage, we used Slack to maintain communication between team members. Furthermore, we used the code snippet sharing feature of Slack to share code snippets so that we can discuss implementation ideas outside of the meetings. Finally, with the workflow channel we see who’s build is failed or passed with the help Travis CI provides us, hence we can discuss why it failed and ways to fix it immediately without having a meeting for it.
 
 \subsection{Conflicts}
 As a group project it is really common the group members to have some conflicts between them. The reason of these conflicts is the different personalities and different programming approaches that a programmer has in order to give a solution on a problem. The first conflict happened on UI design as we changed three times the libraries from JavaFx->Java Swing->JavaFx again. That happened cause none of the members was experienced with these libraries before and we need 4 weeks to decide which is the most suitable for us after spending so many programming hours. This gave us the experience to deal with the second conflict which was choosing the encryption model for our application. The conflicts here appeared when each of the member had a different approach and present his solution as the most secure. Finally we discussed each possible implementation time for doing this, complexity of doing this and connection with the already application design. On each conflict (big or small) we decide that the discussion on meeting or on social platforms (slack, whats up ) is our solution. If we did not come in a final decision then the coordinator as the most experienced of us decided which solution we are going to implement.
 
 \subsection{Workflow}
 
-% Kanban Agile with Trello.
+\subsubsection{Kanban Agile with Trello}
 
-% Travis Continuous Integration
+We chose to base our workflow is loosely based off of Kanban Agile as it encourages teams to share responsibilty of getting work completed \cite{website:altassian_kanban} and meant that people could pick up work they were comfortable doing without assigning people to only work on one part of the system. We have 5 columns for our cards (\emph{features}) to traverse through:
 
-\subsection{Git Version Control System (VCS)}
+\begin{itemize}
+  \item Backlog: Holds cards that are ideas of features to implement in the project.
+  \item Specify: Holds cards that we are discussing the in-depth implementation of.
+  \item Implement: Holds cards that are currently being worked on.
+  \item Test: Holds cards that are on the \emph{develop} branch and thus deployed to the \emph{beta} environment.
+  \item Deployed: Holds cards that are on the \emph{master} branch and thus deployed to the \emph{production} environment.
+\end{itemize}
 
-% Github
+Whilst we did not have a formal Work-in progress (WIP) limit set for each column, we never saw our \emph{Specify} or \emph{Implement} stages go above 4 cards. When we did have 4 cards in the mix, there would still only be one \emph{feature} card from the specification and the other cards would be smaller improvements to the existing code-base e.g. "Infrastructure upgrade", "Incorporate UI testing".
 
-% Decision for git flow over feature/PR
+\subsubsection{Travis CI}
 
-% tying master = production, develop = beta. Pros and Cons.
+Travis CI is one of the most popular hosted continuous integration tools offering easy integration with GitHub projects. We had some experience with other CI tools like Jenkins CI, but as it is self-hosted we would have had to pay for the cloud computing resources we used and spend time setting it up. Travis CI had the lowest barriers for usage and so it was an easier choice.
+
+On Travis, we utilised the \emph{invoke} task runner and \emph{Docker} containers to orchestrate our tests. We also took advantage of the matrix configuration so that our tests could run in parallel \cite{website:travis_parallel}. Our matrix is:
+
+\begin{itemize}
+  \item backend: For the backend tests.
+  \item java\_client: For the desktop unit tests.
+  \item java\_client/e2e: For the desktop UI/E2E tests.
+  \item android\_client: For the Android unit tests.
+\end{itemize}
+
+Unfortunately, we were unable to have our Android UI/e2e (android/e2e) tests running on Travis as they only supported use of the ARM Android Virtual Device (AVD). As detailed earlier in \ref{android-problems-faced}, the ARM AVD was far too slow and unresponsive and so the tests would time-out. We are able to run them locally on our development machines using the "privileged" Docker flag to give the Android emulator access to the CPU extensions that accelerate the x86 image.
+
+A Travis CI build would fail if any tests, checkstyle or code-linting failed. This is achieved by the tasks returning a non-zero exit code. In Unix-like systems, a zero exit-code indicates that a program exited successfully and a non-zero exit code indicates that the program was unsuccesful. This really helped with our workflow as we could be confident that new code was not breaking older functionality (trusting that our older tests were correct).
+
+\subsubsection{Git Version Control System (VCS)}
+
+At the start of the project, only one of us had any experience using 'git' and they were most comfortable using the \emph{git-flow} strategy helped by the nvie/git-flow extension \cite{website:github_nvie_git_flow}. The \emph{git-flow} strategy adds roles to the branches "develop" and "master", where "develop" is used as the latest next-working release source code and "master" consists of released source code \cite{website:git_flow}. The main selling point of this strategy for us was that we could tie the branches so that "develop" was our beta environment and "master" was our production environment. This meant that we could have Travis automatically deploy the backend and create binaries depending on the branch. This also meant that we had an extra stage to test a release before it was created and it clearly divided the in-progress code-base to the released code.
+
+As the project wore on, and heeding concern from our lecturer, there was no code being merged into a master branch because we weren't ready to create a production-facing release. We thought more about the feature/pull-request model and speculated that we could do something similar to trunk-based development where there are no long-lived branches (except master) and achieve continuous deployment. Using this strategy, our master branch could automatically deploy to our testing environment and then we could \textbf{promote} the testing deployment to production when ready \cite{website:thoughtworks_trunk_based_development}.
+
+\subsubsection{Semantic Versioning}
+
 
 \subsubsection{Problems encountered}
 
@@ -389,6 +415,10 @@ As a group project it is really common the group members to have some conflicts 
 % What we've learn and achieved.
 
 % To what extent this system is secure.
+
+\subsection{Future Work}
+
+\subsubsection{Hide inactive users}
 
 \chapter{Peer Review}
 
