@@ -157,8 +157,12 @@ Mockito is one of the testing frameworks that we have been using. There are seve
 In the beginning, we decided to deal with http requests using the unirest library. As we progressed throughout the project we decided to change to use the Okhttp library. This change took place when we the receive message branch was being worked out. Our first idea to help us with real time messaging we used the JavaPhoneixChannels library, as it was known for ease development for Java and Android clients. We found out that the JavaPhoneixChannels library had issues. It was using the old version of OkHttp and they had not synchronised the functions. A PR for their library has been accepted, but they haven’t created a new release yet. Therefore it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation.  
 
 \subsection{Libraries}
+\subparagraph{Spring Framework v4.3.5}
+\subparagraph{Commons logging v1.2}
+\subparagraph{Mig Layout v5.0}
+\subparagraph{okhttp3 v3.6.0}
+\subparagraph{testfx v4.0.5}
 
-\section{Android Client}
 
 \subsection{Design}
 Unlike the Java client, the Android client is designed to be as simple as it can get, since a simple chat app should be as simple and easy to use as it can get. So to achieve this objective, the Android client has sleek but simple design through layouts of activities (i.e. views).
