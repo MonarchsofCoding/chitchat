@@ -3,7 +3,7 @@
     "name": "chit-chat_${environment}",
     "image": "monarchsofcoding/chitchat:release-${backend_version}",
     "essential": true,
-    "memoryReservation": 128,
+    "memoryReservation": 256,
     "portMappings": [
       {
         "containerPort": 80
