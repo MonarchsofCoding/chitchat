@@ -111,7 +111,7 @@ To keep track of the list of conversations and messages for the logged in user w
 We started to use checkstyle half way through this project to help us to get in a habit to write up to good standard code. As you can see from the commits from early into the project, we noticed our code not really readable and not clear cut. Therefore we added a check that if checkstyle fails then this would cause a failure in the build on Travis. This has helped the team massively on pushing us to write good code before we do a PR to the develop branch.
 
 \subsection{Testing}
-Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and the expected results that he wants to have from these tests.The first one, is the JUnit unit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after click on them, the error display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on Java Fx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register user name.
+Testing the code and its functionality has the same importance as writing our actual code. During the process of testing the programmer can test his code and verify the expected results from the tests. One of the testing frameworks we used is the JUnit testing framework where we test the functionality of our User-Interface environment. These tests include: the functionality of interface buttons and their behaviour after interaction, and the display messages after a wrong evaluation or error messages from the server and finally the transfer between stages and scenes on JavaFx. The main requirement for using this library was to set an unique ID for each object that we had to test and to create unique users depending on the scene that we were testing for instance login username or register username.
 
 \subparagraph{Verification and Validation}
 While developing and testing we kept our focus on making sure that the software system meets the requirements that we specified on trello, and does the system meets the users needs. Such as in our registration trello card our specification says that the user should be able to sign in, this is verified by our unit test and UI test, and validated by registering takes a reasonable amount of time to register a user.
@@ -140,7 +140,7 @@ Mockito is one of the testing frameworks that we have been using. There are seve
   JavaFx & Use for User Interface Graphics layouts & 2.0\\
   Jacoco & Use for Java code coverage & 0.7.8\\
   Java SE Security & Implement Cryptographic functions & Java SE 8.0\\
-  Jfoenix & Use for material design & 1.0.0
+  Jfoenix & Use for material design & 1.0.0\\
   Json & Use for transmit data & 20160810\\  
   Junit & Use for unit testing & 4.12\\
   Mig Layout & Use for JavaFx form layout & 5.0\\
