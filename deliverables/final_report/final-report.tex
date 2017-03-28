@@ -5,7 +5,7 @@
 \usepackage{textcomp}
 
 \begin{document}
-\[\title{Distributed Chat Application: Final Report}
+\title{Distributed Chat Application: Final Report}
 \author{Monarchs of Coding:\\
   Aigerim Serikbekova\\
   Aydin Akyol\\
@@ -40,11 +40,11 @@ MQTT stands for "Message Queuing Telemetry Transport". MQTT is a very light mess
 
 \subsection{Other Applications}
 In this part we are going to explain how in order to make our own application we took as an example WhatsApp, Facebook Messenger and WeChat.
-Firstly, the applications are similar with each other. To use this applications, you have to first register with your number and give all your personal details. WhatsApp, Facebook Messenger and WeChat are free to download. WhatsApp use an E2e encrypted security based messaging application for mobile devises.  It uses the Internet to communicate with other users by voice and video call, text messages, send pictures, documents and GIF. Also, possible to send geographical locations, contact details and audio and video files. Nowadays WhatsApp improved their feature and now it is similar to Snapchat, Facebook and Instagram stories. By this year WhatsApp the most popular messaging application around the world. It is a platform supports for iPhone, Android OS, BlackBerry, Symbian OS, Windows Phone and made available for personal computers for both Windows and macOS operating systems which calls WhatsApp Web. 
+Firstly, the applications are similar with each other. To use this applications, you have to first register with your number and give all your personal details. WhatsApp, Facebook Messenger and WeChat are free to download. WhatsApp use an E2e encrypted security based messaging application for mobile devises.  It uses the Internet to communicate with other users by voice and video call, text messages, send pictures, documents and GIF. Also, possible to send geographical locations, contact details and audio and video files. Nowadays WhatsApp improved their feature and now it is similar to Snapchat, Facebook and Instagram stories. By this year WhatsApp the most popular messaging application around the world. It is a platform supports for iPhone, Android OS, BlackBerry, Symbian OS, Windows Phone and made available for personal computers for both Windows and macOS operating systems which calls WhatsApp Web.
 
-Secondly, for WeChat have to download this app on a supported mobile devise for authentication. In this application you can text messaging, voice and broadcast messaging, make video conference like in Skype, play video games, sharing pictures, documents, music and location as well. Also you can exchange contacts with people nearby Bluetooth and a machine translator also available. Each user has personal WeChat account number which linked with bank card and any time can transfer money between users in you WeChat. Via these application users won’t get notices if messages are blocked. Filtering is strict on group chat and keywords are not static. 
-          
-Thirdly, the Messenger texting and software application which is integrated with Facebook web-based chat. All this application has the same function and features as WeChat and WhatsApp.  Apps supports multiple accounts, conversations with E2e encryption, letting users enter an app while inside Messenger and share details from the app into a chat. 
+Secondly, for WeChat have to download this app on a supported mobile devise for authentication. In this application you can text messaging, voice and broadcast messaging, make video conference like in Skype, play video games, sharing pictures, documents, music and location as well. Also you can exchange contacts with people nearby Bluetooth and a machine translator also available. Each user has personal WeChat account number which linked with bank card and any time can transfer money between users in you WeChat. Via these application users won’t get notices if messages are blocked. Filtering is strict on group chat and keywords are not static.
+
+Thirdly, the Messenger texting and software application which is integrated with Facebook web-based chat. All this application has the same function and features as WeChat and WhatsApp.  Apps supports multiple accounts, conversations with E2e encryption, letting users enter an app while inside Messenger and share details from the app into a chat.
 
 \subsection{Signal}
 Signal is a protocol developed by Open Whisper Systems. On this protocol clientsl using their mobile numbers as id can send end-to-end encrypted messages to each other. One of the feature of signal is that clients create a pair of public and private keys which are stored to the endpoints. Moreover, clients can be authenticated using key fingerprints (or scan QR codes). Using a passphrase the user can encrypt the whole database where he stores his messages. One last feature is that users can keep for a specific time their messages to the database using a timer. One of the limitation is that the user can be registered in only one device.
@@ -72,7 +72,11 @@ The system will use the encryption scheme that is explained below this section t
 
 \section{Overall Design}
 
-To fulfil the above requirements we brainstormed some ideas. The simplest solution would have been to implement an email-like system where messages are stored on a backend that clients would manually query for new messages. Instead, to retain the chat-like real-time messaging functionality we opted to use a publish-subscribe model where clients can subscribe to a channel as a \emph{consumer} which a \emph{producer} publishes messages to. With the pub-sub model, a chat program can be very simply implemented by making the following assignments:
+For our application to meet the demands of a popular chat application, it needed to be horizontally scalable. In order for us to achieve this, the backend needed to be stateless by not holding session information in a backend process and giving as much work to the clients as possible. We have built our chat application using the HTTP and Websocket application layer protocols so we did not need to re-invent anything in the lower layers of the TCP/IP stack.
+
+For user authentication, clients receive an access token upon login that they use to perform authenticated requests to the backend via HTTP headers.
+
+For sending messages, the simplest solution was to implement an email-like system where messages are stored on a backend that clients would manually query for new messages. Instead, to retain the chat-like real-time messaging feel we opted to use a publish-subscribe model where clients can subscribe to a channel as a \emph{consumer} which a \emph{producer} publishes messages to. With the pub-sub model, a chat program can be very simply implemented by making the following assignments:
 
 \begin{itemize}
   \item Topic = Conversation.
@@ -141,7 +145,7 @@ Mockito is one of the testing frameworks that we have been using. There are seve
   Jacoco & Use for Java code coverage & 0.7.8\\
   Java SE Security & Implement Cryptographic functions & Java SE 8.0\\
   Jfoenix & Use for material design & 1.0.0\\
-  Json & Use for transmit data & 20160810\\  
+  Json & Use for transmit data & 20160810\\
   Junit & Use for unit testing & 4.12\\
   Mig Layout & Use for JavaFx form layout & 5.0\\
   Mockito & Use for testing framework for Java & 2.+\\
@@ -209,6 +213,8 @@ Espresso is a testing library provided by Android’s testing support library, w
 \section{Backend}
 
 The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without Elixir's distributed functionality, we could have created a Redis cluster to handle the publish-subscribe channels. However, this would have added more components to the backend, thus raising its complexity.
+
+The backend is designed to be as stateless, allowing it be horizontally scalable. i.e. A client is able to send requests to any backend in a cluster without worrying about their session.
 
 \subsection{Libraries}
 
@@ -378,7 +384,10 @@ At the start of the project, only one of us had any experience using `git' and t
 
 \section{Git Branching}
 As the project wore on, and heeding concern from our lecturer, there was no code being merged into a master branch because we weren't ready to create a production-facing release. We thought more about the feature/pull-request model and speculated that we could do something similar to trunk-based development where there are no long-lived branches (except master) and achieve continuous deployment. Using this strategy, our master branch could automatically deploy to our testing environment and then we could \textbf{promote} the testing deployment to production when ready \cite{website:thoughtworks_trunk_based_development}.
-% automating the workflow
+
+At one point during this project, we had a main feature branch `feature/user-receives-message' alongside 2 extra improvement branches, `integration/testfx' and `infrastructure/distillery-swarm'. We ended up merging the extra branches into the main feature branch to make it easier for people to work on all of the features at the same time. This ended up with a very big Pull-Request once the main feature was finished with extra incomplete work. We took note of this and quickly grew to creating smaller, isolated Pull-Requests which were a lot easier to review.
+
+On 24th March, we accidentally merged a Pull-Request into our `master' branch which should not have been according to our git-flow strategy. We identified this immediately, but had to submit another Pull-Request to revert the changes. To help prevent human-errors, we thought about automating checks for the workflow. e.g. check if `feature' PRs are going into `develop'.
 
 \section{Encryption}
 Our implementation using encrypted with public key messages between clients does not allow to us to send a message bigger than 512bytes. The problem is that the message is too big to be encrypted on the side of sender and decrypted on the side of our receiver. For this reason we inform user when he tries to send a longer message than 64 characters. The second limitation is a future implementation of group chat as without using  Diffie Hellman key exchange protocol the success of 100 per cent encryption on a group chat messages is almost impossible. In our project we use RSA which is really slow for exchanging encrypted messages each time, but the time limitation make us to choose this implementation instead of Diffie Hellman.
@@ -397,11 +406,19 @@ The major problem we faced that not about programming is the problems between An
 
 In our Android and Java Desktop clients, you'll see that we throw exceptions inside controllers which are then caught by the activities/views to give feedback to the User.\ e.g. If validation fails, we throw a \emph{ValidationException}. The Elixir docs state that we shouldn't use errors for control flow and errors should be reserved for exceptional situations \cite{website:elixir_error_flow}. The first naive solution for this we found was to rely on the \emph{case} statement. However this led to pyramids of case statements which made controller code complex to read (see: \url{backend/chit_chat/web/controllers/user_controller.ex:14} at revision 700000be3). We resolved this after coming across the newer \emph{with-do} statement that Elixir offers \cite{website:elixir_with}. This statement allowed us to create a pipeline of functions to call and have an else, error atom matcher to handle when a function returned an error atom (see: \url{backend/chit_chat/web/controllers/user_controller.ex:17} at revision b6e008e).
 
-Another problem we had was checking if the infrastructure code in Terraform was actually deployable. It is harder to automate testing that something is deployable (without actually deploying it and running a health-check). This was only an issue in the first time we merged into develop and the deployment failed, thus causing the build to fail, but became another issue week beginning 20th March as we changed the infrastructure a lot and there were no checks. This resulted in some futher PRs that were unsuccessfully deployed. To resolve this, we've added a dry-run of infrastructure changes to the backend tests on Travis. This will check if the infrastructure code is theoretically deployable to the best of Terraform's knowledge, but we acknowledge that this might not always be 100\% safe. As a future improvement, we could try deploying and destroying a separate environment as part of the tests.
+Another problem we had was checking if the infrastructure code in Terraform was actually deployable. It is harder to automate testing of infrastructure without actually deploying it and running a health-check. This was only an issue in the first time we merged into develop and the deployment failed, thus causing the build to fail, but became another issue week beginning 20th March as we changed the infrastructure a lot and there were no checks in place. This resulted in some futher PRs that were also unsuccessfully deployed. To resolve this, we've added a dry-run of infrastructure changes to the backend tests on Travis. This will check if the infrastructure code is theoretically deployable to the best of Terraform's knowledge, but we acknowledge that this might not always be 100\% safe. As a future improvement, we could try deploying and destroying a separate environment as part of the tests.
 
 \section{Future Work}
 
-\subsubsection{Hide inactive users}
+Acknowledging that our project is far from perfect or complete, we have the following immediate issues to address.
+
+\subsection{Notify when public key changes}
+Currently, if two users, Alice and Bob, are conversing, and Bob logs in again elsewhere. Alice does not know that Bob's public key will have changed, and therefore will keep encrypting messages with Bob's old public key, and thus the new logged in Bob cannot read any further messages that Alice sends. This could be arguable as a security feature, but we would still need some feedback to say that Bob's public key has changed.
+
+\subsection{Hide inactive users}
+At the moment, there is no feedback on when users are active or inactive and so the backend returns users that might be offline, and if someone disconnects, their conversants are not notified. This results in people being able to send messages to people who are offline but their messages will be lost. This was quite difficult for us to find an implementation for as the backend can't rely on the clients to notify if they log out. One solution would be to check if the client disconnects from the websocket to first set a user offline. We also have to notify the people that they were talking to that they have gone offline. Phoenix offers a Presence module that resolves this by sending a diff of users to a given channel \cite{website:elixir_phoenix_presence}. This would mean that the clients have to subscribe to an extra `presence:users' channel and then filter the users joining and leaving to the users that they are interested in.
+
+An alternative solution could be if we introduced a friendship feature, the backend could keep track friendships and then notify whoever the user is friends with when they become active or inactive.
 
 \chapter{Peer Assessment}
 
@@ -454,5 +471,4 @@ Given that 5 members had none to little experience in using git; writing unit te
 
 \bibliographystyle{plainurl}
 \bibliography{final-report}{}
-\]
 \end{document}
