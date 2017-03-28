@@ -158,7 +158,7 @@ Mockito is one of the testing frameworks that we have been using. There are seve
 \section{Android Client}
 
 \subsection{Design}
-Unlike the Java client, the Android client is designed to be as simple as it can get, since a simple chat app should be as simple and easy to use as it can get. So to achieve this objective, the Android client has sleek but simple design through layouts of activities (i.e.\ views).
+The Android client is designed to be simple and easy to use. To achieve this objective, we followed existing templated layouts of activities (i.e.\ views).
 The login and registration layouts are primitive, with just a welcoming text, textboxes and buttons. However, the rest is designed to increase usability rather than having a better look for the application.
 To indicate which view is for what functionality, Android Support Library’s ActionBar is used, which is the blue bar with white texts that is visible at every activity. This ActionBar brings sleeker look to the activities, since a simple TextView looks rather like a last-minute job patch, whilst simply states what that activity is for.
 After the registration and login process, the application welcomes the users via a page with tabs. In Java client, the window can get large as it is desired, since it runs on desktop which has quite a lot of space on the screen. However, an Android device cannot be that big (Except tablets, which are the minority of the Android devices). So, to implement the three-fundamental functionality of chatting features, which are searching a user, chatting and having a chats list, a TabLayout is used. Via this element, one can switch through activities easily. The three functionality is separated to tabs as Chats, Search User and Current Chat. Unlike the Java client, the layout in Android client is designed to show the most recent chat, and users can access earlier chats through the list in Chat List tab.
@@ -212,9 +212,9 @@ Espresso is a testing library provided by Android’s testing support library, w
 
 \section{Backend}
 
-The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without Elixir's distributed functionality, we could have created a Redis cluster to handle the publish-subscribe channels. However, this would have added more components to the backend, thus raising its complexity.
+The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without Elixir's distributed functionality, we could have created a Redis cluster to handle any publish-subscribe channels. However, this would have added more components to the backend, raising its complexity.
 
-The backend is designed to be as stateless, allowing it be horizontally scalable. i.e. A client is able to send requests to any backend in a cluster without worrying about their session.
+The backend is designed to be stateless, allowing it be horizontally scalable. i.e. A client is able to send requests to any backend in a cluster without worrying about which node it gets sent to.
 
 \subsection{Libraries}
 
@@ -269,7 +269,7 @@ After log-in, the clients connect to a websocket endpoint at \url{/api/v1/messag
 
 \subsubsection{Automatic clustering with libcluster}
 
-Using libcluster created by Paul Schoenfelder(bitwalker), we managed to connect our containerised Elixir backends together much easier. We use the \textit{gossip} configuration where each backend will use multicasting to find other containers within the same network and connect to them using a pre-defined shared key.
+Using libcluster created by Paul Schoenfelder(bitwalker), we managed to connect our containerised Elixir backends together. We use the \textit{gossip} configuration where each backend will use multicasting to find other containers within the same network and connect to them using a pre-defined shared key.
 
 \subsection{Testing}
 
@@ -277,11 +277,11 @@ The Phoenix Framework also came with test examples which were easy to learn from
 
 \subsubsection{Static Analysis}
 
-Credo and Dogma are both code linters for Elixir. The main difference is that Credo focuses on code-readability, refactoring opportunities and inconsistency, whereas Dogma enforces rules from a style guide. We are using Dogma's default style guide \cite{website:elixir_dogma_rules}. These tools were important for us to use as none of us had any experience with Elixir before and so we wanted to learn and make sure we were writing "good" Elixir code.
+Credo and Dogma are both code linters for Elixir. Credo focuses on code-readability, refactoring opportunities and inconsistency, whereas Dogma enforces rules from a style guide. We are using Dogma's default style guide \cite{website:elixir_dogma_rules}. These tools were important for us to use as none of us had any experience with Elixir before and so whilst we learnt we wanted to make sure that we were writing "good" Elixir code.
 
 \subsection{Terraform with Amazon Web Services}
 
-Amazon Web Services (AWS) is the most popular public cloud computing provider today with 45\% market share \cite{website:geekwire_cloud_share}. Terraform is an open-sourced tool by Hashicorp that allows us to define our infrastructure as code, allowing us to `spin up' and `tear down' the backend programattically, saving us having to remember or document steps required to set-up in detail. We use the following Amazon Web Services products:
+Amazon Web Services (AWS) is the most popular public cloud computing provider today with 45\% market share \cite{website:talkincloud_cloud_share}. Terraform is an open-sourced tool by Hashicorp that allows us to define our infrastructure as code, allowing us to `spin up' and `tear down' the backend programattically, saving us having to remember or document steps required to set-up in detail. We use the following Amazon Web Services products:
 
 \begin{tabular}{| l | p{6cm} |}
   \hline
@@ -313,19 +313,19 @@ Enter Weaveworks, who have created an open-sourced networking toolkit for contai
 \section{Security}
 
 \subsubsection{Why encryption}
-After the wikileaks of Snowden people become more aware about the security of their communications. It is very difficult to succeed on a 100 per cent secure system. On our implementation we used all the security protocols that we already knows and we change them in order to cover our application demandings. All of our exchanging messages are encrypted and we are using some id in order to avoid a man in the middle attack. Even if an attacker steal the encrypted message it is very hard to decrypt it as it takes a long time. Moreover the value of information that he is going to collect after decryption is useless as the keys change in every l666644og in of a user.
+After the wikileaks of Snowden people become more aware about the security of their communications. It is very difficult to succeed on a 100 per cent secure system. On our implementation we used all the security protocols that we already knows and we change them in order to cover our application demandings. All of our exchanging messages are encrypted and we are using some id in order to avoid a man in the middle attack. Even if an attacker steal the encrypted message it is very hard to decrypt it as it takes a long time. Moreover the value of information that he is going to collect after decryption is useless as the keys change in every log in of a user.
 
 \subsubsection{Username and Password}
-The first part of our application that we have to think about security was the front end implementation and specifically the registration form. We used two rules in order a user to be eligible to be sign up to our database. The first was his username to be at least 3 characters and his password 8. Both password and username are checked to the side of the front end and to the back end. The reason that we choose 8character length password it is for a future security implementation where we can use it as a signature of our user.
+We used two basic rules in our registration validation. The first was their username must be longer than 3 characters. The second is that their password must be longer than 8 characters.
 
 \subsubsection{HTTPS and WSS}
 Both of our clients communicate with the backend over the Hypertext Transport Secure (HTTPS) and the WebSocket-Secure (WSS) protocols to provide a layer of security when sending a user's credentials for authentication.
 
 \subsubsection{Authentication Tokens}
-After the registration process the user tries to login to our application using his username and his password. The server receives the https post request with his username and password and checks him on the database. If the user exists then he responds him with an authentication token. This token it is used as signature on the header of the message when the user tries to sends a message to an other client.
+When a user logs into the application, the client sends a HTTPS POST request to the backend with their credentials. If the credentials are valid, the server responds with an authentication token for the user/client to use in further correspondence. This authentication token is a JSON Web Token \cite{website:json_web_tokens} that holds the username encrypted. When the backend recieves this token in a header, it decryptes the token to find the username and therefore a user can be authenticated.
 
 \subsubsection{Encryption}
-On the side of Encryption as we described to our previous sections we used Assymetric key encryption using a public and a private key. Both Java Desktop and Android Client use the same Java SE security libraries generating using RSA (ECB) the pair of keys using a 4096 key length during the generation process.
+For Encryption, as we described in our previous sections we have used asymmetric encryption using a public and private key-pair. Both the Java Desktop and Android Client use the same Java SE security libraries to generate RSA key-pairs with a 4096-bit key length.
 
 \subsection{Applying to our application}
 In our application we used a combination of this research as we described on the previous paragraphs and we manage to use our application in both desktop and mobile device for the one user. In order to succeed on this approach we put some limitations to our system. The first is that user does not keep any message history on his local data as everything is deleted when the users are log out. The second one is that each time the user tries to connect from a different device he creates a different public-private key pair. The new generated public key replaces the previous in our webserver database. That helps our user to protect his message even if his device was stolen or even if he had forgotten his application open to a, accessible from others, device.
@@ -337,7 +337,7 @@ As the development stage went on, the members primarily worked on the environmen
 During the development stage, we used Slack to maintain communication between team members. Furthermore, we used the code snippet sharing feature of Slack to share code snippets so that we can discuss implementation ideas outside of the meetings. Finally, with the workflow channel we see who’s build is failed or passed with the help Travis CI provides us, hence we can discuss why it failed and ways to fix it immediately without having a meeting for it.
 
 \subsection{Conflicts}
-As a group project it is really common the group members to have some conflicts between them. The reason of these conflicts is the different personalities and different programming approaches that a programmer has in order to give a solution on a problem. The first conflict happened on UI design as we changed three times the libraries from Java FX \textrightarrow{} Java Swing \textrightarrow{} Java FX again. That happened cause none of the members was experienced with these libraries before and we need 4 weeks to decide which is the most suitable for us after spending so many programming hours. This gave us the experience to deal with the second conflict which was choosing the encryption model for our application. The conflicts here appeared when each of the member had a different approach and present his solution as the most secure. Finally we discussed each possible implementation time for doing this, complexity of doing this and connection with the already application design. On each conflict (big or small) we decide that the discussion on meeting or on social platforms (Slack, Whatsapp) is our solution. If we did not come in a final decision then the coordinator as the most experienced of us decided which solution we are going to implement.
+As a group project it is really common the group members to have some conflicts between them. The reason of these conflicts is the different personalities and different programming approaches that a programmer has in order to give a solution on a problem. The first conflict happened on UI design as we changed three times the libraries from Java FX \textrightarrow{} Java Swing \textrightarrow{} Java FX again. That happened cause none of the members was experienced with these libraries before and we need 4 weeks to decide which is the most suitable for us after spending so many programming hours. This gave us the experience to deal with the second conflict which was choosing the encryption model for our application. The conflicts here appeared when each of the member had a different approach and present his solution as the most secure. Finally we discussed each possible implementation time for doing this, complexity of doing this and connection with the already application design. On each conflict (big or small) we decide that the discussion on meeting or on social platforms (Slack, Whatsapp) is our solution.
 
 \subsection{Workflow}
 
@@ -378,10 +378,6 @@ At the start of the project, only one of us had any experience using `git' and t
 
 \chapter{Evaluation}
 
-% What we've learnt and achieved.
-
-% To what extent this system is secure.
-
 \section{Git Branching}
 As the project wore on, and heeding concern from our lecturer, there was no code being merged into a master branch because we weren't ready to create a production-facing release. We thought more about the feature/pull-request model and speculated that we could do something similar to trunk-based development where there are no long-lived branches (except master) and achieve continuous deployment. Using this strategy, our master branch could automatically deploy to our testing environment and then we could \textbf{promote} the testing deployment to production when ready \cite{website:thoughtworks_trunk_based_development}.
 
@@ -390,10 +386,10 @@ At one point during this project, we had a main feature branch `feature/user-rec
 On 24th March, we accidentally merged a Pull-Request into our `master' branch which should not have been according to our git-flow strategy. We identified this immediately, but had to submit another Pull-Request to revert the changes. To help prevent human-errors, we thought about automating checks for the workflow. e.g. check if `feature' PRs are going into `develop'.
 
 \section{Encryption}
-Our implementation using encrypted with public key messages between clients does not allow to us to send a message bigger than 512bytes. The problem is that the message is too big to be encrypted on the side of sender and decrypted on the side of our receiver. For this reason we inform user when he tries to send a longer message than 64 characters. The second limitation is a future implementation of group chat as without using  Diffie Hellman key exchange protocol the success of 100 per cent encryption on a group chat messages is almost impossible. In our project we use RSA which is really slow for exchanging encrypted messages each time, but the time limitation make us to choose this implementation instead of Diffie Hellman.
+Our implementation for encryption (with public keys) meant that we cannot send messages larger than 512 bytes. We inform the user when they try to send a message longer than 128 characters. In other protocols, e.g. HTTP over SSL, Asymmetric encryption is used to communicate a shared key for symmetric encryption between parties. Symmetric encryption is much faster than Asymmetric encryption and so we could encrypt longer messages. This could be implemented using the Diffie-Helman protocol in the future. For group conversations, we could orchestrate the group Diffie-Helman protocol to generate a shared key between participating users.
 
 \section{Development of Java Client}
-In the beginning, we decided to deal with http requests using the unirest library. As we progressed throughout the project we decided to change to use the Okhttp library. This change took place when we the receive message branch was being worked out. Our first idea to help us with real time messaging we used the JavaPhoneixChannels library, as it was known for ease development for Java and Android clients. We found out that the JavaPhoneixChannels library had issues. It was using the old version of OkHttp and they had not synchronised the functions. A PR for their library has been accepted, but they haven’t created a new release yet. Therefore it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation.
+In the beginning, we decided to deal with HTTP requests using the Unirest library. As we progressed throughout the project we changed to the OKHttp library. This change took place when we the receive message branch was being worked out. Our first idea to help us with real time messaging we used the JavaPhoneixChannels library, as it was known for ease development for Java and Android clients. We found out that the JavaPhoneixChannels library had issues. It was using the old version of OkHttp and they had not synchronised the functions. A PR for their library has been accepted, but they haven’t created a new release yet. Therefore it was easier for us to write our own websocket client using a new version of OkHttp. In hindsight we should have looked at the channel client libraries first, because this did require a lot of work to change our tests, and to understand the implementation.
 
 
 \section{Development of Android Client} \label{android-problems-faced}
@@ -415,7 +411,7 @@ Acknowledging that our project is far from perfect or complete, we have the foll
 \subsection{Notify when public key changes}
 Currently, if two users, Alice and Bob, are conversing, and Bob logs in again elsewhere. Alice does not know that Bob's public key will have changed, and therefore will keep encrypting messages with Bob's old public key, and thus the new logged in Bob cannot read any further messages that Alice sends. This could be arguable as a security feature, but we would still need some feedback to say that Bob's public key has changed.
 
-\subsection{Hide inactive users}
+\subsection{Hiding inactive users}
 At the moment, there is no feedback on when users are active or inactive and so the backend returns users that might be offline, and if someone disconnects, their conversants are not notified. This results in people being able to send messages to people who are offline but their messages will be lost. This was quite difficult for us to find an implementation for as the backend can't rely on the clients to notify if they log out. One solution would be to check if the client disconnects from the websocket to first set a user offline. We also have to notify the people that they were talking to that they have gone offline. Phoenix offers a Presence module that resolves this by sending a diff of users to a given channel \cite{website:elixir_phoenix_presence}. This would mean that the clients have to subscribe to an extra `presence:users' channel and then filter the users joining and leaving to the users that they are interested in.
 
 An alternative solution could be if we introduced a friendship feature, the backend could keep track friendships and then notify whoever the user is friends with when they become active or inactive.
@@ -445,7 +441,7 @@ Initially, we set up a spreadsheet in which we could grade each other and see ou
 \end{tabular}
 \end{center}
 
-Given that 5 members had none to little experience in using git; writing unit tests; implementing Model-View-Controller; or using Inversion of Control; there was a big learning curve at the start and throughout the project as we implemented a RESTful backend with a publish-subscribe model. 3 members managed to learn and contribute to the implementation of this, and it is clear from comparing their commits at the start of the module to the end that they have learnt and improved a lot.
+Given that 5 members had none to little experience in using git; writing unit tests; implementing Model-View-Controller; or using Inversion of Control; there was a big learning curve at the start and throughout the project as we implemented a RESTful backend alongside a publish-subscribe websocket. 3 members managed to learn and contribute to the implementation of this, and it is clear from comparing their commits at the start of the module to the end that they have learnt and improved a lot.
 
 \subsection{Final Marks}
 
