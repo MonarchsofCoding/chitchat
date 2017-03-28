@@ -2,9 +2,8 @@
   {
     "name": "chit-chat_${environment}",
     "image": "monarchsofcoding/chitchat:release-${backend_version}",
-    "cpu": 20,
-    "memory": 256,
     "essential": true,
+    "memoryReservation": 128,
     "portMappings": [
       {
         "containerPort": 80
