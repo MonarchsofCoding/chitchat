@@ -382,9 +382,6 @@ At the start of the project, only one of us had any experience using `git' and t
 
 As the project wore on, and heeding concern from our lecturer, there was no code being merged into a master branch because we weren't ready to create a production-facing release. We thought more about the feature/pull-request model and speculated that we could do something similar to trunk-based development where there are no long-lived branches (except master) and achieve continuous deployment. Using this strategy, our master branch could automatically deploy to our testing environment and then we could \textbf{promote} the testing deployment to production when ready \cite{website:thoughtworks_trunk_based_development}.
 
-\subsubsection{Semantic Versioning}
-
-
 \subsubsection{Problems encountered}
 
 % automating the workflow
@@ -401,7 +398,54 @@ As the project wore on, and heeding concern from our lecturer, there was no code
 
 \subsubsection{Hide inactive users}
 
-\chapter{Peer Review}
+\chapter{Peer Assessment}
+
+\subsection{Method}
+Initially, we set up a spreadsheet in which we could grade each other and see our consolidated marks. However, it was difficult for some members to give reasonable justification and so we looked to our GitHub repository as a starting point. We used \begin{verbatim}git log --all --shortstat --author="<name>"\end{verbatim} to give us how many additions each author has across all branches. We have removed Vijendra Patel's initial commits for the frameworks used in each component totaling 3,034 additions (5b8d9a4(104) + b7e902a(455) + 5ff54c0(2,475)) to give a fairer view. As of 28th March 2017 we have the following results:
+
+\begin{center}
+\begin{tabular}{| l | l | l |}
+  \hline
+  Team Member & Additions & Percentage of Total Additions\\
+  \hline
+  Aigerim Serikbekova & 93 & 0.24\\
+  \hline
+  Aydin Akyol & 8,540 & 21.74\\
+  \hline
+  Fareed Qaseem & 32 & 0.08\\
+  \hline
+  Spyridon Kousidis & 5,091 & 12.96\\
+  \hline
+  Ozhan Azizi & 5,429 & 13.82\\
+  \hline
+  Vijendra Patel & 20,100 & 51.16\\
+  \hline
+\end{tabular}
+\end{center}
+
+Given that 5 members had none to little experience in using git; writing unit tests; implementing Model-View-Controller; or using Inversion of Control; there was a big learning curve at the start and throughout the project as we implemented a RESTful backend with a publish-subscribe model. 3 members managed to learn and contribute to the implementation of this, and it is clear from comparing their commits at the start of the module to the end that they have learnt and improved a lot.
+
+\subsection{Final Marks}
+
+\begin{center}
+\begin{tabular}{| l | l |}
+  \hline
+  Team Member & Mark out of 100 \\
+  \hline
+  Aigerim Serikbekova & 3\\
+  \hline
+  Aydin Akyol & 23\\
+  \hline
+  Fareed Qaseem & 2\\
+  \hline
+  Spyridon Kousidis & 23\\
+  \hline
+  Ozhan Azizi & 23\\
+  \hline
+  Vijendra Patel & 26\\
+  \hline
+\end{tabular}
+\end{center}
 
 \bibliographystyle{plainurl}
 \bibliography{final-report}{}
