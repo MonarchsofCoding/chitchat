@@ -8,3 +8,11 @@
 *.mp4
 *.flv
 *.gz
+*.aux
+*.log
+*.pdf
+*.bbl
+*.blg
+*.gz
+*.toc
+
