@@ -185,10 +185,14 @@ Dagger 2 is a static dependency injection framework for Java and Android that wo
 Volley is a HTTP library for Android that makes the implementation for REST services easier. \cite{website:volley_homepage}. After some manual implementation trials, we decided to use Volley for our REST requests, for its automatic request handling and ease of implementation with listeners, without threads.
 \subparagraph{JavaPhoenixChannels}
 JavaPhoenixChannels is an open-source project to provide a framework for client applications for communicating a backend that runs on Elixir/Phoenix \cite{website:java_phoenix_channels_homepage}. This framework provides us a simple, thread free listener service to listen to the backend for upcoming messages. The service for receiving messages is implemented with this framework.
+\subparagraph{JSON}
+JSON is a lightweight data format that is easy to read and write \cite{website:json_homepage}. It is used to form the body of requests and handle responses to/from the backend.
 \subparagraph{JUnit}
 As the Java client, during the implementation of the Android client we used JUnit to write the unit tests for the Android client \cite{website:junit_homepage}.
 \subparagraph{Mockito}
 Mockito is primarily used for object mocking the Android client’s unit tests \cite {website:mockito_homepage}.
+\subparagraph{Dexmaker}
+Dexmaker is an API for compile time or runtime code generation \cite{website:dexmaker_homepage}. It must be included to Android projects because Mockito requires Dexmaker in Android project to run properly.
 \subparagraph{Espresso}
 Espresso is a testing library provided by Android’s testing support library, which provides an API for implementing UI tests in Android via many user action simulating functionalities \cite{website:espresso_homepage}. It is simply an API close to what JUnit does to the UI tests in Android, hence we used Espresso to develop our UI tests.
 
