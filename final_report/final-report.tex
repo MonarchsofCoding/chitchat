@@ -30,10 +30,10 @@ At the beginning of the work, we defined several features that our system should
 \section{Messaging Protocols}
 
 \subsection{XMPP}
-XMPP stands for "Extensible Messaging and Presence Protocol". It is an open XML technology for real-time communications. Many applications use XMPP due to its ability to determine the state of each entity, and its ability to determine if the entity is online, offline, or busy, etc. XMPP also uses a unique and very efficient messaging exchanging mechanism, while other protocols create many unnecessary steps and packets which might not satisfy the real-time characteristics. One more interesting feature of XMPP is that it is scalable and adaptive, and it is designed to grow and adapt to size changes.
+XMPP stands for `Extensible Messaging and Presence Protocol'. It is an open XML technology for real-time communications. Many applications use XMPP due to its ability to determine the state of each entity, and its ability to determine if the entity is online, offline, or busy, etc. XMPP also uses a unique and very efficient messaging exchanging mechanism, while other protocols create many unnecessary steps and packets which might not satisfy the real-time characteristics. One more interesting feature of XMPP is that it is scalable and adaptive, and it is designed to grow and adapt to size changes.
 
 \subsection{MQTT}
-MQTT stands for "Message Queuing Telemetry Transport". MQTT is a very light messaging protocol which is used for peer to peer messages exchanging usually, and it uses publish/subscribe communication pattern as well. It is a good choice for applications that run over different types of networks which may experience different levels of latencies. Therefore, many messages exchanging applications use MQTT nowadays, such as Facebook Messenger. And it is used widely not only because of it is efficient mechanism, but also because it is ability to preserve battery power due to the few actions it requires to work. It is worthy to mention that MQTT is used to implement many IoT applications as well.
+MQTT stands for `Message Queuing Telemetry Transport'. MQTT is a very light messaging protocol which is used for peer to peer messages exchanging usually, and it uses publish/subscribe communication pattern as well. It is a good choice for applications that run over different types of networks which may experience different levels of latencies. Therefore, many messages exchanging applications use MQTT nowadays, such as Facebook Messenger. And it is used widely not only because of it is efficient mechanism, but also because it is ability to preserve battery power due to the few actions it requires to work. It is worthy to mention that MQTT is used to implement many IoT applications as well.
 
 \section{Existing Messaging Applications}
 
@@ -42,7 +42,7 @@ We have looked at other applications on how they handle security such as WhatsAp
 
 For WeChat application you can do text messaging, voice and broadcast messaging, make video conference like in Skype, play video games, sharing pictures, documents, translation, music and location as well. You can exchange contacts with people nearby using Bluetooth. Each user has personal WeChat account number that is linked with a bankcard, and any time can transfer money between users in WeChat. Via these application users won’t get notices if messages are blocked. Filtering is strict on group chat and keywords are not static.
 
-The Facebook Messenger software application is integrated with Facebook web-based chat. These applications are similar with each other on their features. Apps support multiple accounts; conversations with E2e encryption, letting users enter an app while inside Messenger and share details from the app into a chat. Applications like these have influenced us on how we should deal with security on our application, and how they could affect features. 
+The Facebook Messenger software application is integrated with Facebook web-based chat. These applications are similar with each other on their features. Apps support multiple accounts; conversations with E2e encryption, letting users enter an app while inside Messenger and share details from the app into a chat. Applications like these have influenced us on how we should deal with security on our application, and how they could affect features.
 
 \subsection{Signal}
 Signal is a protocol developed by Open Whisper Systems. On this protocol clients using their mobile numbers as id so that they can send end-to-end encrypted messages to each other. One of the features of Signal is that clients create a pair of public and private keys which are stored to the endpoints. Moreover, clients can be authenticated using key fingerprints (or scan QR codes). Using a passphrase the user can encrypt the whole database where he/she stores his messages. One last feature is that users can keep for a specific time their messages to the database using a timer. One of the limitation is that the user can be registered in only one device.
@@ -124,19 +124,19 @@ Our tests were providing useful consistent results, essentially when they were f
 
 \subparagraph{Unit Testing} The dynamic testing methods we did are unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed.
 
-\subparagraph{Regression Testing} Since every commit runs a build on Travis this will run all the tests for that build, so we can catch any accidental changes that we do. This is one of the methods we use to verify the software and making sure we did not break any other features that we had. 
+\subparagraph{Regression Testing} Since every commit runs a build on Travis this will run all the tests for that build, so we can catch any accidental changes that we do. This is one of the methods we use to verify the software and making sure we did not break any other features that we had.
 
 \subparagraph{Mockito}
 Mockito is one of the testing frameworks that we have been using. There are several different reasons for mocking, such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. E.g. (RegistrationControllerTest.java, line 62) we mocked the configuration class because we weren’t testing that class, but we were testing the registerUser function that uses the Configuration. Hence, when the configuration is being used, we needed it to return a value we wanted to see if the expected nodes are being hit and producing the expected outcome.
 
-\subparagraph{Problems Faced In Testing} 
-For the user interface, the graphics library we started to use was Java Swing library for the login and registration form. After this implementation we changed to JavaFx library as we realise that JavaFx can give us the opportunity to apply CSS style design (e.g. colours, fonts) and improve the user interface experience. 
+\subparagraph{Problems Faced In Testing}
+For the user interface, the graphics library we started to use was Java Swing library for the login and registration form. After this implementation we changed to JavaFx library as we realise that JavaFx can give us the opportunity to apply CSS style design (e.g.\ colours, fonts) and improve the user interface experience.
 
-One of the problems we had was the testing on our UI was that we used dialog pop up windows which are extremely hard to be tested, because they work individually and not as a part of our window. After some time on attempting to test this, we had to resort to the solution of changing all the dialogs (such as success messages, error messages) to Labels on our Javafx window forms. 
+One of the problems we had was the testing on our UI was that we used dialog pop up windows which are extremely hard to be tested, because they work individually and not as a part of our window. After some time on attempting to test this, we had to resort to the solution of changing all the dialogs (such as success messages, error messages) to Labels on our Javafx window forms.
 
-Since UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e.\ conversationList\_user3 or login\_validuser. 
+Since UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e.\ conversationList\_user3 or login\_validuser.
 
-One of last problems we faced on testing the UI was on the last week, specifically the 24th of March. The programmers of the library Testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after the change. This problem left us in some confusion, so we checked our code based and when we looked through our libraries we understood what was the problem.  
+One of last problems we faced on testing the UI was on the last week, specifically the 24th of March. The programmers of the library Testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after the change. This problem left us in some confusion, so we checked our code based and when we looked through our libraries we understood what was the problem.
 
 We created a helper for our UI tests to reduce duplicate code of setting up a user. We made a mistake of not writing helper functions for each of our tests suites for unit testing, because we kept them updated and it did require a lot of work to do so. We learnt from this and half way through the project when we started UI testing we made sure we wrote helper functions for our suites, so it was easier to keep them updated and the code is cleaner.
 
@@ -199,7 +199,7 @@ During unit tests’ implementation, we faced some constraints and rules about t
 \subparagraph{Android Open Source Project SDK 25}
 As discussed, Android API level 25 is chosen to have all the libraries possible. Hence, the SDK version 25 is used to develop the application throughout the project.
 \subparagraph{Android Support Library v7}
-Android Support Library is a library provided via the Android SDK which enables support for multiple API versions. Via this library, one can add newer functionalities or older functionalities without changing the API. In addition, this library adds new classes and layout items core Android library doesn’t provide \cite{website:android_support_library}. For many reasons whilst developing the UI of the application, elements like widgets are used from this library. Furthermore, all activities are implemented with AppCompatActivity class of this library, rather than using the generic activity.
+Android Support Library is a library provided via the Android SDK which enables support for multiple API versions. Via this library, one can add newer functionalities or older functionalities without changing the API\@. In addition, this library adds new classes and layout items core Android library doesn’t provide \cite{website:android_support_library}. For many reasons whilst developing the UI of the application, elements like widgets are used from this library. Furthermore, all activities are implemented with AppCompatActivity class of this library, rather than using the generic activity.
 \subparagraph{Java Security}
 As the Java client, Java’s own security library is used to create the CryptoBox class. This library contains key generation, encryption and decryption functionalities and many more.
 \subparagraph{Dagger 2}
@@ -225,7 +225,7 @@ Espresso is a testing library provided by Android’s testing support library, w
 
 The backend for this application has been created with the Elixir programming language. Elixir is a functional language that utilises the Erlang Virtual Machine to run its code \cite{website:elixir_homepage}. The primary reason for choosing Elixir was because of its built-in distributed capabilities, which allows every erlang node to be aware of any publish-subscribe channel we created and thus the backend can easily scale horizontally without some nodes losing topic information. We had discussed using C but we felt that it would be too low level. We also considered Go, but decided against it as we would have had to follow Go's workspace setup.  Without Elixir's distributed functionality, we could have created a Redis cluster to handle any publish-subscribe channels. However, this would have added more components to the backend, raising its complexity.
 
-The backend is designed to be stateless, allowing it be horizontally scalable. i.e. A client is able to send requests to any backend in a cluster without worrying about which node it gets sent to.
+The backend is designed to be stateless, allowing it be horizontally scalable.\ i.e. A client is able to send requests to any backend in a cluster without worrying about which node it gets sent to.
 
 \subsection{Libraries}
 
@@ -276,7 +276,7 @@ Using Phoenix, we created a Representational State Transfer(REST) API with the f
 \end{tabular}
 \end{center}
 
-After log-in, the clients connect to a websocket endpoint at \url{/api/v1/messages/websocket} and subscribe to a channel "user:\emph{username}", where \emph{username} is the currently logged in user, in order to receive messages that they are sent in real-time. The connection to both the websocket and channel is authenticated where only valid authentication tokens are accepted to the websocket and a user is only allowed to connect to their own designated channel.
+After log-in, the clients connect to a websocket endpoint at \url{/api/v1/messages/websocket} and subscribe to a channel `user:\emph{username}', where \emph{username} is the currently logged in user, in order to receive messages that they are sent in real-time. The connection to both the websocket and channel is authenticated where only valid authentication tokens are accepted to the websocket and a user is only allowed to connect to their own designated channel.
 
 \subsubsection{Automatic clustering with libcluster}
 
@@ -288,7 +288,7 @@ The Phoenix Framework also came with test examples which were easy to learn from
 
 \subsubsection{Static Analysis}
 
-Credo and Dogma are both code linters for Elixir. Credo focuses on code-readability, refactoring opportunities and inconsistency, whereas Dogma enforces rules from a style guide. We are using Dogma's default style guide \cite{website:elixir_dogma_rules}. These tools were important for us to use as none of us had any experience with Elixir before and so whilst we learnt we wanted to make sure that we were writing "good" Elixir code.
+Credo and Dogma are both code linters for Elixir. Credo focuses on code-readability, refactoring opportunities and inconsistency, whereas Dogma enforces rules from a style guide. We are using Dogma's default style guide \cite{website:elixir_dogma_rules}. These tools were important for us to use as none of us had any experience with Elixir before and so whilst we learnt we wanted to make sure that we were writing `good' Elixir code.
 
 \subsection{Terraform with Amazon Web Services}
 
@@ -309,6 +309,9 @@ Amazon Web Services (AWS) is the most popular public cloud computing provider to
 \end{tabular}
 
 We also considered using Google Container Engine on Google Cloud Platform which is backed by Kubernetes (another container orchestration platform), but this was more complex to automate and so we stuck with Terraform and AWS ECS.
+
+\subsubsection{Deployment with Docker}
+To deploy the backend, we build a Docker image that takes in secret parameters as container environment variables. This image only runs processes that are required for the backend service, similar to a Unikernel, and so the attack surface is much smaller. This image is pushed to the public Docker Hub under `monarchsofcoding/chitchat:release-\emph{version}' where \emph{version} is the git SHA of the build.
 
 \subsubsection{Weaveworks' Weave Net}
 
@@ -364,7 +367,7 @@ We chose to base our workflow is loosely based off of Kanban Agile as it encoura
   \item Deployed: Holds cards that are on the \emph{master} branch and thus deployed to the \emph{production} environment.
 \end{itemize}
 
-Whilst we did not have a formal Work-in progress (WIP) limit set for each column, we never saw our \emph{Specify} or \emph{Implement} stages go above 4 cards. When we did have 4 cards in the mix, there would still only be one \emph{feature} card from the specification and the other cards would be smaller improvements to the existing code-base e.g. "Infrastructure upgrade", "Incorporate UI testing".
+Whilst we did not have a formal Work-in progress (WIP) limit set for each column, we never saw our \emph{Specify} or \emph{Implement} stages go above 4 cards. When we did have 4 cards in the mix, there would still only be one \emph{feature} card from the specification and the other cards would be smaller improvements to the existing code-base e.g. `Infrastructure upgrade', `Incorporate UI testing'.
 
 \subsubsection{Travis CI}
 
@@ -379,13 +382,13 @@ On Travis, we utilised the \emph{invoke} task runner and \emph{Docker} container
   \item android\_client: For the Android unit tests.
 \end{itemize}
 
-Unfortunately, we were unable to have our Android UI/e2e (android/e2e) tests running on Travis as they only supported use of the ARM Android Virtual Device (AVD). As detailed earlier in~\ref{android-problems-faced}, the ARM AVD was far too slow and unresponsive and so the tests would time-out. We are able to run them locally on our development machines using the "privileged" Docker flag to give the Android emulator access to the CPU extensions that accelerate the x86 image.
+Unfortunately, we were unable to have our Android UI/e2e (android/e2e) tests running on Travis as they only supported use of the ARM Android Virtual Device (AVD). As detailed earlier in~\ref{android-problems-faced}, the ARM AVD was far too slow and unresponsive and so the tests would time-out. We are able to run them locally on our development machines using the \emph{privileged} Docker flag to give the Android emulator access to the CPU extensions that accelerate the x86 image.
 
 A Travis CI build would fail if any tests, checkstyle or code-linting failed. This is achieved by the tasks returning a non-zero exit code. In Unix-like systems, a zero exit-code indicates that a program exited successfully and a non-zero exit code indicates that the program was unsuccessful. This really helped with our workflow as we could be confident that new code was not breaking older functionality (trusting that our existing tests were correct).
 
 \subsubsection{Git Version Control System (VCS)}
 
-At the start of the project, only one of us had any experience using `git' and they were most comfortable using the \emph{git-flow} strategy helped by the nvie/git-flow extension \cite{website:github_nvie_git_flow}. The \emph{git-flow} strategy adds roles to the branches "develop" and "master", where "develop" is used as the latest next-working release source code and "master" consists of released source code \cite{website:git_flow}. The main selling point of this strategy for us was that we could tie the branches so that "develop" was our beta environment and "master" was our production environment. This meant that we could have Travis automatically deploy the backend and create binaries depending on the branch. This also meant that we had an extra stage to test a release before it was created and it clearly divided the in-progress code-base to the released code.
+At the start of the project, only one of us had any experience using `git' and they were most comfortable using the \emph{git-flow} strategy helped by the nvie/git-flow extension \cite{website:github_nvie_git_flow}. The \emph{git-flow} strategy adds roles to the branches `develop' and `master', where `develop' is used as the latest next-working release source code and `master' consists of released source code \cite{website:git_flow}. The main selling point of this strategy for us was that we could tie the branches so that `develop' was our beta environment and `master' was our production environment. This meant that we could have Travis automatically deploy the backend and create binaries depending on the branch. This also meant that we had an extra stage to test a release before it was created and it clearly divided the in-progress code-base to the released code.
 
 \chapter{Evaluation}
 
@@ -394,7 +397,7 @@ As the project wore on, and heeding concern from our lecturer, there was no code
 
 At one point during this project, we had a main feature branch `feature/user-receives-message' alongside 2 extra improvement branches, `integration/testfx' and `infrastructure/distillery-swarm'. We ended up merging the extra branches into the main feature branch to make it easier for people to work on all of the features at the same time. This ended up with a very big Pull-Request once the main feature was finished with extra incomplete work. We took note of this and quickly grew to creating smaller, isolated Pull-Requests which were a lot easier to review.
 
-On 24th March, we accidentally merged a Pull-Request into our `master' branch which should not have been according to our git-flow strategy. We identified this immediately, but had to submit another Pull-Request to revert the changes. To help prevent human-errors, we thought about automating checks for the workflow. e.g. check if `feature' PRs are going into `develop'.
+On 24th March, we accidentally merged a Pull-Request into our `master' branch which should not have been according to our git-flow strategy. We identified this immediately, but had to submit another Pull-Request to revert the changes. To help prevent human-errors, we thought about automating checks for the workflow.\ e.g.\ check if `feature' PRs are going into `develop'.
 
 \section{Encryption}
 Our implementation for encryption (with public keys) meant that we cannot send messages larger than 512 bytes. We inform the user when they try to send a message longer than 128 characters. In other protocols, e.g. HTTP over SSL, Asymmetric encryption is used to communicate a shared key for symmetric encryption between parties. Symmetric encryption is much faster than Asymmetric encryption and so we could encrypt longer messages. This could be implemented using the Diffie-Helman protocol in the future. For group conversations, we could orchestrate the group Diffie-Helman protocol to generate a shared key between participating users.
