@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:maxLength="64"
+            android:maxLength="128"
             android:id="@+id/message_text"
             android:layout_weight="0.95"
             style="@style/Widget.AppCompat.EditText"
