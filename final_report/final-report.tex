@@ -78,12 +78,12 @@ For sending messages, the simplest solution was to implement an email-like syste
 
 \begin{itemize}
   \item Topic = Conversation.
-  \item Consumer + Producer = Paticipants in a conversation.
+  \item Consumer + Producer = Participants in a conversation.
 \end{itemize}
 
 One issue with this implementation is that the backend will need to orchestrate the creation of new conversations.\ i.e. If Alice initiates a conversation with Bob, how can Bob find out that he also needs to subscribe to his and Alice's new topic? This implementation is more commonly used in lobby-based chat rooms.
 
-To resolve this, we have a topic for each unique user that they subscribe to when they log in. When Alice wants to send a message to Bob, she creates a message (letter) with Bob as the recipient and sends it to the backend. The backend will then act as a postman and deliver Alice's message to Bob's topic which Bob will then recieve as a consumer.
+To resolve this, we have a topic for each unique user that they subscribe to when they log in. When Alice wants to send a message to Bob, she creates a message (letter) with Bob as the recipient and sends it to the backend. The backend will then act as a postman and deliver Alice's message to Bob's topic which Bob will then receive as a consumer.
 
 \chapter{Implementation}
 
@@ -333,7 +333,7 @@ We used two basic rules in our registration validation. The first was their user
 Both of our clients communicate with the backend over the Hypertext Transport Secure (HTTPS) and the WebSocket-Secure (WSS) protocols to provide a layer of security when sending a user's credentials for authentication.
 
 \subsubsection{Authentication Tokens}
-When a user logs into the application, the client sends a HTTPS POST request to the backend with their credentials. If the credentials are valid, the server responds with an authentication token for the user/client to use in further correspondence. This authentication token is a JSON Web Token \cite{website:json_web_tokens} that holds the username encrypted. When the backend recieves this token in a header, it decryptes the token to find the username and therefore a user can be authenticated.
+When a user logs into the application, the client sends a HTTPS POST request to the backend with their credentials. If the credentials are valid, the server responds with an authentication token for the user/client to use in further correspondence. This authentication token is a JSON Web Token \cite{website:json_web_tokens} that holds the username encrypted. When the backend receives this token in a header, it decrypts the token to find the username and therefore a user can be authenticated.
 
 \subsubsection{Encryption}
 For Encryption, as we described in our previous sections we have used asymmetric encryption using a public and private key-pair. Both the Java Desktop and Android Client use the same Java SE security libraries to generate RSA key-pairs with a 4096-bit key length.
@@ -381,7 +381,7 @@ On Travis, we utilised the \emph{invoke} task runner and \emph{Docker} container
 
 Unfortunately, we were unable to have our Android UI/e2e (android/e2e) tests running on Travis as they only supported use of the ARM Android Virtual Device (AVD). As detailed earlier in~\ref{android-problems-faced}, the ARM AVD was far too slow and unresponsive and so the tests would time-out. We are able to run them locally on our development machines using the "privileged" Docker flag to give the Android emulator access to the CPU extensions that accelerate the x86 image.
 
-A Travis CI build would fail if any tests, checkstyle or code-linting failed. This is achieved by the tasks returning a non-zero exit code. In Unix-like systems, a zero exit-code indicates that a program exited successfully and a non-zero exit code indicates that the program was unsuccesful. This really helped with our workflow as we could be confident that new code was not breaking older functionality (trusting that our existing tests were correct).
+A Travis CI build would fail if any tests, checkstyle or code-linting failed. This is achieved by the tasks returning a non-zero exit code. In Unix-like systems, a zero exit-code indicates that a program exited successfully and a non-zero exit code indicates that the program was unsuccessful. This really helped with our workflow as we could be confident that new code was not breaking older functionality (trusting that our existing tests were correct).
 
 \subsubsection{Git Version Control System (VCS)}
 
