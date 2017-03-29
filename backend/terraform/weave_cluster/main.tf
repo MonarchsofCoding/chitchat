@@ -66,20 +66,12 @@ resource "aws_route_table_association" "a" {
   route_table_id = "${aws_route_table.app.id}"
 }
 
-## Route53
-resource "aws_route53_zone" "service_discovery" {
-  name          = "servicediscovery.internal"
-  vpc_id        = "${aws_vpc.app.id}"
-  force_destroy = true
-}
-
 ## Compute
-
 resource "aws_autoscaling_group" "app_cluster" {
   name                 = "${var.cluster_name}.asg"
   vpc_zone_identifier  = ["${aws_subnet.app.*.id}"]
   min_size             = "1"
-  desired_capacity     = "3"
+  desired_capacity     = "2"
   max_size             = "5"
   launch_configuration = "${aws_launch_configuration.app.name}"
 
@@ -114,7 +106,7 @@ resource "aws_launch_configuration" "app" {
 
   /*image_id                    = "ami-48f9a52e"*/
   image_id                    = "ami-25adf356"
-  instance_type               = "m3.medium"
+  instance_type               = "m4.large"
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.app.name}"
   user_data                   = "${data.template_file.user_data.rendered}"
