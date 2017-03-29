@@ -27,10 +27,31 @@ public class MessageValidatorTest {
         }
     }
 
+    /**
+     *  Test with 128 characters
+     */
+    @Test
+    public void testValidationLargeAmountChars() {
+        UserModel user = new UserModel("Ben");
+        // 128 characters
+        String msg = "12345678912345678912345678912345678912345678912345678912345678912345678912345678912345678912345678912345678912345678912345678912";
+        System.out.println(msg.length());
+        Message message = new Message(user, msg);
+
+        MessageValidator messageValidator = new MessageValidator();
+        try {
+            messageValidator.validate(message);
+        } catch (ValidationException e) {
+            fail(String.format("the string - \"%s\" should of passed", msg));
+        }
+    }
+
     @Test
     public void testValidationFail() {
         UserModel user = new UserModel("Ben");
-        Message message = new Message(user, "123456789123456789123456789123456789123456789123456789123456789123456789123456789");
+        // 194 characters
+        String msg = "123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789";
+        Message message = new Message(user, msg);
 
         MessageValidator messageValidator = new MessageValidator();
         try {
