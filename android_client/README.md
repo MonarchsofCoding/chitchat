@@ -6,6 +6,8 @@
 **If you're planning to run the application on beta or production build, ignore this paragraph**
 If you don't have an Android phone, and thinking to run the application through a virtual machine, we strongly suggest you to use Windows or a Linux distribution, since Docker's virtual machine conflicts with Android Virtual Machine in Mac OSX devices. You can still run via selecting ARM images while creating the virtual machine but it will be unbearably slow. You can still run Android Studio on Mac OSX, and can run the application to debug it with an actual Android phone. 
 
+**If you're planning to run the application on beta or production build with a Mac OSX device, shutdown Docker before you do.**
+
 Simply, download Android Studio to your machine. During installation, do standart installation, not custom. The required SDK and tools will be downloaded by the installer itself. The setups for the project and the Android Emulator is explained below.
 
 IntelliJ IDEA is ok as well, but setup for SDK and tools is not easy. Prefer Android Studio if possible.
