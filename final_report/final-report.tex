@@ -126,11 +126,22 @@ Our tests were providing useful consistent results, essentially when they were f
 
 \subparagraph{Unit Testing} The dynamic testing methods we did are unit testing, where this breaks down the tests into smallest parts of the application into units and tests them independently and individually. Since unit testing is white box testing we have different ways of checking for coverage. We were focusing on two coverage, statement and branch testing. Adequacy criteria for statement testing is for each statement to be executed at least once, and the adequacy criteria for branch testing are each branch must be executed once. The rationale for this is that a faulty statement or branch can only be revealed if it is executed.
 
+\subparagraph{Regression Testing} Since every commit runs a build on Travis this will run all the tests for that build, so we can catch any accidental changes that we do. This is one of the methods we use to verify the software and making sure we did not break any other features that we had. 
+
 \subparagraph{Mockito}
 Mockito is one of the testing frameworks that we have been using. There are several different reasons for mocking, such as test the logic of the class in isolation; provide a response to check the behaviour of the rest of the function. E.g. (RegistrationControllerTest.java, line 62) we mocked the configuration class because we weren’t testing that class, but we were testing the registerUser function that uses the Configuration. Hence, when the configuration is being used, we needed it to return a value we wanted to see if the expected nodes are being hit and producing the expected outcome.
 
-\subparagraph{Problems Faced In Testing}
- In the user interface graphics we started using Java Swing library for the login and registration form. After this implementation we changed to JavaFx graphics as we realise that JavaFx can give us the opportunity to apply css style design (buttons,colours,fonts) and improve the user interface experience. On more problem was the testing on our graphics for the reason that we used dialog pop up windows which are extremely hard to be tasted as they work individually and not as a part of our window. The solution on this came changing all the dialog (success messages, error messages, infomessages) to Labels on our javafx window forms. The last problem with UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e.\ conversationList\_user3 or login\_validuser. One last problem we faced on testing the graphic was on the last week and specifically the 24th of March. The programmers of the library testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after change it tests executed normally. We mention this problem cause in order to find it we had to check again our project from the top(code) to the bottom (libraries) in order to find the bug. We created a helper for our UI tests to reduce duplicate code of setting up a user. We made a mistake of not writing helper functions for each of our tests suites for unit testing, because we kept them updated and it did require a lot of work to do so. We learnt from this and during half way through the project when we started UI testing, so we made sure we wrote helper functions for our suites, so it was easier to keep them updated and the code is cleaner.
+\subparagraph{Problems Faced In Testing} 
+For the user interface, the graphics library we started to use was Java Swing library for the login and registration form. After this implementation we changed to JavaFx library as we realise that JavaFx can give us the opportunity to apply CSS style design (e.g. colours, fonts) and improve the user interface experience. 
+
+One of the problems we had was the testing on our UI was that we used dialog pop up windows which are extremely hard to be tested, because they work individually and not as a part of our window. After some time on attempting to test this, we had to resort to the solution of changing all the dialogs (such as success messages, error messages) to Labels on our Javafx window forms. 
+
+Since UI testing was the sequential execution of our tests. That means that from the registration to the exchanging messages process we had to think and develop a logical sequence of possible users actions. In order to recognise each different stage we specify the username giving them the name of the stage i.e.\ conversationList\_user3 or login\_validuser. 
+
+One of last problems we faced on testing the UI was on the last week, specifically the 24th of March. The programmers of the library Testfx that we used for testing our views decided to do an upgrade from version 4.0.5 to 4.0.6. It was a small patch that should not change the compatibility with our previous implementation. Unfortunately this was the only problem that made our E2E service tests to fail after the change. This problem left us in some confusion, so we checked our code based and when we looked through our libraries we understood what was the problem.  
+
+We created a helper for our UI tests to reduce duplicate code of setting up a user. We made a mistake of not writing helper functions for each of our tests suites for unit testing, because we kept them updated and it did require a lot of work to do so. We learnt from this and half way through the project when we started UI testing we made sure we wrote helper functions for our suites, so it was easier to keep them updated and the code is cleaner.
+
 
 
 \subsection{Libraries}
@@ -141,8 +152,8 @@ Mockito is one of the testing frameworks that we have been using. There are seve
   \hline
   Commons logging & Use of the logging in implementation & 1.2\\
   Checkstyle & Use to check style of code & 7.4\\
-  JavaFx & Use for User Interface Graphics layouts & 2.0\\
   Jacoco & Use for Java code coverage & 0.7.8\\
+  JavaFx & Use for User Interface Graphics layouts & 2.0\\
   Java SE Security & Implement Cryptographic functions & Java SE 8.0\\
   Jfoenix & Use for material design & 1.0.0\\
   Json & Use for transmit data & 20160810\\
