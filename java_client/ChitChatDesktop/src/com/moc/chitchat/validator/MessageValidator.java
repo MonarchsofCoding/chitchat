@@ -38,7 +38,7 @@ public class MessageValidator implements Validator{
             ex.printStackTrace();
         }
 
-        if (utf8Bytes.length > 64) {
+        if (utf8Bytes.length > 128) {
             errors.rejectValue("message", "field.required", "too many characters");
         }
 
