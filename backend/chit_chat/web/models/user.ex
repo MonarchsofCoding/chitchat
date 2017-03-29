@@ -7,6 +7,7 @@ defmodule ChitChat.User do
 
   alias Comeonin.Bcrypt
   alias ChitChat.UserRepository
+  alias Ecto.Changeset
 
   schema "users" do
     field :username, :string
@@ -104,12 +105,21 @@ defmodule ChitChat.User do
   """
   @spec register(Ecto.Changeset) :: struct
   def register(changeset) do
-    changeset
-    |> unique_constraint(:username)
-    |> put_change(:hashed_password, Bcrypt.hashpwsalt(
-                          changeset.params["password"]))
-    |> put_change(:online, false)
-    |> UserRepository.create()
+
+    changeset = Changeset.unique_constraint(changeset, :username)
+
+    case UserRepository.create(changeset) do
+      {:ok, user} ->
+        inserted_changeset = Changeset.change(user)
+        inserted_changeset
+        |> put_change(
+          :hashed_password,
+          Bcrypt.hashpwsalt(changeset.params["password"])
+        )
+        |> UserRepository.save()
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @spec confirm_password(User, Ecto.Changeset) :: {}
