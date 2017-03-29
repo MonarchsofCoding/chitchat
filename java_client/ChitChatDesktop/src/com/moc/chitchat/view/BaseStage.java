@@ -3,7 +3,9 @@ package com.moc.chitchat.view;
 import com.moc.chitchat.application.Configuration;
 import com.moc.chitchat.view.authentication.LoginView;
 import com.moc.chitchat.view.authentication.RegistrationView;
+import com.moc.chitchat.view.main.ConversationListView;
 import com.moc.chitchat.view.main.MainView;
+import com.moc.chitchat.view.main.SearchView;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -26,11 +28,14 @@ public class BaseStage implements Observer {
 
     private Stage primaryStage;
     private Configuration configuration;
+    private ConversationListView conversationListView;
+    private SearchView searchView;
 
     /**
      * Construction for the BaseStage.
-     * @param mainView - The main primaryStage
-     * @param loginView - The login in view
+     *
+     * @param mainView         - The main primaryStage
+     * @param loginView        - The login in view
      * @param registrationView - The registration view
      */
     @Autowired
@@ -38,12 +43,16 @@ public class BaseStage implements Observer {
             MainView mainView,
             LoginView loginView,
             RegistrationView registrationView,
-            Configuration configuration
+            Configuration configuration,
+            ConversationListView conversationListView,
+            SearchView searchView
     ) {
         this.mainView = mainView;
         this.loginView = loginView;
         this.registrationView = registrationView;
         this.configuration = configuration;
+        this.conversationListView = conversationListView;
+        this.searchView = searchView;
     }
 
     public void setPrimaryStage(Stage stage) {
@@ -102,7 +111,14 @@ public class BaseStage implements Observer {
         this.primaryStage.setScene(this.mainView.getScene());
     }
 
-
+    /**
+     * Clear the errormessages and the listobjects.
+     */
+    public void clearListView() {
+        this.conversationListView.clearConversationListView();
+        this.configuration.logout();
+        this.searchView.clearfields();
+    }
 
     @Override
     public void update(Observable observable, Object obj) {

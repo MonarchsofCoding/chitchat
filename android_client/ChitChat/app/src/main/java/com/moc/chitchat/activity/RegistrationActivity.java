@@ -43,6 +43,7 @@ public class RegistrationActivity extends AppCompatActivity
     EditText usernameField;
     EditText passwordField;
     EditText passwordCheckField;
+    Button registerButton;
 
     /**
      * onCreate acts as a constructor and sets up the Activity.
@@ -61,7 +62,7 @@ public class RegistrationActivity extends AppCompatActivity
         this.setContentView(R.layout.activity_register);
         getSupportActionBar().setTitle("Register");
 
-        Button registerButton = (Button) this.findViewById(R.id.register_button);
+        registerButton = (Button) this.findViewById(R.id.register_button);
         registerButton.setOnClickListener(this);
 
         this.usernameField = (EditText) this.findViewById(R.id.username_input);
@@ -76,6 +77,7 @@ public class RegistrationActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         try {
+            registerButton.setEnabled(false);
             this.registrationController.registerUser(
                 this,
                 this,
@@ -85,6 +87,7 @@ public class RegistrationActivity extends AppCompatActivity
                 this.passwordCheckField.getText().toString()
             );
         } catch (ValidationException excevalid) {
+            registerButton.setEnabled(true);
             Map<String, List<String>> errors = excevalid.getErrors();
 
             if (errors.containsKey("username")) {
@@ -123,7 +126,7 @@ public class RegistrationActivity extends AppCompatActivity
      */
     @Override
     public void onErrorResponse(VolleyError error) {
-
+        registerButton.setEnabled(true);
         try {
             JSONObject response = this.errorResponseResolver.getResponseBody(error);
 
@@ -156,6 +159,7 @@ public class RegistrationActivity extends AppCompatActivity
      */
     @Override
     public void onResponse(JSONObject response) {
+        registerButton.setEnabled(true);
         try {
             String username = response.getJSONObject("data").get("username").toString();
             Toast.makeText(this,
