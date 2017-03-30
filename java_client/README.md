@@ -12,58 +12,24 @@ gradle idea
 
 ### Test Execution
 
-#### With Gradle
-
-```
-cd ChitChatDesktop
-gradle test
-```
-
-#### With Docker
+#### Invoke Tasks
 
 ```
 invoke test
 ```
 
-### Building
 
-#### With Gradle
 
-```
-cd ChitChatDesktop
-gradle build
-```
+#### E2E Tests
 
-If the build is successful, you can run the built `.jar` with
+You can run:
 
 ```
-java -jar build/libs/ChitChatDesktop.jar
+cd e2e
+invoke test
 ```
 
-#### With Docker
-
+The video output will be at:
 ```
-invoke build
-```
-
-### Running the built JAR
-
-#### In development mode
-
-```
-java -jar build/libs/ChitChatDesktop.jar dev
-```
-
-
-#### In testing mode
-
-```
-java -jar build/libs/ChitChatDesktop.jar test
-```
-
-
-#### In production mode (default)
-
-```
-java -jar build/libs/ChitChatDesktop.jar
+ChitChatDesktop/ChitChatDesktop.mp4
 ```
